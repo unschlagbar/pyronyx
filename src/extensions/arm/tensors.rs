@@ -12,34 +12,20 @@ use core::ptr::{from_ref, null};
 pub const NAME: &CStr = c"VK_ARM_tensors";
 pub const SPEC_VERSION: u32 = 1;
 
-pub trait TensorsPhysicalDevice {
-    fn get_external_tensor_properties(
-        &self,
-        external_tensor_info: &PhysicalDeviceExternalTensorInfoARM,
-    ) -> ExternalTensorPropertiesARM<'_>;
+pub trait TensorsCommandBuffer {
+    fn copy_tensor(&self, copy_tensor_info: &CopyTensorInfoARM);
 }
 
-impl TensorsPhysicalDevice for PhysicalDevice {
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceExternalTensorPropertiesARM.html>
+impl TensorsCommandBuffer for CommandBuffer {
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyTensorARM.html>
     #[inline]
-    fn get_external_tensor_properties(
-        &self,
-        external_tensor_info: &PhysicalDeviceExternalTensorInfoARM,
-    ) -> ExternalTensorPropertiesARM<'_> {
-        let mut out = MaybeUninit::uninit();
+    fn copy_tensor(&self, copy_tensor_info: &CopyTensorInfoARM) {
         unsafe {
-            (self
-                .fns()
-                .arm_tensors
-                .as_ref()
-                .unwrap()
-                .get_physical_device_external_tensor_properties_arm)(
+            (self.fns().arm_tensors.as_ref().unwrap().copy_tensor_arm)(
                 self.handle,
-                external_tensor_info,
-                out.as_mut_ptr(),
+                copy_tensor_info,
             )
         };
-        unsafe { out.assume_init() }
     }
 }
 
@@ -261,19 +247,33 @@ impl TensorsDevice for Device {
     }
 }
 
-pub trait TensorsCommandBuffer {
-    fn copy_tensor(&self, copy_tensor_info: &CopyTensorInfoARM);
+pub trait TensorsPhysicalDevice {
+    fn get_external_tensor_properties(
+        &self,
+        external_tensor_info: &PhysicalDeviceExternalTensorInfoARM,
+    ) -> ExternalTensorPropertiesARM<'_>;
 }
 
-impl TensorsCommandBuffer for CommandBuffer {
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyTensorARM.html>
+impl TensorsPhysicalDevice for PhysicalDevice {
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceExternalTensorPropertiesARM.html>
     #[inline]
-    fn copy_tensor(&self, copy_tensor_info: &CopyTensorInfoARM) {
+    fn get_external_tensor_properties(
+        &self,
+        external_tensor_info: &PhysicalDeviceExternalTensorInfoARM,
+    ) -> ExternalTensorPropertiesARM<'_> {
+        let mut out = MaybeUninit::uninit();
         unsafe {
-            (self.fns().arm_tensors.as_ref().unwrap().copy_tensor_arm)(
+            (self
+                .fns()
+                .arm_tensors
+                .as_ref()
+                .unwrap()
+                .get_physical_device_external_tensor_properties_arm)(
                 self.handle,
-                copy_tensor_info,
+                external_tensor_info,
+                out.as_mut_ptr(),
             )
         };
+        unsafe { out.assume_init() }
     }
 }

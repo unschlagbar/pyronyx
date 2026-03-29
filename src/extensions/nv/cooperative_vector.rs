@@ -35,29 +35,6 @@ impl CooperativeVectorDevice for Device {
     }
 }
 
-pub trait CooperativeVectorCommandBuffer {
-    fn convert_cooperative_vector_matrix(&self, infos: &[ConvertCooperativeVectorMatrixInfoNV]);
-}
-
-impl CooperativeVectorCommandBuffer for CommandBuffer {
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdConvertCooperativeVectorMatrixNV.html>
-    #[inline]
-    fn convert_cooperative_vector_matrix(&self, infos: &[ConvertCooperativeVectorMatrixInfoNV]) {
-        unsafe {
-            (self
-                .fns()
-                .nv_cooperative_vector
-                .as_ref()
-                .unwrap()
-                .convert_cooperative_vector_matrix_nv)(
-                self.handle,
-                infos.len() as u32,
-                infos.as_ptr(),
-            )
-        };
-    }
-}
-
 pub trait CooperativeVectorPhysicalDevice {
     fn get_cooperative_vector_properties(
         &self,
@@ -85,5 +62,28 @@ impl CooperativeVectorPhysicalDevice for PhysicalDevice {
             )
         }
         .result()
+    }
+}
+
+pub trait CooperativeVectorCommandBuffer {
+    fn convert_cooperative_vector_matrix(&self, infos: &[ConvertCooperativeVectorMatrixInfoNV]);
+}
+
+impl CooperativeVectorCommandBuffer for CommandBuffer {
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdConvertCooperativeVectorMatrixNV.html>
+    #[inline]
+    fn convert_cooperative_vector_matrix(&self, infos: &[ConvertCooperativeVectorMatrixInfoNV]) {
+        unsafe {
+            (self
+                .fns()
+                .nv_cooperative_vector
+                .as_ref()
+                .unwrap()
+                .convert_cooperative_vector_matrix_nv)(
+                self.handle,
+                infos.len() as u32,
+                infos.as_ptr(),
+            )
+        };
     }
 }

@@ -11,6 +11,28 @@ use core::ptr::{from_ref, null};
 pub const NAME: &CStr = c"VK_KHR_win32_surface";
 pub const SPEC_VERSION: u32 = 6;
 
+pub trait Win32SurfacePhysicalDevice {
+    fn get_win32_presentation_support(&self, queue_family_index: u32) -> Bool32;
+}
+
+impl Win32SurfacePhysicalDevice for PhysicalDevice {
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceWin32PresentationSupportKHR.html>
+    #[inline]
+    fn get_win32_presentation_support(&self, queue_family_index: u32) -> Bool32 {
+        unsafe {
+            (self
+                .fns()
+                .khr_win32_surface
+                .as_ref()
+                .unwrap()
+                .get_physical_device_win32_presentation_support_khr)(
+                self.handle,
+                queue_family_index,
+            )
+        }
+    }
+}
+
 pub trait Win32SurfaceInstance {
     fn create_win32_surface(
         &self,
@@ -42,27 +64,5 @@ impl Win32SurfaceInstance for Instance {
             )
         }
         .init_on_success(out)
-    }
-}
-
-pub trait Win32SurfacePhysicalDevice {
-    fn get_win32_presentation_support(&self, queue_family_index: u32) -> Bool32;
-}
-
-impl Win32SurfacePhysicalDevice for PhysicalDevice {
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceWin32PresentationSupportKHR.html>
-    #[inline]
-    fn get_win32_presentation_support(&self, queue_family_index: u32) -> Bool32 {
-        unsafe {
-            (self
-                .fns()
-                .khr_win32_surface
-                .as_ref()
-                .unwrap()
-                .get_physical_device_win32_presentation_support_khr)(
-                self.handle,
-                queue_family_index,
-            )
-        }
     }
 }

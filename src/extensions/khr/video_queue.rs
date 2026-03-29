@@ -11,6 +11,55 @@ use core::ptr::{from_ref, null};
 pub const NAME: &CStr = c"VK_KHR_video_queue";
 pub const SPEC_VERSION: u32 = 8;
 
+pub trait VideoQueueCommandBuffer {
+    fn begin_video_coding(&self, begin_info: &VideoBeginCodingInfoKHR);
+
+    fn control_video_coding(&self, coding_control_info: &VideoCodingControlInfoKHR);
+
+    fn end_video_coding(&self, end_coding_info: &VideoEndCodingInfoKHR);
+}
+
+impl VideoQueueCommandBuffer for CommandBuffer {
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBeginVideoCodingKHR.html>
+    #[inline]
+    fn begin_video_coding(&self, begin_info: &VideoBeginCodingInfoKHR) {
+        unsafe {
+            (self
+                .fns()
+                .khr_video_queue
+                .as_ref()
+                .unwrap()
+                .begin_video_coding_khr)(self.handle, begin_info)
+        };
+    }
+
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdControlVideoCodingKHR.html>
+    #[inline]
+    fn control_video_coding(&self, coding_control_info: &VideoCodingControlInfoKHR) {
+        unsafe {
+            (self
+                .fns()
+                .khr_video_queue
+                .as_ref()
+                .unwrap()
+                .control_video_coding_khr)(self.handle, coding_control_info)
+        };
+    }
+
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdEndVideoCodingKHR.html>
+    #[inline]
+    fn end_video_coding(&self, end_coding_info: &VideoEndCodingInfoKHR) {
+        unsafe {
+            (self
+                .fns()
+                .khr_video_queue
+                .as_ref()
+                .unwrap()
+                .end_video_coding_khr)(self.handle, end_coding_info)
+        };
+    }
+}
+
 pub trait VideoQueueDevice {
     fn create_video_session(
         &self,
@@ -272,54 +321,5 @@ impl VideoQueuePhysicalDevice for PhysicalDevice {
             )
         }
         .result()
-    }
-}
-
-pub trait VideoQueueCommandBuffer {
-    fn begin_video_coding(&self, begin_info: &VideoBeginCodingInfoKHR);
-
-    fn control_video_coding(&self, coding_control_info: &VideoCodingControlInfoKHR);
-
-    fn end_video_coding(&self, end_coding_info: &VideoEndCodingInfoKHR);
-}
-
-impl VideoQueueCommandBuffer for CommandBuffer {
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBeginVideoCodingKHR.html>
-    #[inline]
-    fn begin_video_coding(&self, begin_info: &VideoBeginCodingInfoKHR) {
-        unsafe {
-            (self
-                .fns()
-                .khr_video_queue
-                .as_ref()
-                .unwrap()
-                .begin_video_coding_khr)(self.handle, begin_info)
-        };
-    }
-
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdControlVideoCodingKHR.html>
-    #[inline]
-    fn control_video_coding(&self, coding_control_info: &VideoCodingControlInfoKHR) {
-        unsafe {
-            (self
-                .fns()
-                .khr_video_queue
-                .as_ref()
-                .unwrap()
-                .control_video_coding_khr)(self.handle, coding_control_info)
-        };
-    }
-
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdEndVideoCodingKHR.html>
-    #[inline]
-    fn end_video_coding(&self, end_coding_info: &VideoEndCodingInfoKHR) {
-        unsafe {
-            (self
-                .fns()
-                .khr_video_queue
-                .as_ref()
-                .unwrap()
-                .end_video_coding_khr)(self.handle, end_coding_info)
-        };
     }
 }

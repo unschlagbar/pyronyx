@@ -13,3 +13,10 @@ categories = [
     "graphics",
     "rendering::graphics-api",
 ]
+
+[dependencies]
+raw-window-handle = { version = "0.6.2", optional = true }
+
+[features]
+default = []
+rwh_06 = ["raw-window-handle"]

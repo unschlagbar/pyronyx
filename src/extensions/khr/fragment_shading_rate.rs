@@ -9,6 +9,33 @@ use core::ffi::CStr;
 pub const NAME: &CStr = c"VK_KHR_fragment_shading_rate";
 pub const SPEC_VERSION: u32 = 2;
 
+pub trait FragmentShadingRateCommandBuffer {
+    fn set_fragment_shading_rate(
+        &self,
+        fragment_size: &Extent2D,
+        combiner_ops: FragmentShadingRateCombinerOpKHR,
+    );
+}
+
+impl FragmentShadingRateCommandBuffer for CommandBuffer {
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetFragmentShadingRateKHR.html>
+    #[inline]
+    fn set_fragment_shading_rate(
+        &self,
+        fragment_size: &Extent2D,
+        combiner_ops: FragmentShadingRateCombinerOpKHR,
+    ) {
+        unsafe {
+            (self
+                .fns()
+                .khr_fragment_shading_rate
+                .as_ref()
+                .unwrap()
+                .set_fragment_shading_rate_khr)(self.handle, fragment_size, combiner_ops)
+        };
+    }
+}
+
 pub trait FragmentShadingRatePhysicalDevice {
     fn get_fragment_shading_rates(
         &self,
@@ -36,32 +63,5 @@ impl FragmentShadingRatePhysicalDevice for PhysicalDevice {
             )
         }
         .result()
-    }
-}
-
-pub trait FragmentShadingRateCommandBuffer {
-    fn set_fragment_shading_rate(
-        &self,
-        fragment_size: &Extent2D,
-        combiner_ops: FragmentShadingRateCombinerOpKHR,
-    );
-}
-
-impl FragmentShadingRateCommandBuffer for CommandBuffer {
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetFragmentShadingRateKHR.html>
-    #[inline]
-    fn set_fragment_shading_rate(
-        &self,
-        fragment_size: &Extent2D,
-        combiner_ops: FragmentShadingRateCombinerOpKHR,
-    ) {
-        unsafe {
-            (self
-                .fns()
-                .khr_fragment_shading_rate
-                .as_ref()
-                .unwrap()
-                .set_fragment_shading_rate_khr)(self.handle, fragment_size, combiner_ops)
-        };
     }
 }

@@ -13,172 +13,6 @@ use core::ptr::{from_ref, null};
 pub const NAME: &CStr = c"VK_NV_ray_tracing";
 pub const SPEC_VERSION: u32 = 3;
 
-pub trait RayTracingCommandBuffer {
-    fn copy_acceleration_structure(
-        &self,
-        dst: AccelerationStructureNV,
-        src: AccelerationStructureNV,
-        mode: CopyAccelerationStructureModeKHR,
-    );
-
-    fn write_acceleration_structures_properties(
-        &self,
-        acceleration_structures: &[AccelerationStructureNV],
-        query_type: QueryType,
-        query_pool: QueryPool,
-        first_query: u32,
-    );
-
-    fn build_acceleration_structure(
-        &self,
-        info: &AccelerationStructureInfoNV,
-        instance_data: Buffer,
-        instance_offset: DeviceSize,
-        update: bool,
-        dst: AccelerationStructureNV,
-        src: AccelerationStructureNV,
-        scratch: Buffer,
-        scratch_offset: DeviceSize,
-    );
-
-    fn trace_rays(
-        &self,
-        raygen_shader_binding_table_buffer: Buffer,
-        raygen_shader_binding_offset: DeviceSize,
-        miss_shader_binding_table_buffer: Buffer,
-        miss_shader_binding_offset: DeviceSize,
-        miss_shader_binding_stride: DeviceSize,
-        hit_shader_binding_table_buffer: Buffer,
-        hit_shader_binding_offset: DeviceSize,
-        hit_shader_binding_stride: DeviceSize,
-        callable_shader_binding_table_buffer: Buffer,
-        callable_shader_binding_offset: DeviceSize,
-        callable_shader_binding_stride: DeviceSize,
-        width: u32,
-        height: u32,
-        depth: u32,
-    );
-}
-
-impl RayTracingCommandBuffer for CommandBuffer {
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyAccelerationStructureNV.html>
-    #[inline]
-    fn copy_acceleration_structure(
-        &self,
-        dst: AccelerationStructureNV,
-        src: AccelerationStructureNV,
-        mode: CopyAccelerationStructureModeKHR,
-    ) {
-        unsafe {
-            (self
-                .fns()
-                .nv_ray_tracing
-                .as_ref()
-                .unwrap()
-                .copy_acceleration_structure_nv)(self.handle, dst, src, mode)
-        };
-    }
-
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdWriteAccelerationStructuresPropertiesNV.html>
-    #[inline]
-    fn write_acceleration_structures_properties(
-        &self,
-        acceleration_structures: &[AccelerationStructureNV],
-        query_type: QueryType,
-        query_pool: QueryPool,
-        first_query: u32,
-    ) {
-        unsafe {
-            (self
-                .fns()
-                .nv_ray_tracing
-                .as_ref()
-                .unwrap()
-                .write_acceleration_structures_properties_nv)(
-                self.handle,
-                acceleration_structures.len() as u32,
-                acceleration_structures.as_ptr(),
-                query_type,
-                query_pool,
-                first_query,
-            )
-        };
-    }
-
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBuildAccelerationStructureNV.html>
-    #[inline]
-    fn build_acceleration_structure(
-        &self,
-        info: &AccelerationStructureInfoNV,
-        instance_data: Buffer,
-        instance_offset: DeviceSize,
-        update: bool,
-        dst: AccelerationStructureNV,
-        src: AccelerationStructureNV,
-        scratch: Buffer,
-        scratch_offset: DeviceSize,
-    ) {
-        unsafe {
-            (self
-                .fns()
-                .nv_ray_tracing
-                .as_ref()
-                .unwrap()
-                .build_acceleration_structure_nv)(
-                self.handle,
-                info,
-                instance_data,
-                instance_offset,
-                update as _,
-                dst,
-                src,
-                scratch,
-                scratch_offset,
-            )
-        };
-    }
-
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdTraceRaysNV.html>
-    #[inline]
-    fn trace_rays(
-        &self,
-        raygen_shader_binding_table_buffer: Buffer,
-        raygen_shader_binding_offset: DeviceSize,
-        miss_shader_binding_table_buffer: Buffer,
-        miss_shader_binding_offset: DeviceSize,
-        miss_shader_binding_stride: DeviceSize,
-        hit_shader_binding_table_buffer: Buffer,
-        hit_shader_binding_offset: DeviceSize,
-        hit_shader_binding_stride: DeviceSize,
-        callable_shader_binding_table_buffer: Buffer,
-        callable_shader_binding_offset: DeviceSize,
-        callable_shader_binding_stride: DeviceSize,
-        width: u32,
-        height: u32,
-        depth: u32,
-    ) {
-        unsafe {
-            (self.fns().nv_ray_tracing.as_ref().unwrap().trace_rays_nv)(
-                self.handle,
-                raygen_shader_binding_table_buffer,
-                raygen_shader_binding_offset,
-                miss_shader_binding_table_buffer,
-                miss_shader_binding_offset,
-                miss_shader_binding_stride,
-                hit_shader_binding_table_buffer,
-                hit_shader_binding_offset,
-                hit_shader_binding_stride,
-                callable_shader_binding_table_buffer,
-                callable_shader_binding_offset,
-                callable_shader_binding_stride,
-                width,
-                height,
-                depth,
-            )
-        };
-    }
-}
-
 pub trait RayTracingDevice {
     fn compile_deferred(&self, pipeline: Pipeline, shader: u32) -> Result<(), vkResult>;
 
@@ -371,5 +205,171 @@ impl RayTracingDevice for Device {
             )
         }
         .result()
+    }
+}
+
+pub trait RayTracingCommandBuffer {
+    fn copy_acceleration_structure(
+        &self,
+        dst: AccelerationStructureNV,
+        src: AccelerationStructureNV,
+        mode: CopyAccelerationStructureModeKHR,
+    );
+
+    fn write_acceleration_structures_properties(
+        &self,
+        acceleration_structures: &[AccelerationStructureNV],
+        query_type: QueryType,
+        query_pool: QueryPool,
+        first_query: u32,
+    );
+
+    fn build_acceleration_structure(
+        &self,
+        info: &AccelerationStructureInfoNV,
+        instance_data: Buffer,
+        instance_offset: DeviceSize,
+        update: bool,
+        dst: AccelerationStructureNV,
+        src: AccelerationStructureNV,
+        scratch: Buffer,
+        scratch_offset: DeviceSize,
+    );
+
+    fn trace_rays(
+        &self,
+        raygen_shader_binding_table_buffer: Buffer,
+        raygen_shader_binding_offset: DeviceSize,
+        miss_shader_binding_table_buffer: Buffer,
+        miss_shader_binding_offset: DeviceSize,
+        miss_shader_binding_stride: DeviceSize,
+        hit_shader_binding_table_buffer: Buffer,
+        hit_shader_binding_offset: DeviceSize,
+        hit_shader_binding_stride: DeviceSize,
+        callable_shader_binding_table_buffer: Buffer,
+        callable_shader_binding_offset: DeviceSize,
+        callable_shader_binding_stride: DeviceSize,
+        width: u32,
+        height: u32,
+        depth: u32,
+    );
+}
+
+impl RayTracingCommandBuffer for CommandBuffer {
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyAccelerationStructureNV.html>
+    #[inline]
+    fn copy_acceleration_structure(
+        &self,
+        dst: AccelerationStructureNV,
+        src: AccelerationStructureNV,
+        mode: CopyAccelerationStructureModeKHR,
+    ) {
+        unsafe {
+            (self
+                .fns()
+                .nv_ray_tracing
+                .as_ref()
+                .unwrap()
+                .copy_acceleration_structure_nv)(self.handle, dst, src, mode)
+        };
+    }
+
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdWriteAccelerationStructuresPropertiesNV.html>
+    #[inline]
+    fn write_acceleration_structures_properties(
+        &self,
+        acceleration_structures: &[AccelerationStructureNV],
+        query_type: QueryType,
+        query_pool: QueryPool,
+        first_query: u32,
+    ) {
+        unsafe {
+            (self
+                .fns()
+                .nv_ray_tracing
+                .as_ref()
+                .unwrap()
+                .write_acceleration_structures_properties_nv)(
+                self.handle,
+                acceleration_structures.len() as u32,
+                acceleration_structures.as_ptr(),
+                query_type,
+                query_pool,
+                first_query,
+            )
+        };
+    }
+
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBuildAccelerationStructureNV.html>
+    #[inline]
+    fn build_acceleration_structure(
+        &self,
+        info: &AccelerationStructureInfoNV,
+        instance_data: Buffer,
+        instance_offset: DeviceSize,
+        update: bool,
+        dst: AccelerationStructureNV,
+        src: AccelerationStructureNV,
+        scratch: Buffer,
+        scratch_offset: DeviceSize,
+    ) {
+        unsafe {
+            (self
+                .fns()
+                .nv_ray_tracing
+                .as_ref()
+                .unwrap()
+                .build_acceleration_structure_nv)(
+                self.handle,
+                info,
+                instance_data,
+                instance_offset,
+                update as _,
+                dst,
+                src,
+                scratch,
+                scratch_offset,
+            )
+        };
+    }
+
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdTraceRaysNV.html>
+    #[inline]
+    fn trace_rays(
+        &self,
+        raygen_shader_binding_table_buffer: Buffer,
+        raygen_shader_binding_offset: DeviceSize,
+        miss_shader_binding_table_buffer: Buffer,
+        miss_shader_binding_offset: DeviceSize,
+        miss_shader_binding_stride: DeviceSize,
+        hit_shader_binding_table_buffer: Buffer,
+        hit_shader_binding_offset: DeviceSize,
+        hit_shader_binding_stride: DeviceSize,
+        callable_shader_binding_table_buffer: Buffer,
+        callable_shader_binding_offset: DeviceSize,
+        callable_shader_binding_stride: DeviceSize,
+        width: u32,
+        height: u32,
+        depth: u32,
+    ) {
+        unsafe {
+            (self.fns().nv_ray_tracing.as_ref().unwrap().trace_rays_nv)(
+                self.handle,
+                raygen_shader_binding_table_buffer,
+                raygen_shader_binding_offset,
+                miss_shader_binding_table_buffer,
+                miss_shader_binding_offset,
+                miss_shader_binding_stride,
+                hit_shader_binding_table_buffer,
+                hit_shader_binding_offset,
+                hit_shader_binding_stride,
+                callable_shader_binding_table_buffer,
+                callable_shader_binding_offset,
+                callable_shader_binding_stride,
+                width,
+                height,
+                depth,
+            )
+        };
     }
 }

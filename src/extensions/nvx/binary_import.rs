@@ -11,25 +11,6 @@ use core::ptr::{from_ref, null};
 pub const NAME: &CStr = c"VK_NVX_binary_import";
 pub const SPEC_VERSION: u32 = 2;
 
-pub trait BinaryImportCommandBuffer {
-    fn cu_launch_kernel(&self, launch_info: &CuLaunchInfoNVX);
-}
-
-impl BinaryImportCommandBuffer for CommandBuffer {
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCuLaunchKernelNVX.html>
-    #[inline]
-    fn cu_launch_kernel(&self, launch_info: &CuLaunchInfoNVX) {
-        unsafe {
-            (self
-                .fns()
-                .nvx_binary_import
-                .as_ref()
-                .unwrap()
-                .cu_launch_kernel_nvx)(self.handle, launch_info)
-        };
-    }
-}
-
 pub trait BinaryImportDevice {
     fn create_cu_module(
         &self,
@@ -128,6 +109,25 @@ impl BinaryImportDevice for Device {
                 .destroy_cu_function_nvx)(
                 self.handle, function, allocator.map_or(null(), from_ref)
             )
+        };
+    }
+}
+
+pub trait BinaryImportCommandBuffer {
+    fn cu_launch_kernel(&self, launch_info: &CuLaunchInfoNVX);
+}
+
+impl BinaryImportCommandBuffer for CommandBuffer {
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCuLaunchKernelNVX.html>
+    #[inline]
+    fn cu_launch_kernel(&self, launch_info: &CuLaunchInfoNVX) {
+        unsafe {
+            (self
+                .fns()
+                .nvx_binary_import
+                .as_ref()
+                .unwrap()
+                .cu_launch_kernel_nvx)(self.handle, launch_info)
         };
     }
 }

@@ -11,105 +11,6 @@ use core::ptr::{from_ref, null};
 pub const NAME: &CStr = c"VK_KHR_ray_tracing_pipeline";
 pub const SPEC_VERSION: u32 = 1;
 
-pub trait RayTracingPipelineCommandBuffer {
-    fn trace_rays(
-        &self,
-        raygen_shader_binding_table: &StridedDeviceAddressRegionKHR,
-        miss_shader_binding_table: &StridedDeviceAddressRegionKHR,
-        hit_shader_binding_table: &StridedDeviceAddressRegionKHR,
-        callable_shader_binding_table: &StridedDeviceAddressRegionKHR,
-        width: u32,
-        height: u32,
-        depth: u32,
-    );
-
-    fn trace_rays_indirect(
-        &self,
-        raygen_shader_binding_table: &StridedDeviceAddressRegionKHR,
-        miss_shader_binding_table: &StridedDeviceAddressRegionKHR,
-        hit_shader_binding_table: &StridedDeviceAddressRegionKHR,
-        callable_shader_binding_table: &StridedDeviceAddressRegionKHR,
-        indirect_device_address: DeviceAddress,
-    );
-
-    fn set_ray_tracing_pipeline_stack_size(&self, pipeline_stack_size: u32);
-}
-
-impl RayTracingPipelineCommandBuffer for CommandBuffer {
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdTraceRaysKHR.html>
-    #[inline]
-    fn trace_rays(
-        &self,
-        raygen_shader_binding_table: &StridedDeviceAddressRegionKHR,
-        miss_shader_binding_table: &StridedDeviceAddressRegionKHR,
-        hit_shader_binding_table: &StridedDeviceAddressRegionKHR,
-        callable_shader_binding_table: &StridedDeviceAddressRegionKHR,
-        width: u32,
-        height: u32,
-        depth: u32,
-    ) {
-        unsafe {
-            (self
-                .fns()
-                .khr_ray_tracing_pipeline
-                .as_ref()
-                .unwrap()
-                .trace_rays_khr)(
-                self.handle,
-                raygen_shader_binding_table,
-                miss_shader_binding_table,
-                hit_shader_binding_table,
-                callable_shader_binding_table,
-                width,
-                height,
-                depth,
-            )
-        };
-    }
-
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdTraceRaysIndirectKHR.html>
-    #[inline]
-    fn trace_rays_indirect(
-        &self,
-        raygen_shader_binding_table: &StridedDeviceAddressRegionKHR,
-        miss_shader_binding_table: &StridedDeviceAddressRegionKHR,
-        hit_shader_binding_table: &StridedDeviceAddressRegionKHR,
-        callable_shader_binding_table: &StridedDeviceAddressRegionKHR,
-        indirect_device_address: DeviceAddress,
-    ) {
-        unsafe {
-            (self
-                .fns()
-                .khr_ray_tracing_pipeline
-                .as_ref()
-                .unwrap()
-                .trace_rays_indirect_khr)(
-                self.handle,
-                raygen_shader_binding_table,
-                miss_shader_binding_table,
-                hit_shader_binding_table,
-                callable_shader_binding_table,
-                indirect_device_address,
-            )
-        };
-    }
-
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetRayTracingPipelineStackSizeKHR.html>
-    #[inline]
-    fn set_ray_tracing_pipeline_stack_size(&self, pipeline_stack_size: u32) {
-        unsafe {
-            (self
-                .fns()
-                .khr_ray_tracing_pipeline
-                .as_ref()
-                .unwrap()
-                .set_ray_tracing_pipeline_stack_size_khr)(
-                self.handle, pipeline_stack_size
-            )
-        };
-    }
-}
-
 pub trait RayTracingPipelineDevice {
     fn get_ray_tracing_shader_group_handles(
         &self,
@@ -250,5 +151,104 @@ impl RayTracingPipelineDevice for Device {
                 group_shader,
             )
         }
+    }
+}
+
+pub trait RayTracingPipelineCommandBuffer {
+    fn trace_rays(
+        &self,
+        raygen_shader_binding_table: &StridedDeviceAddressRegionKHR,
+        miss_shader_binding_table: &StridedDeviceAddressRegionKHR,
+        hit_shader_binding_table: &StridedDeviceAddressRegionKHR,
+        callable_shader_binding_table: &StridedDeviceAddressRegionKHR,
+        width: u32,
+        height: u32,
+        depth: u32,
+    );
+
+    fn trace_rays_indirect(
+        &self,
+        raygen_shader_binding_table: &StridedDeviceAddressRegionKHR,
+        miss_shader_binding_table: &StridedDeviceAddressRegionKHR,
+        hit_shader_binding_table: &StridedDeviceAddressRegionKHR,
+        callable_shader_binding_table: &StridedDeviceAddressRegionKHR,
+        indirect_device_address: DeviceAddress,
+    );
+
+    fn set_ray_tracing_pipeline_stack_size(&self, pipeline_stack_size: u32);
+}
+
+impl RayTracingPipelineCommandBuffer for CommandBuffer {
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdTraceRaysKHR.html>
+    #[inline]
+    fn trace_rays(
+        &self,
+        raygen_shader_binding_table: &StridedDeviceAddressRegionKHR,
+        miss_shader_binding_table: &StridedDeviceAddressRegionKHR,
+        hit_shader_binding_table: &StridedDeviceAddressRegionKHR,
+        callable_shader_binding_table: &StridedDeviceAddressRegionKHR,
+        width: u32,
+        height: u32,
+        depth: u32,
+    ) {
+        unsafe {
+            (self
+                .fns()
+                .khr_ray_tracing_pipeline
+                .as_ref()
+                .unwrap()
+                .trace_rays_khr)(
+                self.handle,
+                raygen_shader_binding_table,
+                miss_shader_binding_table,
+                hit_shader_binding_table,
+                callable_shader_binding_table,
+                width,
+                height,
+                depth,
+            )
+        };
+    }
+
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdTraceRaysIndirectKHR.html>
+    #[inline]
+    fn trace_rays_indirect(
+        &self,
+        raygen_shader_binding_table: &StridedDeviceAddressRegionKHR,
+        miss_shader_binding_table: &StridedDeviceAddressRegionKHR,
+        hit_shader_binding_table: &StridedDeviceAddressRegionKHR,
+        callable_shader_binding_table: &StridedDeviceAddressRegionKHR,
+        indirect_device_address: DeviceAddress,
+    ) {
+        unsafe {
+            (self
+                .fns()
+                .khr_ray_tracing_pipeline
+                .as_ref()
+                .unwrap()
+                .trace_rays_indirect_khr)(
+                self.handle,
+                raygen_shader_binding_table,
+                miss_shader_binding_table,
+                hit_shader_binding_table,
+                callable_shader_binding_table,
+                indirect_device_address,
+            )
+        };
+    }
+
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetRayTracingPipelineStackSizeKHR.html>
+    #[inline]
+    fn set_ray_tracing_pipeline_stack_size(&self, pipeline_stack_size: u32) {
+        unsafe {
+            (self
+                .fns()
+                .khr_ray_tracing_pipeline
+                .as_ref()
+                .unwrap()
+                .set_ray_tracing_pipeline_stack_size_khr)(
+                self.handle, pipeline_stack_size
+            )
+        };
     }
 }

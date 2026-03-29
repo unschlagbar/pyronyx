@@ -10,6 +10,41 @@ use core::mem::MaybeUninit;
 pub const NAME: &CStr = c"VK_KHR_performance_query";
 pub const SPEC_VERSION: u32 = 1;
 
+pub trait PerformanceQueryDevice {
+    fn acquire_profiling_lock(&self, info: &AcquireProfilingLockInfoKHR) -> Result<(), vkResult>;
+
+    fn release_profiling_lock(&self);
+}
+
+impl PerformanceQueryDevice for Device {
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkAcquireProfilingLockKHR.html>
+    #[inline]
+    fn acquire_profiling_lock(&self, info: &AcquireProfilingLockInfoKHR) -> Result<(), vkResult> {
+        unsafe {
+            (self
+                .fns()
+                .khr_performance_query
+                .as_ref()
+                .unwrap()
+                .acquire_profiling_lock_khr)(self.handle, info)
+        }
+        .result()
+    }
+
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkReleaseProfilingLockKHR.html>
+    #[inline]
+    fn release_profiling_lock(&self) {
+        unsafe {
+            (self
+                .fns()
+                .khr_performance_query
+                .as_ref()
+                .unwrap()
+                .release_profiling_lock_khr)(self.handle)
+        };
+    }
+}
+
 pub trait PerformanceQueryPhysicalDevice {
     fn enumerate_queue_family_performance_query_counters(
         &self,
@@ -71,40 +106,5 @@ impl PerformanceQueryPhysicalDevice for PhysicalDevice {
             )
         };
         unsafe { out.assume_init() }
-    }
-}
-
-pub trait PerformanceQueryDevice {
-    fn acquire_profiling_lock(&self, info: &AcquireProfilingLockInfoKHR) -> Result<(), vkResult>;
-
-    fn release_profiling_lock(&self);
-}
-
-impl PerformanceQueryDevice for Device {
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkAcquireProfilingLockKHR.html>
-    #[inline]
-    fn acquire_profiling_lock(&self, info: &AcquireProfilingLockInfoKHR) -> Result<(), vkResult> {
-        unsafe {
-            (self
-                .fns()
-                .khr_performance_query
-                .as_ref()
-                .unwrap()
-                .acquire_profiling_lock_khr)(self.handle, info)
-        }
-        .result()
-    }
-
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkReleaseProfilingLockKHR.html>
-    #[inline]
-    fn release_profiling_lock(&self) {
-        unsafe {
-            (self
-                .fns()
-                .khr_performance_query
-                .as_ref()
-                .unwrap()
-                .release_profiling_lock_khr)(self.handle)
-        };
     }
 }

@@ -10,31 +10,6 @@ use core::mem::MaybeUninit;
 pub const NAME: &CStr = c"VK_NV_partitioned_acceleration_structure";
 pub const SPEC_VERSION: u32 = 1;
 
-pub trait PartitionedAccelerationStructureCommandBuffer {
-    fn build_partitioned_acceleration_structures(
-        &self,
-        build_info: &BuildPartitionedAccelerationStructureInfoNV,
-    );
-}
-
-impl PartitionedAccelerationStructureCommandBuffer for CommandBuffer {
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBuildPartitionedAccelerationStructuresNV.html>
-    #[inline]
-    fn build_partitioned_acceleration_structures(
-        &self,
-        build_info: &BuildPartitionedAccelerationStructureInfoNV,
-    ) {
-        unsafe {
-            (self
-                .fns()
-                .nv_partitioned_acceleration_structure
-                .as_ref()
-                .unwrap()
-                .build_partitioned_acceleration_structures_nv)(self.handle, build_info)
-        };
-    }
-}
-
 pub trait PartitionedAccelerationStructureDevice {
     fn get_partitioned_acceleration_structures_build_sizes(
         &self,
@@ -63,5 +38,30 @@ impl PartitionedAccelerationStructureDevice for Device {
             )
         };
         unsafe { out.assume_init() }
+    }
+}
+
+pub trait PartitionedAccelerationStructureCommandBuffer {
+    fn build_partitioned_acceleration_structures(
+        &self,
+        build_info: &BuildPartitionedAccelerationStructureInfoNV,
+    );
+}
+
+impl PartitionedAccelerationStructureCommandBuffer for CommandBuffer {
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBuildPartitionedAccelerationStructuresNV.html>
+    #[inline]
+    fn build_partitioned_acceleration_structures(
+        &self,
+        build_info: &BuildPartitionedAccelerationStructureInfoNV,
+    ) {
+        unsafe {
+            (self
+                .fns()
+                .nv_partitioned_acceleration_structure
+                .as_ref()
+                .unwrap()
+                .build_partitioned_acceleration_structures_nv)(self.handle, build_info)
+        };
     }
 }

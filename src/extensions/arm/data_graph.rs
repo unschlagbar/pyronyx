@@ -251,35 +251,6 @@ impl DataGraphDevice for Device {
     }
 }
 
-pub trait DataGraphCommandBuffer {
-    fn dispatch_data_graph(
-        &self,
-        session: DataGraphPipelineSessionARM,
-        info: Option<&DataGraphPipelineDispatchInfoARM>,
-    );
-}
-
-impl DataGraphCommandBuffer for CommandBuffer {
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdDispatchDataGraphARM.html>
-    #[inline]
-    fn dispatch_data_graph(
-        &self,
-        session: DataGraphPipelineSessionARM,
-        info: Option<&DataGraphPipelineDispatchInfoARM>,
-    ) {
-        unsafe {
-            (self
-                .fns()
-                .arm_data_graph
-                .as_ref()
-                .unwrap()
-                .dispatch_data_graph_arm)(
-                self.handle, session, info.map_or(null(), from_ref)
-            )
-        };
-    }
-}
-
 pub trait DataGraphPhysicalDevice {
     fn get_queue_family_data_graph_properties(
         &self,
@@ -337,5 +308,34 @@ impl DataGraphPhysicalDevice for PhysicalDevice {
             )
         };
         unsafe { out.assume_init() }
+    }
+}
+
+pub trait DataGraphCommandBuffer {
+    fn dispatch_data_graph(
+        &self,
+        session: DataGraphPipelineSessionARM,
+        info: Option<&DataGraphPipelineDispatchInfoARM>,
+    );
+}
+
+impl DataGraphCommandBuffer for CommandBuffer {
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdDispatchDataGraphARM.html>
+    #[inline]
+    fn dispatch_data_graph(
+        &self,
+        session: DataGraphPipelineSessionARM,
+        info: Option<&DataGraphPipelineDispatchInfoARM>,
+    ) {
+        unsafe {
+            (self
+                .fns()
+                .arm_data_graph
+                .as_ref()
+                .unwrap()
+                .dispatch_data_graph_arm)(
+                self.handle, session, info.map_or(null(), from_ref)
+            )
+        };
     }
 }

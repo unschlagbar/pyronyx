@@ -10,25 +10,6 @@ use core::mem::MaybeUninit;
 pub const NAME: &CStr = c"VK_HUAWEI_subpass_shading";
 pub const SPEC_VERSION: u32 = 3;
 
-pub trait SubpassShadingCommandBuffer {
-    fn subpass_shading(&self);
-}
-
-impl SubpassShadingCommandBuffer for CommandBuffer {
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSubpassShadingHUAWEI.html>
-    #[inline]
-    fn subpass_shading(&self) {
-        unsafe {
-            (self
-                .fns()
-                .huawei_subpass_shading
-                .as_ref()
-                .unwrap()
-                .subpass_shading_huawei)(self.handle)
-        };
-    }
-}
-
 pub trait SubpassShadingDevice {
     fn get_device_subpass_shading_max_workgroup_size(
         &self,
@@ -57,5 +38,24 @@ impl SubpassShadingDevice for Device {
             )
         }
         .init_on_success(out)
+    }
+}
+
+pub trait SubpassShadingCommandBuffer {
+    fn subpass_shading(&self);
+}
+
+impl SubpassShadingCommandBuffer for CommandBuffer {
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSubpassShadingHUAWEI.html>
+    #[inline]
+    fn subpass_shading(&self) {
+        unsafe {
+            (self
+                .fns()
+                .huawei_subpass_shading
+                .as_ref()
+                .unwrap()
+                .subpass_shading_huawei)(self.handle)
+        };
     }
 }

@@ -29,55 +29,6 @@ impl DescriptorHeapPhysicalDevice for PhysicalDevice {
     }
 }
 
-pub trait DescriptorHeapCommandBuffer {
-    fn bind_sampler_heap(&self, bind_info: &BindHeapInfoEXT);
-
-    fn bind_resource_heap(&self, bind_info: &BindHeapInfoEXT);
-
-    fn push_data(&self, push_data_info: &PushDataInfoEXT);
-}
-
-impl DescriptorHeapCommandBuffer for CommandBuffer {
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBindSamplerHeapEXT.html>
-    #[inline]
-    fn bind_sampler_heap(&self, bind_info: &BindHeapInfoEXT) {
-        unsafe {
-            (self
-                .fns()
-                .ext_descriptor_heap
-                .as_ref()
-                .unwrap()
-                .bind_sampler_heap_ext)(self.handle, bind_info)
-        };
-    }
-
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBindResourceHeapEXT.html>
-    #[inline]
-    fn bind_resource_heap(&self, bind_info: &BindHeapInfoEXT) {
-        unsafe {
-            (self
-                .fns()
-                .ext_descriptor_heap
-                .as_ref()
-                .unwrap()
-                .bind_resource_heap_ext)(self.handle, bind_info)
-        };
-    }
-
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdPushDataEXT.html>
-    #[inline]
-    fn push_data(&self, push_data_info: &PushDataInfoEXT) {
-        unsafe {
-            (self
-                .fns()
-                .ext_descriptor_heap
-                .as_ref()
-                .unwrap()
-                .push_data_ext)(self.handle, push_data_info)
-        };
-    }
-}
-
 pub trait DescriptorHeapDevice {
     fn write_sampler_descriptors(
         &self,
@@ -244,5 +195,54 @@ impl DescriptorHeapDevice for Device {
             )
         }
         .result()
+    }
+}
+
+pub trait DescriptorHeapCommandBuffer {
+    fn bind_sampler_heap(&self, bind_info: &BindHeapInfoEXT);
+
+    fn bind_resource_heap(&self, bind_info: &BindHeapInfoEXT);
+
+    fn push_data(&self, push_data_info: &PushDataInfoEXT);
+}
+
+impl DescriptorHeapCommandBuffer for CommandBuffer {
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBindSamplerHeapEXT.html>
+    #[inline]
+    fn bind_sampler_heap(&self, bind_info: &BindHeapInfoEXT) {
+        unsafe {
+            (self
+                .fns()
+                .ext_descriptor_heap
+                .as_ref()
+                .unwrap()
+                .bind_sampler_heap_ext)(self.handle, bind_info)
+        };
+    }
+
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBindResourceHeapEXT.html>
+    #[inline]
+    fn bind_resource_heap(&self, bind_info: &BindHeapInfoEXT) {
+        unsafe {
+            (self
+                .fns()
+                .ext_descriptor_heap
+                .as_ref()
+                .unwrap()
+                .bind_resource_heap_ext)(self.handle, bind_info)
+        };
+    }
+
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdPushDataEXT.html>
+    #[inline]
+    fn push_data(&self, push_data_info: &PushDataInfoEXT) {
+        unsafe {
+            (self
+                .fns()
+                .ext_descriptor_heap
+                .as_ref()
+                .unwrap()
+                .push_data_ext)(self.handle, push_data_info)
+        };
     }
 }

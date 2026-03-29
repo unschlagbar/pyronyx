@@ -10,25 +10,6 @@ use core::mem::MaybeUninit;
 pub const NAME: &CStr = c"VK_NV_low_latency2";
 pub const SPEC_VERSION: u32 = 2;
 
-pub trait LowLatency2Queue {
-    fn notify_out_of_band(&self, queue_type_info: &OutOfBandQueueTypeInfoNV);
-}
-
-impl LowLatency2Queue for Queue {
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkQueueNotifyOutOfBandNV.html>
-    #[inline]
-    fn notify_out_of_band(&self, queue_type_info: &OutOfBandQueueTypeInfoNV) {
-        unsafe {
-            (self
-                .fns()
-                .nv_low_latency2
-                .as_ref()
-                .unwrap()
-                .queue_notify_out_of_band_nv)(self.handle, queue_type_info)
-        };
-    }
-}
-
 pub trait LowLatency2Device {
     fn set_latency_sleep_mode(
         &self,
@@ -118,5 +99,24 @@ impl LowLatency2Device for Device {
                 .get_latency_timings_nv)(self.handle, swapchain, out.as_mut_ptr())
         };
         unsafe { out.assume_init() }
+    }
+}
+
+pub trait LowLatency2Queue {
+    fn notify_out_of_band(&self, queue_type_info: &OutOfBandQueueTypeInfoNV);
+}
+
+impl LowLatency2Queue for Queue {
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkQueueNotifyOutOfBandNV.html>
+    #[inline]
+    fn notify_out_of_band(&self, queue_type_info: &OutOfBandQueueTypeInfoNV) {
+        unsafe {
+            (self
+                .fns()
+                .nv_low_latency2
+                .as_ref()
+                .unwrap()
+                .queue_notify_out_of_band_nv)(self.handle, queue_type_info)
+        };
     }
 }

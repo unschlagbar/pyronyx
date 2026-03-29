@@ -3,7 +3,7 @@
 // Do not Edit! Execute `cargo run pyronyx-gen`
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-use crate::read_into_vec_result;
+use crate::utils::read_into_vec_result;
 use crate::vk::*;
 use core::ffi::CStr;
 use core::mem::MaybeUninit;
@@ -11,6 +11,24 @@ use core::ptr::{from_ref, null};
 
 pub const NAME: &CStr = c"VK_KHR_swapchain";
 pub const SPEC_VERSION: u32 = 70;
+
+pub trait SwapchainQueue {
+    fn present(&self, present_info: &PresentInfoKHR) -> Result<(), vkResult>;
+}
+
+impl SwapchainQueue for Queue {
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkQueuePresentKHR.html>
+    #[inline]
+    fn present(&self, present_info: &PresentInfoKHR) -> Result<(), vkResult> {
+        unsafe {
+            (self.fns().khr_swapchain.as_ref().unwrap().queue_present_khr)(
+                self.handle,
+                present_info,
+            )
+        }
+        .result()
+    }
+}
 
 pub trait SwapchainDevice {
     fn create_swapchain(
@@ -111,23 +129,5 @@ impl SwapchainDevice for Device {
             )
         }
         .init_on_success(out)
-    }
-}
-
-pub trait SwapchainQueue {
-    fn present(&self, present_info: &PresentInfoKHR) -> Result<(), vkResult>;
-}
-
-impl SwapchainQueue for Queue {
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkQueuePresentKHR.html>
-    #[inline]
-    fn present(&self, present_info: &PresentInfoKHR) -> Result<(), vkResult> {
-        unsafe {
-            (self.fns().khr_swapchain.as_ref().unwrap().queue_present_khr)(
-                self.handle,
-                present_info,
-            )
-        }
-        .result()
     }
 }

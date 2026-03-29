@@ -12,104 +12,6 @@ use core::ptr::{from_ref, null};
 pub const NAME: &CStr = c"VK_EXT_opacity_micromap";
 pub const SPEC_VERSION: u32 = 2;
 
-pub trait OpacityMicromapCommandBuffer {
-    fn build_micromaps(&self, infos: &[MicromapBuildInfoEXT]);
-
-    fn copy_micromap(&self, info: &CopyMicromapInfoEXT);
-
-    fn copy_micromap_to_memory(&self, info: &CopyMicromapToMemoryInfoEXT);
-
-    fn copy_memory_to_micromap(&self, info: &CopyMemoryToMicromapInfoEXT);
-
-    fn write_micromaps_properties(
-        &self,
-        micromaps: &[MicromapEXT],
-        query_type: QueryType,
-        query_pool: QueryPool,
-        first_query: u32,
-    );
-}
-
-impl OpacityMicromapCommandBuffer for CommandBuffer {
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBuildMicromapsEXT.html>
-    #[inline]
-    fn build_micromaps(&self, infos: &[MicromapBuildInfoEXT]) {
-        unsafe {
-            (self
-                .fns()
-                .ext_opacity_micromap
-                .as_ref()
-                .unwrap()
-                .build_micromaps_ext)(self.handle, infos.len() as u32, infos.as_ptr())
-        };
-    }
-
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyMicromapEXT.html>
-    #[inline]
-    fn copy_micromap(&self, info: &CopyMicromapInfoEXT) {
-        unsafe {
-            (self
-                .fns()
-                .ext_opacity_micromap
-                .as_ref()
-                .unwrap()
-                .copy_micromap_ext)(self.handle, info)
-        };
-    }
-
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyMicromapToMemoryEXT.html>
-    #[inline]
-    fn copy_micromap_to_memory(&self, info: &CopyMicromapToMemoryInfoEXT) {
-        unsafe {
-            (self
-                .fns()
-                .ext_opacity_micromap
-                .as_ref()
-                .unwrap()
-                .copy_micromap_to_memory_ext)(self.handle, info)
-        };
-    }
-
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyMemoryToMicromapEXT.html>
-    #[inline]
-    fn copy_memory_to_micromap(&self, info: &CopyMemoryToMicromapInfoEXT) {
-        unsafe {
-            (self
-                .fns()
-                .ext_opacity_micromap
-                .as_ref()
-                .unwrap()
-                .copy_memory_to_micromap_ext)(self.handle, info)
-        };
-    }
-
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdWriteMicromapsPropertiesEXT.html>
-    #[inline]
-    fn write_micromaps_properties(
-        &self,
-        micromaps: &[MicromapEXT],
-        query_type: QueryType,
-        query_pool: QueryPool,
-        first_query: u32,
-    ) {
-        unsafe {
-            (self
-                .fns()
-                .ext_opacity_micromap
-                .as_ref()
-                .unwrap()
-                .write_micromaps_properties_ext)(
-                self.handle,
-                micromaps.len() as u32,
-                micromaps.as_ptr(),
-                query_type,
-                query_pool,
-                first_query,
-            )
-        };
-    }
-}
-
 pub trait OpacityMicromapDevice {
     fn create_micromap(
         &self,
@@ -350,5 +252,103 @@ impl OpacityMicromapDevice for Device {
             )
         };
         unsafe { out.assume_init() }
+    }
+}
+
+pub trait OpacityMicromapCommandBuffer {
+    fn build_micromaps(&self, infos: &[MicromapBuildInfoEXT]);
+
+    fn copy_micromap(&self, info: &CopyMicromapInfoEXT);
+
+    fn copy_micromap_to_memory(&self, info: &CopyMicromapToMemoryInfoEXT);
+
+    fn copy_memory_to_micromap(&self, info: &CopyMemoryToMicromapInfoEXT);
+
+    fn write_micromaps_properties(
+        &self,
+        micromaps: &[MicromapEXT],
+        query_type: QueryType,
+        query_pool: QueryPool,
+        first_query: u32,
+    );
+}
+
+impl OpacityMicromapCommandBuffer for CommandBuffer {
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBuildMicromapsEXT.html>
+    #[inline]
+    fn build_micromaps(&self, infos: &[MicromapBuildInfoEXT]) {
+        unsafe {
+            (self
+                .fns()
+                .ext_opacity_micromap
+                .as_ref()
+                .unwrap()
+                .build_micromaps_ext)(self.handle, infos.len() as u32, infos.as_ptr())
+        };
+    }
+
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyMicromapEXT.html>
+    #[inline]
+    fn copy_micromap(&self, info: &CopyMicromapInfoEXT) {
+        unsafe {
+            (self
+                .fns()
+                .ext_opacity_micromap
+                .as_ref()
+                .unwrap()
+                .copy_micromap_ext)(self.handle, info)
+        };
+    }
+
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyMicromapToMemoryEXT.html>
+    #[inline]
+    fn copy_micromap_to_memory(&self, info: &CopyMicromapToMemoryInfoEXT) {
+        unsafe {
+            (self
+                .fns()
+                .ext_opacity_micromap
+                .as_ref()
+                .unwrap()
+                .copy_micromap_to_memory_ext)(self.handle, info)
+        };
+    }
+
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyMemoryToMicromapEXT.html>
+    #[inline]
+    fn copy_memory_to_micromap(&self, info: &CopyMemoryToMicromapInfoEXT) {
+        unsafe {
+            (self
+                .fns()
+                .ext_opacity_micromap
+                .as_ref()
+                .unwrap()
+                .copy_memory_to_micromap_ext)(self.handle, info)
+        };
+    }
+
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdWriteMicromapsPropertiesEXT.html>
+    #[inline]
+    fn write_micromaps_properties(
+        &self,
+        micromaps: &[MicromapEXT],
+        query_type: QueryType,
+        query_pool: QueryPool,
+        first_query: u32,
+    ) {
+        unsafe {
+            (self
+                .fns()
+                .ext_opacity_micromap
+                .as_ref()
+                .unwrap()
+                .write_micromaps_properties_ext)(
+                self.handle,
+                micromaps.len() as u32,
+                micromaps.as_ptr(),
+                query_type,
+                query_pool,
+                first_query,
+            )
+        };
     }
 }

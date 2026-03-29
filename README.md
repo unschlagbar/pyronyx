@@ -1,6 +1,6 @@
 # Pyronyx
 
-A lightweight, fully generated next gen Vulkan binding for Rust — focused on zero overhead and natural Rust ergonomics.
+Lightweight fully generated next gen Vulkan bindings for Rust — focused on zero overhead and natural Rust ergonomics.
 
 [![Vulkan 1.4](https://img.shields.io/badge/Vulkan-1.4-red.svg)](https://registry.khronos.org/vulkan/)
 [![LICENSE](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE-MIT)

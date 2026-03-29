@@ -19,13 +19,14 @@ pub use handles::*;
 pub use platform_types::*;
 pub use types::*;
 
-use crate::read_into_vec_result;
-use crate::vkGetInstanceProcAddr;
+use crate::utils::read_into_vec_result;
 use crate::vtables::to_option;
+
+pub use crate::vkGetInstanceProcAddr as get_instance_proc_addr;
 
 pub fn enumerate_instance_layer_properties() -> Result<Vec<LayerProperties>, vkResult> {
     let pfn: vkEnumerateInstanceLayerProperties = to_option(unsafe {
-        transmute(vkGetInstanceProcAddr(
+        transmute(get_instance_proc_addr(
             vkInstance::null(),
             c"vkEnumerateInstanceLayerProperties".as_ptr(),
         ))
@@ -38,7 +39,7 @@ pub fn enumerate_instance_extension_properties(
     layer_name: Option<&CStr>,
 ) -> Result<Vec<ExtensionProperties>, vkResult> {
     let pfn: vkEnumerateInstanceExtensionProperties = to_option(unsafe {
-        transmute(vkGetInstanceProcAddr(
+        transmute(get_instance_proc_addr(
             vkInstance::null(),
             c"vkEnumerateInstanceExtensionProperties".as_ptr(),
         ))

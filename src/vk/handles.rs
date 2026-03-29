@@ -33,13 +33,12 @@
 //!   official C API – the wrapper does **not** add reference counting.
 
 use crate::{
-    raw_option, read_into_vec_result,
+    utils::{raw_option, read_into_vec_result},
     vk::{
         self, AllocationCallbacks, CommandBufferAllocateInfo, DeviceCreateInfo, InstanceCreateInfo,
-        vkCommandBuffer, vkCreateInstance, vkDevice, vkGetDeviceProcAddr, vkInstance,
-        vkPhysicalDevice, vkQueue, vkResult,
+        get_instance_proc_addr, vkCommandBuffer, vkCreateInstance, vkDevice, vkGetDeviceProcAddr,
+        vkInstance, vkPhysicalDevice, vkQueue, vkResult,
     },
-    vkGetInstanceProcAddr,
     vtables::{
         CommandBufferFn, DeviceFn, DeviceVTable, InstanceFn, InstanceVTable, PhysicalDeviceFn,
         QueueFn, to_option,
@@ -95,7 +94,7 @@ impl Instance {
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<Instance, vkResult> {
         let pfn: vkCreateInstance = to_option(unsafe {
-            transmute(vkGetInstanceProcAddr(
+            transmute(get_instance_proc_addr(
                 vkInstance::null(),
                 c"vkCreateInstance".as_ptr(),
             ))
@@ -110,7 +109,7 @@ impl Instance {
         }
 
         let loader =
-            |name: &CStr| unsafe { transmute(vkGetInstanceProcAddr(instance, name.as_ptr())) };
+            |name: &CStr| unsafe { transmute(get_instance_proc_addr(instance, name.as_ptr())) };
 
         let extensions: &[*const i8] = if create_info.pp_enabled_extension_names.is_null()
             || create_info.enabled_extension_count == 0
@@ -205,7 +204,7 @@ impl PhysicalDevice {
         };
 
         let device_loader = unsafe {
-            vkGetInstanceProcAddr(instance.handle(), c"vkGetDeviceProcAddr".as_ptr()).unwrap()
+            get_instance_proc_addr(instance.handle(), c"vkGetDeviceProcAddr".as_ptr()).unwrap()
         };
         let device_loader: vkGetDeviceProcAddr = unsafe { transmute(device_loader) };
 

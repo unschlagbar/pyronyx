@@ -11,33 +11,6 @@ use core::ptr::{from_ref, null};
 pub const NAME: &CStr = c"VK_NV_optical_flow";
 pub const SPEC_VERSION: u32 = 1;
 
-pub trait OpticalFlowCommandBuffer {
-    fn optical_flow_execute(
-        &self,
-        session: OpticalFlowSessionNV,
-        execute_info: &OpticalFlowExecuteInfoNV,
-    );
-}
-
-impl OpticalFlowCommandBuffer for CommandBuffer {
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdOpticalFlowExecuteNV.html>
-    #[inline]
-    fn optical_flow_execute(
-        &self,
-        session: OpticalFlowSessionNV,
-        execute_info: &OpticalFlowExecuteInfoNV,
-    ) {
-        unsafe {
-            (self
-                .fns()
-                .nv_optical_flow
-                .as_ref()
-                .unwrap()
-                .optical_flow_execute_nv)(self.handle, session, execute_info)
-        };
-    }
-}
-
 pub trait OpticalFlowPhysicalDevice {
     fn get_optical_flow_image_formats(
         &self,
@@ -163,5 +136,32 @@ impl OpticalFlowDevice for Device {
             )
         }
         .result()
+    }
+}
+
+pub trait OpticalFlowCommandBuffer {
+    fn optical_flow_execute(
+        &self,
+        session: OpticalFlowSessionNV,
+        execute_info: &OpticalFlowExecuteInfoNV,
+    );
+}
+
+impl OpticalFlowCommandBuffer for CommandBuffer {
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdOpticalFlowExecuteNV.html>
+    #[inline]
+    fn optical_flow_execute(
+        &self,
+        session: OpticalFlowSessionNV,
+        execute_info: &OpticalFlowExecuteInfoNV,
+    ) {
+        unsafe {
+            (self
+                .fns()
+                .nv_optical_flow
+                .as_ref()
+                .unwrap()
+                .optical_flow_execute_nv)(self.handle, session, execute_info)
+        };
     }
 }

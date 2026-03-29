@@ -3,8 +3,8 @@
 // Do not Edit! Execute `cargo run pyronyx-gen`
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-use crate::read_into_vec;
-use crate::read_into_vec_result;
+use crate::utils::read_into_vec;
+use crate::utils::read_into_vec_result;
 use crate::vk::*;
 use core::ffi::c_void;
 use core::mem::MaybeUninit;

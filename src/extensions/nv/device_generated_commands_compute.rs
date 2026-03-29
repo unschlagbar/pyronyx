@@ -10,35 +10,6 @@ use core::mem::MaybeUninit;
 pub const NAME: &CStr = c"VK_NV_device_generated_commands_compute";
 pub const SPEC_VERSION: u32 = 2;
 
-pub trait DeviceGeneratedCommandsComputeCommandBuffer {
-    fn update_pipeline_indirect_buffer(
-        &self,
-        pipeline_bind_point: PipelineBindPoint,
-        pipeline: Pipeline,
-    );
-}
-
-impl DeviceGeneratedCommandsComputeCommandBuffer for CommandBuffer {
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdUpdatePipelineIndirectBufferNV.html>
-    #[inline]
-    fn update_pipeline_indirect_buffer(
-        &self,
-        pipeline_bind_point: PipelineBindPoint,
-        pipeline: Pipeline,
-    ) {
-        unsafe {
-            (self
-                .fns()
-                .nv_device_generated_commands_compute
-                .as_ref()
-                .unwrap()
-                .update_pipeline_indirect_buffer_nv)(
-                self.handle, pipeline_bind_point, pipeline
-            )
-        };
-    }
-}
-
 pub trait DeviceGeneratedCommandsComputeDevice {
     fn get_pipeline_indirect_memory_requirements(
         &self,
@@ -88,5 +59,34 @@ impl DeviceGeneratedCommandsComputeDevice for Device {
                 .unwrap()
                 .get_pipeline_indirect_device_address_nv)(self.handle, info)
         }
+    }
+}
+
+pub trait DeviceGeneratedCommandsComputeCommandBuffer {
+    fn update_pipeline_indirect_buffer(
+        &self,
+        pipeline_bind_point: PipelineBindPoint,
+        pipeline: Pipeline,
+    );
+}
+
+impl DeviceGeneratedCommandsComputeCommandBuffer for CommandBuffer {
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdUpdatePipelineIndirectBufferNV.html>
+    #[inline]
+    fn update_pipeline_indirect_buffer(
+        &self,
+        pipeline_bind_point: PipelineBindPoint,
+        pipeline: Pipeline,
+    ) {
+        unsafe {
+            (self
+                .fns()
+                .nv_device_generated_commands_compute
+                .as_ref()
+                .unwrap()
+                .update_pipeline_indirect_buffer_nv)(
+                self.handle, pipeline_bind_point, pipeline
+            )
+        };
     }
 }

@@ -10,6 +10,39 @@ use core::mem::MaybeUninit;
 pub const NAME: &CStr = c"VK_KHR_device_group";
 pub const SPEC_VERSION: u32 = 4;
 
+pub trait DeviceGroupPhysicalDevice {
+    fn get_present_rectangles(
+        &self,
+        surface: SurfaceKHR,
+        rects: &mut [Rect2D],
+    ) -> Result<(), vkResult>;
+}
+
+impl DeviceGroupPhysicalDevice for PhysicalDevice {
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDevicePresentRectanglesKHR.html>
+    #[inline]
+    fn get_present_rectangles(
+        &self,
+        surface: SurfaceKHR,
+        rects: &mut [Rect2D],
+    ) -> Result<(), vkResult> {
+        unsafe {
+            (self
+                .fns()
+                .khr_device_group
+                .as_ref()
+                .unwrap()
+                .get_physical_device_present_rectangles_khr)(
+                self.handle,
+                surface,
+                rects.len() as *mut u32,
+                rects.as_mut_ptr(),
+            )
+        }
+        .result()
+    }
+}
+
 pub trait DeviceGroupDevice {
     fn get_device_group_present_capabilities(
         &self,
@@ -76,38 +109,5 @@ impl DeviceGroupDevice for Device {
                 .acquire_next_image2_khr)(self.handle, acquire_info, out.as_mut_ptr())
         }
         .init_on_success(out)
-    }
-}
-
-pub trait DeviceGroupPhysicalDevice {
-    fn get_present_rectangles(
-        &self,
-        surface: SurfaceKHR,
-        rects: &mut [Rect2D],
-    ) -> Result<(), vkResult>;
-}
-
-impl DeviceGroupPhysicalDevice for PhysicalDevice {
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDevicePresentRectanglesKHR.html>
-    #[inline]
-    fn get_present_rectangles(
-        &self,
-        surface: SurfaceKHR,
-        rects: &mut [Rect2D],
-    ) -> Result<(), vkResult> {
-        unsafe {
-            (self
-                .fns()
-                .khr_device_group
-                .as_ref()
-                .unwrap()
-                .get_physical_device_present_rectangles_khr)(
-                self.handle,
-                surface,
-                rects.len() as *mut u32,
-                rects.as_mut_ptr(),
-            )
-        }
-        .result()
     }
 }
