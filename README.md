@@ -18,9 +18,10 @@ A lightweight, fully generated next gen Vulkan binding for Rust — focused on z
 - [x] `Result`-returning commands
 - [x] No hidden runtime cost
 
-
-<img width="650" height="250" alt="vulkan" src="https://www.nvidia.com/content/dam/en-zz/Solutions/geforce/news/vulkan-graphics-api-launches-nvidia-gpus-game-ready/vulkan-logo-featuredmain.png"/>
-<img width="512" height="547" alt="vulkan video" src="https://d29g4g2dyqv443.cloudfront.net/sites/default/files/akamai/VulkanVideo_Logo-512.png"/>
+<p align="center">
+  <img src="https://www.nvidia.com/content/dam/en-zz/Solutions/geforce/news/vulkan-graphics-api-launches-nvidia-gpus-game-ready/vulkan-logo-featuredmain.png" height="120" />
+  <img src="https://d29g4g2dyqv443.cloudfront.net/sites/default/files/akamai/VulkanVideo_Logo-512.png" height="120" />
+</p>
 
 ---
 
@@ -119,7 +120,7 @@ let profile = VideoProfileInfoKHR {
 
 ---
 
-##Pointer chains
+## Pointer chains
 
 Comming Soon!
 
