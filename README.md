@@ -119,7 +119,6 @@ let profile = VideoProfileInfoKHR {
 
 ---
 
-```
 ##Pointer chains
 
 Comming Soon!
