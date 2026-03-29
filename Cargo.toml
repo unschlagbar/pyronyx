@@ -1,0 +1,15 @@
+[package]
+name = "pyronyx"
+version = "0.1.0+1.4.341"
+edition = "2024"
+rust-version = "1.85.0"
+readme = "README.md"
+keywords = ["gamedev", "graphics", "vulkan", "bindings"]
+description = "Better Vulkan bindings for Rust"
+categories = [
+    "api-bindings",
+    "external-ffi-bindings",
+    "game-development",
+    "graphics",
+    "rendering::graphics-api",
+]
