@@ -19,7 +19,7 @@ A lightweight, fully generated next gen Vulkan binding for Rust — focused on z
 - [x] No hidden runtime cost
 
 <p align="center">
-  <img src="https://www.nvidia.com/content/dam/en-zz/Solutions/geforce/news/vulkan-graphics-api-launches-nvidia-gpus-game-ready/vulkan-logo-featuredmain.png" height="20" />
+  <img src="https://www.nvidia.com/content/dam/en-zz/Solutions/geforce/news/vulkan-graphics-api-launches-nvidia-gpus-game-ready/vulkan-logo-featuredmain.png" height="200" />
   <img src="https://d29g4g2dyqv443.cloudfront.net/sites/default/files/akamai/VulkanVideo_Logo-512.png" height="200" />
 </p>
 
