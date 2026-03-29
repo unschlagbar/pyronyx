@@ -1,4 +1,0 @@
-cargo:rerun-if-env-changed=VULKAN_SDK
-cargo:rerun-if-env-changed=ANDROID_NDK_HOME
-cargo:rustc-link-search=/home/unschlagbar/VulkanSDK/1.4.341.1/x86_64/lib
-cargo:rustc-link-lib=vulkan
