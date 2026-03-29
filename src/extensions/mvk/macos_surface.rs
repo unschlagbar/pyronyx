@@ -1,0 +1,47 @@
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// Auto generated from pyronyx-gen — generated extensions
+// Do not Edit! Execute `cargo run pyronyx-gen`
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+use crate::vk::*;
+use core::ffi::CStr;
+use core::mem::MaybeUninit;
+use core::ptr::{from_ref, null};
+
+#[deprecated = "This extension is deprecated. Use `VK_EXT_metal_surface` instead."]
+pub const NAME: &CStr = c"VK_MVK_macos_surface";
+pub const SPEC_VERSION: u32 = 3;
+
+pub trait MacosSurfaceInstance {
+    fn create_mac_os_surface(
+        &self,
+        create_info: &MacOSSurfaceCreateInfoMVK,
+        allocator: Option<&AllocationCallbacks>,
+    ) -> Result<SurfaceKHR, vkResult>;
+}
+
+impl MacosSurfaceInstance for Instance {
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCreateMacOSSurfaceMVK.html>
+    #[inline]
+    fn create_mac_os_surface(
+        &self,
+        create_info: &MacOSSurfaceCreateInfoMVK,
+        allocator: Option<&AllocationCallbacks>,
+    ) -> Result<SurfaceKHR, vkResult> {
+        let mut out = MaybeUninit::uninit();
+        unsafe {
+            (self
+                .fns()
+                .mvk_macos_surface
+                .as_ref()
+                .unwrap()
+                .create_mac_os_surface_mvk)(
+                self.handle,
+                create_info,
+                allocator.map_or(null(), from_ref),
+                out.as_mut_ptr(),
+            )
+        }
+        .init_on_success(out)
+    }
+}
