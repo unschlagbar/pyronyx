@@ -15,6 +15,7 @@ pub mod vtables;
 pub use extensions::*;
 
 unsafe extern "system" {
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetInstanceProcAddr.html>
     pub unsafe fn vkGetInstanceProcAddr(
         instance: vk::vkInstance,
         name: *const core::ffi::c_char,

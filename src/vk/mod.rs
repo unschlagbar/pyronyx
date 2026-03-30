@@ -24,6 +24,7 @@ use crate::vtables::to_option;
 
 pub use crate::vkGetInstanceProcAddr as get_instance_proc_addr;
 
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/vkEnumerateInstanceLayerProperties.html>
 pub fn enumerate_instance_layer_properties() -> Result<Vec<LayerProperties>, vkResult> {
     let pfn: vkEnumerateInstanceLayerProperties = to_option(unsafe {
         transmute(get_instance_proc_addr(
@@ -35,6 +36,7 @@ pub fn enumerate_instance_layer_properties() -> Result<Vec<LayerProperties>, vkR
     read_into_vec_result(|count, data| unsafe { (pfn)(count, data) })
 }
 
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/vkEnumerateInstanceExtensionProperties.html>
 pub fn enumerate_instance_extension_properties(
     layer_name: Option<&CStr>,
 ) -> Result<Vec<ExtensionProperties>, vkResult> {
@@ -52,6 +54,27 @@ pub fn enumerate_instance_extension_properties(
             data,
         )
     })
+}
+
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/vkEnumerateInstanceVersion.html>
+///
+/// Since it's a Vulkan 1.1 function,
+/// it just returns [`API_VERSION_1_0`] if the fn is not available!
+pub fn enumerate_instance_version() -> u32 {
+    let pfn: Option<vkEnumerateInstanceVersion> = to_option(unsafe {
+        transmute(get_instance_proc_addr(
+            vkInstance::null(),
+            c"vkEnumerateInstanceVersion".as_ptr(),
+        ))
+    });
+
+    if let Some(pfn) = pfn {
+        let mut version = API_VERSION_1_0;
+        let _ = unsafe { (pfn)(&mut version) };
+        version
+    } else {
+        API_VERSION_1_0
+    }
 }
 
 impl vkResult {

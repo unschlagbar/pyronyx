@@ -65,7 +65,7 @@ let create_info = vk::InstanceCreateInfo {
 let instance = vk::Instance::create(&create_info, None)?;
 
 // surface and debug functions are already on instance
-let surface = instance.create_win32_surface(&surface_info, None)?;
+let surface = instance.create_wayland_surface(&surface_info, None)?;
 instance.destroy_surface(surface, None);
 ```
 
