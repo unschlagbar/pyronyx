@@ -16,7 +16,7 @@ pub trait SurfaceInstance {
         &self,
         create_info: &SurfaceCreateInfoOHOS,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<SurfaceKHR, vkResult>;
+    ) -> Result<SurfaceKHR, Error>;
 }
 
 impl SurfaceInstance for Instance {
@@ -26,7 +26,7 @@ impl SurfaceInstance for Instance {
         &self,
         create_info: &SurfaceCreateInfoOHOS,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<SurfaceKHR, vkResult> {
+    ) -> Result<SurfaceKHR, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self

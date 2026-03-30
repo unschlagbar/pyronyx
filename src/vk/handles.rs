@@ -13,7 +13,7 @@
 //!   resolved at runtime so the crate works with any Vulkan loader / ICD.
 //! - **Idiomatic Rust API**: The generated `impl` blocks (see `codegen` module)
 //!   turn raw C signatures into nice Rust signatures (`&mut [T]`, `Vec<T>`,
-//!   `Result<_, vkResult>`, etc.).
+//!   `Result<_, Error>`, etc.).
 //! - **Safety**: Most Vulkan calls are inherently unsafe. This wrapper makes
 //!   the *safe* parts as ergonomic as possible while clearly marking the
 //!   unsafe parts.
@@ -35,9 +35,9 @@
 use crate::{
     utils::{raw_option, read_into_vec_result},
     vk::{
-        self, AllocationCallbacks, CommandBufferAllocateInfo, DeviceCreateInfo, InstanceCreateInfo,
-        get_instance_proc_addr, vkCommandBuffer, vkCreateInstance, vkDevice, vkGetDeviceProcAddr,
-        vkInstance, vkPhysicalDevice, vkQueue, vkResult,
+        self, AllocationCallbacks, CommandBufferAllocateInfo, DeviceCreateInfo, Error,
+        InstanceCreateInfo, get_instance_proc_addr, vkCommandBuffer, vkCreateInstance, vkDevice,
+        vkGetDeviceProcAddr, vkInstance, vkPhysicalDevice, vkQueue, vkResult,
     },
     vtables::{
         CommandBufferFn, DeviceFn, DeviceVTable, InstanceFn, InstanceVTable, PhysicalDeviceFn,
@@ -92,7 +92,7 @@ impl Instance {
     pub fn create(
         create_info: &InstanceCreateInfo,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<Instance, vkResult> {
+    ) -> Result<Instance, Error> {
         let pfn: vkCreateInstance = to_option(unsafe {
             transmute(get_instance_proc_addr(
                 vkInstance::null(),
@@ -105,7 +105,7 @@ impl Instance {
         let result = unsafe { (pfn)(create_info, raw_option(allocator), &mut instance) };
 
         if !matches!(result, vkResult::Success) {
-            return Err(result);
+            return Err(result.into());
         }
 
         let loader =
@@ -151,7 +151,7 @@ impl Instance {
     /// use the `VK_LAYER_KHRONOS_validation` layer in [`InstanceCreateInfo`]
     /// together with the Vulkan SDK to catch these bugs!
     #[inline]
-    pub unsafe fn enumerate_physical_devices(&self) -> Result<Vec<PhysicalDevice>, vkResult> {
+    pub unsafe fn enumerate_physical_devices(&self) -> Result<Vec<PhysicalDevice>, Error> {
         self.enumerate_physical_devices_raw().map(|p| {
             p.into_iter()
                 .map(|d| unsafe { d.to_physical_device(self) })
@@ -164,7 +164,7 @@ impl Instance {
     ///
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkEnumeratePhysicalDevices.html>
     #[inline]
-    pub fn enumerate_physical_devices_raw(&self) -> Result<Vec<vkPhysicalDevice>, vkResult> {
+    pub fn enumerate_physical_devices_raw(&self) -> Result<Vec<vkPhysicalDevice>, Error> {
         read_into_vec_result(|count, data| unsafe {
             (self.fns().v1_0.enumerate_physical_devices.unwrap())(self.handle(), count, data)
         })
@@ -203,7 +203,7 @@ impl PhysicalDevice {
         create_info: &DeviceCreateInfo,
         allocator: Option<&AllocationCallbacks>,
         instance: &Instance,
-    ) -> Result<Device, vkResult> {
+    ) -> Result<Device, Error> {
         let mut handle = MaybeUninit::uninit();
         let result = unsafe {
             (self.v_table.v1_0.create_device.unwrap())(
@@ -215,7 +215,7 @@ impl PhysicalDevice {
         };
 
         let handle = if !matches!(result, vkResult::Success) {
-            return Err(result);
+            return Err(result.into());
         } else {
             unsafe { handle.assume_init() }
         };
@@ -374,7 +374,7 @@ impl Device {
     pub unsafe fn allocate_command_buffers(
         &self,
         allocate_info: &CommandBufferAllocateInfo,
-    ) -> Result<Vec<CommandBuffer>, vkResult> {
+    ) -> Result<Vec<CommandBuffer>, Error> {
         self.allocate_command_buffers_raw(allocate_info).map(|c| {
             c.into_iter()
                 .map(|c| unsafe { c.to_command_buffer(self) })
@@ -389,22 +389,16 @@ impl Device {
     pub fn allocate_command_buffers_raw(
         &self,
         allocate_info: &CommandBufferAllocateInfo,
-    ) -> Result<Vec<vkCommandBuffer>, vkResult> {
+    ) -> Result<Vec<vkCommandBuffer>, Error> {
         let mut buffers = Vec::with_capacity(allocate_info.command_buffer_count as usize);
-        let result = unsafe {
+        unsafe {
             (self.fns().v1_0.allocate_command_buffers.unwrap())(
                 self.handle(),
                 allocate_info,
                 buffers.as_mut_ptr(),
             )
             .set_len_on_success(buffers, allocate_info.command_buffer_count as usize)
-        };
-
-        if let Err(e) = result {
-            return Err(e);
         }
-
-        result
     }
 }
 

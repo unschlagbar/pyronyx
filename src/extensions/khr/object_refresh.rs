@@ -32,7 +32,7 @@ pub trait ObjectRefreshPhysicalDevice {
     fn get_refreshable_object_types(
         &self,
         refreshable_object_types: &mut [ObjectType],
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 }
 
 impl ObjectRefreshPhysicalDevice for PhysicalDevice {
@@ -41,7 +41,7 @@ impl ObjectRefreshPhysicalDevice for PhysicalDevice {
     fn get_refreshable_object_types(
         &self,
         refreshable_object_types: &mut [ObjectType],
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()

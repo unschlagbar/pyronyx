@@ -16,26 +16,26 @@ pub trait DisplayControlDevice {
         &self,
         display: DisplayKHR,
         display_power_info: &DisplayPowerInfoEXT,
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 
     fn register_device_event(
         &self,
         device_event_info: &DeviceEventInfoEXT,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<Fence, vkResult>;
+    ) -> Result<Fence, Error>;
 
     fn register_display_event(
         &self,
         display: DisplayKHR,
         display_event_info: &DisplayEventInfoEXT,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<Fence, vkResult>;
+    ) -> Result<Fence, Error>;
 
     fn get_swapchain_counter(
         &self,
         swapchain: SwapchainKHR,
         counter: SurfaceCounterFlagsEXT,
-    ) -> Result<u64, vkResult>;
+    ) -> Result<u64, Error>;
 }
 
 impl DisplayControlDevice for Device {
@@ -45,7 +45,7 @@ impl DisplayControlDevice for Device {
         &self,
         display: DisplayKHR,
         display_power_info: &DisplayPowerInfoEXT,
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()
@@ -63,7 +63,7 @@ impl DisplayControlDevice for Device {
         &self,
         device_event_info: &DeviceEventInfoEXT,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<Fence, vkResult> {
+    ) -> Result<Fence, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self
@@ -88,7 +88,7 @@ impl DisplayControlDevice for Device {
         display: DisplayKHR,
         display_event_info: &DisplayEventInfoEXT,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<Fence, vkResult> {
+    ) -> Result<Fence, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self
@@ -113,7 +113,7 @@ impl DisplayControlDevice for Device {
         &self,
         swapchain: SwapchainKHR,
         counter: SurfaceCounterFlagsEXT,
-    ) -> Result<u64, vkResult> {
+    ) -> Result<u64, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self

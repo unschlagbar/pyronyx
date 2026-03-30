@@ -15,13 +15,13 @@ pub trait ExternalMemoryMetalDevice {
     fn get_memory_metal_handle(
         &self,
         get_metal_handle_info: &MemoryGetMetalHandleInfoEXT,
-    ) -> Result<*mut c_void, vkResult>;
+    ) -> Result<*mut c_void, Error>;
 
     fn get_memory_metal_handle_properties(
         &self,
         handle_type: ExternalMemoryHandleTypeFlags,
         handle: &c_void,
-    ) -> Result<MemoryMetalHandlePropertiesEXT<'_>, vkResult>;
+    ) -> Result<MemoryMetalHandlePropertiesEXT<'_>, Error>;
 }
 
 impl ExternalMemoryMetalDevice for Device {
@@ -30,7 +30,7 @@ impl ExternalMemoryMetalDevice for Device {
     fn get_memory_metal_handle(
         &self,
         get_metal_handle_info: &MemoryGetMetalHandleInfoEXT,
-    ) -> Result<*mut c_void, vkResult> {
+    ) -> Result<*mut c_void, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self
@@ -51,7 +51,7 @@ impl ExternalMemoryMetalDevice for Device {
         &self,
         handle_type: ExternalMemoryHandleTypeFlags,
         handle: &c_void,
-    ) -> Result<MemoryMetalHandlePropertiesEXT<'_>, vkResult> {
+    ) -> Result<MemoryMetalHandlePropertiesEXT<'_>, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self

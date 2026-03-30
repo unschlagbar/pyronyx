@@ -17,7 +17,7 @@ pub trait ValidationCacheDevice {
         &self,
         create_info: &ValidationCacheCreateInfoEXT,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<ValidationCacheEXT, vkResult>;
+    ) -> Result<ValidationCacheEXT, Error>;
 
     fn destroy_validation_cache(
         &self,
@@ -29,13 +29,13 @@ pub trait ValidationCacheDevice {
         &self,
         validation_cache: ValidationCacheEXT,
         data: &mut [c_void],
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 
     fn merge_validation_caches(
         &self,
         dst_cache: ValidationCacheEXT,
         src_caches: &[ValidationCacheEXT],
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 }
 
 impl ValidationCacheDevice for Device {
@@ -45,7 +45,7 @@ impl ValidationCacheDevice for Device {
         &self,
         create_info: &ValidationCacheCreateInfoEXT,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<ValidationCacheEXT, vkResult> {
+    ) -> Result<ValidationCacheEXT, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self
@@ -90,7 +90,7 @@ impl ValidationCacheDevice for Device {
         &self,
         validation_cache: ValidationCacheEXT,
         data: &mut [c_void],
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()
@@ -113,7 +113,7 @@ impl ValidationCacheDevice for Device {
         &self,
         dst_cache: ValidationCacheEXT,
         src_caches: &[ValidationCacheEXT],
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()

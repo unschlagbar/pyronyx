@@ -15,7 +15,7 @@ pub trait PresentWaitDevice {
         swapchain: SwapchainKHR,
         present_id: u64,
         timeout: u64,
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 }
 
 impl PresentWaitDevice for Device {
@@ -26,7 +26,7 @@ impl PresentWaitDevice for Device {
         swapchain: SwapchainKHR,
         present_id: u64,
         timeout: u64,
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()

@@ -15,12 +15,12 @@ pub trait DebugUtilsDevice {
     fn set_debug_utils_object_name(
         &self,
         name_info: &DebugUtilsObjectNameInfoEXT,
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 
     fn set_debug_utils_object_tag(
         &self,
         tag_info: &DebugUtilsObjectTagInfoEXT,
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 }
 
 impl DebugUtilsDevice for Device {
@@ -29,7 +29,7 @@ impl DebugUtilsDevice for Device {
     fn set_debug_utils_object_name(
         &self,
         name_info: &DebugUtilsObjectNameInfoEXT,
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()
@@ -46,7 +46,7 @@ impl DebugUtilsDevice for Device {
     fn set_debug_utils_object_tag(
         &self,
         tag_info: &DebugUtilsObjectTagInfoEXT,
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()
@@ -162,7 +162,7 @@ pub trait DebugUtilsInstance {
         &self,
         create_info: &DebugUtilsMessengerCreateInfoEXT,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<DebugUtilsMessengerEXT, vkResult>;
+    ) -> Result<DebugUtilsMessengerEXT, Error>;
 
     fn destroy_debug_utils_messenger(
         &self,
@@ -185,7 +185,7 @@ impl DebugUtilsInstance for Instance {
         &self,
         create_info: &DebugUtilsMessengerCreateInfoEXT,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<DebugUtilsMessengerEXT, vkResult> {
+    ) -> Result<DebugUtilsMessengerEXT, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self

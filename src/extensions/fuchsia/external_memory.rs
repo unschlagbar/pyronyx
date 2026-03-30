@@ -14,13 +14,13 @@ pub trait ExternalMemoryDevice {
     fn get_memory_zircon_handle(
         &self,
         get_zircon_handle_info: &MemoryGetZirconHandleInfoFUCHSIA,
-    ) -> Result<zx_handle_t, vkResult>;
+    ) -> Result<zx_handle_t, Error>;
 
     fn get_memory_zircon_handle_properties(
         &self,
         handle_type: ExternalMemoryHandleTypeFlags,
         zircon_handle: zx_handle_t,
-    ) -> Result<MemoryZirconHandlePropertiesFUCHSIA<'_>, vkResult>;
+    ) -> Result<MemoryZirconHandlePropertiesFUCHSIA<'_>, Error>;
 }
 
 impl ExternalMemoryDevice for Device {
@@ -29,7 +29,7 @@ impl ExternalMemoryDevice for Device {
     fn get_memory_zircon_handle(
         &self,
         get_zircon_handle_info: &MemoryGetZirconHandleInfoFUCHSIA,
-    ) -> Result<zx_handle_t, vkResult> {
+    ) -> Result<zx_handle_t, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self
@@ -52,7 +52,7 @@ impl ExternalMemoryDevice for Device {
         &self,
         handle_type: ExternalMemoryHandleTypeFlags,
         zircon_handle: zx_handle_t,
-    ) -> Result<MemoryZirconHandlePropertiesFUCHSIA<'_>, vkResult> {
+    ) -> Result<MemoryZirconHandlePropertiesFUCHSIA<'_>, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self

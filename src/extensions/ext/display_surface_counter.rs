@@ -14,7 +14,7 @@ pub trait DisplaySurfaceCounterPhysicalDevice {
     fn get_surface_capabilities2(
         &self,
         surface: SurfaceKHR,
-    ) -> Result<SurfaceCapabilities2EXT<'_>, vkResult>;
+    ) -> Result<SurfaceCapabilities2EXT<'_>, Error>;
 }
 
 impl DisplaySurfaceCounterPhysicalDevice for PhysicalDevice {
@@ -23,7 +23,7 @@ impl DisplaySurfaceCounterPhysicalDevice for PhysicalDevice {
     fn get_surface_capabilities2(
         &self,
         surface: SurfaceKHR,
-    ) -> Result<SurfaceCapabilities2EXT<'_>, vkResult> {
+    ) -> Result<SurfaceCapabilities2EXT<'_>, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self

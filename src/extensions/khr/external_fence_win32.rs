@@ -14,12 +14,12 @@ pub trait ExternalFenceWin32Device {
     fn get_fence_win32_handle(
         &self,
         get_win32_handle_info: &FenceGetWin32HandleInfoKHR,
-    ) -> Result<HANDLE, vkResult>;
+    ) -> Result<HANDLE, Error>;
 
     fn import_fence_win32_handle(
         &self,
         import_fence_win32_handle_info: &ImportFenceWin32HandleInfoKHR,
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 }
 
 impl ExternalFenceWin32Device for Device {
@@ -28,7 +28,7 @@ impl ExternalFenceWin32Device for Device {
     fn get_fence_win32_handle(
         &self,
         get_win32_handle_info: &FenceGetWin32HandleInfoKHR,
-    ) -> Result<HANDLE, vkResult> {
+    ) -> Result<HANDLE, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self
@@ -48,7 +48,7 @@ impl ExternalFenceWin32Device for Device {
     fn import_fence_win32_handle(
         &self,
         import_fence_win32_handle_info: &ImportFenceWin32HandleInfoKHR,
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()

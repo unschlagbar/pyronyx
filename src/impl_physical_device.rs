@@ -80,7 +80,7 @@ impl PhysicalDevice {
         tiling: ImageTiling,
         usage: ImageUsageFlags,
         flags: ImageCreateFlags,
-    ) -> Result<ImageFormatProperties, vkResult> {
+    ) -> Result<ImageFormatProperties, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self
@@ -102,7 +102,7 @@ impl PhysicalDevice {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkEnumerateDeviceLayerProperties.html>
     #[inline]
-    pub fn enumerate_device_layer_properties(&self) -> Result<Vec<LayerProperties>, vkResult> {
+    pub fn enumerate_device_layer_properties(&self) -> Result<Vec<LayerProperties>, Error> {
         read_into_vec_result(|count, data| unsafe {
             (self.fns().v1_0.enumerate_device_layer_properties.unwrap())(self.handle, count, data)
         })
@@ -113,7 +113,7 @@ impl PhysicalDevice {
     pub fn enumerate_device_extension_properties(
         &self,
         layer_name: Option<&c_char>,
-    ) -> Result<Vec<ExtensionProperties>, vkResult> {
+    ) -> Result<Vec<ExtensionProperties>, Error> {
         read_into_vec_result(|count, data| unsafe {
             (self
                 .fns()
@@ -189,7 +189,7 @@ impl PhysicalDevice {
     pub fn get_image_format_properties2(
         &self,
         image_format_info: &PhysicalDeviceImageFormatInfo2,
-    ) -> Result<ImageFormatProperties2<'_>, vkResult> {
+    ) -> Result<ImageFormatProperties2<'_>, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self
@@ -311,7 +311,7 @@ impl PhysicalDevice {
     pub fn get_tool_properties(
         &self,
         tool_properties: &mut [PhysicalDeviceToolProperties],
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self.fns().v1_3.get_physical_device_tool_properties.unwrap())(
                 self.handle,

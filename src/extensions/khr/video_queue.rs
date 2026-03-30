@@ -15,13 +15,13 @@ pub trait VideoQueuePhysicalDevice {
     fn get_video_capabilities(
         &self,
         video_profile: &VideoProfileInfoKHR,
-    ) -> Result<VideoCapabilitiesKHR<'_>, vkResult>;
+    ) -> Result<VideoCapabilitiesKHR<'_>, Error>;
 
     fn get_video_format_properties(
         &self,
         video_format_info: &PhysicalDeviceVideoFormatInfoKHR,
         video_format_properties: &mut [VideoFormatPropertiesKHR],
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 }
 
 impl VideoQueuePhysicalDevice for PhysicalDevice {
@@ -30,7 +30,7 @@ impl VideoQueuePhysicalDevice for PhysicalDevice {
     fn get_video_capabilities(
         &self,
         video_profile: &VideoProfileInfoKHR,
-    ) -> Result<VideoCapabilitiesKHR<'_>, vkResult> {
+    ) -> Result<VideoCapabilitiesKHR<'_>, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self
@@ -53,7 +53,7 @@ impl VideoQueuePhysicalDevice for PhysicalDevice {
         &self,
         video_format_info: &PhysicalDeviceVideoFormatInfoKHR,
         video_format_properties: &mut [VideoFormatPropertiesKHR],
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()
@@ -76,7 +76,7 @@ pub trait VideoQueueDevice {
         &self,
         create_info: &VideoSessionCreateInfoKHR,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<VideoSessionKHR, vkResult>;
+    ) -> Result<VideoSessionKHR, Error>;
 
     fn destroy_video_session(
         &self,
@@ -88,13 +88,13 @@ pub trait VideoQueueDevice {
         &self,
         create_info: &VideoSessionParametersCreateInfoKHR,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<VideoSessionParametersKHR, vkResult>;
+    ) -> Result<VideoSessionParametersKHR, Error>;
 
     fn update_video_session_parameters(
         &self,
         video_session_parameters: VideoSessionParametersKHR,
         update_info: &VideoSessionParametersUpdateInfoKHR,
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 
     fn destroy_video_session_parameters(
         &self,
@@ -106,13 +106,13 @@ pub trait VideoQueueDevice {
         &self,
         video_session: VideoSessionKHR,
         memory_requirements: &mut [VideoSessionMemoryRequirementsKHR],
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 
     fn bind_video_session_memory(
         &self,
         video_session: VideoSessionKHR,
         bind_session_memory_infos: &[BindVideoSessionMemoryInfoKHR],
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 }
 
 impl VideoQueueDevice for Device {
@@ -122,7 +122,7 @@ impl VideoQueueDevice for Device {
         &self,
         create_info: &VideoSessionCreateInfoKHR,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<VideoSessionKHR, vkResult> {
+    ) -> Result<VideoSessionKHR, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self
@@ -167,7 +167,7 @@ impl VideoQueueDevice for Device {
         &self,
         create_info: &VideoSessionParametersCreateInfoKHR,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<VideoSessionParametersKHR, vkResult> {
+    ) -> Result<VideoSessionParametersKHR, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self
@@ -191,7 +191,7 @@ impl VideoQueueDevice for Device {
         &self,
         video_session_parameters: VideoSessionParametersKHR,
         update_info: &VideoSessionParametersUpdateInfoKHR,
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()
@@ -234,7 +234,7 @@ impl VideoQueueDevice for Device {
         &self,
         video_session: VideoSessionKHR,
         memory_requirements: &mut [VideoSessionMemoryRequirementsKHR],
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()
@@ -257,7 +257,7 @@ impl VideoQueueDevice for Device {
         &self,
         video_session: VideoSessionKHR,
         bind_session_memory_infos: &[BindVideoSessionMemoryInfoKHR],
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()

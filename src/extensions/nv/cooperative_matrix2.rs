@@ -13,7 +13,7 @@ pub trait CooperativeMatrix2PhysicalDevice {
     fn get_cooperative_matrix_flexible_dimensions_properties(
         &self,
         properties: &mut [CooperativeMatrixFlexibleDimensionsPropertiesNV],
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 }
 
 impl CooperativeMatrix2PhysicalDevice for PhysicalDevice {
@@ -22,7 +22,7 @@ impl CooperativeMatrix2PhysicalDevice for PhysicalDevice {
     fn get_cooperative_matrix_flexible_dimensions_properties(
         &self,
         properties: &mut [CooperativeMatrixFlexibleDimensionsPropertiesNV],
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()

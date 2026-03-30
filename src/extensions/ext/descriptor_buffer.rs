@@ -25,27 +25,27 @@ pub trait DescriptorBufferDevice {
     fn get_buffer_opaque_capture_descriptor_data(
         &self,
         info: &BufferCaptureDescriptorDataInfoEXT,
-    ) -> Result<c_void, vkResult>;
+    ) -> Result<c_void, Error>;
 
     fn get_image_opaque_capture_descriptor_data(
         &self,
         info: &ImageCaptureDescriptorDataInfoEXT,
-    ) -> Result<c_void, vkResult>;
+    ) -> Result<c_void, Error>;
 
     fn get_image_view_opaque_capture_descriptor_data(
         &self,
         info: &ImageViewCaptureDescriptorDataInfoEXT,
-    ) -> Result<c_void, vkResult>;
+    ) -> Result<c_void, Error>;
 
     fn get_sampler_opaque_capture_descriptor_data(
         &self,
         info: &SamplerCaptureDescriptorDataInfoEXT,
-    ) -> Result<c_void, vkResult>;
+    ) -> Result<c_void, Error>;
 
     fn get_acceleration_structure_opaque_capture_descriptor_data(
         &self,
         info: &AccelerationStructureCaptureDescriptorDataInfoEXT,
-    ) -> Result<c_void, vkResult>;
+    ) -> Result<c_void, Error>;
 }
 
 impl DescriptorBufferDevice for Device {
@@ -113,7 +113,7 @@ impl DescriptorBufferDevice for Device {
     fn get_buffer_opaque_capture_descriptor_data(
         &self,
         info: &BufferCaptureDescriptorDataInfoEXT,
-    ) -> Result<c_void, vkResult> {
+    ) -> Result<c_void, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self
@@ -133,7 +133,7 @@ impl DescriptorBufferDevice for Device {
     fn get_image_opaque_capture_descriptor_data(
         &self,
         info: &ImageCaptureDescriptorDataInfoEXT,
-    ) -> Result<c_void, vkResult> {
+    ) -> Result<c_void, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self
@@ -153,7 +153,7 @@ impl DescriptorBufferDevice for Device {
     fn get_image_view_opaque_capture_descriptor_data(
         &self,
         info: &ImageViewCaptureDescriptorDataInfoEXT,
-    ) -> Result<c_void, vkResult> {
+    ) -> Result<c_void, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self
@@ -175,7 +175,7 @@ impl DescriptorBufferDevice for Device {
     fn get_sampler_opaque_capture_descriptor_data(
         &self,
         info: &SamplerCaptureDescriptorDataInfoEXT,
-    ) -> Result<c_void, vkResult> {
+    ) -> Result<c_void, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self
@@ -197,7 +197,7 @@ impl DescriptorBufferDevice for Device {
     fn get_acceleration_structure_opaque_capture_descriptor_data(
         &self,
         info: &AccelerationStructureCaptureDescriptorDataInfoEXT,
-    ) -> Result<c_void, vkResult> {
+    ) -> Result<c_void, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self

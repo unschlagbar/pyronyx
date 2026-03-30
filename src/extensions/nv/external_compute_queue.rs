@@ -16,7 +16,7 @@ pub trait ExternalComputeQueueDevice {
         &self,
         create_info: &ExternalComputeQueueCreateInfoNV,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<ExternalComputeQueueNV, vkResult>;
+    ) -> Result<ExternalComputeQueueNV, Error>;
 
     fn destroy_external_compute_queue(
         &self,
@@ -32,7 +32,7 @@ impl ExternalComputeQueueDevice for Device {
         &self,
         create_info: &ExternalComputeQueueCreateInfoNV,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<ExternalComputeQueueNV, vkResult> {
+    ) -> Result<ExternalComputeQueueNV, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self

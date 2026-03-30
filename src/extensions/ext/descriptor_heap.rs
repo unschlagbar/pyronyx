@@ -15,19 +15,19 @@ pub trait DescriptorHeapDevice {
         &self,
         samplers: &[SamplerCreateInfo],
         descriptors: &[HostAddressRangeEXT],
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 
     fn write_resource_descriptors(
         &self,
         resources: &[ResourceDescriptorInfoEXT],
         descriptors: &[HostAddressRangeEXT],
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 
     fn register_custom_border_color(
         &self,
         border_color: &SamplerCustomBorderColorCreateInfoEXT,
         request_index: bool,
-    ) -> Result<u32, vkResult>;
+    ) -> Result<u32, Error>;
 
     fn unregister_custom_border_color(&self, index: u32);
 
@@ -35,13 +35,13 @@ pub trait DescriptorHeapDevice {
         &self,
         images: &[Image],
         datas: &mut [HostAddressRangeEXT],
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 
     fn get_tensor_opaque_capture_data(
         &self,
         tensors: &[TensorARM],
         datas: &mut [HostAddressRangeEXT],
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 }
 
 impl DescriptorHeapDevice for Device {
@@ -51,7 +51,7 @@ impl DescriptorHeapDevice for Device {
         &self,
         samplers: &[SamplerCreateInfo],
         descriptors: &[HostAddressRangeEXT],
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         assert_eq!(samplers.len(), descriptors.len());
         unsafe {
             (self
@@ -75,7 +75,7 @@ impl DescriptorHeapDevice for Device {
         &self,
         resources: &[ResourceDescriptorInfoEXT],
         descriptors: &[HostAddressRangeEXT],
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         assert_eq!(resources.len(), descriptors.len());
         unsafe {
             (self
@@ -99,7 +99,7 @@ impl DescriptorHeapDevice for Device {
         &self,
         border_color: &SamplerCustomBorderColorCreateInfoEXT,
         request_index: bool,
-    ) -> Result<u32, vkResult> {
+    ) -> Result<u32, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self
@@ -136,7 +136,7 @@ impl DescriptorHeapDevice for Device {
         &self,
         images: &[Image],
         datas: &mut [HostAddressRangeEXT],
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         assert_eq!(images.len(), datas.len());
         unsafe {
             (self
@@ -160,7 +160,7 @@ impl DescriptorHeapDevice for Device {
         &self,
         tensors: &[TensorARM],
         datas: &mut [HostAddressRangeEXT],
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         assert_eq!(tensors.len(), datas.len());
         unsafe {
             (self

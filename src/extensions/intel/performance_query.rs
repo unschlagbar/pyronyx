@@ -14,24 +14,24 @@ pub trait PerformanceQueryDevice {
     fn initialize_performance_api(
         &self,
         initialize_info: &InitializePerformanceApiInfoINTEL,
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 
     fn uninitialize_performance_api(&self);
 
     fn acquire_performance_configuration(
         &self,
         acquire_info: &PerformanceConfigurationAcquireInfoINTEL,
-    ) -> Result<PerformanceConfigurationINTEL, vkResult>;
+    ) -> Result<PerformanceConfigurationINTEL, Error>;
 
     fn release_performance_configuration(
         &self,
         configuration: PerformanceConfigurationINTEL,
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 
     fn get_performance_parameter(
         &self,
         parameter: PerformanceParameterTypeINTEL,
-    ) -> Result<PerformanceValueINTEL, vkResult>;
+    ) -> Result<PerformanceValueINTEL, Error>;
 }
 
 impl PerformanceQueryDevice for Device {
@@ -40,7 +40,7 @@ impl PerformanceQueryDevice for Device {
     fn initialize_performance_api(
         &self,
         initialize_info: &InitializePerformanceApiInfoINTEL,
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()
@@ -70,7 +70,7 @@ impl PerformanceQueryDevice for Device {
     fn acquire_performance_configuration(
         &self,
         acquire_info: &PerformanceConfigurationAcquireInfoINTEL,
-    ) -> Result<PerformanceConfigurationINTEL, vkResult> {
+    ) -> Result<PerformanceConfigurationINTEL, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self
@@ -92,7 +92,7 @@ impl PerformanceQueryDevice for Device {
     fn release_performance_configuration(
         &self,
         configuration: PerformanceConfigurationINTEL,
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()
@@ -109,7 +109,7 @@ impl PerformanceQueryDevice for Device {
     fn get_performance_parameter(
         &self,
         parameter: PerformanceParameterTypeINTEL,
-    ) -> Result<PerformanceValueINTEL, vkResult> {
+    ) -> Result<PerformanceValueINTEL, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self
@@ -126,20 +126,18 @@ impl PerformanceQueryDevice for Device {
 }
 
 pub trait PerformanceQueryCommandBuffer {
-    fn set_performance_marker(
-        &self,
-        marker_info: &PerformanceMarkerInfoINTEL,
-    ) -> Result<(), vkResult>;
+    fn set_performance_marker(&self, marker_info: &PerformanceMarkerInfoINTEL)
+    -> Result<(), Error>;
 
     fn set_performance_stream_marker(
         &self,
         marker_info: &PerformanceStreamMarkerInfoINTEL,
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 
     fn set_performance_override(
         &self,
         override_info: &PerformanceOverrideInfoINTEL,
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 }
 
 impl PerformanceQueryCommandBuffer for CommandBuffer {
@@ -148,7 +146,7 @@ impl PerformanceQueryCommandBuffer for CommandBuffer {
     fn set_performance_marker(
         &self,
         marker_info: &PerformanceMarkerInfoINTEL,
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()
@@ -165,7 +163,7 @@ impl PerformanceQueryCommandBuffer for CommandBuffer {
     fn set_performance_stream_marker(
         &self,
         marker_info: &PerformanceStreamMarkerInfoINTEL,
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()
@@ -182,7 +180,7 @@ impl PerformanceQueryCommandBuffer for CommandBuffer {
     fn set_performance_override(
         &self,
         override_info: &PerformanceOverrideInfoINTEL,
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()
@@ -199,7 +197,7 @@ pub trait PerformanceQueryQueue {
     fn set_performance_configuration(
         &self,
         configuration: PerformanceConfigurationINTEL,
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 }
 
 impl PerformanceQueryQueue for Queue {
@@ -208,7 +206,7 @@ impl PerformanceQueryQueue for Queue {
     fn set_performance_configuration(
         &self,
         configuration: PerformanceConfigurationINTEL,
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()

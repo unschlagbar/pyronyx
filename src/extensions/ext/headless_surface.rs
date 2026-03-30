@@ -16,7 +16,7 @@ pub trait HeadlessSurfaceInstance {
         &self,
         create_info: &HeadlessSurfaceCreateInfoEXT,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<SurfaceKHR, vkResult>;
+    ) -> Result<SurfaceKHR, Error>;
 }
 
 impl HeadlessSurfaceInstance for Instance {
@@ -26,7 +26,7 @@ impl HeadlessSurfaceInstance for Instance {
         &self,
         create_info: &HeadlessSurfaceCreateInfoEXT,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<SurfaceKHR, vkResult> {
+    ) -> Result<SurfaceKHR, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self

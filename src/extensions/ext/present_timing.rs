@@ -15,24 +15,24 @@ pub trait PresentTimingDevice {
         &self,
         swapchain: SwapchainKHR,
         size: u32,
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 
     fn get_swapchain_timing_properties(
         &self,
         swapchain: SwapchainKHR,
         swapchain_timing_properties: *mut SwapchainTimingPropertiesEXT,
-    ) -> Result<u64, vkResult>;
+    ) -> Result<u64, Error>;
 
     fn get_swapchain_time_domain_properties(
         &self,
         swapchain: SwapchainKHR,
         swapchain_time_domain_properties: *mut SwapchainTimeDomainPropertiesEXT,
-    ) -> Result<u64, vkResult>;
+    ) -> Result<u64, Error>;
 
     fn get_past_presentation_timing(
         &self,
         past_presentation_timing_info: &PastPresentationTimingInfoEXT,
-    ) -> Result<PastPresentationTimingPropertiesEXT<'_>, vkResult>;
+    ) -> Result<PastPresentationTimingPropertiesEXT<'_>, Error>;
 }
 
 impl PresentTimingDevice for Device {
@@ -42,7 +42,7 @@ impl PresentTimingDevice for Device {
         &self,
         swapchain: SwapchainKHR,
         size: u32,
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()
@@ -62,7 +62,7 @@ impl PresentTimingDevice for Device {
         &self,
         swapchain: SwapchainKHR,
         swapchain_timing_properties: *mut SwapchainTimingPropertiesEXT,
-    ) -> Result<u64, vkResult> {
+    ) -> Result<u64, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self
@@ -86,7 +86,7 @@ impl PresentTimingDevice for Device {
         &self,
         swapchain: SwapchainKHR,
         swapchain_time_domain_properties: *mut SwapchainTimeDomainPropertiesEXT,
-    ) -> Result<u64, vkResult> {
+    ) -> Result<u64, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self
@@ -109,7 +109,7 @@ impl PresentTimingDevice for Device {
     fn get_past_presentation_timing(
         &self,
         past_presentation_timing_info: &PastPresentationTimingInfoEXT,
-    ) -> Result<PastPresentationTimingPropertiesEXT<'_>, vkResult> {
+    ) -> Result<PastPresentationTimingPropertiesEXT<'_>, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self

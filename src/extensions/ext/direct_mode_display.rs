@@ -10,13 +10,13 @@ pub const NAME: &CStr = c"VK_EXT_direct_mode_display";
 pub const SPEC_VERSION: u32 = 1;
 
 pub trait DirectModeDisplayPhysicalDevice {
-    fn release_display(&self, display: DisplayKHR) -> Result<(), vkResult>;
+    fn release_display(&self, display: DisplayKHR) -> Result<(), Error>;
 }
 
 impl DirectModeDisplayPhysicalDevice for PhysicalDevice {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkReleaseDisplayEXT.html>
     #[inline]
-    fn release_display(&self, display: DisplayKHR) -> Result<(), vkResult> {
+    fn release_display(&self, display: DisplayKHR) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()

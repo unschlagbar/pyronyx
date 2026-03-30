@@ -14,7 +14,7 @@ pub trait CalibratedTimestampsPhysicalDevice {
     fn get_calibrateable_time_domains(
         &self,
         time_domains: &mut [TimeDomainKHR],
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 }
 
 impl CalibratedTimestampsPhysicalDevice for PhysicalDevice {
@@ -23,7 +23,7 @@ impl CalibratedTimestampsPhysicalDevice for PhysicalDevice {
     fn get_calibrateable_time_domains(
         &self,
         time_domains: &mut [TimeDomainKHR],
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()
@@ -45,7 +45,7 @@ pub trait CalibratedTimestampsDevice {
         &self,
         timestamp_infos: &[CalibratedTimestampInfoKHR],
         timestamps: &mut [u64],
-    ) -> Result<u64, vkResult>;
+    ) -> Result<u64, Error>;
 }
 
 impl CalibratedTimestampsDevice for Device {
@@ -55,7 +55,7 @@ impl CalibratedTimestampsDevice for Device {
         &self,
         timestamp_infos: &[CalibratedTimestampInfoKHR],
         timestamps: &mut [u64],
-    ) -> Result<u64, vkResult> {
+    ) -> Result<u64, Error> {
         assert_eq!(timestamp_infos.len(), timestamps.len());
         let mut out = MaybeUninit::uninit();
         unsafe {

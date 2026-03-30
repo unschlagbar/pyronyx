@@ -3,18 +3,20 @@ mod commands;
 mod constants;
 mod display_bitflags;
 mod enums;
+mod error;
 mod handles;
 mod platform_types;
 mod types;
 
 use core::ffi::CStr;
 use core::mem::{MaybeUninit, transmute};
-use core::{fmt, ptr};
+use core::ptr;
 
 pub use bitflags::*;
 pub(crate) use commands::*;
 pub use constants::*;
 pub use enums::*;
+pub use error::Error;
 pub use handles::*;
 pub use platform_types::*;
 pub use types::*;
@@ -25,7 +27,7 @@ use crate::vtables::to_option;
 pub use crate::vkGetInstanceProcAddr as get_instance_proc_addr;
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkEnumerateInstanceLayerProperties.html>
-pub fn enumerate_instance_layer_properties() -> Result<Vec<LayerProperties>, vkResult> {
+pub fn enumerate_instance_layer_properties() -> Result<Vec<LayerProperties>, Error> {
     let pfn: vkEnumerateInstanceLayerProperties = to_option(unsafe {
         transmute(get_instance_proc_addr(
             vkInstance::null(),
@@ -39,7 +41,7 @@ pub fn enumerate_instance_layer_properties() -> Result<Vec<LayerProperties>, vkR
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkEnumerateInstanceExtensionProperties.html>
 pub fn enumerate_instance_extension_properties(
     layer_name: Option<&CStr>,
-) -> Result<Vec<ExtensionProperties>, vkResult> {
+) -> Result<Vec<ExtensionProperties>, Error> {
     let pfn: vkEnumerateInstanceExtensionProperties = to_option(unsafe {
         transmute(get_instance_proc_addr(
             vkInstance::null(),
@@ -79,107 +81,33 @@ pub fn enumerate_instance_version() -> u32 {
 
 impl vkResult {
     #[inline]
-    pub fn init_on_success<T>(&self, v: MaybeUninit<T>) -> Result<T, vkResult> {
+    pub fn init_on_success<T>(&self, v: MaybeUninit<T>) -> Result<T, Error> {
         match self {
             Self::Success => Ok(unsafe { v.assume_init() }),
-            _ => Err(*self),
+            _ => Err((*self).into()),
         }
     }
 
     #[inline]
-    pub fn result(&self) -> Result<(), vkResult> {
+    pub fn result(&self) -> Result<(), Error> {
         match self {
             Self::Success => Ok(()),
-            _ => Err(*self),
+            _ => Err((*self).into()),
         }
     }
 
     #[inline]
-    pub unsafe fn set_len_on_success<T>(
-        self,
-        mut v: Vec<T>,
-        len: usize,
-    ) -> Result<Vec<T>, vkResult> {
+    pub unsafe fn set_len_on_success<T>(self, mut v: Vec<T>, len: usize) -> Result<Vec<T>, Error> {
         match self {
             Self::Success => {
                 unsafe { v.set_len(len) };
                 Ok(v)
             }
-            _ => Err(self),
+            _ => Err(self.into()),
         }
     }
 }
 
-impl fmt::Display for vkResult {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let s = match self {
-            vkResult::Success => "Success",
-            vkResult::NotReady => "NotReady",
-            vkResult::Timeout => "Timeout",
-            vkResult::EventSet => "EventSet",
-            vkResult::EventReset => "EventReset",
-            vkResult::Incomplete => "Incomplete",
-            vkResult::ErrorOutOfHostMemory => "ErrorOutOfHostMemory",
-            vkResult::ErrorOutOfDeviceMemory => "ErrorOutOfDeviceMemory",
-            vkResult::ErrorInitializationFailed => "ErrorInitializationFailed",
-            vkResult::ErrorDeviceLost => "ErrorDeviceLost",
-            vkResult::ErrorMemoryMapFailed => "ErrorMemoryMapFailed",
-            vkResult::ErrorLayerNotPresent => "ErrorLayerNotPresent",
-            vkResult::ErrorExtensionNotPresent => "ErrorExtensionNotPresent",
-            vkResult::ErrorFeatureNotPresent => "ErrorFeatureNotPresent",
-            vkResult::ErrorIncompatibleDriver => "ErrorIncompatibleDriver",
-            vkResult::ErrorTooManyObjects => "ErrorTooManyObjects",
-            vkResult::ErrorFormatNotSupported => "ErrorFormatNotSupported",
-            vkResult::ErrorFragmentedPool => "ErrorFragmentedPool",
-            vkResult::ErrorUnknown => "ErrorUnknown",
-            vkResult::ErrorValidationFailed => "ErrorValidationFailed",
-            vkResult::ErrorOutOfPoolMemory => "ErrorOutOfPoolMemory",
-            vkResult::ErrorInvalidExternalHandle => "ErrorInvalidExternalHandle",
-            vkResult::ErrorInvalidOpaqueCaptureAddress => "ErrorInvalidOpaqueCaptureAddress",
-            vkResult::ErrorFragmentation => "ErrorFragmentation",
-            vkResult::PipelineCompileRequired => "PipelineCompileRequired",
-            vkResult::ErrorNotPermitted => "ErrorNotPermitted",
-            vkResult::ErrorInvalidPipelineCacheData => "ErrorInvalidPipelineCacheData",
-            vkResult::ErrorNoPipelineMatch => "ErrorNoPipelineMatch",
-            vkResult::ErrorSurfaceLostKHR => "ErrorSurfaceLostKHR",
-            vkResult::ErrorNativeWindowInUseKHR => "ErrorNativeWindowInUseKHR",
-            vkResult::SuboptimalKHR => "SuboptimalKHR",
-            vkResult::ErrorOutOfDateKHR => "ErrorOutOfDateKHR",
-            vkResult::ErrorIncompatibleDisplayKHR => "ErrorIncompatibleDisplayKHR",
-            vkResult::ErrorInvalidShaderNV => "ErrorInvalidShaderNV",
-            vkResult::ErrorImageUsageNotSupportedKHR => "ErrorImageUsageNotSupportedKHR",
-            vkResult::ErrorVideoPictureLayoutNotSupportedKHR => {
-                "ErrorVideoPictureLayoutNotSupportedKHR"
-            }
-            vkResult::ErrorVideoProfileOperationNotSupportedKHR => {
-                "ErrorVideoProfileOperationNotSupportedKHR"
-            }
-            vkResult::ErrorVideoProfileFormatNotSupportedKHR => {
-                "ErrorVideoProfileFormatNotSupportedKHR"
-            }
-            vkResult::ErrorVideoProfileCodecNotSupportedKHR => {
-                "ErrorVideoProfileCodecNotSupportedKHR"
-            }
-            vkResult::ErrorVideoStdVersionNotSupportedKHR => "ErrorVideoStdVersionNotSupportedKHR",
-            vkResult::ErrorInvalidDrmFormatModifierPlaneLayoutEXT => {
-                "ErrorInvalidDrmFormatModifierPlaneLayoutEXT"
-            }
-            vkResult::ErrorPresentTimingQueueFullEXT => "ErrorPresentTimingQueueFullEXT",
-            vkResult::ErrorFullScreenExclusiveModeLostEXT => "ErrorFullScreenExclusiveModeLostEXT",
-            vkResult::ThreadIdleKHR => "ThreadIdleKHR",
-            vkResult::ThreadDoneKHR => "ThreadDoneKHR",
-            vkResult::OperationDeferredKHR => "OperationDeferredKHR",
-            vkResult::OperationNotDeferredKHR => "OperationNotDeferredKHR",
-            vkResult::ErrorInvalidVideoStdParametersKHR => "ErrorInvalidVideoStdParametersKHR",
-            vkResult::ErrorCompressionExhaustedEXT => "ErrorCompressionExhaustedEXT",
-            vkResult::IncompatibleShaderBinaryEXT => "IncompatibleShaderBinaryEXT",
-            vkResult::PipelineBinaryMissingKHR => "PipelineBinaryMissingKHR",
-            vkResult::ErrorNotEnoughSpaceKHR => "ErrorNotEnoughSpaceKHR",
-        };
-
-        write!(f, "{s}")
-    }
-}
 impl vkPhysicalDevice {
     /// # Safety
     /// The returned [`PhysicalDevice`] borrows their function table from this

@@ -16,7 +16,7 @@ pub trait OpticalFlowPhysicalDevice {
         &self,
         optical_flow_image_format_info: &OpticalFlowImageFormatInfoNV,
         image_format_properties: &mut [OpticalFlowImageFormatPropertiesNV],
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 }
 
 impl OpticalFlowPhysicalDevice for PhysicalDevice {
@@ -26,7 +26,7 @@ impl OpticalFlowPhysicalDevice for PhysicalDevice {
         &self,
         optical_flow_image_format_info: &OpticalFlowImageFormatInfoNV,
         image_format_properties: &mut [OpticalFlowImageFormatPropertiesNV],
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()
@@ -49,7 +49,7 @@ pub trait OpticalFlowDevice {
         &self,
         create_info: &OpticalFlowSessionCreateInfoNV,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<OpticalFlowSessionNV, vkResult>;
+    ) -> Result<OpticalFlowSessionNV, Error>;
 
     fn destroy_optical_flow_session(
         &self,
@@ -63,7 +63,7 @@ pub trait OpticalFlowDevice {
         binding_point: OpticalFlowSessionBindingPointNV,
         view: ImageView,
         layout: ImageLayout,
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 }
 
 impl OpticalFlowDevice for Device {
@@ -73,7 +73,7 @@ impl OpticalFlowDevice for Device {
         &self,
         create_info: &OpticalFlowSessionCreateInfoNV,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<OpticalFlowSessionNV, vkResult> {
+    ) -> Result<OpticalFlowSessionNV, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self
@@ -120,7 +120,7 @@ impl OpticalFlowDevice for Device {
         binding_point: OpticalFlowSessionBindingPointNV,
         view: ImageView,
         layout: ImageLayout,
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()

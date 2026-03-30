@@ -13,14 +13,14 @@ pub const SPEC_VERSION: u32 = 4;
 pub trait DeviceGroupDevice {
     fn get_device_group_present_capabilities(
         &self,
-    ) -> Result<DeviceGroupPresentCapabilitiesKHR<'_>, vkResult>;
+    ) -> Result<DeviceGroupPresentCapabilitiesKHR<'_>, Error>;
 
     fn get_device_group_surface_present_modes(
         &self,
         surface: SurfaceKHR,
-    ) -> Result<DeviceGroupPresentModeFlagsKHR, vkResult>;
+    ) -> Result<DeviceGroupPresentModeFlagsKHR, Error>;
 
-    fn acquire_next_image2(&self, acquire_info: &AcquireNextImageInfoKHR) -> Result<u32, vkResult>;
+    fn acquire_next_image2(&self, acquire_info: &AcquireNextImageInfoKHR) -> Result<u32, Error>;
 }
 
 impl DeviceGroupDevice for Device {
@@ -28,7 +28,7 @@ impl DeviceGroupDevice for Device {
     #[inline]
     fn get_device_group_present_capabilities(
         &self,
-    ) -> Result<DeviceGroupPresentCapabilitiesKHR<'_>, vkResult> {
+    ) -> Result<DeviceGroupPresentCapabilitiesKHR<'_>, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self
@@ -48,7 +48,7 @@ impl DeviceGroupDevice for Device {
     fn get_device_group_surface_present_modes(
         &self,
         surface: SurfaceKHR,
-    ) -> Result<DeviceGroupPresentModeFlagsKHR, vkResult> {
+    ) -> Result<DeviceGroupPresentModeFlagsKHR, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self
@@ -65,7 +65,7 @@ impl DeviceGroupDevice for Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkAcquireNextImage2KHR.html>
     #[inline]
-    fn acquire_next_image2(&self, acquire_info: &AcquireNextImageInfoKHR) -> Result<u32, vkResult> {
+    fn acquire_next_image2(&self, acquire_info: &AcquireNextImageInfoKHR) -> Result<u32, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self
@@ -84,7 +84,7 @@ pub trait DeviceGroupPhysicalDevice {
         &self,
         surface: SurfaceKHR,
         rects: &mut [Rect2D],
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 }
 
 impl DeviceGroupPhysicalDevice for PhysicalDevice {
@@ -94,7 +94,7 @@ impl DeviceGroupPhysicalDevice for PhysicalDevice {
         &self,
         surface: SurfaceKHR,
         rects: &mut [Rect2D],
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()

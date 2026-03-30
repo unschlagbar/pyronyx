@@ -9,19 +9,19 @@ use core::ffi::c_void;
 impl CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkBeginCommandBuffer.html>
     #[inline]
-    pub fn begin(&self, begin_info: &CommandBufferBeginInfo) -> Result<(), vkResult> {
+    pub fn begin(&self, begin_info: &CommandBufferBeginInfo) -> Result<(), Error> {
         unsafe { (self.fns().v1_0.begin_command_buffer.unwrap())(self.handle, begin_info) }.result()
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkEndCommandBuffer.html>
     #[inline]
-    pub fn end(&self) -> Result<(), vkResult> {
+    pub fn end(&self) -> Result<(), Error> {
         unsafe { (self.fns().v1_0.end_command_buffer.unwrap())(self.handle) }.result()
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkResetCommandBuffer.html>
     #[inline]
-    pub fn reset(&self, flags: CommandBufferResetFlags) -> Result<(), vkResult> {
+    pub fn reset(&self, flags: CommandBufferResetFlags) -> Result<(), Error> {
         unsafe { (self.fns().v1_0.reset_command_buffer.unwrap())(self.handle, flags) }.result()
     }
 

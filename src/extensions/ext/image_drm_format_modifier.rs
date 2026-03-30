@@ -14,7 +14,7 @@ pub trait ImageDrmFormatModifierDevice {
     fn get_image_drm_format_modifier_properties(
         &self,
         image: Image,
-    ) -> Result<ImageDrmFormatModifierPropertiesEXT<'_>, vkResult>;
+    ) -> Result<ImageDrmFormatModifierPropertiesEXT<'_>, Error>;
 }
 
 impl ImageDrmFormatModifierDevice for Device {
@@ -23,7 +23,7 @@ impl ImageDrmFormatModifierDevice for Device {
     fn get_image_drm_format_modifier_properties(
         &self,
         image: Image,
-    ) -> Result<ImageDrmFormatModifierPropertiesEXT<'_>, vkResult> {
+    ) -> Result<ImageDrmFormatModifierPropertiesEXT<'_>, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self

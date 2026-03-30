@@ -15,7 +15,7 @@ pub trait PerformanceCountersByRegionPhysicalDevice {
         queue_family_index: u32,
         counters: &mut [PerformanceCounterARM],
         counter_descriptions: &mut [PerformanceCounterDescriptionARM],
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 }
 
 impl PerformanceCountersByRegionPhysicalDevice for PhysicalDevice {
@@ -26,7 +26,7 @@ impl PerformanceCountersByRegionPhysicalDevice for PhysicalDevice {
         queue_family_index: u32,
         counters: &mut [PerformanceCounterARM],
         counter_descriptions: &mut [PerformanceCounterDescriptionARM],
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         assert_eq!(counters.len(), counter_descriptions.len());
         unsafe {
             (self

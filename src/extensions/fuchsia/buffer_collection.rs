@@ -16,19 +16,19 @@ pub trait BufferCollectionDevice {
         &self,
         create_info: &BufferCollectionCreateInfoFUCHSIA,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<BufferCollectionFUCHSIA, vkResult>;
+    ) -> Result<BufferCollectionFUCHSIA, Error>;
 
     fn set_buffer_collection_buffer_constraints(
         &self,
         collection: BufferCollectionFUCHSIA,
         buffer_constraints_info: &BufferConstraintsInfoFUCHSIA,
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 
     fn set_buffer_collection_image_constraints(
         &self,
         collection: BufferCollectionFUCHSIA,
         image_constraints_info: &ImageConstraintsInfoFUCHSIA,
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 
     fn destroy_buffer_collection(
         &self,
@@ -39,7 +39,7 @@ pub trait BufferCollectionDevice {
     fn get_buffer_collection_properties(
         &self,
         collection: BufferCollectionFUCHSIA,
-    ) -> Result<BufferCollectionPropertiesFUCHSIA<'_>, vkResult>;
+    ) -> Result<BufferCollectionPropertiesFUCHSIA<'_>, Error>;
 }
 
 impl BufferCollectionDevice for Device {
@@ -49,7 +49,7 @@ impl BufferCollectionDevice for Device {
         &self,
         create_info: &BufferCollectionCreateInfoFUCHSIA,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<BufferCollectionFUCHSIA, vkResult> {
+    ) -> Result<BufferCollectionFUCHSIA, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self
@@ -73,7 +73,7 @@ impl BufferCollectionDevice for Device {
         &self,
         collection: BufferCollectionFUCHSIA,
         buffer_constraints_info: &BufferConstraintsInfoFUCHSIA,
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()
@@ -95,7 +95,7 @@ impl BufferCollectionDevice for Device {
         &self,
         collection: BufferCollectionFUCHSIA,
         image_constraints_info: &ImageConstraintsInfoFUCHSIA,
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()
@@ -137,7 +137,7 @@ impl BufferCollectionDevice for Device {
     fn get_buffer_collection_properties(
         &self,
         collection: BufferCollectionFUCHSIA,
-    ) -> Result<BufferCollectionPropertiesFUCHSIA<'_>, vkResult> {
+    ) -> Result<BufferCollectionPropertiesFUCHSIA<'_>, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self

@@ -17,7 +17,7 @@ pub trait TensorsDevice {
         &self,
         create_info: &TensorCreateInfoARM,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<TensorARM, vkResult>;
+    ) -> Result<TensorARM, Error>;
 
     fn destroy_tensor(&self, tensor: TensorARM, allocator: Option<&AllocationCallbacks>);
 
@@ -25,7 +25,7 @@ pub trait TensorsDevice {
         &self,
         create_info: &TensorViewCreateInfoARM,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<TensorViewARM, vkResult>;
+    ) -> Result<TensorViewARM, Error>;
 
     fn destroy_tensor_view(
         &self,
@@ -38,7 +38,7 @@ pub trait TensorsDevice {
         info: &TensorMemoryRequirementsInfoARM,
     ) -> MemoryRequirements2<'_>;
 
-    fn bind_tensor_memory(&self, bind_infos: &[BindTensorMemoryInfoARM]) -> Result<(), vkResult>;
+    fn bind_tensor_memory(&self, bind_infos: &[BindTensorMemoryInfoARM]) -> Result<(), Error>;
 
     fn get_device_tensor_memory_requirements(
         &self,
@@ -48,12 +48,12 @@ pub trait TensorsDevice {
     fn get_tensor_opaque_capture_descriptor_data(
         &self,
         info: &TensorCaptureDescriptorDataInfoARM,
-    ) -> Result<c_void, vkResult>;
+    ) -> Result<c_void, Error>;
 
     fn get_tensor_view_opaque_capture_descriptor_data(
         &self,
         info: &TensorViewCaptureDescriptorDataInfoARM,
-    ) -> Result<c_void, vkResult>;
+    ) -> Result<c_void, Error>;
 }
 
 impl TensorsDevice for Device {
@@ -63,7 +63,7 @@ impl TensorsDevice for Device {
         &self,
         create_info: &TensorCreateInfoARM,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<TensorARM, vkResult> {
+    ) -> Result<TensorARM, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self.fns().arm_tensors.as_ref().unwrap().create_tensor_arm)(
@@ -94,7 +94,7 @@ impl TensorsDevice for Device {
         &self,
         create_info: &TensorViewCreateInfoARM,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<TensorViewARM, vkResult> {
+    ) -> Result<TensorViewARM, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self
@@ -153,7 +153,7 @@ impl TensorsDevice for Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkBindTensorMemoryARM.html>
     #[inline]
-    fn bind_tensor_memory(&self, bind_infos: &[BindTensorMemoryInfoARM]) -> Result<(), vkResult> {
+    fn bind_tensor_memory(&self, bind_infos: &[BindTensorMemoryInfoARM]) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()
@@ -192,7 +192,7 @@ impl TensorsDevice for Device {
     fn get_tensor_opaque_capture_descriptor_data(
         &self,
         info: &TensorCaptureDescriptorDataInfoARM,
-    ) -> Result<c_void, vkResult> {
+    ) -> Result<c_void, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self
@@ -212,7 +212,7 @@ impl TensorsDevice for Device {
     fn get_tensor_view_opaque_capture_descriptor_data(
         &self,
         info: &TensorViewCaptureDescriptorDataInfoARM,
-    ) -> Result<c_void, vkResult> {
+    ) -> Result<c_void, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self

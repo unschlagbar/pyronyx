@@ -16,7 +16,7 @@ pub trait ExternalMemoryWin32Device {
         &self,
         memory: DeviceMemory,
         handle_type: ExternalMemoryHandleTypeFlagsNV,
-    ) -> Result<HANDLE, vkResult>;
+    ) -> Result<HANDLE, Error>;
 }
 
 impl ExternalMemoryWin32Device for Device {
@@ -26,7 +26,7 @@ impl ExternalMemoryWin32Device for Device {
         &self,
         memory: DeviceMemory,
         handle_type: ExternalMemoryHandleTypeFlagsNV,
-    ) -> Result<HANDLE, vkResult> {
+    ) -> Result<HANDLE, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self

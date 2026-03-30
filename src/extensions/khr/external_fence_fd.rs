@@ -12,15 +12,15 @@ pub const NAME: &CStr = c"VK_KHR_external_fence_fd";
 pub const SPEC_VERSION: u32 = 1;
 
 pub trait ExternalFenceFdDevice {
-    fn get_fence_fd(&self, get_fd_info: &FenceGetFdInfoKHR) -> Result<c_int, vkResult>;
+    fn get_fence_fd(&self, get_fd_info: &FenceGetFdInfoKHR) -> Result<c_int, Error>;
 
-    fn import_fence_fd(&self, import_fence_fd_info: &ImportFenceFdInfoKHR) -> Result<(), vkResult>;
+    fn import_fence_fd(&self, import_fence_fd_info: &ImportFenceFdInfoKHR) -> Result<(), Error>;
 }
 
 impl ExternalFenceFdDevice for Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetFenceFdKHR.html>
     #[inline]
-    fn get_fence_fd(&self, get_fd_info: &FenceGetFdInfoKHR) -> Result<c_int, vkResult> {
+    fn get_fence_fd(&self, get_fd_info: &FenceGetFdInfoKHR) -> Result<c_int, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self
@@ -35,7 +35,7 @@ impl ExternalFenceFdDevice for Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkImportFenceFdKHR.html>
     #[inline]
-    fn import_fence_fd(&self, import_fence_fd_info: &ImportFenceFdInfoKHR) -> Result<(), vkResult> {
+    fn import_fence_fd(&self, import_fence_fd_info: &ImportFenceFdInfoKHR) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()

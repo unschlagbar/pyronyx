@@ -17,7 +17,7 @@ pub trait PipelineBinaryDevice {
         &self,
         create_info: &PipelineBinaryCreateInfoKHR,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<PipelineBinaryHandlesInfoKHR<'_>, vkResult>;
+    ) -> Result<PipelineBinaryHandlesInfoKHR<'_>, Error>;
 
     fn destroy_pipeline_binary(
         &self,
@@ -28,20 +28,20 @@ pub trait PipelineBinaryDevice {
     fn get_pipeline_key(
         &self,
         pipeline_create_info: Option<&PipelineCreateInfoKHR>,
-    ) -> Result<PipelineBinaryKeyKHR<'_>, vkResult>;
+    ) -> Result<PipelineBinaryKeyKHR<'_>, Error>;
 
     fn get_pipeline_binary_data(
         &self,
         info: &PipelineBinaryDataInfoKHR,
         pipeline_binary_key: *mut PipelineBinaryKeyKHR,
         pipeline_binary_data: &mut [c_void],
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 
     fn release_captured_pipeline_data(
         &self,
         info: &ReleaseCapturedPipelineDataInfoKHR,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 }
 
 impl PipelineBinaryDevice for Device {
@@ -51,7 +51,7 @@ impl PipelineBinaryDevice for Device {
         &self,
         create_info: &PipelineBinaryCreateInfoKHR,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<PipelineBinaryHandlesInfoKHR<'_>, vkResult> {
+    ) -> Result<PipelineBinaryHandlesInfoKHR<'_>, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self
@@ -95,7 +95,7 @@ impl PipelineBinaryDevice for Device {
     fn get_pipeline_key(
         &self,
         pipeline_create_info: Option<&PipelineCreateInfoKHR>,
-    ) -> Result<PipelineBinaryKeyKHR<'_>, vkResult> {
+    ) -> Result<PipelineBinaryKeyKHR<'_>, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self
@@ -119,7 +119,7 @@ impl PipelineBinaryDevice for Device {
         info: &PipelineBinaryDataInfoKHR,
         pipeline_binary_key: *mut PipelineBinaryKeyKHR,
         pipeline_binary_data: &mut [c_void],
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()
@@ -143,7 +143,7 @@ impl PipelineBinaryDevice for Device {
         &self,
         info: &ReleaseCapturedPipelineDataInfoKHR,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()

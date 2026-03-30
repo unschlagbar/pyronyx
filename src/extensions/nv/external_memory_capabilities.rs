@@ -20,7 +20,7 @@ pub trait ExternalMemoryCapabilitiesPhysicalDevice {
         usage: ImageUsageFlags,
         flags: ImageCreateFlags,
         external_handle_type: ExternalMemoryHandleTypeFlagsNV,
-    ) -> Result<ExternalImageFormatPropertiesNV, vkResult>;
+    ) -> Result<ExternalImageFormatPropertiesNV, Error>;
 }
 
 impl ExternalMemoryCapabilitiesPhysicalDevice for PhysicalDevice {
@@ -34,7 +34,7 @@ impl ExternalMemoryCapabilitiesPhysicalDevice for PhysicalDevice {
         usage: ImageUsageFlags,
         flags: ImageCreateFlags,
         external_handle_type: ExternalMemoryHandleTypeFlagsNV,
-    ) -> Result<ExternalImageFormatPropertiesNV, vkResult> {
+    ) -> Result<ExternalImageFormatPropertiesNV, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self

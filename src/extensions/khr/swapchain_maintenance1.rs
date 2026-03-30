@@ -13,7 +13,7 @@ pub trait SwapchainMaintenance1Device {
     fn release_swapchain_images(
         &self,
         release_info: &ReleaseSwapchainImagesInfoKHR,
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 }
 
 impl SwapchainMaintenance1Device for Device {
@@ -22,7 +22,7 @@ impl SwapchainMaintenance1Device for Device {
     fn release_swapchain_images(
         &self,
         release_info: &ReleaseSwapchainImagesInfoKHR,
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()

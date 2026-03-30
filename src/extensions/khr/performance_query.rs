@@ -16,7 +16,7 @@ pub trait PerformanceQueryPhysicalDevice {
         queue_family_index: u32,
         counters: &mut [PerformanceCounterKHR],
         counter_descriptions: &mut [PerformanceCounterDescriptionKHR],
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 
     fn get_queue_family_performance_query_passes(
         &self,
@@ -32,7 +32,7 @@ impl PerformanceQueryPhysicalDevice for PhysicalDevice {
         queue_family_index: u32,
         counters: &mut [PerformanceCounterKHR],
         counter_descriptions: &mut [PerformanceCounterDescriptionKHR],
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         assert_eq!(counters.len(), counter_descriptions.len());
         unsafe {
             (self
@@ -75,7 +75,7 @@ impl PerformanceQueryPhysicalDevice for PhysicalDevice {
 }
 
 pub trait PerformanceQueryDevice {
-    fn acquire_profiling_lock(&self, info: &AcquireProfilingLockInfoKHR) -> Result<(), vkResult>;
+    fn acquire_profiling_lock(&self, info: &AcquireProfilingLockInfoKHR) -> Result<(), Error>;
 
     fn release_profiling_lock(&self);
 }
@@ -83,7 +83,7 @@ pub trait PerformanceQueryDevice {
 impl PerformanceQueryDevice for Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkAcquireProfilingLockKHR.html>
     #[inline]
-    fn acquire_profiling_lock(&self, info: &AcquireProfilingLockInfoKHR) -> Result<(), vkResult> {
+    fn acquire_profiling_lock(&self, info: &AcquireProfilingLockInfoKHR) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()

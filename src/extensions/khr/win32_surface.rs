@@ -16,7 +16,7 @@ pub trait Win32SurfaceInstance {
         &self,
         create_info: &Win32SurfaceCreateInfoKHR,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<SurfaceKHR, vkResult>;
+    ) -> Result<SurfaceKHR, Error>;
 }
 
 impl Win32SurfaceInstance for Instance {
@@ -26,7 +26,7 @@ impl Win32SurfaceInstance for Instance {
         &self,
         create_info: &Win32SurfaceCreateInfoKHR,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<SurfaceKHR, vkResult> {
+    ) -> Result<SurfaceKHR, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self

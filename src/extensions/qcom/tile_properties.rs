@@ -15,12 +15,12 @@ pub trait TilePropertiesDevice {
         &self,
         framebuffer: Framebuffer,
         properties: &mut [TilePropertiesQCOM],
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 
     fn get_dynamic_rendering_tile_properties(
         &self,
         rendering_info: &RenderingInfo,
-    ) -> Result<TilePropertiesQCOM<'_>, vkResult>;
+    ) -> Result<TilePropertiesQCOM<'_>, Error>;
 }
 
 impl TilePropertiesDevice for Device {
@@ -30,7 +30,7 @@ impl TilePropertiesDevice for Device {
         &self,
         framebuffer: Framebuffer,
         properties: &mut [TilePropertiesQCOM],
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()
@@ -52,7 +52,7 @@ impl TilePropertiesDevice for Device {
     fn get_dynamic_rendering_tile_properties(
         &self,
         rendering_info: &RenderingInfo,
-    ) -> Result<TilePropertiesQCOM<'_>, vkResult> {
+    ) -> Result<TilePropertiesQCOM<'_>, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self

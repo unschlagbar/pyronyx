@@ -14,7 +14,7 @@ pub trait ExternalMemoryRdmaDevice {
     fn get_memory_remote_address(
         &self,
         memory_get_remote_address_info: &MemoryGetRemoteAddressInfoNV,
-    ) -> Result<RemoteAddressNV, vkResult>;
+    ) -> Result<RemoteAddressNV, Error>;
 }
 
 impl ExternalMemoryRdmaDevice for Device {
@@ -23,7 +23,7 @@ impl ExternalMemoryRdmaDevice for Device {
     fn get_memory_remote_address(
         &self,
         memory_get_remote_address_info: &MemoryGetRemoteAddressInfoNV,
-    ) -> Result<RemoteAddressNV, vkResult> {
+    ) -> Result<RemoteAddressNV, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self

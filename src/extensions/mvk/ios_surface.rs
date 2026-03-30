@@ -17,7 +17,7 @@ pub trait IosSurfaceInstance {
         &self,
         create_info: &IOSSurfaceCreateInfoMVK,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<SurfaceKHR, vkResult>;
+    ) -> Result<SurfaceKHR, Error>;
 }
 
 impl IosSurfaceInstance for Instance {
@@ -27,7 +27,7 @@ impl IosSurfaceInstance for Instance {
         &self,
         create_info: &IOSSurfaceCreateInfoMVK,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<SurfaceKHR, vkResult> {
+    ) -> Result<SurfaceKHR, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self

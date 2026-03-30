@@ -16,7 +16,7 @@ pub trait DisplaySwapchainDevice {
         create_infos: &[SwapchainCreateInfoKHR],
         allocator: Option<&AllocationCallbacks>,
         swapchains: &mut [SwapchainKHR],
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 }
 
 impl DisplaySwapchainDevice for Device {
@@ -27,7 +27,7 @@ impl DisplaySwapchainDevice for Device {
         create_infos: &[SwapchainCreateInfoKHR],
         allocator: Option<&AllocationCallbacks>,
         swapchains: &mut [SwapchainKHR],
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         assert_eq!(create_infos.len(), swapchains.len());
         unsafe {
             (self

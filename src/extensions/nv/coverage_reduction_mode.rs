@@ -13,7 +13,7 @@ pub trait CoverageReductionModePhysicalDevice {
     fn get_supported_framebuffer_mixed_samples_combinations(
         &self,
         combinations: &mut [FramebufferMixedSamplesCombinationNV],
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 }
 
 impl CoverageReductionModePhysicalDevice for PhysicalDevice {
@@ -22,7 +22,7 @@ impl CoverageReductionModePhysicalDevice for PhysicalDevice {
     fn get_supported_framebuffer_mixed_samples_combinations(
         &self,
         combinations: &mut [FramebufferMixedSamplesCombinationNV],
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()

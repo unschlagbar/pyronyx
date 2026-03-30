@@ -15,7 +15,7 @@ pub trait VideoEncodeQueuePhysicalDevice {
     fn get_video_encode_quality_level_properties(
         &self,
         quality_level_info: &PhysicalDeviceVideoEncodeQualityLevelInfoKHR,
-    ) -> Result<VideoEncodeQualityLevelPropertiesKHR<'_>, vkResult>;
+    ) -> Result<VideoEncodeQualityLevelPropertiesKHR<'_>, Error>;
 }
 
 impl VideoEncodeQueuePhysicalDevice for PhysicalDevice {
@@ -24,7 +24,7 @@ impl VideoEncodeQueuePhysicalDevice for PhysicalDevice {
     fn get_video_encode_quality_level_properties(
         &self,
         quality_level_info: &PhysicalDeviceVideoEncodeQualityLevelInfoKHR,
-    ) -> Result<VideoEncodeQualityLevelPropertiesKHR<'_>, vkResult> {
+    ) -> Result<VideoEncodeQualityLevelPropertiesKHR<'_>, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self
@@ -48,7 +48,7 @@ pub trait VideoEncodeQueueDevice {
         video_session_parameters_info: &VideoEncodeSessionParametersGetInfoKHR,
         feedback_info: *mut VideoEncodeSessionParametersFeedbackInfoKHR,
         data: &mut [c_void],
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 }
 
 impl VideoEncodeQueueDevice for Device {
@@ -59,7 +59,7 @@ impl VideoEncodeQueueDevice for Device {
         video_session_parameters_info: &VideoEncodeSessionParametersGetInfoKHR,
         feedback_info: *mut VideoEncodeSessionParametersFeedbackInfoKHR,
         data: &mut [c_void],
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()

@@ -15,13 +15,13 @@ pub trait LowLatency2Device {
         &self,
         swapchain: SwapchainKHR,
         sleep_mode_info: &LatencySleepModeInfoNV,
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 
     fn latency_sleep(
         &self,
         swapchain: SwapchainKHR,
         sleep_info: &LatencySleepInfoNV,
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 
     fn set_latency_marker(
         &self,
@@ -39,7 +39,7 @@ impl LowLatency2Device for Device {
         &self,
         swapchain: SwapchainKHR,
         sleep_mode_info: &LatencySleepModeInfoNV,
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()
@@ -57,7 +57,7 @@ impl LowLatency2Device for Device {
         &self,
         swapchain: SwapchainKHR,
         sleep_info: &LatencySleepInfoNV,
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()

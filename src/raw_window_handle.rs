@@ -1,5 +1,5 @@
 use crate::khr::surface;
-use crate::vk::{self, Instance, vkResult};
+use crate::vk::{self, Error, Instance};
 use core::ffi::c_char;
 use raw_window_handle::{RawDisplayHandle, RawWindowHandle};
 
@@ -49,7 +49,7 @@ pub fn create_surface(
     instance: &Instance,
     display_handle: RawDisplayHandle,
     window_handle: RawWindowHandle,
-) -> Result<vk::SurfaceKHR, vkResult> {
+) -> Result<vk::SurfaceKHR, Error> {
     match (display_handle, window_handle) {
         #[cfg(target_os = "windows")]
         (RawDisplayHandle::Windows(_), RawWindowHandle::Win32(window)) => {
@@ -57,7 +57,7 @@ pub fn create_surface(
                 hwnd: window.hwnd.get(),
                 hinstance: window
                     .hinstance
-                    .ok_or(vk::vkResult::ErrorInitializationFailed)?
+                    .ok_or(Error::ErrorInitializationFailed)?
                     .get(),
                 ..Default::default()
             };
@@ -79,7 +79,7 @@ pub fn create_surface(
             let create_info = vk::XlibSurfaceCreateInfoKHR {
                 dpy: display
                     .display
-                    .ok_or(vk::vkResult::ErrorInitializationFailed)?
+                    .ok_or(Error::ErrorInitializationFailed)?
                     .as_ptr(),
                 window: window.window,
                 ..Default::default()
@@ -93,7 +93,7 @@ pub fn create_surface(
             let create_info = vk::XcbSurfaceCreateInfoKHR {
                 connection: display
                     .connection
-                    .ok_or(vk::vkResult::ErrorInitializationFailed)?
+                    .ok_or(Error::ErrorInitializationFailed)?
                     .as_ptr(),
                 window: window.window.get(),
                 ..Default::default()
@@ -139,7 +139,7 @@ pub fn create_surface(
             instance.create_surface(&create_info, None)
         }
 
-        _ => Err(vk::vkResult::ErrorExtensionNotPresent),
+        _ => Err(Error::ErrorExtensionNotPresent),
     }
 }
 
@@ -152,7 +152,7 @@ pub fn create_surface(
 /// The returned extensions will include all extension dependencies.
 pub fn get_required_extensions(
     display_handle: RawDisplayHandle,
-) -> Result<[*const c_char; 2], vk::vkResult> {
+) -> Result<[*const c_char; 2], Error> {
     let extensions = match display_handle {
         #[cfg(target_os = "windows")]
         RawDisplayHandle::Windows(_) => [surface::NAME.as_ptr(), win32_surface::NAME.as_ptr()],
@@ -177,7 +177,7 @@ pub fn get_required_extensions(
         #[cfg(target_env = "ohos")]
         RawDisplayHandle::Ohos(_) => [surface::NAME.as_ptr(), crate::ohos::surface::NAME.as_ptr()],
 
-        _ => return Err(vk::vkResult::ErrorExtensionNotPresent),
+        _ => return Err(Error::ErrorExtensionNotPresent),
     };
 
     Ok(extensions)

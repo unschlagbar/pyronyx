@@ -11,15 +11,15 @@ pub const NAME: &CStr = c"VK_NV_acquire_winrt_display";
 pub const SPEC_VERSION: u32 = 1;
 
 pub trait AcquireWinrtDisplayPhysicalDevice {
-    fn acquire_winrt_display(&self, display: DisplayKHR) -> Result<(), vkResult>;
+    fn acquire_winrt_display(&self, display: DisplayKHR) -> Result<(), Error>;
 
-    fn get_winrt_display(&self, device_relative_id: u32) -> Result<DisplayKHR, vkResult>;
+    fn get_winrt_display(&self, device_relative_id: u32) -> Result<DisplayKHR, Error>;
 }
 
 impl AcquireWinrtDisplayPhysicalDevice for PhysicalDevice {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkAcquireWinrtDisplayNV.html>
     #[inline]
-    fn acquire_winrt_display(&self, display: DisplayKHR) -> Result<(), vkResult> {
+    fn acquire_winrt_display(&self, display: DisplayKHR) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()
@@ -33,7 +33,7 @@ impl AcquireWinrtDisplayPhysicalDevice for PhysicalDevice {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetWinrtDisplayNV.html>
     #[inline]
-    fn get_winrt_display(&self, device_relative_id: u32) -> Result<DisplayKHR, vkResult> {
+    fn get_winrt_display(&self, device_relative_id: u32) -> Result<DisplayKHR, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self

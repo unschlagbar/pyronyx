@@ -14,7 +14,7 @@ pub trait PresentWait2Device {
         &self,
         swapchain: SwapchainKHR,
         present_wait2_info: &PresentWait2InfoKHR,
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 }
 
 impl PresentWait2Device for Device {
@@ -24,7 +24,7 @@ impl PresentWait2Device for Device {
         &self,
         swapchain: SwapchainKHR,
         present_wait2_info: &PresentWait2InfoKHR,
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()

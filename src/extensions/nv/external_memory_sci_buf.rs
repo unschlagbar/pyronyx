@@ -14,7 +14,7 @@ pub trait ExternalMemorySciBufDevice {
     fn get_memory_sci_buf(
         &self,
         get_sci_buf_info: &MemoryGetSciBufInfoNV,
-    ) -> Result<NvSciBufObj, vkResult>;
+    ) -> Result<NvSciBufObj, Error>;
 }
 
 impl ExternalMemorySciBufDevice for Device {
@@ -23,7 +23,7 @@ impl ExternalMemorySciBufDevice for Device {
     fn get_memory_sci_buf(
         &self,
         get_sci_buf_info: &MemoryGetSciBufInfoNV,
-    ) -> Result<NvSciBufObj, vkResult> {
+    ) -> Result<NvSciBufObj, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self
@@ -42,9 +42,9 @@ pub trait ExternalMemorySciBufPhysicalDevice {
         &self,
         handle_type: ExternalMemoryHandleTypeFlags,
         handle: NvSciBufObj,
-    ) -> Result<MemorySciBufPropertiesNV<'_>, vkResult>;
+    ) -> Result<MemorySciBufPropertiesNV<'_>, Error>;
 
-    fn get_sci_buf_attributes(&self, attributes: NvSciBufAttrList) -> Result<(), vkResult>;
+    fn get_sci_buf_attributes(&self, attributes: NvSciBufAttrList) -> Result<(), Error>;
 }
 
 impl ExternalMemorySciBufPhysicalDevice for PhysicalDevice {
@@ -54,7 +54,7 @@ impl ExternalMemorySciBufPhysicalDevice for PhysicalDevice {
         &self,
         handle_type: ExternalMemoryHandleTypeFlags,
         handle: NvSciBufObj,
-    ) -> Result<MemorySciBufPropertiesNV<'_>, vkResult> {
+    ) -> Result<MemorySciBufPropertiesNV<'_>, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self
@@ -74,7 +74,7 @@ impl ExternalMemorySciBufPhysicalDevice for PhysicalDevice {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceSciBufAttributesNV.html>
     #[inline]
-    fn get_sci_buf_attributes(&self, attributes: NvSciBufAttrList) -> Result<(), vkResult> {
+    fn get_sci_buf_attributes(&self, attributes: NvSciBufAttrList) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()

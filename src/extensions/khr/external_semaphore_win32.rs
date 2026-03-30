@@ -14,12 +14,12 @@ pub trait ExternalSemaphoreWin32Device {
     fn get_semaphore_win32_handle(
         &self,
         get_win32_handle_info: &SemaphoreGetWin32HandleInfoKHR,
-    ) -> Result<HANDLE, vkResult>;
+    ) -> Result<HANDLE, Error>;
 
     fn import_semaphore_win32_handle(
         &self,
         import_semaphore_win32_handle_info: &ImportSemaphoreWin32HandleInfoKHR,
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 }
 
 impl ExternalSemaphoreWin32Device for Device {
@@ -28,7 +28,7 @@ impl ExternalSemaphoreWin32Device for Device {
     fn get_semaphore_win32_handle(
         &self,
         get_win32_handle_info: &SemaphoreGetWin32HandleInfoKHR,
-    ) -> Result<HANDLE, vkResult> {
+    ) -> Result<HANDLE, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self
@@ -50,7 +50,7 @@ impl ExternalSemaphoreWin32Device for Device {
     fn import_semaphore_win32_handle(
         &self,
         import_semaphore_win32_handle_info: &ImportSemaphoreWin32HandleInfoKHR,
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()

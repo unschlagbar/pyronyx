@@ -12,19 +12,19 @@ pub const NAME: &CStr = c"VK_KHR_external_memory_fd";
 pub const SPEC_VERSION: u32 = 1;
 
 pub trait ExternalMemoryFdDevice {
-    fn get_memory_fd(&self, get_fd_info: &MemoryGetFdInfoKHR) -> Result<c_int, vkResult>;
+    fn get_memory_fd(&self, get_fd_info: &MemoryGetFdInfoKHR) -> Result<c_int, Error>;
 
     fn get_memory_fd_properties(
         &self,
         handle_type: ExternalMemoryHandleTypeFlags,
         fd: c_int,
-    ) -> Result<MemoryFdPropertiesKHR<'_>, vkResult>;
+    ) -> Result<MemoryFdPropertiesKHR<'_>, Error>;
 }
 
 impl ExternalMemoryFdDevice for Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetMemoryFdKHR.html>
     #[inline]
-    fn get_memory_fd(&self, get_fd_info: &MemoryGetFdInfoKHR) -> Result<c_int, vkResult> {
+    fn get_memory_fd(&self, get_fd_info: &MemoryGetFdInfoKHR) -> Result<c_int, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self
@@ -43,7 +43,7 @@ impl ExternalMemoryFdDevice for Device {
         &self,
         handle_type: ExternalMemoryHandleTypeFlags,
         fd: c_int,
-    ) -> Result<MemoryFdPropertiesKHR<'_>, vkResult> {
+    ) -> Result<MemoryFdPropertiesKHR<'_>, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self

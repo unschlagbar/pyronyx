@@ -14,7 +14,7 @@ pub(crate) fn raw_option<T>(value: Option<&T>) -> *const T {
 #[inline]
 pub(crate) fn read_into_vec_result<N: Copy + Default + TryInto<usize>, T>(
     f: impl Fn(&mut N, *mut T) -> vk::vkResult,
-) -> Result<Vec<T>, vk::vkResult>
+) -> Result<Vec<T>, vk::Error>
 where
     <N as TryInto<usize>>::Error: Debug,
 {

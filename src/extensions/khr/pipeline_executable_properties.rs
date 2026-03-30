@@ -14,19 +14,19 @@ pub trait PipelineExecutablePropertiesDevice {
         &self,
         pipeline_info: &PipelineInfoKHR,
         properties: &mut [PipelineExecutablePropertiesKHR],
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 
     fn get_pipeline_executable_statistics(
         &self,
         executable_info: &PipelineExecutableInfoKHR,
         statistics: &mut [PipelineExecutableStatisticKHR],
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 
     fn get_pipeline_executable_internal_representations(
         &self,
         executable_info: &PipelineExecutableInfoKHR,
         internal_representations: &mut [PipelineExecutableInternalRepresentationKHR],
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 }
 
 impl PipelineExecutablePropertiesDevice for Device {
@@ -36,7 +36,7 @@ impl PipelineExecutablePropertiesDevice for Device {
         &self,
         pipeline_info: &PipelineInfoKHR,
         properties: &mut [PipelineExecutablePropertiesKHR],
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()
@@ -59,7 +59,7 @@ impl PipelineExecutablePropertiesDevice for Device {
         &self,
         executable_info: &PipelineExecutableInfoKHR,
         statistics: &mut [PipelineExecutableStatisticKHR],
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()
@@ -82,7 +82,7 @@ impl PipelineExecutablePropertiesDevice for Device {
         &self,
         executable_info: &PipelineExecutableInfoKHR,
         internal_representations: &mut [PipelineExecutableInternalRepresentationKHR],
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()

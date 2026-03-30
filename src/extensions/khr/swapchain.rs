@@ -17,11 +17,11 @@ pub trait SwapchainDevice {
         &self,
         create_info: &SwapchainCreateInfoKHR,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<SwapchainKHR, vkResult>;
+    ) -> Result<SwapchainKHR, Error>;
 
     fn destroy_swapchain(&self, swapchain: SwapchainKHR, allocator: Option<&AllocationCallbacks>);
 
-    fn get_swapchain_images(&self, swapchain: SwapchainKHR) -> Result<Vec<Image>, vkResult>;
+    fn get_swapchain_images(&self, swapchain: SwapchainKHR) -> Result<Vec<Image>, Error>;
 
     fn acquire_next_image(
         &self,
@@ -29,7 +29,7 @@ pub trait SwapchainDevice {
         timeout: u64,
         semaphore: Semaphore,
         fence: Fence,
-    ) -> Result<u32, vkResult>;
+    ) -> Result<u32, Error>;
 }
 
 impl SwapchainDevice for Device {
@@ -39,7 +39,7 @@ impl SwapchainDevice for Device {
         &self,
         create_info: &SwapchainCreateInfoKHR,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<SwapchainKHR, vkResult> {
+    ) -> Result<SwapchainKHR, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self
@@ -74,7 +74,7 @@ impl SwapchainDevice for Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetSwapchainImagesKHR.html>
     #[inline]
-    fn get_swapchain_images(&self, swapchain: SwapchainKHR) -> Result<Vec<Image>, vkResult> {
+    fn get_swapchain_images(&self, swapchain: SwapchainKHR) -> Result<Vec<Image>, Error> {
         read_into_vec_result(|count, data| unsafe {
             (self
                 .fns()
@@ -93,7 +93,7 @@ impl SwapchainDevice for Device {
         timeout: u64,
         semaphore: Semaphore,
         fence: Fence,
-    ) -> Result<u32, vkResult> {
+    ) -> Result<u32, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self
@@ -115,13 +115,13 @@ impl SwapchainDevice for Device {
 }
 
 pub trait SwapchainQueue {
-    fn present(&self, present_info: &PresentInfoKHR) -> Result<(), vkResult>;
+    fn present(&self, present_info: &PresentInfoKHR) -> Result<(), Error>;
 }
 
 impl SwapchainQueue for Queue {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkQueuePresentKHR.html>
     #[inline]
-    fn present(&self, present_info: &PresentInfoKHR) -> Result<(), vkResult> {
+    fn present(&self, present_info: &PresentInfoKHR) -> Result<(), Error> {
         unsafe {
             (self.fns().khr_swapchain.as_ref().unwrap().queue_present_khr)(
                 self.handle,

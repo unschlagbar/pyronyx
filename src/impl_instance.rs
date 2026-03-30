@@ -23,7 +23,7 @@ impl Instance {
     pub fn enumerate_physical_device_groups(
         &self,
         physical_device_group_properties: &mut [PhysicalDeviceGroupProperties],
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self.fns().v1_1.enumerate_physical_device_groups.unwrap())(
                 self.handle,

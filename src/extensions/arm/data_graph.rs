@@ -19,19 +19,19 @@ pub trait DataGraphDevice {
         create_infos: &[DataGraphPipelineCreateInfoARM],
         allocator: Option<&AllocationCallbacks>,
         pipelines: &mut [Pipeline],
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 
     fn create_data_graph_pipeline_session(
         &self,
         create_info: &DataGraphPipelineSessionCreateInfoARM,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<DataGraphPipelineSessionARM, vkResult>;
+    ) -> Result<DataGraphPipelineSessionARM, Error>;
 
     fn get_data_graph_pipeline_session_bind_point_requirements(
         &self,
         info: &DataGraphPipelineSessionBindPointRequirementsInfoARM,
         bind_point_requirements: &mut [DataGraphPipelineSessionBindPointRequirementARM],
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 
     fn get_data_graph_pipeline_session_memory_requirements(
         &self,
@@ -41,7 +41,7 @@ pub trait DataGraphDevice {
     fn bind_data_graph_pipeline_session_memory(
         &self,
         bind_infos: &[BindDataGraphPipelineSessionMemoryInfoARM],
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 
     fn destroy_data_graph_pipeline_session(
         &self,
@@ -53,13 +53,13 @@ pub trait DataGraphDevice {
         &self,
         pipeline_info: &DataGraphPipelineInfoARM,
         properties: &mut [DataGraphPipelinePropertyARM],
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 
     fn get_data_graph_pipeline_properties(
         &self,
         pipeline_info: &DataGraphPipelineInfoARM,
         properties: &mut [DataGraphPipelinePropertyQueryResultARM],
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 }
 
 impl DataGraphDevice for Device {
@@ -72,7 +72,7 @@ impl DataGraphDevice for Device {
         create_infos: &[DataGraphPipelineCreateInfoARM],
         allocator: Option<&AllocationCallbacks>,
         pipelines: &mut [Pipeline],
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         assert_eq!(create_infos.len(), pipelines.len());
         unsafe {
             (self
@@ -99,7 +99,7 @@ impl DataGraphDevice for Device {
         &self,
         create_info: &DataGraphPipelineSessionCreateInfoARM,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<DataGraphPipelineSessionARM, vkResult> {
+    ) -> Result<DataGraphPipelineSessionARM, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self
@@ -123,7 +123,7 @@ impl DataGraphDevice for Device {
         &self,
         info: &DataGraphPipelineSessionBindPointRequirementsInfoARM,
         bind_point_requirements: &mut [DataGraphPipelineSessionBindPointRequirementARM],
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()
@@ -167,7 +167,7 @@ impl DataGraphDevice for Device {
     fn bind_data_graph_pipeline_session_memory(
         &self,
         bind_infos: &[BindDataGraphPipelineSessionMemoryInfoARM],
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()
@@ -210,7 +210,7 @@ impl DataGraphDevice for Device {
         &self,
         pipeline_info: &DataGraphPipelineInfoARM,
         properties: &mut [DataGraphPipelinePropertyARM],
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()
@@ -233,7 +233,7 @@ impl DataGraphDevice for Device {
         &self,
         pipeline_info: &DataGraphPipelineInfoARM,
         properties: &mut [DataGraphPipelinePropertyQueryResultARM],
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()
@@ -285,7 +285,7 @@ pub trait DataGraphPhysicalDevice {
         &self,
         queue_family_index: u32,
         queue_family_data_graph_properties: &mut [QueueFamilyDataGraphPropertiesARM],
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 
     fn get_queue_family_data_graph_processing_engine_properties(
         &self,
@@ -300,7 +300,7 @@ impl DataGraphPhysicalDevice for PhysicalDevice {
         &self,
         queue_family_index: u32,
         queue_family_data_graph_properties: &mut [QueueFamilyDataGraphPropertiesARM],
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()

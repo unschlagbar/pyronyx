@@ -15,7 +15,7 @@ pub trait DeferredHostOperationsDevice {
     fn create_deferred_operation(
         &self,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<DeferredOperationKHR, vkResult>;
+    ) -> Result<DeferredOperationKHR, Error>;
 
     fn destroy_deferred_operation(
         &self,
@@ -25,12 +25,9 @@ pub trait DeferredHostOperationsDevice {
 
     fn get_deferred_operation_max_concurrency(&self, operation: DeferredOperationKHR) -> u32;
 
-    fn get_deferred_operation_result(
-        &self,
-        operation: DeferredOperationKHR,
-    ) -> Result<(), vkResult>;
+    fn get_deferred_operation_result(&self, operation: DeferredOperationKHR) -> Result<(), Error>;
 
-    fn deferred_operation_join(&self, operation: DeferredOperationKHR) -> Result<(), vkResult>;
+    fn deferred_operation_join(&self, operation: DeferredOperationKHR) -> Result<(), Error>;
 }
 
 impl DeferredHostOperationsDevice for Device {
@@ -39,7 +36,7 @@ impl DeferredHostOperationsDevice for Device {
     fn create_deferred_operation(
         &self,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<DeferredOperationKHR, vkResult> {
+    ) -> Result<DeferredOperationKHR, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self
@@ -92,10 +89,7 @@ impl DeferredHostOperationsDevice for Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetDeferredOperationResultKHR.html>
     #[inline]
-    fn get_deferred_operation_result(
-        &self,
-        operation: DeferredOperationKHR,
-    ) -> Result<(), vkResult> {
+    fn get_deferred_operation_result(&self, operation: DeferredOperationKHR) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()
@@ -109,7 +103,7 @@ impl DeferredHostOperationsDevice for Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkDeferredOperationJoinKHR.html>
     #[inline]
-    fn deferred_operation_join(&self, operation: DeferredOperationKHR) -> Result<(), vkResult> {
+    fn deferred_operation_join(&self, operation: DeferredOperationKHR) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()

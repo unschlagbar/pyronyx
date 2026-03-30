@@ -24,7 +24,7 @@ impl Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkDeviceWaitIdle.html>
     #[inline]
-    pub fn device_wait_idle(&self) -> Result<(), vkResult> {
+    pub fn device_wait_idle(&self) -> Result<(), Error> {
         unsafe { (self.fns().v1_0.device_wait_idle.unwrap())(self.handle) }.result()
     }
 
@@ -34,7 +34,7 @@ impl Device {
         &self,
         allocate_info: &MemoryAllocateInfo,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<DeviceMemory, vkResult> {
+    ) -> Result<DeviceMemory, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self.fns().v1_0.allocate_memory.unwrap())(
@@ -67,7 +67,7 @@ impl Device {
         offset: DeviceSize,
         size: DeviceSize,
         flags: MemoryMapFlags,
-    ) -> Result<*mut c_void, vkResult> {
+    ) -> Result<*mut c_void, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self.fns().v1_0.map_memory.unwrap())(
@@ -93,7 +93,7 @@ impl Device {
     pub fn flush_mapped_memory_ranges(
         &self,
         memory_ranges: &[MappedMemoryRange],
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self.fns().v1_0.flush_mapped_memory_ranges.unwrap())(
                 self.handle,
@@ -109,7 +109,7 @@ impl Device {
     pub fn invalidate_mapped_memory_ranges(
         &self,
         memory_ranges: &[MappedMemoryRange],
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self.fns().v1_0.invalidate_mapped_memory_ranges.unwrap())(
                 self.handle,
@@ -155,7 +155,7 @@ impl Device {
         buffer: Buffer,
         memory: DeviceMemory,
         memory_offset: DeviceSize,
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self.fns().v1_0.bind_buffer_memory.unwrap())(
                 self.handle,
@@ -188,7 +188,7 @@ impl Device {
         image: Image,
         memory: DeviceMemory,
         memory_offset: DeviceSize,
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self.fns().v1_0.bind_image_memory.unwrap())(self.handle, image, memory, memory_offset)
         }
@@ -216,7 +216,7 @@ impl Device {
         &self,
         create_info: &FenceCreateInfo,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<Fence, vkResult> {
+    ) -> Result<Fence, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self.fns().v1_0.create_fence.unwrap())(
@@ -243,7 +243,7 @@ impl Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkResetFences.html>
     #[inline]
-    pub fn reset_fences(&self, fences: &[Fence]) -> Result<(), vkResult> {
+    pub fn reset_fences(&self, fences: &[Fence]) -> Result<(), Error> {
         unsafe {
             (self.fns().v1_0.reset_fences.unwrap())(
                 self.handle,
@@ -256,7 +256,7 @@ impl Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetFenceStatus.html>
     #[inline]
-    pub fn get_fence_status(&self, fence: Fence) -> Result<(), vkResult> {
+    pub fn get_fence_status(&self, fence: Fence) -> Result<(), Error> {
         unsafe { (self.fns().v1_0.get_fence_status.unwrap())(self.handle, fence) }.result()
     }
 
@@ -267,7 +267,7 @@ impl Device {
         fences: &[Fence],
         wait_all: bool,
         timeout: u64,
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self.fns().v1_0.wait_for_fences.unwrap())(
                 self.handle,
@@ -286,7 +286,7 @@ impl Device {
         &self,
         create_info: &SemaphoreCreateInfo,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<Semaphore, vkResult> {
+    ) -> Result<Semaphore, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self.fns().v1_0.create_semaphore.unwrap())(
@@ -317,7 +317,7 @@ impl Device {
         &self,
         create_info: &EventCreateInfo,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<Event, vkResult> {
+    ) -> Result<Event, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self.fns().v1_0.create_event.unwrap())(
@@ -344,19 +344,19 @@ impl Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetEventStatus.html>
     #[inline]
-    pub fn get_event_status(&self, event: Event) -> Result<(), vkResult> {
+    pub fn get_event_status(&self, event: Event) -> Result<(), Error> {
         unsafe { (self.fns().v1_0.get_event_status.unwrap())(self.handle, event) }.result()
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkSetEvent.html>
     #[inline]
-    pub fn set_event(&self, event: Event) -> Result<(), vkResult> {
+    pub fn set_event(&self, event: Event) -> Result<(), Error> {
         unsafe { (self.fns().v1_0.set_event.unwrap())(self.handle, event) }.result()
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkResetEvent.html>
     #[inline]
-    pub fn reset_event(&self, event: Event) -> Result<(), vkResult> {
+    pub fn reset_event(&self, event: Event) -> Result<(), Error> {
         unsafe { (self.fns().v1_0.reset_event.unwrap())(self.handle, event) }.result()
     }
 
@@ -366,7 +366,7 @@ impl Device {
         &self,
         create_info: &QueryPoolCreateInfo,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<QueryPool, vkResult> {
+    ) -> Result<QueryPool, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self.fns().v1_0.create_query_pool.unwrap())(
@@ -405,7 +405,7 @@ impl Device {
         data: &mut [c_void],
         stride: DeviceSize,
         flags: QueryResultFlags,
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self.fns().v1_0.get_query_pool_results.unwrap())(
                 self.handle,
@@ -440,7 +440,7 @@ impl Device {
         &self,
         create_info: &BufferCreateInfo,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<Buffer, vkResult> {
+    ) -> Result<Buffer, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self.fns().v1_0.create_buffer.unwrap())(
@@ -471,7 +471,7 @@ impl Device {
         &self,
         create_info: &BufferViewCreateInfo,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<BufferView, vkResult> {
+    ) -> Result<BufferView, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self.fns().v1_0.create_buffer_view.unwrap())(
@@ -506,7 +506,7 @@ impl Device {
         &self,
         create_info: &ImageCreateInfo,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<Image, vkResult> {
+    ) -> Result<Image, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self.fns().v1_0.create_image.unwrap())(
@@ -556,7 +556,7 @@ impl Device {
         &self,
         create_info: &ImageViewCreateInfo,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<ImageView, vkResult> {
+    ) -> Result<ImageView, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self.fns().v1_0.create_image_view.unwrap())(
@@ -591,7 +591,7 @@ impl Device {
         &self,
         create_info: &ShaderModuleCreateInfo,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<ShaderModule, vkResult> {
+    ) -> Result<ShaderModule, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self.fns().v1_0.create_shader_module.unwrap())(
@@ -626,7 +626,7 @@ impl Device {
         &self,
         create_info: &PipelineCacheCreateInfo,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<PipelineCache, vkResult> {
+    ) -> Result<PipelineCache, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self.fns().v1_0.create_pipeline_cache.unwrap())(
@@ -660,7 +660,7 @@ impl Device {
     pub fn get_pipeline_cache_data(
         &self,
         pipeline_cache: PipelineCache,
-    ) -> Result<Vec<c_void>, vkResult> {
+    ) -> Result<Vec<c_void>, Error> {
         read_into_vec_result(|count, data| unsafe {
             (self.fns().v1_0.get_pipeline_cache_data.unwrap())(
                 self.handle,
@@ -677,7 +677,7 @@ impl Device {
         &self,
         dst_cache: PipelineCache,
         src_caches: &[PipelineCache],
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self.fns().v1_0.merge_pipeline_caches.unwrap())(
                 self.handle,
@@ -697,7 +697,7 @@ impl Device {
         create_infos: &[GraphicsPipelineCreateInfo],
         allocator: Option<&AllocationCallbacks>,
         pipelines: &mut [Pipeline],
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         assert_eq!(create_infos.len(), pipelines.len());
         unsafe {
             (self.fns().v1_0.create_graphics_pipelines.unwrap())(
@@ -720,7 +720,7 @@ impl Device {
         create_infos: &[ComputePipelineCreateInfo],
         allocator: Option<&AllocationCallbacks>,
         pipelines: &mut [Pipeline],
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         assert_eq!(create_infos.len(), pipelines.len());
         unsafe {
             (self.fns().v1_0.create_compute_pipelines.unwrap())(
@@ -753,7 +753,7 @@ impl Device {
         &self,
         create_info: &PipelineLayoutCreateInfo,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<PipelineLayout, vkResult> {
+    ) -> Result<PipelineLayout, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self.fns().v1_0.create_pipeline_layout.unwrap())(
@@ -788,7 +788,7 @@ impl Device {
         &self,
         create_info: &SamplerCreateInfo,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<Sampler, vkResult> {
+    ) -> Result<Sampler, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self.fns().v1_0.create_sampler.unwrap())(
@@ -819,7 +819,7 @@ impl Device {
         &self,
         create_info: &DescriptorSetLayoutCreateInfo,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<DescriptorSetLayout, vkResult> {
+    ) -> Result<DescriptorSetLayout, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self.fns().v1_0.create_descriptor_set_layout.unwrap())(
@@ -854,7 +854,7 @@ impl Device {
         &self,
         create_info: &DescriptorPoolCreateInfo,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<DescriptorPool, vkResult> {
+    ) -> Result<DescriptorPool, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self.fns().v1_0.create_descriptor_pool.unwrap())(
@@ -889,7 +889,7 @@ impl Device {
         &self,
         descriptor_pool: DescriptorPool,
         flags: DescriptorPoolResetFlags,
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self.fns().v1_0.reset_descriptor_pool.unwrap())(self.handle, descriptor_pool, flags)
         }
@@ -902,7 +902,7 @@ impl Device {
         &self,
         allocate_info: &DescriptorSetAllocateInfo,
         descriptor_sets: &mut [DescriptorSet],
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         assert_eq!(
             allocate_info.descriptor_set_count as usize,
             descriptor_sets.len()
@@ -923,7 +923,7 @@ impl Device {
         &self,
         descriptor_pool: DescriptorPool,
         descriptor_sets: &[DescriptorSet],
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self.fns().v1_0.free_descriptor_sets.unwrap())(
                 self.handle,
@@ -959,7 +959,7 @@ impl Device {
         &self,
         create_info: &FramebufferCreateInfo,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<Framebuffer, vkResult> {
+    ) -> Result<Framebuffer, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self.fns().v1_0.create_framebuffer.unwrap())(
@@ -994,7 +994,7 @@ impl Device {
         &self,
         create_info: &RenderPassCreateInfo,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<RenderPass, vkResult> {
+    ) -> Result<RenderPass, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self.fns().v1_0.create_render_pass.unwrap())(
@@ -1060,7 +1060,7 @@ impl Device {
         &self,
         create_info: &CommandPoolCreateInfo,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<CommandPool, vkResult> {
+    ) -> Result<CommandPool, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self.fns().v1_0.create_command_pool.unwrap())(
@@ -1095,7 +1095,7 @@ impl Device {
         &self,
         command_pool: CommandPool,
         flags: CommandPoolResetFlags,
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe { (self.fns().v1_0.reset_command_pool.unwrap())(self.handle, command_pool, flags) }
             .result()
     }
@@ -1150,7 +1150,7 @@ impl Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkBindBufferMemory2.html>
     #[inline]
-    pub fn bind_buffer_memory2(&self, bind_infos: &[BindBufferMemoryInfo]) -> Result<(), vkResult> {
+    pub fn bind_buffer_memory2(&self, bind_infos: &[BindBufferMemoryInfo]) -> Result<(), Error> {
         unsafe {
             (self.fns().v1_1.bind_buffer_memory2.unwrap())(
                 self.handle,
@@ -1163,7 +1163,7 @@ impl Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkBindImageMemory2.html>
     #[inline]
-    pub fn bind_image_memory2(&self, bind_infos: &[BindImageMemoryInfo]) -> Result<(), vkResult> {
+    pub fn bind_image_memory2(&self, bind_infos: &[BindImageMemoryInfo]) -> Result<(), Error> {
         unsafe {
             (self.fns().v1_1.bind_image_memory2.unwrap())(
                 self.handle,
@@ -1180,7 +1180,7 @@ impl Device {
         &self,
         create_info: &DescriptorUpdateTemplateCreateInfo,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<DescriptorUpdateTemplate, vkResult> {
+    ) -> Result<DescriptorUpdateTemplate, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self.fns().v1_1.create_descriptor_update_template.unwrap())(
@@ -1343,7 +1343,7 @@ impl Device {
         &self,
         create_info: &SamplerYcbcrConversionCreateInfo,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<SamplerYcbcrConversion, vkResult> {
+    ) -> Result<SamplerYcbcrConversion, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self.fns().v1_1.create_sampler_ycbcr_conversion.unwrap())(
@@ -1395,7 +1395,7 @@ impl Device {
         &self,
         create_info: &RenderPassCreateInfo2,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<RenderPass, vkResult> {
+    ) -> Result<RenderPass, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self.fns().v1_2.create_render_pass2.unwrap())(
@@ -1410,7 +1410,7 @@ impl Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetSemaphoreCounterValue.html>
     #[inline]
-    pub fn get_semaphore_counter_value(&self, semaphore: Semaphore) -> Result<u64, vkResult> {
+    pub fn get_semaphore_counter_value(&self, semaphore: Semaphore) -> Result<u64, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self.fns().v1_2.get_semaphore_counter_value.unwrap())(
@@ -1428,14 +1428,14 @@ impl Device {
         &self,
         wait_info: &SemaphoreWaitInfo,
         timeout: u64,
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe { (self.fns().v1_2.wait_semaphores.unwrap())(self.handle, wait_info, timeout) }
             .result()
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkSignalSemaphore.html>
     #[inline]
-    pub fn signal_semaphore(&self, signal_info: &SemaphoreSignalInfo) -> Result<(), vkResult> {
+    pub fn signal_semaphore(&self, signal_info: &SemaphoreSignalInfo) -> Result<(), Error> {
         unsafe { (self.fns().v1_2.signal_semaphore.unwrap())(self.handle, signal_info) }.result()
     }
 
@@ -1473,7 +1473,7 @@ impl Device {
         fault_query_behavior: FaultQueryBehavior,
         unrecorded_faults: *mut Bool32,
         faults: &mut [FaultData],
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self.fns().v1_0.get_fault_data.unwrap())(
                 self.handle,
@@ -1492,7 +1492,7 @@ impl Device {
         &self,
         create_info: &PrivateDataSlotCreateInfo,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<PrivateDataSlot, vkResult> {
+    ) -> Result<PrivateDataSlot, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self.fns().v1_3.create_private_data_slot.unwrap())(
@@ -1529,7 +1529,7 @@ impl Device {
         object_handle: u64,
         private_data_slot: PrivateDataSlot,
         data: u64,
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self.fns().v1_3.set_private_data.unwrap())(
                 self.handle,
@@ -1568,7 +1568,7 @@ impl Device {
     pub fn copy_memory_to_image(
         &self,
         copy_memory_to_image_info: &CopyMemoryToImageInfo,
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self.fns().v1_4.copy_memory_to_image.unwrap())(self.handle, copy_memory_to_image_info)
         }
@@ -1580,7 +1580,7 @@ impl Device {
     pub fn copy_image_to_memory(
         &self,
         copy_image_to_memory_info: &CopyImageToMemoryInfo,
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self.fns().v1_4.copy_image_to_memory.unwrap())(self.handle, copy_image_to_memory_info)
         }
@@ -1592,7 +1592,7 @@ impl Device {
     pub fn copy_image_to_image(
         &self,
         copy_image_to_image_info: &CopyImageToImageInfo,
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self.fns().v1_4.copy_image_to_image.unwrap())(self.handle, copy_image_to_image_info)
         }
@@ -1604,7 +1604,7 @@ impl Device {
     pub fn transition_image_layout(
         &self,
         transitions: &[HostImageLayoutTransitionInfo],
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self.fns().v1_4.transition_image_layout.unwrap())(
                 self.handle,
@@ -1672,7 +1672,7 @@ impl Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkMapMemory2.html>
     #[inline]
-    pub fn map_memory2(&self, memory_map_info: &MemoryMapInfo) -> Result<*mut c_void, vkResult> {
+    pub fn map_memory2(&self, memory_map_info: &MemoryMapInfo) -> Result<*mut c_void, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self.fns().v1_4.map_memory2.unwrap())(self.handle, memory_map_info, out.as_mut_ptr())
@@ -1682,7 +1682,7 @@ impl Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkUnmapMemory2.html>
     #[inline]
-    pub fn unmap_memory2(&self, memory_unmap_info: &MemoryUnmapInfo) -> Result<(), vkResult> {
+    pub fn unmap_memory2(&self, memory_unmap_info: &MemoryUnmapInfo) -> Result<(), Error> {
         unsafe { (self.fns().v1_4.unmap_memory2.unwrap())(self.handle, memory_unmap_info) }.result()
     }
 }

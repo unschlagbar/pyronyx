@@ -14,7 +14,7 @@ pub trait SubpassShadingDevice {
     fn get_device_subpass_shading_max_workgroup_size(
         &self,
         renderpass: RenderPass,
-    ) -> Result<Extent2D, vkResult>;
+    ) -> Result<Extent2D, Error>;
 }
 
 impl SubpassShadingDevice for Device {
@@ -23,7 +23,7 @@ impl SubpassShadingDevice for Device {
     fn get_device_subpass_shading_max_workgroup_size(
         &self,
         renderpass: RenderPass,
-    ) -> Result<Extent2D, vkResult> {
+    ) -> Result<Extent2D, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self

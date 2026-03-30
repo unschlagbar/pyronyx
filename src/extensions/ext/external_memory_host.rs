@@ -16,7 +16,7 @@ pub trait ExternalMemoryHostDevice {
         &self,
         handle_type: ExternalMemoryHandleTypeFlags,
         host_pointer: &c_void,
-    ) -> Result<MemoryHostPointerPropertiesEXT<'_>, vkResult>;
+    ) -> Result<MemoryHostPointerPropertiesEXT<'_>, Error>;
 }
 
 impl ExternalMemoryHostDevice for Device {
@@ -26,7 +26,7 @@ impl ExternalMemoryHostDevice for Device {
         &self,
         handle_type: ExternalMemoryHandleTypeFlags,
         host_pointer: &c_void,
-    ) -> Result<MemoryHostPointerPropertiesEXT<'_>, vkResult> {
+    ) -> Result<MemoryHostPointerPropertiesEXT<'_>, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self

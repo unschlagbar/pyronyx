@@ -17,7 +17,7 @@ pub trait ShaderInfoDevice {
         shader_stage: ShaderStageFlags,
         info_type: ShaderInfoTypeAMD,
         info: &mut [c_void],
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 }
 
 impl ShaderInfoDevice for Device {
@@ -29,7 +29,7 @@ impl ShaderInfoDevice for Device {
         shader_stage: ShaderStageFlags,
         info_type: ShaderInfoTypeAMD,
         info: &mut [c_void],
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()

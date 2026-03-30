@@ -16,7 +16,7 @@ pub trait StreamDescriptorSurfaceInstance {
         &self,
         create_info: &StreamDescriptorSurfaceCreateInfoGGP,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<SurfaceKHR, vkResult>;
+    ) -> Result<SurfaceKHR, Error>;
 }
 
 impl StreamDescriptorSurfaceInstance for Instance {
@@ -26,7 +26,7 @@ impl StreamDescriptorSurfaceInstance for Instance {
         &self,
         create_info: &StreamDescriptorSurfaceCreateInfoGGP,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<SurfaceKHR, vkResult> {
+    ) -> Result<SurfaceKHR, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self

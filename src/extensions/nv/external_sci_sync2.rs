@@ -16,28 +16,28 @@ pub trait ExternalSciSync2Device {
     fn get_fence_sci_sync_fence(
         &self,
         get_sci_sync_handle_info: &FenceGetSciSyncInfoNV,
-    ) -> Result<c_void, vkResult>;
+    ) -> Result<c_void, Error>;
 
     fn get_fence_sci_sync_obj(
         &self,
         get_sci_sync_handle_info: &FenceGetSciSyncInfoNV,
-    ) -> Result<c_void, vkResult>;
+    ) -> Result<c_void, Error>;
 
     fn import_fence_sci_sync_fence(
         &self,
         import_fence_sci_sync_info: &ImportFenceSciSyncInfoNV,
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 
     fn import_fence_sci_sync_obj(
         &self,
         import_fence_sci_sync_info: &ImportFenceSciSyncInfoNV,
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 
     fn create_semaphore_sci_sync_pool(
         &self,
         create_info: &SemaphoreSciSyncPoolCreateInfoNV,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<SemaphoreSciSyncPoolNV, vkResult>;
+    ) -> Result<SemaphoreSciSyncPoolNV, Error>;
 
     fn destroy_semaphore_sci_sync_pool(
         &self,
@@ -52,7 +52,7 @@ impl ExternalSciSync2Device for Device {
     fn get_fence_sci_sync_fence(
         &self,
         get_sci_sync_handle_info: &FenceGetSciSyncInfoNV,
-    ) -> Result<c_void, vkResult> {
+    ) -> Result<c_void, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self
@@ -74,7 +74,7 @@ impl ExternalSciSync2Device for Device {
     fn get_fence_sci_sync_obj(
         &self,
         get_sci_sync_handle_info: &FenceGetSciSyncInfoNV,
-    ) -> Result<c_void, vkResult> {
+    ) -> Result<c_void, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self
@@ -94,7 +94,7 @@ impl ExternalSciSync2Device for Device {
     fn import_fence_sci_sync_fence(
         &self,
         import_fence_sci_sync_info: &ImportFenceSciSyncInfoNV,
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()
@@ -111,7 +111,7 @@ impl ExternalSciSync2Device for Device {
     fn import_fence_sci_sync_obj(
         &self,
         import_fence_sci_sync_info: &ImportFenceSciSyncInfoNV,
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()
@@ -129,7 +129,7 @@ impl ExternalSciSync2Device for Device {
         &self,
         create_info: &SemaphoreSciSyncPoolCreateInfoNV,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<SemaphoreSciSyncPoolNV, vkResult> {
+    ) -> Result<SemaphoreSciSyncPoolNV, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self
@@ -174,7 +174,7 @@ pub trait ExternalSciSync2PhysicalDevice {
         &self,
         sci_sync_attributes_info: &SciSyncAttributesInfoNV,
         attributes: NvSciSyncAttrList,
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 }
 
 impl ExternalSciSync2PhysicalDevice for PhysicalDevice {
@@ -184,7 +184,7 @@ impl ExternalSciSync2PhysicalDevice for PhysicalDevice {
         &self,
         sci_sync_attributes_info: &SciSyncAttributesInfoNV,
         attributes: NvSciSyncAttrList,
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()

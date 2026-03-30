@@ -17,13 +17,13 @@ pub trait OpacityMicromapDevice {
         &self,
         create_info: &MicromapCreateInfoEXT,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<MicromapEXT, vkResult>;
+    ) -> Result<MicromapEXT, Error>;
 
     fn build_micromaps(
         &self,
         deferred_operation: DeferredOperationKHR,
         infos: &[MicromapBuildInfoEXT],
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 
     fn destroy_micromap(&self, micromap: MicromapEXT, allocator: Option<&AllocationCallbacks>);
 
@@ -31,19 +31,19 @@ pub trait OpacityMicromapDevice {
         &self,
         deferred_operation: DeferredOperationKHR,
         info: &CopyMicromapInfoEXT,
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 
     fn copy_micromap_to_memory(
         &self,
         deferred_operation: DeferredOperationKHR,
         info: &CopyMicromapToMemoryInfoEXT,
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 
     fn copy_memory_to_micromap(
         &self,
         deferred_operation: DeferredOperationKHR,
         info: &CopyMemoryToMicromapInfoEXT,
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 
     fn write_micromaps_properties(
         &self,
@@ -51,7 +51,7 @@ pub trait OpacityMicromapDevice {
         query_type: QueryType,
         data: &mut [c_void],
         stride: usize,
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 
     fn get_device_micromap_compatibility(
         &self,
@@ -72,7 +72,7 @@ impl OpacityMicromapDevice for Device {
         &self,
         create_info: &MicromapCreateInfoEXT,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<MicromapEXT, vkResult> {
+    ) -> Result<MicromapEXT, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self
@@ -96,7 +96,7 @@ impl OpacityMicromapDevice for Device {
         &self,
         deferred_operation: DeferredOperationKHR,
         infos: &[MicromapBuildInfoEXT],
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()
@@ -134,7 +134,7 @@ impl OpacityMicromapDevice for Device {
         &self,
         deferred_operation: DeferredOperationKHR,
         info: &CopyMicromapInfoEXT,
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()
@@ -152,7 +152,7 @@ impl OpacityMicromapDevice for Device {
         &self,
         deferred_operation: DeferredOperationKHR,
         info: &CopyMicromapToMemoryInfoEXT,
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()
@@ -170,7 +170,7 @@ impl OpacityMicromapDevice for Device {
         &self,
         deferred_operation: DeferredOperationKHR,
         info: &CopyMemoryToMicromapInfoEXT,
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()
@@ -190,7 +190,7 @@ impl OpacityMicromapDevice for Device {
         query_type: QueryType,
         data: &mut [c_void],
         stride: usize,
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()

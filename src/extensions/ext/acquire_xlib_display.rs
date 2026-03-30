@@ -11,19 +11,19 @@ pub const NAME: &CStr = c"VK_EXT_acquire_xlib_display";
 pub const SPEC_VERSION: u32 = 1;
 
 pub trait AcquireXlibDisplayPhysicalDevice {
-    fn acquire_xlib_display(&self, dpy: *mut Display, display: DisplayKHR) -> Result<(), vkResult>;
+    fn acquire_xlib_display(&self, dpy: *mut Display, display: DisplayKHR) -> Result<(), Error>;
 
     fn get_rand_r_output_display(
         &self,
         dpy: *mut Display,
         rr_output: RROutput,
-    ) -> Result<DisplayKHR, vkResult>;
+    ) -> Result<DisplayKHR, Error>;
 }
 
 impl AcquireXlibDisplayPhysicalDevice for PhysicalDevice {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkAcquireXlibDisplayEXT.html>
     #[inline]
-    fn acquire_xlib_display(&self, dpy: *mut Display, display: DisplayKHR) -> Result<(), vkResult> {
+    fn acquire_xlib_display(&self, dpy: *mut Display, display: DisplayKHR) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()
@@ -41,7 +41,7 @@ impl AcquireXlibDisplayPhysicalDevice for PhysicalDevice {
         &self,
         dpy: *mut Display,
         rr_output: RROutput,
-    ) -> Result<DisplayKHR, vkResult> {
+    ) -> Result<DisplayKHR, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self

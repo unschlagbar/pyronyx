@@ -14,7 +14,7 @@ pub trait PipelinePropertiesDevice {
     fn get_pipeline_properties(
         &self,
         pipeline_info: &PipelineInfoEXT,
-    ) -> Result<BaseOutStructure<'_>, vkResult>;
+    ) -> Result<BaseOutStructure<'_>, Error>;
 }
 
 impl PipelinePropertiesDevice for Device {
@@ -23,7 +23,7 @@ impl PipelinePropertiesDevice for Device {
     fn get_pipeline_properties(
         &self,
         pipeline_info: &PipelineInfoEXT,
-    ) -> Result<BaseOutStructure<'_>, vkResult> {
+    ) -> Result<BaseOutStructure<'_>, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self

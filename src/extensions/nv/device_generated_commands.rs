@@ -97,7 +97,7 @@ pub trait DeviceGeneratedCommandsDevice {
         &self,
         create_info: &IndirectCommandsLayoutCreateInfoNV,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<IndirectCommandsLayoutNV, vkResult>;
+    ) -> Result<IndirectCommandsLayoutNV, Error>;
 
     fn destroy_indirect_commands_layout(
         &self,
@@ -133,7 +133,7 @@ impl DeviceGeneratedCommandsDevice for Device {
         &self,
         create_info: &IndirectCommandsLayoutCreateInfoNV,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<IndirectCommandsLayoutNV, vkResult> {
+    ) -> Result<IndirectCommandsLayoutNV, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self

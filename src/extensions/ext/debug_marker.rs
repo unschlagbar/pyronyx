@@ -13,12 +13,12 @@ pub trait DebugMarkerDevice {
     fn debug_marker_set_object_name(
         &self,
         name_info: &DebugMarkerObjectNameInfoEXT,
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 
     fn debug_marker_set_object_tag(
         &self,
         tag_info: &DebugMarkerObjectTagInfoEXT,
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 }
 
 impl DebugMarkerDevice for Device {
@@ -27,7 +27,7 @@ impl DebugMarkerDevice for Device {
     fn debug_marker_set_object_name(
         &self,
         name_info: &DebugMarkerObjectNameInfoEXT,
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()
@@ -44,7 +44,7 @@ impl DebugMarkerDevice for Device {
     fn debug_marker_set_object_tag(
         &self,
         tag_info: &DebugMarkerObjectTagInfoEXT,
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()

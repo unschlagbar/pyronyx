@@ -14,23 +14,23 @@ pub trait GetDisplayProperties2PhysicalDevice {
     fn get_display_properties2(
         &self,
         properties: &mut [DisplayProperties2KHR],
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 
     fn get_display_plane_properties2(
         &self,
         properties: &mut [DisplayPlaneProperties2KHR],
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 
     fn get_display_mode_properties2(
         &self,
         display: DisplayKHR,
         properties: &mut [DisplayModeProperties2KHR],
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 
     fn get_display_plane_capabilities2(
         &self,
         display_plane_info: &DisplayPlaneInfo2KHR,
-    ) -> Result<DisplayPlaneCapabilities2KHR<'_>, vkResult>;
+    ) -> Result<DisplayPlaneCapabilities2KHR<'_>, Error>;
 }
 
 impl GetDisplayProperties2PhysicalDevice for PhysicalDevice {
@@ -39,7 +39,7 @@ impl GetDisplayProperties2PhysicalDevice for PhysicalDevice {
     fn get_display_properties2(
         &self,
         properties: &mut [DisplayProperties2KHR],
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()
@@ -60,7 +60,7 @@ impl GetDisplayProperties2PhysicalDevice for PhysicalDevice {
     fn get_display_plane_properties2(
         &self,
         properties: &mut [DisplayPlaneProperties2KHR],
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()
@@ -82,7 +82,7 @@ impl GetDisplayProperties2PhysicalDevice for PhysicalDevice {
         &self,
         display: DisplayKHR,
         properties: &mut [DisplayModeProperties2KHR],
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         unsafe {
             (self
                 .fns()
@@ -104,7 +104,7 @@ impl GetDisplayProperties2PhysicalDevice for PhysicalDevice {
     fn get_display_plane_capabilities2(
         &self,
         display_plane_info: &DisplayPlaneInfo2KHR,
-    ) -> Result<DisplayPlaneCapabilities2KHR<'_>, vkResult> {
+    ) -> Result<DisplayPlaneCapabilities2KHR<'_>, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self

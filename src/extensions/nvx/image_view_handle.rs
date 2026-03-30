@@ -18,7 +18,7 @@ pub trait ImageViewHandleDevice {
     fn get_image_view_address(
         &self,
         image_view: ImageView,
-    ) -> Result<ImageViewAddressPropertiesNVX<'_>, vkResult>;
+    ) -> Result<ImageViewAddressPropertiesNVX<'_>, Error>;
 
     fn get_device_combined_image_sampler_index(
         &self,
@@ -59,7 +59,7 @@ impl ImageViewHandleDevice for Device {
     fn get_image_view_address(
         &self,
         image_view: ImageView,
-    ) -> Result<ImageViewAddressPropertiesNVX<'_>, vkResult> {
+    ) -> Result<ImageViewAddressPropertiesNVX<'_>, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self

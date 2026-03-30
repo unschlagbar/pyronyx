@@ -18,15 +18,15 @@ pub trait CudaKernelLaunchDevice {
         &self,
         create_info: &CudaModuleCreateInfoNV,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<CudaModuleNV, vkResult>;
+    ) -> Result<CudaModuleNV, Error>;
 
-    fn get_cuda_module_cache(&self, module: CudaModuleNV) -> Result<Vec<c_void>, vkResult>;
+    fn get_cuda_module_cache(&self, module: CudaModuleNV) -> Result<Vec<c_void>, Error>;
 
     fn create_cuda_function(
         &self,
         create_info: &CudaFunctionCreateInfoNV,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<CudaFunctionNV, vkResult>;
+    ) -> Result<CudaFunctionNV, Error>;
 
     fn destroy_cuda_module(&self, module: CudaModuleNV, allocator: Option<&AllocationCallbacks>);
 
@@ -44,7 +44,7 @@ impl CudaKernelLaunchDevice for Device {
         &self,
         create_info: &CudaModuleCreateInfoNV,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<CudaModuleNV, vkResult> {
+    ) -> Result<CudaModuleNV, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self
@@ -64,7 +64,7 @@ impl CudaKernelLaunchDevice for Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetCudaModuleCacheNV.html>
     #[inline]
-    fn get_cuda_module_cache(&self, module: CudaModuleNV) -> Result<Vec<c_void>, vkResult> {
+    fn get_cuda_module_cache(&self, module: CudaModuleNV) -> Result<Vec<c_void>, Error> {
         read_into_vec_result(|count, data| unsafe {
             (self
                 .fns()
@@ -81,7 +81,7 @@ impl CudaKernelLaunchDevice for Device {
         &self,
         create_info: &CudaFunctionCreateInfoNV,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<CudaFunctionNV, vkResult> {
+    ) -> Result<CudaFunctionNV, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self

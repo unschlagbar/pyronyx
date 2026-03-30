@@ -16,7 +16,7 @@ pub trait XcbSurfaceInstance {
         &self,
         create_info: &XcbSurfaceCreateInfoKHR,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<SurfaceKHR, vkResult>;
+    ) -> Result<SurfaceKHR, Error>;
 }
 
 impl XcbSurfaceInstance for Instance {
@@ -26,7 +26,7 @@ impl XcbSurfaceInstance for Instance {
         &self,
         create_info: &XcbSurfaceCreateInfoKHR,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<SurfaceKHR, vkResult> {
+    ) -> Result<SurfaceKHR, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self

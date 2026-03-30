@@ -14,7 +14,7 @@ pub trait DeviceFaultDevice {
     fn get_device_fault_info(
         &self,
         fault_counts: *mut DeviceFaultCountsEXT,
-    ) -> Result<DeviceFaultInfoEXT<'_>, vkResult>;
+    ) -> Result<DeviceFaultInfoEXT<'_>, Error>;
 }
 
 impl DeviceFaultDevice for Device {
@@ -23,7 +23,7 @@ impl DeviceFaultDevice for Device {
     fn get_device_fault_info(
         &self,
         fault_counts: *mut DeviceFaultCountsEXT,
-    ) -> Result<DeviceFaultInfoEXT<'_>, vkResult> {
+    ) -> Result<DeviceFaultInfoEXT<'_>, Error> {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self

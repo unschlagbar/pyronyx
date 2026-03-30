@@ -654,11 +654,11 @@ pub trait ShaderObjectDevice {
         create_infos: &[ShaderCreateInfoEXT],
         allocator: Option<&AllocationCallbacks>,
         shaders: &mut [ShaderEXT],
-    ) -> Result<(), vkResult>;
+    ) -> Result<(), Error>;
 
     fn destroy_shader(&self, shader: ShaderEXT, allocator: Option<&AllocationCallbacks>);
 
-    fn get_shader_binary_data(&self, shader: ShaderEXT) -> Result<Vec<c_void>, vkResult>;
+    fn get_shader_binary_data(&self, shader: ShaderEXT) -> Result<Vec<c_void>, Error>;
 }
 
 impl ShaderObjectDevice for Device {
@@ -669,7 +669,7 @@ impl ShaderObjectDevice for Device {
         create_infos: &[ShaderCreateInfoEXT],
         allocator: Option<&AllocationCallbacks>,
         shaders: &mut [ShaderEXT],
-    ) -> Result<(), vkResult> {
+    ) -> Result<(), Error> {
         assert_eq!(create_infos.len(), shaders.len());
         unsafe {
             (self
@@ -705,7 +705,7 @@ impl ShaderObjectDevice for Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetShaderBinaryDataEXT.html>
     #[inline]
-    fn get_shader_binary_data(&self, shader: ShaderEXT) -> Result<Vec<c_void>, vkResult> {
+    fn get_shader_binary_data(&self, shader: ShaderEXT) -> Result<Vec<c_void>, Error> {
         read_into_vec_result(|count, data| unsafe {
             (self
                 .fns()
