@@ -111,14 +111,14 @@ impl Instance {
         let loader =
             |name: &CStr| unsafe { transmute(get_instance_proc_addr(instance, name.as_ptr())) };
 
-        let extensions: &[*const i8] = if create_info.pp_enabled_extension_names.is_null()
+        let extensions: &[*const i8] = if create_info.enabled_extension_names.is_null()
             || create_info.enabled_extension_count == 0
         {
             &[]
         } else {
             unsafe {
                 slice::from_raw_parts(
-                    create_info.pp_enabled_extension_names.cast(),
+                    create_info.enabled_extension_names.cast(),
                     create_info.enabled_extension_count as usize,
                 )
             }
@@ -227,14 +227,14 @@ impl PhysicalDevice {
 
         let loader = |name: &CStr| unsafe { transmute((device_loader)(handle, name.as_ptr())) };
 
-        let extensions: &[*const i8] = if create_info.pp_enabled_extension_names.is_null()
+        let extensions: &[*const i8] = if create_info.enabled_extension_names.is_null()
             || create_info.enabled_extension_count == 0
         {
             &[]
         } else {
             unsafe {
                 slice::from_raw_parts(
-                    create_info.pp_enabled_extension_names.cast(),
+                    create_info.enabled_extension_names.cast(),
                     create_info.enabled_extension_count as usize,
                 )
             }

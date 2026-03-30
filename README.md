@@ -27,7 +27,7 @@ Lightweight fully generated next gen Vulkan bindings for Rust — focused on zer
 
 ## Everything is on the right handle
 
-`Device`, `PhysicalDevice`, `Instance`, `Queue`, `CommandBuffer` — every handle owns its commands directly. There is nothing to construct beyond the handle itself:
+`Device`, `PhysicalDevice`, `Instance`, `Queue`, `CommandBuffer` — every handle knows its commands directly. There is nothing to construct beyond the handle itself:
 
 ```rust
 // physical device queries
@@ -50,7 +50,7 @@ command_buffer.draw_indexed(index_count, 1, 0, 0, 0);
 
 ---
 
-## Extensions — no loader structs
+## Extensions — no loaders required
 
 Enable an extension in `CreateInfo` and its functions are immediately available on the handle. No separate objects, no extra allocation:
 
@@ -58,7 +58,7 @@ Enable an extension in `CreateInfo` and its functions are immediately available 
 let extensions = [surface::NAME.as_ptr(), wayland_surface::NAME.as_ptr()];
 
 let create_info = vk::InstanceCreateInfo {
-    pp_enabled_extension_names: extensions.as_ptr(),
+    enabled_extension_names: extensions.as_ptr(),
     enabled_extension_count: extensions.len() as u32,
     ..Default::default()
 };
@@ -91,7 +91,7 @@ Every handle is a raw Vulkan handle plus a single pointer to its vtable — noth
 
 ```rust
 let images = device.get_swapchain_images(swapchain)?;  // Vec<Image>
-let devices = instance.enumerate_physical_devices()?;    // Vec<PhysicalDevice>
+let devices = instance.enumerate_physical_devices()?;  // Vec<PhysicalDevice>
 
 // count/pointer pairs become slices
 command_buffer.bind_descriptor_sets(
@@ -107,7 +107,7 @@ command_buffer.bind_descriptor_sets(
 
 ## Vulkan Video
 
-Complete generated bindings video:
+Complete generated bindings for video:
 
 ```rust
 use pyronyx::vk::video::*;

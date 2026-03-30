@@ -143,7 +143,7 @@ pub type vkMapMemory = unsafe extern "system" fn(
     offset: DeviceSize,
     size: DeviceSize,
     flags: MemoryMapFlags,
-    pp_data: *mut *mut c_void,
+    data: *mut *mut c_void,
 ) -> vkResult;
 
 pub type vkUnmapMemory = unsafe extern "system" fn(device: vkDevice, memory: DeviceMemory);
@@ -3102,7 +3102,7 @@ pub type vkCmdBuildAccelerationStructuresKHR = unsafe extern "system" fn(
     command_buffer: vkCommandBuffer,
     info_count: u32,
     infos: *const AccelerationStructureBuildGeometryInfoKHR,
-    pp_build_range_infos: *const *const AccelerationStructureBuildRangeInfoKHR,
+    build_range_infos: *const *const AccelerationStructureBuildRangeInfoKHR,
 );
 
 pub type vkCmdBuildAccelerationStructuresIndirectKHR = unsafe extern "system" fn(
@@ -3111,7 +3111,7 @@ pub type vkCmdBuildAccelerationStructuresIndirectKHR = unsafe extern "system" fn
     infos: *const AccelerationStructureBuildGeometryInfoKHR,
     indirect_device_addresses: *const DeviceAddress,
     indirect_strides: *const u32,
-    pp_max_primitive_counts: *const *const u32,
+    max_primitive_counts: *const *const u32,
 );
 
 pub type vkBuildAccelerationStructuresKHR = unsafe extern "system" fn(
@@ -3119,7 +3119,7 @@ pub type vkBuildAccelerationStructuresKHR = unsafe extern "system" fn(
     deferred_operation: DeferredOperationKHR,
     info_count: u32,
     infos: *const AccelerationStructureBuildGeometryInfoKHR,
-    pp_build_range_infos: *const *const AccelerationStructureBuildRangeInfoKHR,
+    build_range_infos: *const *const AccelerationStructureBuildRangeInfoKHR,
 ) -> vkResult;
 
 pub type vkGetAccelerationStructureDeviceAddressKHR = unsafe extern "system" fn(
@@ -4134,7 +4134,7 @@ pub type vkGetDescriptorSetLayoutHostMappingInfoVALVE = unsafe extern "system" f
 pub type vkGetDescriptorSetHostMappingVALVE = unsafe extern "system" fn(
     device: vkDevice,
     descriptor_set: DescriptorSet,
-    pp_data: *mut *mut c_void,
+    data: *mut *mut c_void,
 );
 
 pub type vkCreateMicromapEXT = unsafe extern "system" fn(
@@ -4356,13 +4356,13 @@ pub type vkGetDeviceImageSubresourceLayoutKHR = unsafe extern "system" fn(
 pub type vkMapMemory2 = unsafe extern "system" fn(
     device: vkDevice,
     memory_map_info: *const MemoryMapInfo,
-    pp_data: *mut *mut c_void,
+    data: *mut *mut c_void,
 ) -> vkResult;
 
 pub type vkMapMemory2KHR = unsafe extern "system" fn(
     device: vkDevice,
     memory_map_info: *const MemoryMapInfo,
-    pp_data: *mut *mut c_void,
+    data: *mut *mut c_void,
 ) -> vkResult;
 
 pub type vkUnmapMemory2 = unsafe extern "system" fn(

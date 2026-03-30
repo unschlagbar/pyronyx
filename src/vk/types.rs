@@ -1866,9 +1866,9 @@ pub struct DeviceCreateInfo<'a> {
     pub queue_create_infos: *const DeviceQueueCreateInfo<'a>,
     pub enabled_layer_count: u32,
     /// Ordered list of layer names to be enabled
-    pub pp_enabled_layer_names: *const *const c_char,
+    pub enabled_layer_names: *const *const c_char,
     pub enabled_extension_count: u32,
-    pub pp_enabled_extension_names: *const *const c_char,
+    pub enabled_extension_names: *const *const c_char,
     /// Nullable
     pub enabled_features: *const PhysicalDeviceFeatures,
     pub _marker: PhantomData<&'a ()>,
@@ -1882,9 +1882,9 @@ impl Default for DeviceCreateInfo<'_> {
             queue_create_info_count: 0,
             queue_create_infos: ptr::null_mut(),
             enabled_layer_count: 0,
-            pp_enabled_layer_names: ptr::null_mut(),
+            enabled_layer_names: ptr::null_mut(),
             enabled_extension_count: 0,
-            pp_enabled_extension_names: ptr::null_mut(),
+            enabled_extension_names: ptr::null_mut(),
             enabled_features: ptr::null_mut(),
             _marker: PhantomData,
         }
@@ -1902,10 +1902,10 @@ pub struct InstanceCreateInfo<'a> {
     pub application_info: *const ApplicationInfo<'a>,
     pub enabled_layer_count: u32,
     /// Ordered list of layer names to be enabled
-    pub pp_enabled_layer_names: *const *const c_char,
+    pub enabled_layer_names: *const *const c_char,
     pub enabled_extension_count: u32,
     /// Extension names to be enabled
-    pub pp_enabled_extension_names: *const *const c_char,
+    pub enabled_extension_names: *const *const c_char,
     pub _marker: PhantomData<&'a ()>,
 }
 impl Default for InstanceCreateInfo<'_> {
@@ -1916,9 +1916,9 @@ impl Default for InstanceCreateInfo<'_> {
             flags: Default::default(),
             application_info: ptr::null_mut(),
             enabled_layer_count: 0,
-            pp_enabled_layer_names: ptr::null_mut(),
+            enabled_layer_names: ptr::null_mut(),
             enabled_extension_count: 0,
-            pp_enabled_extension_names: ptr::null_mut(),
+            enabled_extension_names: ptr::null_mut(),
             _marker: PhantomData,
         }
     }
@@ -24003,7 +24003,7 @@ pub struct VideoCapabilitiesKHR<'a> {
     pub max_coded_extent: Extent2D,
     pub max_dpb_slots: u32,
     pub max_active_reference_pictures: u32,
-    pub std_header_version: ExtensionProperties,
+    pub header_version: ExtensionProperties,
     pub _marker: PhantomData<&'a ()>,
 }
 impl Default for VideoCapabilitiesKHR<'_> {
@@ -24019,7 +24019,7 @@ impl Default for VideoCapabilitiesKHR<'_> {
             max_coded_extent: Default::default(),
             max_dpb_slots: 0,
             max_active_reference_pictures: 0,
-            std_header_version: Default::default(),
+            header_version: Default::default(),
             _marker: PhantomData,
         }
     }
@@ -24281,7 +24281,7 @@ pub struct VideoDecodeH264ProfileInfoKHR<'a> {
     pub s_type: StructureType,
     /// Nullable
     pub next: *const c_void,
-    pub std_profile_idc: H264ProfileIdc,
+    pub profile_idc: H264ProfileIdc,
     pub picture_layout: VideoDecodeH264PictureLayoutFlagsKHR,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -24290,7 +24290,7 @@ impl Default for VideoDecodeH264ProfileInfoKHR<'_> {
         Self {
             s_type: StructureType::VideoDecodeH264ProfileInfoKHR,
             next: ptr::null_mut(),
-            std_profile_idc: Default::default(),
+            profile_idc: Default::default(),
             picture_layout: Default::default(),
             _marker: PhantomData,
         }
@@ -24328,11 +24328,11 @@ pub struct VideoDecodeH264SessionParametersAddInfoKHR<'a> {
     pub s_type: StructureType,
     /// Nullable
     pub next: *const c_void,
-    pub std_sps_count: u32,
-    pub std_sp_ss: *const H264SequenceParameterSet<'a>,
-    pub std_pps_count: u32,
+    pub sps_count: u32,
+    pub sp_ss: *const H264SequenceParameterSet<'a>,
+    pub pps_count: u32,
     /// List of Picture Parameters associated with the spsStd, above
-    pub std_pp_ss: *const H264PictureParameterSet<'a>,
+    pub pp_ss: *const H264PictureParameterSet<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
 impl Default for VideoDecodeH264SessionParametersAddInfoKHR<'_> {
@@ -24340,10 +24340,10 @@ impl Default for VideoDecodeH264SessionParametersAddInfoKHR<'_> {
         Self {
             s_type: StructureType::VideoDecodeH264SessionParametersAddInfoKHR,
             next: ptr::null_mut(),
-            std_sps_count: 0,
-            std_sp_ss: ptr::null_mut(),
-            std_pps_count: 0,
-            std_pp_ss: ptr::null_mut(),
+            sps_count: 0,
+            sp_ss: ptr::null_mut(),
+            pps_count: 0,
+            pp_ss: ptr::null_mut(),
             _marker: PhantomData,
         }
     }
@@ -24356,8 +24356,8 @@ pub struct VideoDecodeH264SessionParametersCreateInfoKHR<'a> {
     pub s_type: StructureType,
     /// Nullable
     pub next: *const c_void,
-    pub max_std_sps_count: u32,
-    pub max_std_pps_count: u32,
+    pub max_sps_count: u32,
+    pub max_pps_count: u32,
     /// Nullable
     pub parameters_add_info: *const VideoDecodeH264SessionParametersAddInfoKHR<'a>,
     pub _marker: PhantomData<&'a ()>,
@@ -24367,8 +24367,8 @@ impl Default for VideoDecodeH264SessionParametersCreateInfoKHR<'_> {
         Self {
             s_type: StructureType::VideoDecodeH264SessionParametersCreateInfoKHR,
             next: ptr::null_mut(),
-            max_std_sps_count: 0,
-            max_std_pps_count: 0,
+            max_sps_count: 0,
+            max_pps_count: 0,
             parameters_add_info: ptr::null_mut(),
             _marker: PhantomData,
         }
@@ -24383,9 +24383,9 @@ pub struct VideoDecodeH264InlineSessionParametersInfoKHR<'a> {
     /// Nullable
     pub next: *const c_void,
     /// Nullable
-    pub std_sps: *const H264SequenceParameterSet<'a>,
+    pub sps: *const H264SequenceParameterSet<'a>,
     /// Nullable
-    pub std_pps: *const H264PictureParameterSet<'a>,
+    pub pps: *const H264PictureParameterSet<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
 impl Default for VideoDecodeH264InlineSessionParametersInfoKHR<'_> {
@@ -24393,8 +24393,8 @@ impl Default for VideoDecodeH264InlineSessionParametersInfoKHR<'_> {
         Self {
             s_type: StructureType::VideoDecodeH264InlineSessionParametersInfoKHR,
             next: ptr::null_mut(),
-            std_sps: ptr::null_mut(),
-            std_pps: ptr::null_mut(),
+            sps: ptr::null_mut(),
+            pps: ptr::null_mut(),
             _marker: PhantomData,
         }
     }
@@ -24407,7 +24407,7 @@ pub struct VideoDecodeH264PictureInfoKHR<'a> {
     pub s_type: StructureType,
     /// Nullable
     pub next: *const c_void,
-    pub std_picture_info: *const DecodeH264PictureInfo,
+    pub picture_info: *const DecodeH264PictureInfo,
     pub slice_count: u32,
     pub slice_offsets: *const u32,
     pub _marker: PhantomData<&'a ()>,
@@ -24417,7 +24417,7 @@ impl Default for VideoDecodeH264PictureInfoKHR<'_> {
         Self {
             s_type: StructureType::VideoDecodeH264PictureInfoKHR,
             next: ptr::null_mut(),
-            std_picture_info: ptr::null_mut(),
+            picture_info: ptr::null_mut(),
             slice_count: 0,
             slice_offsets: ptr::null_mut(),
             _marker: PhantomData,
@@ -24432,7 +24432,7 @@ pub struct VideoDecodeH264DpbSlotInfoKHR<'a> {
     pub s_type: StructureType,
     /// Nullable
     pub next: *const c_void,
-    pub std_reference_info: *const DecodeH264ReferenceInfo,
+    pub reference_info: *const DecodeH264ReferenceInfo,
     pub _marker: PhantomData<&'a ()>,
 }
 impl Default for VideoDecodeH264DpbSlotInfoKHR<'_> {
@@ -24440,7 +24440,7 @@ impl Default for VideoDecodeH264DpbSlotInfoKHR<'_> {
         Self {
             s_type: StructureType::VideoDecodeH264DpbSlotInfoKHR,
             next: ptr::null_mut(),
-            std_reference_info: ptr::null_mut(),
+            reference_info: ptr::null_mut(),
             _marker: PhantomData,
         }
     }
@@ -24453,7 +24453,7 @@ pub struct VideoDecodeH265ProfileInfoKHR<'a> {
     pub s_type: StructureType,
     /// Nullable
     pub next: *const c_void,
-    pub std_profile_idc: H265ProfileIdc,
+    pub profile_idc: H265ProfileIdc,
     pub _marker: PhantomData<&'a ()>,
 }
 impl Default for VideoDecodeH265ProfileInfoKHR<'_> {
@@ -24461,7 +24461,7 @@ impl Default for VideoDecodeH265ProfileInfoKHR<'_> {
         Self {
             s_type: StructureType::VideoDecodeH265ProfileInfoKHR,
             next: ptr::null_mut(),
-            std_profile_idc: Default::default(),
+            profile_idc: Default::default(),
             _marker: PhantomData,
         }
     }
@@ -24496,13 +24496,13 @@ pub struct VideoDecodeH265SessionParametersAddInfoKHR<'a> {
     pub s_type: StructureType,
     /// Nullable
     pub next: *const c_void,
-    pub std_vps_count: u32,
-    pub std_vp_ss: *const H265VideoParameterSet<'a>,
-    pub std_sps_count: u32,
-    pub std_sp_ss: *const H265SequenceParameterSet<'a>,
-    pub std_pps_count: u32,
+    pub vps_count: u32,
+    pub vp_ss: *const H265VideoParameterSet<'a>,
+    pub sps_count: u32,
+    pub sp_ss: *const H265SequenceParameterSet<'a>,
+    pub pps_count: u32,
     /// List of Picture Parameters associated with the spsStd, above
-    pub std_pp_ss: *const H265PictureParameterSet<'a>,
+    pub pp_ss: *const H265PictureParameterSet<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
 impl Default for VideoDecodeH265SessionParametersAddInfoKHR<'_> {
@@ -24510,12 +24510,12 @@ impl Default for VideoDecodeH265SessionParametersAddInfoKHR<'_> {
         Self {
             s_type: StructureType::VideoDecodeH265SessionParametersAddInfoKHR,
             next: ptr::null_mut(),
-            std_vps_count: 0,
-            std_vp_ss: ptr::null_mut(),
-            std_sps_count: 0,
-            std_sp_ss: ptr::null_mut(),
-            std_pps_count: 0,
-            std_pp_ss: ptr::null_mut(),
+            vps_count: 0,
+            vp_ss: ptr::null_mut(),
+            sps_count: 0,
+            sp_ss: ptr::null_mut(),
+            pps_count: 0,
+            pp_ss: ptr::null_mut(),
             _marker: PhantomData,
         }
     }
@@ -24528,9 +24528,9 @@ pub struct VideoDecodeH265SessionParametersCreateInfoKHR<'a> {
     pub s_type: StructureType,
     /// Nullable
     pub next: *const c_void,
-    pub max_std_vps_count: u32,
-    pub max_std_sps_count: u32,
-    pub max_std_pps_count: u32,
+    pub max_vps_count: u32,
+    pub max_sps_count: u32,
+    pub max_pps_count: u32,
     /// Nullable
     pub parameters_add_info: *const VideoDecodeH265SessionParametersAddInfoKHR<'a>,
     pub _marker: PhantomData<&'a ()>,
@@ -24540,9 +24540,9 @@ impl Default for VideoDecodeH265SessionParametersCreateInfoKHR<'_> {
         Self {
             s_type: StructureType::VideoDecodeH265SessionParametersCreateInfoKHR,
             next: ptr::null_mut(),
-            max_std_vps_count: 0,
-            max_std_sps_count: 0,
-            max_std_pps_count: 0,
+            max_vps_count: 0,
+            max_sps_count: 0,
+            max_pps_count: 0,
             parameters_add_info: ptr::null_mut(),
             _marker: PhantomData,
         }
@@ -24557,11 +24557,11 @@ pub struct VideoDecodeH265InlineSessionParametersInfoKHR<'a> {
     /// Nullable
     pub next: *const c_void,
     /// Nullable
-    pub std_vps: *const H265VideoParameterSet<'a>,
+    pub vps: *const H265VideoParameterSet<'a>,
     /// Nullable
-    pub std_sps: *const H265SequenceParameterSet<'a>,
+    pub sps: *const H265SequenceParameterSet<'a>,
     /// Nullable
-    pub std_pps: *const H265PictureParameterSet<'a>,
+    pub pps: *const H265PictureParameterSet<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
 impl Default for VideoDecodeH265InlineSessionParametersInfoKHR<'_> {
@@ -24569,9 +24569,9 @@ impl Default for VideoDecodeH265InlineSessionParametersInfoKHR<'_> {
         Self {
             s_type: StructureType::VideoDecodeH265InlineSessionParametersInfoKHR,
             next: ptr::null_mut(),
-            std_vps: ptr::null_mut(),
-            std_sps: ptr::null_mut(),
-            std_pps: ptr::null_mut(),
+            vps: ptr::null_mut(),
+            sps: ptr::null_mut(),
+            pps: ptr::null_mut(),
             _marker: PhantomData,
         }
     }
@@ -24584,7 +24584,7 @@ pub struct VideoDecodeH265PictureInfoKHR<'a> {
     pub s_type: StructureType,
     /// Nullable
     pub next: *const c_void,
-    pub std_picture_info: *const DecodeH265PictureInfo,
+    pub picture_info: *const DecodeH265PictureInfo,
     pub slice_segment_count: u32,
     pub slice_segment_offsets: *const u32,
     pub _marker: PhantomData<&'a ()>,
@@ -24594,7 +24594,7 @@ impl Default for VideoDecodeH265PictureInfoKHR<'_> {
         Self {
             s_type: StructureType::VideoDecodeH265PictureInfoKHR,
             next: ptr::null_mut(),
-            std_picture_info: ptr::null_mut(),
+            picture_info: ptr::null_mut(),
             slice_segment_count: 0,
             slice_segment_offsets: ptr::null_mut(),
             _marker: PhantomData,
@@ -24609,7 +24609,7 @@ pub struct VideoDecodeH265DpbSlotInfoKHR<'a> {
     pub s_type: StructureType,
     /// Nullable
     pub next: *const c_void,
-    pub std_reference_info: *const DecodeH265ReferenceInfo,
+    pub reference_info: *const DecodeH265ReferenceInfo,
     pub _marker: PhantomData<&'a ()>,
 }
 impl Default for VideoDecodeH265DpbSlotInfoKHR<'_> {
@@ -24617,7 +24617,7 @@ impl Default for VideoDecodeH265DpbSlotInfoKHR<'_> {
         Self {
             s_type: StructureType::VideoDecodeH265DpbSlotInfoKHR,
             next: ptr::null_mut(),
-            std_reference_info: ptr::null_mut(),
+            reference_info: ptr::null_mut(),
             _marker: PhantomData,
         }
     }
@@ -24651,7 +24651,7 @@ pub struct VideoDecodeVP9ProfileInfoKHR<'a> {
     pub s_type: StructureType,
     /// Nullable
     pub next: *const c_void,
-    pub std_profile: VP9Profile,
+    pub profile: VP9Profile,
     pub _marker: PhantomData<&'a ()>,
 }
 impl Default for VideoDecodeVP9ProfileInfoKHR<'_> {
@@ -24659,7 +24659,7 @@ impl Default for VideoDecodeVP9ProfileInfoKHR<'_> {
         Self {
             s_type: StructureType::VideoDecodeVP9ProfileInfoKHR,
             next: ptr::null_mut(),
-            std_profile: Default::default(),
+            profile: Default::default(),
             _marker: PhantomData,
         }
     }
@@ -24694,7 +24694,7 @@ pub struct VideoDecodeVP9PictureInfoKHR<'a> {
     pub s_type: StructureType,
     /// Nullable
     pub next: *const c_void,
-    pub std_picture_info: *const DecodeVP9PictureInfo<'a>,
+    pub picture_info: *const DecodeVP9PictureInfo<'a>,
     pub reference_name_slot_indices: [i32; MAX_VIDEO_VP9_REFERENCES_PER_FRAME_KHR as usize],
     pub uncompressed_header_offset: u32,
     pub compressed_header_offset: u32,
@@ -24706,7 +24706,7 @@ impl Default for VideoDecodeVP9PictureInfoKHR<'_> {
         Self {
             s_type: StructureType::VideoDecodeVP9PictureInfoKHR,
             next: ptr::null_mut(),
-            std_picture_info: ptr::null_mut(),
+            picture_info: ptr::null_mut(),
             reference_name_slot_indices: unsafe { mem::zeroed() },
             uncompressed_header_offset: 0,
             compressed_header_offset: 0,
@@ -24723,7 +24723,7 @@ pub struct VideoDecodeAV1ProfileInfoKHR<'a> {
     pub s_type: StructureType,
     /// Nullable
     pub next: *const c_void,
-    pub std_profile: AV1Profile,
+    pub profile: AV1Profile,
     pub film_grain_support: Bool32,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -24732,7 +24732,7 @@ impl Default for VideoDecodeAV1ProfileInfoKHR<'_> {
         Self {
             s_type: StructureType::VideoDecodeAV1ProfileInfoKHR,
             next: ptr::null_mut(),
-            std_profile: Default::default(),
+            profile: Default::default(),
             film_grain_support: FALSE,
             _marker: PhantomData,
         }
@@ -24768,7 +24768,7 @@ pub struct VideoDecodeAV1SessionParametersCreateInfoKHR<'a> {
     pub s_type: StructureType,
     /// Nullable
     pub next: *const c_void,
-    pub std_sequence_header: *const AV1SequenceHeader<'a>,
+    pub sequence_header: *const AV1SequenceHeader<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
 impl Default for VideoDecodeAV1SessionParametersCreateInfoKHR<'_> {
@@ -24776,7 +24776,7 @@ impl Default for VideoDecodeAV1SessionParametersCreateInfoKHR<'_> {
         Self {
             s_type: StructureType::VideoDecodeAV1SessionParametersCreateInfoKHR,
             next: ptr::null_mut(),
-            std_sequence_header: ptr::null_mut(),
+            sequence_header: ptr::null_mut(),
             _marker: PhantomData,
         }
     }
@@ -24790,7 +24790,7 @@ pub struct VideoDecodeAV1InlineSessionParametersInfoKHR<'a> {
     /// Nullable
     pub next: *const c_void,
     /// Nullable
-    pub std_sequence_header: *const AV1SequenceHeader<'a>,
+    pub sequence_header: *const AV1SequenceHeader<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
 impl Default for VideoDecodeAV1InlineSessionParametersInfoKHR<'_> {
@@ -24798,7 +24798,7 @@ impl Default for VideoDecodeAV1InlineSessionParametersInfoKHR<'_> {
         Self {
             s_type: StructureType::VideoDecodeAV1InlineSessionParametersInfoKHR,
             next: ptr::null_mut(),
-            std_sequence_header: ptr::null_mut(),
+            sequence_header: ptr::null_mut(),
             _marker: PhantomData,
         }
     }
@@ -24811,7 +24811,7 @@ pub struct VideoDecodeAV1PictureInfoKHR<'a> {
     pub s_type: StructureType,
     /// Nullable
     pub next: *const c_void,
-    pub std_picture_info: *const DecodeAV1PictureInfo<'a>,
+    pub picture_info: *const DecodeAV1PictureInfo<'a>,
     pub reference_name_slot_indices: [i32; MAX_VIDEO_AV1_REFERENCES_PER_FRAME_KHR as usize],
     pub frame_header_offset: u32,
     pub tile_count: u32,
@@ -24824,7 +24824,7 @@ impl Default for VideoDecodeAV1PictureInfoKHR<'_> {
         Self {
             s_type: StructureType::VideoDecodeAV1PictureInfoKHR,
             next: ptr::null_mut(),
-            std_picture_info: ptr::null_mut(),
+            picture_info: ptr::null_mut(),
             reference_name_slot_indices: unsafe { mem::zeroed() },
             frame_header_offset: 0,
             tile_count: 0,
@@ -24842,7 +24842,7 @@ pub struct VideoDecodeAV1DpbSlotInfoKHR<'a> {
     pub s_type: StructureType,
     /// Nullable
     pub next: *const c_void,
-    pub std_reference_info: *const DecodeAV1ReferenceInfo,
+    pub reference_info: *const DecodeAV1ReferenceInfo,
     pub _marker: PhantomData<&'a ()>,
 }
 impl Default for VideoDecodeAV1DpbSlotInfoKHR<'_> {
@@ -24850,7 +24850,7 @@ impl Default for VideoDecodeAV1DpbSlotInfoKHR<'_> {
         Self {
             s_type: StructureType::VideoDecodeAV1DpbSlotInfoKHR,
             next: ptr::null_mut(),
-            std_reference_info: ptr::null_mut(),
+            reference_info: ptr::null_mut(),
             _marker: PhantomData,
         }
     }
@@ -24870,7 +24870,7 @@ pub struct VideoSessionCreateInfoKHR<'a> {
     pub reference_picture_format: Format,
     pub max_dpb_slots: u32,
     pub max_active_reference_pictures: u32,
-    pub std_header_version: *const ExtensionProperties,
+    pub header_version: *const ExtensionProperties,
     pub _marker: PhantomData<&'a ()>,
 }
 impl Default for VideoSessionCreateInfoKHR<'_> {
@@ -24886,7 +24886,7 @@ impl Default for VideoSessionCreateInfoKHR<'_> {
             reference_picture_format: Default::default(),
             max_dpb_slots: 0,
             max_active_reference_pictures: 0,
-            std_header_version: ptr::null_mut(),
+            header_version: ptr::null_mut(),
             _marker: PhantomData,
         }
     }
@@ -25370,7 +25370,7 @@ pub struct VideoEncodeH264CapabilitiesKHR<'a> {
     pub max_qp: i32,
     pub prefers_gop_remaining_frames: Bool32,
     pub requires_gop_remaining_frames: Bool32,
-    pub std_syntax_flags: VideoEncodeH264StdFlagsKHR,
+    pub syntax_flags: VideoEncodeH264StdFlagsKHR,
     pub _marker: PhantomData<&'a ()>,
 }
 impl Default for VideoEncodeH264CapabilitiesKHR<'_> {
@@ -25390,7 +25390,7 @@ impl Default for VideoEncodeH264CapabilitiesKHR<'_> {
             max_qp: 0,
             prefers_gop_remaining_frames: FALSE,
             requires_gop_remaining_frames: FALSE,
-            std_syntax_flags: Default::default(),
+            syntax_flags: Default::default(),
             _marker: PhantomData,
         }
     }
@@ -25412,7 +25412,7 @@ pub struct VideoEncodeH264QualityLevelPropertiesKHR<'a> {
     pub preferred_constant_qp: VideoEncodeH264QpKHR,
     pub preferred_max_l0_reference_count: u32,
     pub preferred_max_l1_reference_count: u32,
-    pub preferred_std_entropy_coding_mode_flag: Bool32,
+    pub preferred_entropy_coding_mode_flag: Bool32,
     pub _marker: PhantomData<&'a ()>,
 }
 impl Default for VideoEncodeH264QualityLevelPropertiesKHR<'_> {
@@ -25428,7 +25428,7 @@ impl Default for VideoEncodeH264QualityLevelPropertiesKHR<'_> {
             preferred_constant_qp: Default::default(),
             preferred_max_l0_reference_count: 0,
             preferred_max_l1_reference_count: 0,
-            preferred_std_entropy_coding_mode_flag: FALSE,
+            preferred_entropy_coding_mode_flag: FALSE,
             _marker: PhantomData,
         }
     }
@@ -25464,13 +25464,13 @@ pub struct VideoEncodeH264SessionParametersAddInfoKHR<'a> {
     pub s_type: StructureType,
     /// Nullable
     pub next: *const c_void,
-    pub std_sps_count: u32,
+    pub sps_count: u32,
     /// Nullable
-    pub std_sp_ss: *const H264SequenceParameterSet<'a>,
-    pub std_pps_count: u32,
+    pub sp_ss: *const H264SequenceParameterSet<'a>,
+    pub pps_count: u32,
     /// List of Picture Parameters associated with the spsStd, above
     /// Nullable
-    pub std_pp_ss: *const H264PictureParameterSet<'a>,
+    pub pp_ss: *const H264PictureParameterSet<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
 impl Default for VideoEncodeH264SessionParametersAddInfoKHR<'_> {
@@ -25478,10 +25478,10 @@ impl Default for VideoEncodeH264SessionParametersAddInfoKHR<'_> {
         Self {
             s_type: StructureType::VideoEncodeH264SessionParametersAddInfoKHR,
             next: ptr::null_mut(),
-            std_sps_count: 0,
-            std_sp_ss: ptr::null_mut(),
-            std_pps_count: 0,
-            std_pp_ss: ptr::null_mut(),
+            sps_count: 0,
+            sp_ss: ptr::null_mut(),
+            pps_count: 0,
+            pp_ss: ptr::null_mut(),
             _marker: PhantomData,
         }
     }
@@ -25494,8 +25494,8 @@ pub struct VideoEncodeH264SessionParametersCreateInfoKHR<'a> {
     pub s_type: StructureType,
     /// Nullable
     pub next: *const c_void,
-    pub max_std_sps_count: u32,
-    pub max_std_pps_count: u32,
+    pub max_sps_count: u32,
+    pub max_pps_count: u32,
     /// Nullable
     pub parameters_add_info: *const VideoEncodeH264SessionParametersAddInfoKHR<'a>,
     pub _marker: PhantomData<&'a ()>,
@@ -25505,8 +25505,8 @@ impl Default for VideoEncodeH264SessionParametersCreateInfoKHR<'_> {
         Self {
             s_type: StructureType::VideoEncodeH264SessionParametersCreateInfoKHR,
             next: ptr::null_mut(),
-            max_std_sps_count: 0,
-            max_std_pps_count: 0,
+            max_sps_count: 0,
+            max_pps_count: 0,
             parameters_add_info: ptr::null_mut(),
             _marker: PhantomData,
         }
@@ -25520,10 +25520,10 @@ pub struct VideoEncodeH264SessionParametersGetInfoKHR<'a> {
     pub s_type: StructureType,
     /// Nullable
     pub next: *const c_void,
-    pub write_std_sps: Bool32,
-    pub write_std_pps: Bool32,
-    pub std_sps_id: u32,
-    pub std_pps_id: u32,
+    pub write_sps: Bool32,
+    pub write_pps: Bool32,
+    pub sps_id: u32,
+    pub pps_id: u32,
     pub _marker: PhantomData<&'a ()>,
 }
 impl Default for VideoEncodeH264SessionParametersGetInfoKHR<'_> {
@@ -25531,10 +25531,10 @@ impl Default for VideoEncodeH264SessionParametersGetInfoKHR<'_> {
         Self {
             s_type: StructureType::VideoEncodeH264SessionParametersGetInfoKHR,
             next: ptr::null_mut(),
-            write_std_sps: FALSE,
-            write_std_pps: FALSE,
-            std_sps_id: 0,
-            std_pps_id: 0,
+            write_sps: FALSE,
+            write_pps: FALSE,
+            sps_id: 0,
+            pps_id: 0,
             _marker: PhantomData,
         }
     }
@@ -25548,8 +25548,8 @@ pub struct VideoEncodeH264SessionParametersFeedbackInfoKHR<'a> {
     pub s_type: StructureType,
     /// Nullable
     pub next: *mut c_void,
-    pub has_std_sps_overrides: Bool32,
-    pub has_std_pps_overrides: Bool32,
+    pub has_sps_overrides: Bool32,
+    pub has_pps_overrides: Bool32,
     pub _marker: PhantomData<&'a ()>,
 }
 impl Default for VideoEncodeH264SessionParametersFeedbackInfoKHR<'_> {
@@ -25557,8 +25557,8 @@ impl Default for VideoEncodeH264SessionParametersFeedbackInfoKHR<'_> {
         Self {
             s_type: StructureType::VideoEncodeH264SessionParametersFeedbackInfoKHR,
             next: ptr::null_mut(),
-            has_std_sps_overrides: FALSE,
-            has_std_pps_overrides: FALSE,
+            has_sps_overrides: FALSE,
+            has_pps_overrides: FALSE,
             _marker: PhantomData,
         }
     }
@@ -25571,7 +25571,7 @@ pub struct VideoEncodeH264DpbSlotInfoKHR<'a> {
     pub s_type: StructureType,
     /// Nullable
     pub next: *const c_void,
-    pub std_reference_info: *const EncodeH264ReferenceInfo,
+    pub reference_info: *const EncodeH264ReferenceInfo,
     pub _marker: PhantomData<&'a ()>,
 }
 impl Default for VideoEncodeH264DpbSlotInfoKHR<'_> {
@@ -25579,7 +25579,7 @@ impl Default for VideoEncodeH264DpbSlotInfoKHR<'_> {
         Self {
             s_type: StructureType::VideoEncodeH264DpbSlotInfoKHR,
             next: ptr::null_mut(),
-            std_reference_info: ptr::null_mut(),
+            reference_info: ptr::null_mut(),
             _marker: PhantomData,
         }
     }
@@ -25594,7 +25594,7 @@ pub struct VideoEncodeH264PictureInfoKHR<'a> {
     pub next: *const c_void,
     pub nalu_slice_entry_count: u32,
     pub nalu_slice_entries: *const VideoEncodeH264NaluSliceInfoKHR<'a>,
-    pub std_picture_info: *const EncodeH264PictureInfo<'a>,
+    pub picture_info: *const EncodeH264PictureInfo<'a>,
     pub generate_prefix_nalu: Bool32,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -25605,7 +25605,7 @@ impl Default for VideoEncodeH264PictureInfoKHR<'_> {
             next: ptr::null_mut(),
             nalu_slice_entry_count: 0,
             nalu_slice_entries: ptr::null_mut(),
-            std_picture_info: ptr::null_mut(),
+            picture_info: ptr::null_mut(),
             generate_prefix_nalu: FALSE,
             _marker: PhantomData,
         }
@@ -25619,7 +25619,7 @@ pub struct VideoEncodeH264ProfileInfoKHR<'a> {
     pub s_type: StructureType,
     /// Nullable
     pub next: *const c_void,
-    pub std_profile_idc: H264ProfileIdc,
+    pub profile_idc: H264ProfileIdc,
     pub _marker: PhantomData<&'a ()>,
 }
 impl Default for VideoEncodeH264ProfileInfoKHR<'_> {
@@ -25627,7 +25627,7 @@ impl Default for VideoEncodeH264ProfileInfoKHR<'_> {
         Self {
             s_type: StructureType::VideoEncodeH264ProfileInfoKHR,
             next: ptr::null_mut(),
-            std_profile_idc: Default::default(),
+            profile_idc: Default::default(),
             _marker: PhantomData,
         }
     }
@@ -25640,7 +25640,7 @@ pub struct VideoEncodeH264NaluSliceInfoKHR<'a> {
     /// Nullable
     pub next: *const c_void,
     pub constant_qp: i32,
-    pub std_slice_header: *const EncodeH264SliceHeader<'a>,
+    pub slice_header: *const EncodeH264SliceHeader<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
 impl Default for VideoEncodeH264NaluSliceInfoKHR<'_> {
@@ -25649,7 +25649,7 @@ impl Default for VideoEncodeH264NaluSliceInfoKHR<'_> {
             s_type: StructureType::VideoEncodeH264NaluSliceInfoKHR,
             next: ptr::null_mut(),
             constant_qp: 0,
-            std_slice_header: ptr::null_mut(),
+            slice_header: ptr::null_mut(),
             _marker: PhantomData,
         }
     }
@@ -25799,7 +25799,7 @@ pub struct VideoEncodeH265CapabilitiesKHR<'a> {
     pub max_qp: i32,
     pub prefers_gop_remaining_frames: Bool32,
     pub requires_gop_remaining_frames: Bool32,
-    pub std_syntax_flags: VideoEncodeH265StdFlagsKHR,
+    pub syntax_flags: VideoEncodeH265StdFlagsKHR,
     pub _marker: PhantomData<&'a ()>,
 }
 impl Default for VideoEncodeH265CapabilitiesKHR<'_> {
@@ -25822,7 +25822,7 @@ impl Default for VideoEncodeH265CapabilitiesKHR<'_> {
             max_qp: 0,
             prefers_gop_remaining_frames: FALSE,
             requires_gop_remaining_frames: FALSE,
-            std_syntax_flags: Default::default(),
+            syntax_flags: Default::default(),
             _marker: PhantomData,
         }
     }
@@ -25894,16 +25894,16 @@ pub struct VideoEncodeH265SessionParametersAddInfoKHR<'a> {
     pub s_type: StructureType,
     /// Nullable
     pub next: *const c_void,
-    pub std_vps_count: u32,
+    pub vps_count: u32,
     /// Nullable
-    pub std_vp_ss: *const H265VideoParameterSet<'a>,
-    pub std_sps_count: u32,
+    pub vp_ss: *const H265VideoParameterSet<'a>,
+    pub sps_count: u32,
     /// Nullable
-    pub std_sp_ss: *const H265SequenceParameterSet<'a>,
-    pub std_pps_count: u32,
+    pub sp_ss: *const H265SequenceParameterSet<'a>,
+    pub pps_count: u32,
     /// List of Picture Parameters associated with the spsStd, above
     /// Nullable
-    pub std_pp_ss: *const H265PictureParameterSet<'a>,
+    pub pp_ss: *const H265PictureParameterSet<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
 impl Default for VideoEncodeH265SessionParametersAddInfoKHR<'_> {
@@ -25911,12 +25911,12 @@ impl Default for VideoEncodeH265SessionParametersAddInfoKHR<'_> {
         Self {
             s_type: StructureType::VideoEncodeH265SessionParametersAddInfoKHR,
             next: ptr::null_mut(),
-            std_vps_count: 0,
-            std_vp_ss: ptr::null_mut(),
-            std_sps_count: 0,
-            std_sp_ss: ptr::null_mut(),
-            std_pps_count: 0,
-            std_pp_ss: ptr::null_mut(),
+            vps_count: 0,
+            vp_ss: ptr::null_mut(),
+            sps_count: 0,
+            sp_ss: ptr::null_mut(),
+            pps_count: 0,
+            pp_ss: ptr::null_mut(),
             _marker: PhantomData,
         }
     }
@@ -25929,9 +25929,9 @@ pub struct VideoEncodeH265SessionParametersCreateInfoKHR<'a> {
     pub s_type: StructureType,
     /// Nullable
     pub next: *const c_void,
-    pub max_std_vps_count: u32,
-    pub max_std_sps_count: u32,
-    pub max_std_pps_count: u32,
+    pub max_vps_count: u32,
+    pub max_sps_count: u32,
+    pub max_pps_count: u32,
     /// Nullable
     pub parameters_add_info: *const VideoEncodeH265SessionParametersAddInfoKHR<'a>,
     pub _marker: PhantomData<&'a ()>,
@@ -25941,9 +25941,9 @@ impl Default for VideoEncodeH265SessionParametersCreateInfoKHR<'_> {
         Self {
             s_type: StructureType::VideoEncodeH265SessionParametersCreateInfoKHR,
             next: ptr::null_mut(),
-            max_std_vps_count: 0,
-            max_std_sps_count: 0,
-            max_std_pps_count: 0,
+            max_vps_count: 0,
+            max_sps_count: 0,
+            max_pps_count: 0,
             parameters_add_info: ptr::null_mut(),
             _marker: PhantomData,
         }
@@ -25957,12 +25957,12 @@ pub struct VideoEncodeH265SessionParametersGetInfoKHR<'a> {
     pub s_type: StructureType,
     /// Nullable
     pub next: *const c_void,
-    pub write_std_vps: Bool32,
-    pub write_std_sps: Bool32,
-    pub write_std_pps: Bool32,
-    pub std_vps_id: u32,
-    pub std_sps_id: u32,
-    pub std_pps_id: u32,
+    pub write_vps: Bool32,
+    pub write_sps: Bool32,
+    pub write_pps: Bool32,
+    pub vps_id: u32,
+    pub sps_id: u32,
+    pub pps_id: u32,
     pub _marker: PhantomData<&'a ()>,
 }
 impl Default for VideoEncodeH265SessionParametersGetInfoKHR<'_> {
@@ -25970,12 +25970,12 @@ impl Default for VideoEncodeH265SessionParametersGetInfoKHR<'_> {
         Self {
             s_type: StructureType::VideoEncodeH265SessionParametersGetInfoKHR,
             next: ptr::null_mut(),
-            write_std_vps: FALSE,
-            write_std_sps: FALSE,
-            write_std_pps: FALSE,
-            std_vps_id: 0,
-            std_sps_id: 0,
-            std_pps_id: 0,
+            write_vps: FALSE,
+            write_sps: FALSE,
+            write_pps: FALSE,
+            vps_id: 0,
+            sps_id: 0,
+            pps_id: 0,
             _marker: PhantomData,
         }
     }
@@ -25989,9 +25989,9 @@ pub struct VideoEncodeH265SessionParametersFeedbackInfoKHR<'a> {
     pub s_type: StructureType,
     /// Nullable
     pub next: *mut c_void,
-    pub has_std_vps_overrides: Bool32,
-    pub has_std_sps_overrides: Bool32,
-    pub has_std_pps_overrides: Bool32,
+    pub has_vps_overrides: Bool32,
+    pub has_sps_overrides: Bool32,
+    pub has_pps_overrides: Bool32,
     pub _marker: PhantomData<&'a ()>,
 }
 impl Default for VideoEncodeH265SessionParametersFeedbackInfoKHR<'_> {
@@ -25999,9 +25999,9 @@ impl Default for VideoEncodeH265SessionParametersFeedbackInfoKHR<'_> {
         Self {
             s_type: StructureType::VideoEncodeH265SessionParametersFeedbackInfoKHR,
             next: ptr::null_mut(),
-            has_std_vps_overrides: FALSE,
-            has_std_sps_overrides: FALSE,
-            has_std_pps_overrides: FALSE,
+            has_vps_overrides: FALSE,
+            has_sps_overrides: FALSE,
+            has_pps_overrides: FALSE,
             _marker: PhantomData,
         }
     }
@@ -26016,7 +26016,7 @@ pub struct VideoEncodeH265PictureInfoKHR<'a> {
     pub next: *const c_void,
     pub nalu_slice_segment_entry_count: u32,
     pub nalu_slice_segment_entries: *const VideoEncodeH265NaluSliceSegmentInfoKHR<'a>,
-    pub std_picture_info: *const EncodeH265PictureInfo<'a>,
+    pub picture_info: *const EncodeH265PictureInfo<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
 impl Default for VideoEncodeH265PictureInfoKHR<'_> {
@@ -26026,7 +26026,7 @@ impl Default for VideoEncodeH265PictureInfoKHR<'_> {
             next: ptr::null_mut(),
             nalu_slice_segment_entry_count: 0,
             nalu_slice_segment_entries: ptr::null_mut(),
-            std_picture_info: ptr::null_mut(),
+            picture_info: ptr::null_mut(),
             _marker: PhantomData,
         }
     }
@@ -26039,7 +26039,7 @@ pub struct VideoEncodeH265NaluSliceSegmentInfoKHR<'a> {
     /// Nullable
     pub next: *const c_void,
     pub constant_qp: i32,
-    pub std_slice_segment_header: *const EncodeH265SliceSegmentHeader<'a>,
+    pub slice_segment_header: *const EncodeH265SliceSegmentHeader<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
 impl Default for VideoEncodeH265NaluSliceSegmentInfoKHR<'_> {
@@ -26048,7 +26048,7 @@ impl Default for VideoEncodeH265NaluSliceSegmentInfoKHR<'_> {
             s_type: StructureType::VideoEncodeH265NaluSliceSegmentInfoKHR,
             next: ptr::null_mut(),
             constant_qp: 0,
-            std_slice_segment_header: ptr::null_mut(),
+            slice_segment_header: ptr::null_mut(),
             _marker: PhantomData,
         }
     }
@@ -26182,7 +26182,7 @@ pub struct VideoEncodeH265ProfileInfoKHR<'a> {
     pub s_type: StructureType,
     /// Nullable
     pub next: *const c_void,
-    pub std_profile_idc: H265ProfileIdc,
+    pub profile_idc: H265ProfileIdc,
     pub _marker: PhantomData<&'a ()>,
 }
 impl Default for VideoEncodeH265ProfileInfoKHR<'_> {
@@ -26190,7 +26190,7 @@ impl Default for VideoEncodeH265ProfileInfoKHR<'_> {
         Self {
             s_type: StructureType::VideoEncodeH265ProfileInfoKHR,
             next: ptr::null_mut(),
-            std_profile_idc: Default::default(),
+            profile_idc: Default::default(),
             _marker: PhantomData,
         }
     }
@@ -26203,7 +26203,7 @@ pub struct VideoEncodeH265DpbSlotInfoKHR<'a> {
     pub s_type: StructureType,
     /// Nullable
     pub next: *const c_void,
-    pub std_reference_info: *const EncodeH265ReferenceInfo,
+    pub reference_info: *const EncodeH265ReferenceInfo,
     pub _marker: PhantomData<&'a ()>,
 }
 impl Default for VideoEncodeH265DpbSlotInfoKHR<'_> {
@@ -26211,7 +26211,7 @@ impl Default for VideoEncodeH265DpbSlotInfoKHR<'_> {
         Self {
             s_type: StructureType::VideoEncodeH265DpbSlotInfoKHR,
             next: ptr::null_mut(),
-            std_reference_info: ptr::null_mut(),
+            reference_info: ptr::null_mut(),
             _marker: PhantomData,
         }
     }
@@ -26248,7 +26248,7 @@ pub struct VideoEncodeAV1CapabilitiesKHR<'a> {
     pub max_q_index: u32,
     pub prefers_gop_remaining_frames: Bool32,
     pub requires_gop_remaining_frames: Bool32,
-    pub std_syntax_flags: VideoEncodeAV1StdFlagsKHR,
+    pub syntax_flags: VideoEncodeAV1StdFlagsKHR,
     pub _marker: PhantomData<&'a ()>,
 }
 impl Default for VideoEncodeAV1CapabilitiesKHR<'_> {
@@ -26279,7 +26279,7 @@ impl Default for VideoEncodeAV1CapabilitiesKHR<'_> {
             max_q_index: 0,
             prefers_gop_remaining_frames: FALSE,
             requires_gop_remaining_frames: FALSE,
-            std_syntax_flags: Default::default(),
+            syntax_flags: Default::default(),
             _marker: PhantomData,
         }
     }
@@ -26386,12 +26386,12 @@ pub struct VideoEncodeAV1SessionParametersCreateInfoKHR<'a> {
     pub s_type: StructureType,
     /// Nullable
     pub next: *const c_void,
-    pub std_sequence_header: *const AV1SequenceHeader<'a>,
+    pub sequence_header: *const AV1SequenceHeader<'a>,
     /// Nullable
-    pub std_decoder_model_info: *const EncodeAV1DecoderModelInfo,
-    pub std_operating_point_count: u32,
+    pub decoder_model_info: *const EncodeAV1DecoderModelInfo,
+    pub operating_point_count: u32,
     /// Nullable
-    pub std_operating_points: *const EncodeAV1OperatingPointInfo,
+    pub operating_points: *const EncodeAV1OperatingPointInfo,
     pub _marker: PhantomData<&'a ()>,
 }
 impl Default for VideoEncodeAV1SessionParametersCreateInfoKHR<'_> {
@@ -26399,10 +26399,10 @@ impl Default for VideoEncodeAV1SessionParametersCreateInfoKHR<'_> {
         Self {
             s_type: StructureType::VideoEncodeAV1SessionParametersCreateInfoKHR,
             next: ptr::null_mut(),
-            std_sequence_header: ptr::null_mut(),
-            std_decoder_model_info: ptr::null_mut(),
-            std_operating_point_count: 0,
-            std_operating_points: ptr::null_mut(),
+            sequence_header: ptr::null_mut(),
+            decoder_model_info: ptr::null_mut(),
+            operating_point_count: 0,
+            operating_points: ptr::null_mut(),
             _marker: PhantomData,
         }
     }
@@ -26415,7 +26415,7 @@ pub struct VideoEncodeAV1DpbSlotInfoKHR<'a> {
     pub s_type: StructureType,
     /// Nullable
     pub next: *const c_void,
-    pub std_reference_info: *const EncodeAV1ReferenceInfo<'a>,
+    pub reference_info: *const EncodeAV1ReferenceInfo<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
 impl Default for VideoEncodeAV1DpbSlotInfoKHR<'_> {
@@ -26423,7 +26423,7 @@ impl Default for VideoEncodeAV1DpbSlotInfoKHR<'_> {
         Self {
             s_type: StructureType::VideoEncodeAV1DpbSlotInfoKHR,
             next: ptr::null_mut(),
-            std_reference_info: ptr::null_mut(),
+            reference_info: ptr::null_mut(),
             _marker: PhantomData,
         }
     }
@@ -26439,7 +26439,7 @@ pub struct VideoEncodeAV1PictureInfoKHR<'a> {
     pub prediction_mode: VideoEncodeAV1PredictionModeKHR,
     pub rate_control_group: VideoEncodeAV1RateControlGroupKHR,
     pub constant_q_index: u32,
-    pub std_picture_info: *const EncodeAV1PictureInfo<'a>,
+    pub picture_info: *const EncodeAV1PictureInfo<'a>,
     pub reference_name_slot_indices: [i32; MAX_VIDEO_AV1_REFERENCES_PER_FRAME_KHR as usize],
     pub primary_reference_cdf_only: Bool32,
     pub generate_obu_extension_header: Bool32,
@@ -26453,7 +26453,7 @@ impl Default for VideoEncodeAV1PictureInfoKHR<'_> {
             prediction_mode: Default::default(),
             rate_control_group: Default::default(),
             constant_q_index: 0,
-            std_picture_info: ptr::null_mut(),
+            picture_info: ptr::null_mut(),
             reference_name_slot_indices: unsafe { mem::zeroed() },
             primary_reference_cdf_only: FALSE,
             generate_obu_extension_header: FALSE,
@@ -26469,7 +26469,7 @@ pub struct VideoEncodeAV1ProfileInfoKHR<'a> {
     pub s_type: StructureType,
     /// Nullable
     pub next: *const c_void,
-    pub std_profile: AV1Profile,
+    pub profile: AV1Profile,
     pub _marker: PhantomData<&'a ()>,
 }
 impl Default for VideoEncodeAV1ProfileInfoKHR<'_> {
@@ -26477,7 +26477,7 @@ impl Default for VideoEncodeAV1ProfileInfoKHR<'_> {
         Self {
             s_type: StructureType::VideoEncodeAV1ProfileInfoKHR,
             next: ptr::null_mut(),
-            std_profile: Default::default(),
+            profile: Default::default(),
             _marker: PhantomData,
         }
     }

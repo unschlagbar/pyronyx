@@ -60,7 +60,7 @@ pub trait AccelerationStructureDevice {
         &self,
         deferred_operation: DeferredOperationKHR,
         infos: &[AccelerationStructureBuildGeometryInfoKHR],
-        pp_build_range_infos: &[*const AccelerationStructureBuildRangeInfoKHR],
+        build_range_infos: &[*const AccelerationStructureBuildRangeInfoKHR],
     ) -> Result<(), vkResult>;
 
     fn get_acceleration_structure_device_address(
@@ -236,9 +236,9 @@ impl AccelerationStructureDevice for Device {
         &self,
         deferred_operation: DeferredOperationKHR,
         infos: &[AccelerationStructureBuildGeometryInfoKHR],
-        pp_build_range_infos: &[*const AccelerationStructureBuildRangeInfoKHR],
+        build_range_infos: &[*const AccelerationStructureBuildRangeInfoKHR],
     ) -> Result<(), vkResult> {
-        assert_eq!(infos.len(), pp_build_range_infos.len());
+        assert_eq!(infos.len(), build_range_infos.len());
         unsafe {
             (self
                 .fns()
@@ -250,7 +250,7 @@ impl AccelerationStructureDevice for Device {
                 deferred_operation,
                 infos.len() as u32,
                 infos.as_ptr(),
-                pp_build_range_infos.as_ptr(),
+                build_range_infos.as_ptr(),
             )
         }
         .result()
@@ -323,7 +323,7 @@ pub trait AccelerationStructureCommandBuffer {
     fn build_acceleration_structures(
         &self,
         infos: &[AccelerationStructureBuildGeometryInfoKHR],
-        pp_build_range_infos: &[*const AccelerationStructureBuildRangeInfoKHR],
+        build_range_infos: &[*const AccelerationStructureBuildRangeInfoKHR],
     );
 
     fn build_acceleration_structures_indirect(
@@ -331,7 +331,7 @@ pub trait AccelerationStructureCommandBuffer {
         infos: &[AccelerationStructureBuildGeometryInfoKHR],
         indirect_device_addresses: &[DeviceAddress],
         indirect_strides: &[u32],
-        pp_max_primitive_counts: &[*const u32],
+        max_primitive_counts: &[*const u32],
     );
 }
 
@@ -412,9 +412,9 @@ impl AccelerationStructureCommandBuffer for CommandBuffer {
     fn build_acceleration_structures(
         &self,
         infos: &[AccelerationStructureBuildGeometryInfoKHR],
-        pp_build_range_infos: &[*const AccelerationStructureBuildRangeInfoKHR],
+        build_range_infos: &[*const AccelerationStructureBuildRangeInfoKHR],
     ) {
-        assert_eq!(infos.len(), pp_build_range_infos.len());
+        assert_eq!(infos.len(), build_range_infos.len());
         unsafe {
             (self
                 .fns()
@@ -425,7 +425,7 @@ impl AccelerationStructureCommandBuffer for CommandBuffer {
                 self.handle,
                 infos.len() as u32,
                 infos.as_ptr(),
-                pp_build_range_infos.as_ptr(),
+                build_range_infos.as_ptr(),
             )
         };
     }
@@ -437,11 +437,11 @@ impl AccelerationStructureCommandBuffer for CommandBuffer {
         infos: &[AccelerationStructureBuildGeometryInfoKHR],
         indirect_device_addresses: &[DeviceAddress],
         indirect_strides: &[u32],
-        pp_max_primitive_counts: &[*const u32],
+        max_primitive_counts: &[*const u32],
     ) {
         assert_eq!(infos.len(), indirect_device_addresses.len());
         assert_eq!(infos.len(), indirect_strides.len());
-        assert_eq!(infos.len(), pp_max_primitive_counts.len());
+        assert_eq!(infos.len(), max_primitive_counts.len());
         unsafe {
             (self
                 .fns()
@@ -454,7 +454,7 @@ impl AccelerationStructureCommandBuffer for CommandBuffer {
                 infos.as_ptr(),
                 indirect_device_addresses.as_ptr(),
                 indirect_strides.as_ptr(),
-                pp_max_primitive_counts.as_ptr(),
+                max_primitive_counts.as_ptr(),
             )
         };
     }
