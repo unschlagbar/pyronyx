@@ -7,7 +7,7 @@
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkImageLayout.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum ImageLayout {
     /// Implicit layout an image is when its contents are undefined due to various reasons (e.g. right after creation)
     #[default]
@@ -55,7 +55,7 @@ pub enum ImageLayout {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkAttachmentLoadOp.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum AttachmentLoadOp {
     #[default]
     Load = 0,
@@ -66,7 +66,7 @@ pub enum AttachmentLoadOp {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkAttachmentStoreOp.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum AttachmentStoreOp {
     #[default]
     Store = 0,
@@ -76,7 +76,7 @@ pub enum AttachmentStoreOp {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkImageType.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum ImageType {
     #[default]
     Type1d = 0,
@@ -86,7 +86,7 @@ pub enum ImageType {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkImageTiling.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum ImageTiling {
     #[default]
     Optimal = 0,
@@ -96,7 +96,7 @@ pub enum ImageTiling {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkImageViewType.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum ImageViewType {
     #[default]
     Type1d = 0,
@@ -110,7 +110,7 @@ pub enum ImageViewType {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkCommandBufferLevel.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum CommandBufferLevel {
     #[default]
     Primary = 0,
@@ -119,7 +119,7 @@ pub enum CommandBufferLevel {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkComponentSwizzle.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum ComponentSwizzle {
     #[default]
     Identity = 0,
@@ -133,7 +133,7 @@ pub enum ComponentSwizzle {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkDescriptorType.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum DescriptorType {
     #[default]
     Sampler = 0,
@@ -159,7 +159,7 @@ pub enum DescriptorType {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkQueryType.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum QueryType {
     #[default]
     Occlusion = 0,
@@ -184,7 +184,7 @@ pub enum QueryType {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkBorderColor.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum BorderColor {
     #[default]
     FloatTransparentBlack = 0,
@@ -199,7 +199,7 @@ pub enum BorderColor {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPipelineBindPoint.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum PipelineBindPoint {
     #[default]
     Graphics = 0,
@@ -212,7 +212,7 @@ pub enum PipelineBindPoint {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPipelineCacheHeaderVersion.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum PipelineCacheHeaderVersion {
     #[default]
     One = 1,
@@ -222,7 +222,7 @@ pub enum PipelineCacheHeaderVersion {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPrimitiveTopology.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum PrimitiveTopology {
     #[default]
     PointList = 0,
@@ -240,7 +240,7 @@ pub enum PrimitiveTopology {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkSharingMode.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum SharingMode {
     #[default]
     Exclusive = 0,
@@ -249,7 +249,7 @@ pub enum SharingMode {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkIndexType.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum IndexType {
     #[default]
     Uint16 = 0,
@@ -260,7 +260,7 @@ pub enum IndexType {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkFilter.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum Filter {
     #[default]
     Nearest = 0,
@@ -270,7 +270,7 @@ pub enum Filter {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkSamplerMipmapMode.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum SamplerMipmapMode {
     /// Choose nearest mip level
     #[default]
@@ -281,7 +281,7 @@ pub enum SamplerMipmapMode {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkSamplerAddressMode.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum SamplerAddressMode {
     #[default]
     Repeat = 0,
@@ -294,7 +294,7 @@ pub enum SamplerAddressMode {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkCompareOp.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum CompareOp {
     #[default]
     Never = 0,
@@ -309,7 +309,7 @@ pub enum CompareOp {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPolygonMode.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum PolygonMode {
     #[default]
     Fill = 0,
@@ -320,7 +320,7 @@ pub enum PolygonMode {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkFrontFace.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum FrontFace {
     #[default]
     CounterClockwise = 0,
@@ -329,7 +329,7 @@ pub enum FrontFace {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkBlendFactor.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum BlendFactor {
     #[default]
     Zero = 0,
@@ -355,7 +355,7 @@ pub enum BlendFactor {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkBlendOp.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum BlendOp {
     #[default]
     Add = 0,
@@ -413,7 +413,7 @@ pub enum BlendOp {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkStencilOp.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum StencilOp {
     #[default]
     Keep = 0,
@@ -428,7 +428,7 @@ pub enum StencilOp {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkLogicOp.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum LogicOp {
     #[default]
     Clear = 0,
@@ -451,7 +451,7 @@ pub enum LogicOp {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkInternalAllocationType.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum InternalAllocationType {
     #[default]
     Executable = 0,
@@ -459,7 +459,7 @@ pub enum InternalAllocationType {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkSystemAllocationScope.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum SystemAllocationScope {
     #[default]
     Command = 0,
@@ -471,7 +471,7 @@ pub enum SystemAllocationScope {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPhysicalDeviceType.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum PhysicalDeviceType {
     #[default]
     Other = 0,
@@ -483,7 +483,7 @@ pub enum PhysicalDeviceType {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkVertexInputRate.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum VertexInputRate {
     #[default]
     Vertex = 0,
@@ -492,7 +492,7 @@ pub enum VertexInputRate {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkFormat.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum Format {
     #[default]
     Undefined = 0,
@@ -794,7 +794,7 @@ pub enum Format {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkStructureType.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum StructureType {
     #[default]
     ApplicationInfo = 0,
@@ -2013,7 +2013,7 @@ impl StructureType {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkSubpassContents.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum SubpassContents {
     #[default]
     Inline = 0,
@@ -2023,7 +2023,7 @@ pub enum SubpassContents {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkResult.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum vkResult {
     /// Command completed successfully
     #[default]
@@ -2101,7 +2101,7 @@ pub enum vkResult {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkDynamicState.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum DynamicState {
     #[default]
     Viewport = 0,
@@ -2183,7 +2183,7 @@ pub enum DynamicState {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkDescriptorUpdateTemplateType.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum DescriptorUpdateTemplateType {
     /// Create descriptor update template for descriptor set updates
     #[default]
@@ -2193,7 +2193,7 @@ pub enum DescriptorUpdateTemplateType {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkObjectType.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum ObjectType {
     #[default]
     Unknown = 0,
@@ -2263,7 +2263,7 @@ pub enum ObjectType {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkRayTracingInvocationReorderModeEXT.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum RayTracingInvocationReorderModeEXT {
     #[default]
     None = 0,
@@ -2272,7 +2272,7 @@ pub enum RayTracingInvocationReorderModeEXT {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkRayTracingLssIndexingModeNV.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum RayTracingLssIndexingModeNV {
     #[default]
     List = 0,
@@ -2281,7 +2281,7 @@ pub enum RayTracingLssIndexingModeNV {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkRayTracingLssPrimitiveEndCapsModeNV.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum RayTracingLssPrimitiveEndCapsModeNV {
     #[default]
     None = 0,
@@ -2290,7 +2290,7 @@ pub enum RayTracingLssPrimitiveEndCapsModeNV {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkDirectDriverLoadingModeLUNARG.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum DirectDriverLoadingModeLUNARG {
     #[default]
     Exclusive = 0,
@@ -2299,7 +2299,7 @@ pub enum DirectDriverLoadingModeLUNARG {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkAntiLagModeAMD.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum AntiLagModeAMD {
     #[default]
     DriverControl = 0,
@@ -2309,7 +2309,7 @@ pub enum AntiLagModeAMD {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkAntiLagStageAMD.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum AntiLagStageAMD {
     #[default]
     Input = 0,
@@ -2318,7 +2318,7 @@ pub enum AntiLagStageAMD {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkSemaphoreType.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum SemaphoreType {
     #[default]
     Binary = 0,
@@ -2327,7 +2327,7 @@ pub enum SemaphoreType {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPresentModeKHR.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum PresentModeKHR {
     #[default]
     Immediate = 0,
@@ -2341,7 +2341,7 @@ pub enum PresentModeKHR {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkColorSpaceKHR.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum ColorSpaceKHR {
     #[default]
     SrgbNonlinear = 0,
@@ -2364,7 +2364,7 @@ pub enum ColorSpaceKHR {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkDisplaySurfaceStereoTypeNV.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum DisplaySurfaceStereoTypeNV {
     #[default]
     None = 0,
@@ -2375,7 +2375,7 @@ pub enum DisplaySurfaceStereoTypeNV {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkTimeDomainKHR.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum TimeDomainKHR {
     #[default]
     Device = 0,
@@ -2388,7 +2388,7 @@ pub enum TimeDomainKHR {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkDebugReportObjectTypeEXT.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum DebugReportObjectTypeEXT {
     #[default]
     Unknown = 0,
@@ -2436,7 +2436,7 @@ pub enum DebugReportObjectTypeEXT {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkDeviceMemoryReportEventTypeEXT.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum DeviceMemoryReportEventTypeEXT {
     #[default]
     Allocate = 0,
@@ -2448,7 +2448,7 @@ pub enum DeviceMemoryReportEventTypeEXT {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkRasterizationOrderAMD.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum RasterizationOrderAMD {
     #[default]
     Strict = 0,
@@ -2457,7 +2457,7 @@ pub enum RasterizationOrderAMD {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkClusterAccelerationStructureTypeNV.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum ClusterAccelerationStructureTypeNV {
     #[default]
     ClustersBottomLevel = 0,
@@ -2467,7 +2467,7 @@ pub enum ClusterAccelerationStructureTypeNV {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkClusterAccelerationStructureOpTypeNV.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum ClusterAccelerationStructureOpTypeNV {
     #[default]
     MoveObjects = 0,
@@ -2480,7 +2480,7 @@ pub enum ClusterAccelerationStructureOpTypeNV {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkClusterAccelerationStructureOpModeNV.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum ClusterAccelerationStructureOpModeNV {
     #[default]
     ImplicitDestinations = 0,
@@ -2490,7 +2490,7 @@ pub enum ClusterAccelerationStructureOpModeNV {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkValidationCheckEXT.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum ValidationCheckEXT {
     #[default]
     All = 0,
@@ -2499,7 +2499,7 @@ pub enum ValidationCheckEXT {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkValidationFeatureEnableEXT.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum ValidationFeatureEnableEXT {
     #[default]
     GpuAssisted = 0,
@@ -2511,7 +2511,7 @@ pub enum ValidationFeatureEnableEXT {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkValidationFeatureDisableEXT.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum ValidationFeatureDisableEXT {
     #[default]
     All = 0,
@@ -2526,7 +2526,7 @@ pub enum ValidationFeatureDisableEXT {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkLayerSettingTypeEXT.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum LayerSettingTypeEXT {
     #[default]
     Bool32 = 0,
@@ -2541,7 +2541,7 @@ pub enum LayerSettingTypeEXT {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkIndirectCommandsTokenTypeNV.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum IndirectCommandsTokenTypeNV {
     #[default]
     ShaderGroup = 0,
@@ -2560,7 +2560,7 @@ pub enum IndirectCommandsTokenTypeNV {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkDisplayPowerStateEXT.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum DisplayPowerStateEXT {
     #[default]
     Off = 0,
@@ -2570,7 +2570,7 @@ pub enum DisplayPowerStateEXT {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkDeviceEventTypeEXT.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum DeviceEventTypeEXT {
     #[default]
     DisplayHotplug = 0,
@@ -2578,7 +2578,7 @@ pub enum DeviceEventTypeEXT {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkDisplayEventTypeEXT.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum DisplayEventTypeEXT {
     #[default]
     FirstPixelOut = 0,
@@ -2586,7 +2586,7 @@ pub enum DisplayEventTypeEXT {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkViewportCoordinateSwizzleNV.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum ViewportCoordinateSwizzleNV {
     #[default]
     PositiveX = 0,
@@ -2601,7 +2601,7 @@ pub enum ViewportCoordinateSwizzleNV {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkDiscardRectangleModeEXT.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum DiscardRectangleModeEXT {
     #[default]
     Inclusive = 0,
@@ -2610,7 +2610,7 @@ pub enum DiscardRectangleModeEXT {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPointClippingBehavior.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum PointClippingBehavior {
     #[default]
     AllClipPlanes = 0,
@@ -2619,7 +2619,7 @@ pub enum PointClippingBehavior {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkSamplerReductionMode.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum SamplerReductionMode {
     #[default]
     WeightedAverage = 0,
@@ -2630,7 +2630,7 @@ pub enum SamplerReductionMode {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkTessellationDomainOrigin.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum TessellationDomainOrigin {
     #[default]
     UpperLeft = 0,
@@ -2639,7 +2639,7 @@ pub enum TessellationDomainOrigin {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkSamplerYcbcrModelConversion.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum SamplerYcbcrModelConversion {
     #[default]
     RgbIdentity = 0,
@@ -2655,7 +2655,7 @@ pub enum SamplerYcbcrModelConversion {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkSamplerYcbcrRange.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum SamplerYcbcrRange {
     /// Luma 0..1 maps to 0..255, chroma -0.5..0.5 to 1..255 (clamped)
     #[default]
@@ -2666,7 +2666,7 @@ pub enum SamplerYcbcrRange {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkChromaLocation.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum ChromaLocation {
     #[default]
     CositedEven = 0,
@@ -2675,7 +2675,7 @@ pub enum ChromaLocation {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkBlendOverlapEXT.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum BlendOverlapEXT {
     #[default]
     Uncorrelated = 0,
@@ -2685,7 +2685,7 @@ pub enum BlendOverlapEXT {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkCoverageModulationModeNV.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum CoverageModulationModeNV {
     #[default]
     None = 0,
@@ -2696,7 +2696,7 @@ pub enum CoverageModulationModeNV {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkCoverageReductionModeNV.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum CoverageReductionModeNV {
     #[default]
     Merge = 0,
@@ -2705,7 +2705,7 @@ pub enum CoverageReductionModeNV {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkValidationCacheHeaderVersionEXT.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum ValidationCacheHeaderVersionEXT {
     #[default]
     One = 1,
@@ -2713,7 +2713,7 @@ pub enum ValidationCacheHeaderVersionEXT {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkShaderInfoTypeAMD.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum ShaderInfoTypeAMD {
     #[default]
     Statistics = 0,
@@ -2723,7 +2723,7 @@ pub enum ShaderInfoTypeAMD {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkQueueGlobalPriority.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum QueueGlobalPriority {
     #[default]
     Low = 128,
@@ -2734,7 +2734,7 @@ pub enum QueueGlobalPriority {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkConservativeRasterizationModeEXT.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum ConservativeRasterizationModeEXT {
     #[default]
     Disabled = 0,
@@ -2744,7 +2744,7 @@ pub enum ConservativeRasterizationModeEXT {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkVendorId.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum VendorId {
     /// Khronos vendor ID
     #[default]
@@ -2767,7 +2767,7 @@ pub enum VendorId {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkDriverId.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum DriverId {
     /// Advanced Micro Devices, Inc.
     #[default]
@@ -2830,7 +2830,7 @@ pub enum DriverId {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkShadingRatePaletteEntryNV.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum ShadingRatePaletteEntryNV {
     #[default]
     NoInvocations = 0,
@@ -2849,7 +2849,7 @@ pub enum ShadingRatePaletteEntryNV {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkCoarseSampleOrderTypeNV.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum CoarseSampleOrderTypeNV {
     #[default]
     Default = 0,
@@ -2860,7 +2860,7 @@ pub enum CoarseSampleOrderTypeNV {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkCopyAccelerationStructureModeKHR.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum CopyAccelerationStructureModeKHR {
     #[default]
     Clone = 0,
@@ -2871,7 +2871,7 @@ pub enum CopyAccelerationStructureModeKHR {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkBuildAccelerationStructureModeKHR.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum BuildAccelerationStructureModeKHR {
     #[default]
     Build = 0,
@@ -2880,7 +2880,7 @@ pub enum BuildAccelerationStructureModeKHR {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkAccelerationStructureTypeKHR.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum AccelerationStructureTypeKHR {
     #[default]
     TopLevel = 0,
@@ -2890,7 +2890,7 @@ pub enum AccelerationStructureTypeKHR {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkGeometryTypeKHR.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum GeometryTypeKHR {
     #[default]
     Triangles = 0,
@@ -2903,7 +2903,7 @@ pub enum GeometryTypeKHR {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkAccelerationStructureMemoryRequirementsTypeNV.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum AccelerationStructureMemoryRequirementsTypeNV {
     #[default]
     Object = 0,
@@ -2913,7 +2913,7 @@ pub enum AccelerationStructureMemoryRequirementsTypeNV {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkAccelerationStructureBuildTypeKHR.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum AccelerationStructureBuildTypeKHR {
     #[default]
     Host = 0,
@@ -2923,7 +2923,7 @@ pub enum AccelerationStructureBuildTypeKHR {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkRayTracingShaderGroupTypeKHR.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum RayTracingShaderGroupTypeKHR {
     #[default]
     General = 0,
@@ -2933,7 +2933,7 @@ pub enum RayTracingShaderGroupTypeKHR {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkAccelerationStructureCompatibilityKHR.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum AccelerationStructureCompatibilityKHR {
     #[default]
     Compatible = 0,
@@ -2942,7 +2942,7 @@ pub enum AccelerationStructureCompatibilityKHR {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkShaderGroupShaderKHR.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum ShaderGroupShaderKHR {
     #[default]
     General = 0,
@@ -2953,7 +2953,7 @@ pub enum ShaderGroupShaderKHR {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkMemoryOverallocationBehaviorAMD.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum MemoryOverallocationBehaviorAMD {
     #[default]
     Default = 0,
@@ -2963,7 +2963,7 @@ pub enum MemoryOverallocationBehaviorAMD {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkFullScreenExclusiveEXT.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum FullScreenExclusiveEXT {
     #[default]
     Default = 0,
@@ -2974,7 +2974,7 @@ pub enum FullScreenExclusiveEXT {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPerformanceCounterScopeKHR.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum PerformanceCounterScopeKHR {
     #[default]
     CommandBuffer = 0,
@@ -2984,7 +2984,7 @@ pub enum PerformanceCounterScopeKHR {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPerformanceCounterUnitKHR.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum PerformanceCounterUnitKHR {
     #[default]
     Generic = 0,
@@ -3002,7 +3002,7 @@ pub enum PerformanceCounterUnitKHR {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPerformanceCounterStorageKHR.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum PerformanceCounterStorageKHR {
     #[default]
     Int32 = 0,
@@ -3015,7 +3015,7 @@ pub enum PerformanceCounterStorageKHR {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPerformanceConfigurationTypeINTEL.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum PerformanceConfigurationTypeINTEL {
     #[default]
     CommandQueueMetricsDiscoveryActivated = 0,
@@ -3023,7 +3023,7 @@ pub enum PerformanceConfigurationTypeINTEL {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkQueryPoolSamplingModeINTEL.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum QueryPoolSamplingModeINTEL {
     #[default]
     Manual = 0,
@@ -3031,7 +3031,7 @@ pub enum QueryPoolSamplingModeINTEL {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPerformanceOverrideTypeINTEL.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum PerformanceOverrideTypeINTEL {
     #[default]
     NullHardware = 0,
@@ -3040,7 +3040,7 @@ pub enum PerformanceOverrideTypeINTEL {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPerformanceParameterTypeINTEL.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum PerformanceParameterTypeINTEL {
     #[default]
     HwCountersSupported = 0,
@@ -3049,7 +3049,7 @@ pub enum PerformanceParameterTypeINTEL {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPerformanceValueTypeINTEL.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum PerformanceValueTypeINTEL {
     #[default]
     Uint32 = 0,
@@ -3061,7 +3061,7 @@ pub enum PerformanceValueTypeINTEL {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkShaderFloatControlsIndependence.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum ShaderFloatControlsIndependence {
     #[default]
     Type32BitOnly = 0,
@@ -3071,7 +3071,7 @@ pub enum ShaderFloatControlsIndependence {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPipelineExecutableStatisticFormatKHR.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum PipelineExecutableStatisticFormatKHR {
     #[default]
     Bool32 = 0,
@@ -3082,7 +3082,7 @@ pub enum PipelineExecutableStatisticFormatKHR {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkLineRasterizationMode.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum LineRasterizationMode {
     #[default]
     Default = 0,
@@ -3093,7 +3093,7 @@ pub enum LineRasterizationMode {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkFaultLevel.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum FaultLevel {
     #[default]
     Unassigned = 0,
@@ -3104,7 +3104,7 @@ pub enum FaultLevel {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkFaultType.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum FaultType {
     #[default]
     Invalid = 0,
@@ -3118,7 +3118,7 @@ pub enum FaultType {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkFaultQueryBehavior.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum FaultQueryBehavior {
     #[default]
     GetAndClearAllFaults = 0,
@@ -3126,7 +3126,7 @@ pub enum FaultQueryBehavior {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPipelineMatchControl.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum PipelineMatchControl {
     #[default]
     ApplicationUuidExactMatch = 0,
@@ -3134,7 +3134,7 @@ pub enum PipelineMatchControl {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkFragmentShadingRateCombinerOpKHR.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum FragmentShadingRateCombinerOpKHR {
     #[default]
     Keep = 0,
@@ -3146,7 +3146,7 @@ pub enum FragmentShadingRateCombinerOpKHR {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkFragmentShadingRateNV.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum FragmentShadingRateNV {
     #[default]
     Type1InvocationPerPixel = 0,
@@ -3165,7 +3165,7 @@ pub enum FragmentShadingRateNV {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkFragmentShadingRateTypeNV.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum FragmentShadingRateTypeNV {
     #[default]
     FragmentSize = 0,
@@ -3174,7 +3174,7 @@ pub enum FragmentShadingRateTypeNV {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkSubpassMergeStatusEXT.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum SubpassMergeStatusEXT {
     #[default]
     Merged = 0,
@@ -3195,7 +3195,7 @@ pub enum SubpassMergeStatusEXT {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkSciSyncClientTypeNV.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum SciSyncClientTypeNV {
     #[default]
     Signaler = 0,
@@ -3205,7 +3205,7 @@ pub enum SciSyncClientTypeNV {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkSciSyncPrimitiveTypeNV.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum SciSyncPrimitiveTypeNV {
     #[default]
     Fence = 0,
@@ -3214,7 +3214,7 @@ pub enum SciSyncPrimitiveTypeNV {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkProvokingVertexModeEXT.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum ProvokingVertexModeEXT {
     #[default]
     FirstVertex = 0,
@@ -3223,7 +3223,7 @@ pub enum ProvokingVertexModeEXT {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPipelineCacheValidationVersion.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum PipelineCacheValidationVersion {
     #[default]
     SafetyCriticalOne = 1,
@@ -3231,7 +3231,7 @@ pub enum PipelineCacheValidationVersion {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkAccelerationStructureMotionInstanceTypeNV.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum AccelerationStructureMotionInstanceTypeNV {
     #[default]
     Static = 0,
@@ -3241,7 +3241,7 @@ pub enum AccelerationStructureMotionInstanceTypeNV {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkDeviceAddressBindingTypeEXT.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum DeviceAddressBindingTypeEXT {
     #[default]
     Bind = 0,
@@ -3250,7 +3250,7 @@ pub enum DeviceAddressBindingTypeEXT {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkQueryResultStatusKHR.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum QueryResultStatusKHR {
     #[default]
     Error = -1,
@@ -3261,7 +3261,7 @@ pub enum QueryResultStatusKHR {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkVideoEncodeTuningModeKHR.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum VideoEncodeTuningModeKHR {
     #[default]
     Default = 0,
@@ -3273,7 +3273,7 @@ pub enum VideoEncodeTuningModeKHR {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPartitionedAccelerationStructureOpTypeNV.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum PartitionedAccelerationStructureOpTypeNV {
     #[default]
     WriteInstance = 0,
@@ -3283,7 +3283,7 @@ pub enum PartitionedAccelerationStructureOpTypeNV {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkVideoEncodeAV1PredictionModeKHR.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum VideoEncodeAV1PredictionModeKHR {
     #[default]
     IntraOnly = 0,
@@ -3294,7 +3294,7 @@ pub enum VideoEncodeAV1PredictionModeKHR {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkVideoEncodeAV1RateControlGroupKHR.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum VideoEncodeAV1RateControlGroupKHR {
     #[default]
     Intra = 0,
@@ -3304,7 +3304,7 @@ pub enum VideoEncodeAV1RateControlGroupKHR {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPipelineRobustnessBufferBehavior.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum PipelineRobustnessBufferBehavior {
     #[default]
     DeviceDefault = 0,
@@ -3315,7 +3315,7 @@ pub enum PipelineRobustnessBufferBehavior {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPipelineRobustnessImageBehavior.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum PipelineRobustnessImageBehavior {
     #[default]
     DeviceDefault = 0,
@@ -3326,7 +3326,7 @@ pub enum PipelineRobustnessImageBehavior {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkOpticalFlowPerformanceLevelNV.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum OpticalFlowPerformanceLevelNV {
     #[default]
     Unknown = 0,
@@ -3337,7 +3337,7 @@ pub enum OpticalFlowPerformanceLevelNV {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkOpticalFlowSessionBindingPointNV.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum OpticalFlowSessionBindingPointNV {
     #[default]
     Unknown = 0,
@@ -3353,7 +3353,7 @@ pub enum OpticalFlowSessionBindingPointNV {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkMicromapTypeEXT.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum MicromapTypeEXT {
     #[default]
     OpacityMicromap = 0,
@@ -3362,7 +3362,7 @@ pub enum MicromapTypeEXT {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkCopyMicromapModeEXT.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum CopyMicromapModeEXT {
     #[default]
     Clone = 0,
@@ -3373,7 +3373,7 @@ pub enum CopyMicromapModeEXT {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkBuildMicromapModeEXT.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum BuildMicromapModeEXT {
     #[default]
     Build = 0,
@@ -3381,7 +3381,7 @@ pub enum BuildMicromapModeEXT {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkOpacityMicromapFormatEXT.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum OpacityMicromapFormatEXT {
     #[default]
     Type2State = 1,
@@ -3390,7 +3390,7 @@ pub enum OpacityMicromapFormatEXT {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkOpacityMicromapSpecialIndexEXT.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum OpacityMicromapSpecialIndexEXT {
     #[default]
     FullyTransparent = -1,
@@ -3402,7 +3402,7 @@ pub enum OpacityMicromapSpecialIndexEXT {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkDepthBiasRepresentationEXT.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum DepthBiasRepresentationEXT {
     #[default]
     LeastRepresentableValueFormat = 0,
@@ -3412,7 +3412,7 @@ pub enum DepthBiasRepresentationEXT {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkDeviceFaultAddressTypeEXT.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum DeviceFaultAddressTypeEXT {
     /// Currently unused
     #[default]
@@ -3427,7 +3427,7 @@ pub enum DeviceFaultAddressTypeEXT {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkDeviceFaultVendorBinaryHeaderVersionEXT.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum DeviceFaultVendorBinaryHeaderVersionEXT {
     #[default]
     One = 1,
@@ -3435,7 +3435,7 @@ pub enum DeviceFaultVendorBinaryHeaderVersionEXT {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkIndirectExecutionSetInfoTypeEXT.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum IndirectExecutionSetInfoTypeEXT {
     #[default]
     Pipelines = 0,
@@ -3444,7 +3444,7 @@ pub enum IndirectExecutionSetInfoTypeEXT {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkIndirectCommandsTokenTypeEXT.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum IndirectCommandsTokenTypeEXT {
     #[default]
     ExecutionSet = 0,
@@ -3468,7 +3468,7 @@ pub enum IndirectCommandsTokenTypeEXT {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkDisplacementMicromapFormatNV.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum DisplacementMicromapFormatNV {
     #[default]
     Type64Triangles64Bytes = 1,
@@ -3478,7 +3478,7 @@ pub enum DisplacementMicromapFormatNV {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkShaderCodeTypeEXT.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum ShaderCodeTypeEXT {
     #[default]
     Binary = 0,
@@ -3487,7 +3487,7 @@ pub enum ShaderCodeTypeEXT {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkScopeKHR.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum ScopeKHR {
     #[default]
     Device = 1,
@@ -3498,7 +3498,7 @@ pub enum ScopeKHR {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkComponentTypeKHR.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum ComponentTypeKHR {
     #[default]
     Float16 = 0,
@@ -3521,7 +3521,7 @@ pub enum ComponentTypeKHR {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkCubicFilterWeightsQCOM.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum CubicFilterWeightsQCOM {
     #[default]
     CatmullRom = 0,
@@ -3532,7 +3532,7 @@ pub enum CubicFilterWeightsQCOM {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkBlockMatchWindowCompareModeQCOM.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum BlockMatchWindowCompareModeQCOM {
     #[default]
     Min = 0,
@@ -3541,7 +3541,7 @@ pub enum BlockMatchWindowCompareModeQCOM {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPhysicalDeviceLayeredApiKHR.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum PhysicalDeviceLayeredApiKHR {
     #[default]
     Vulkan = 0,
@@ -3553,7 +3553,7 @@ pub enum PhysicalDeviceLayeredApiKHR {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkLayeredDriverUnderlyingApiMSFT.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum LayeredDriverUnderlyingApiMSFT {
     #[default]
     None = 0,
@@ -3562,7 +3562,7 @@ pub enum LayeredDriverUnderlyingApiMSFT {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkLatencyMarkerNV.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum LatencyMarkerNV {
     #[default]
     SimulationStart = 0,
@@ -3581,7 +3581,7 @@ pub enum LatencyMarkerNV {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkOutOfBandQueueTypeNV.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum OutOfBandQueueTypeNV {
     #[default]
     Render = 0,
@@ -3590,7 +3590,7 @@ pub enum OutOfBandQueueTypeNV {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkCompressedTriangleFormatAMDX.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum CompressedTriangleFormatAMDX {
     #[default]
     Dgf1 = 0,
@@ -3598,7 +3598,7 @@ pub enum CompressedTriangleFormatAMDX {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkDepthClampModeEXT.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum DepthClampModeEXT {
     #[default]
     ViewportRange = 0,
@@ -3607,7 +3607,7 @@ pub enum DepthClampModeEXT {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkCooperativeVectorMatrixLayoutNV.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum CooperativeVectorMatrixLayoutNV {
     #[default]
     RowMajor = 0,
@@ -3618,7 +3618,7 @@ pub enum CooperativeVectorMatrixLayoutNV {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkTensorTilingARM.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum TensorTilingARM {
     #[default]
     Optimal = 0,
@@ -3627,7 +3627,7 @@ pub enum TensorTilingARM {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkDefaultVertexAttributeValueKHR.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum DefaultVertexAttributeValueKHR {
     #[default]
     ZeroZeroZeroZero = 0,
@@ -3636,7 +3636,7 @@ pub enum DefaultVertexAttributeValueKHR {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkDataGraphPipelineSessionBindPointARM.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum DataGraphPipelineSessionBindPointARM {
     #[default]
     Transient = 0,
@@ -3644,7 +3644,7 @@ pub enum DataGraphPipelineSessionBindPointARM {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkDataGraphPipelineSessionBindPointTypeARM.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum DataGraphPipelineSessionBindPointTypeARM {
     #[default]
     Memory = 0,
@@ -3652,7 +3652,7 @@ pub enum DataGraphPipelineSessionBindPointTypeARM {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkDataGraphPipelinePropertyARM.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum DataGraphPipelinePropertyARM {
     #[default]
     CreationLog = 0,
@@ -3661,7 +3661,7 @@ pub enum DataGraphPipelinePropertyARM {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPhysicalDeviceDataGraphProcessingEngineTypeARM.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum PhysicalDeviceDataGraphProcessingEngineTypeARM {
     #[default]
     Default = 0,
@@ -3671,7 +3671,7 @@ pub enum PhysicalDeviceDataGraphProcessingEngineTypeARM {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPhysicalDeviceDataGraphOperationTypeARM.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum PhysicalDeviceDataGraphOperationTypeARM {
     #[default]
     SpirvExtendedInstructionSet = 0,
@@ -3681,7 +3681,7 @@ pub enum PhysicalDeviceDataGraphOperationTypeARM {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkDataGraphModelCacheTypeQCOM.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum DataGraphModelCacheTypeQCOM {
     #[default]
     GenericBinary = 0,
@@ -3689,7 +3689,7 @@ pub enum DataGraphModelCacheTypeQCOM {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkDescriptorMappingSourceEXT.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum DescriptorMappingSourceEXT {
     #[default]
     HeapWithConstantOffset = 0,

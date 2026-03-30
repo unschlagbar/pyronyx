@@ -118,6 +118,7 @@ impl vkPhysicalDevice {
     /// if there are invalid ptr in the parameter structs,
     /// use the `VK_LAYER_KHRONOS_validation` layer in [`InstanceCreateInfo`]
     /// together with the Vulkan SDK to catch these bugs!
+    #[inline]
     pub unsafe fn to_physical_device(self, instance: &Instance) -> PhysicalDevice {
         let v_table = &instance.v_table().physical_device;
         let v_table = unsafe { transmute::<&_, &'static _>(v_table) };
@@ -139,6 +140,7 @@ impl vkCommandBuffer {
     /// if there are invalid ptr in the parameter structs,
     /// use the `VK_LAYER_KHRONOS_validation` layer in [`InstanceCreateInfo`]
     /// together with the Vulkan SDK to catch these bugs!
+    #[inline]
     pub unsafe fn to_command_buffer(self, device: &Device) -> CommandBuffer {
         let v_table = &device.v_table().command_buffer;
         let v_table = unsafe { transmute::<&_, &'static _>(v_table) };
@@ -160,6 +162,7 @@ impl vkQueue {
     /// if there are invalid ptr in the parameter structs,
     /// use the `VK_LAYER_KHRONOS_validation` layer in [`InstanceCreateInfo`]
     /// together with the Vulkan SDK to catch these bugs!
+    #[inline]
     pub unsafe fn to_queue(self, device: &Device) -> Queue {
         let v_table = &device.v_table().queue;
         let v_table = unsafe { transmute::<&_, &'static _>(v_table) };

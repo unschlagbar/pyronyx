@@ -1571,7 +1571,7 @@ impl Default for BaseInStructure<'_> {
 }
 
 #[repr(C)]
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, Hash, PartialEq, Eq)]
 pub struct Offset2D {
     pub x: i32,
     pub y: i32,
@@ -1583,7 +1583,7 @@ impl Default for Offset2D {
 }
 
 #[repr(C)]
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, Hash, PartialEq, Eq)]
 pub struct Offset3D {
     pub x: i32,
     pub y: i32,
@@ -1596,7 +1596,7 @@ impl Default for Offset3D {
 }
 
 #[repr(C)]
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, Hash, PartialEq, Eq)]
 pub struct Extent2D {
     pub width: u32,
     pub height: u32,
@@ -1611,7 +1611,7 @@ impl Default for Extent2D {
 }
 
 #[repr(C)]
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, Hash, PartialEq, Eq)]
 pub struct Extent3D {
     pub width: u32,
     pub height: u32,
@@ -1651,7 +1651,7 @@ impl Default for Viewport {
 }
 
 #[repr(C)]
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, Hash, PartialEq, Eq)]
 pub struct Rect2D {
     pub offset: Offset2D,
     pub extent: Extent2D,
@@ -1666,7 +1666,7 @@ impl Default for Rect2D {
 }
 
 #[repr(C)]
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, Hash, PartialEq, Eq)]
 pub struct ClearRect {
     pub rect: Rect2D,
     pub base_array_layer: u32,
@@ -1710,6 +1710,7 @@ pub struct PhysicalDeviceProperties {
     pub vendor_id: u32,
     pub device_id: u32,
     pub device_type: PhysicalDeviceType,
+    /// Len: null-terminated
     pub device_name: [c_char; MAX_PHYSICAL_DEVICE_NAME_SIZE as usize],
     pub pipeline_cache_uuid: [u8; UUID_SIZE as usize],
     pub limits: PhysicalDeviceLimits,
@@ -1736,6 +1737,7 @@ impl Default for PhysicalDeviceProperties {
 #[derive(Copy, Clone, Debug)]
 pub struct ExtensionProperties {
     /// extension name
+    /// Len: null-terminated
     pub extension_name: [c_char; MAX_EXTENSION_NAME_SIZE as usize],
     /// version of the extension specification implemented
     pub spec_version: u32,
@@ -1754,12 +1756,14 @@ impl Default for ExtensionProperties {
 #[derive(Copy, Clone, Debug)]
 pub struct LayerProperties {
     /// layer name
+    /// Len: null-terminated
     pub layer_name: [c_char; MAX_EXTENSION_NAME_SIZE as usize],
     /// version of the layer specification implemented
     pub spec_version: u32,
     /// build or release version of the layer's library
     pub implementation_version: u32,
     /// Free-form description of the layer
+    /// Len: null-terminated
     pub description: [c_char; MAX_DESCRIPTION_SIZE as usize],
 }
 impl Default for LayerProperties {
@@ -1780,9 +1784,11 @@ pub struct ApplicationInfo<'a> {
     /// Nullable
     pub next: *const c_void,
     /// Nullable
+    /// Len: null-terminated
     pub application_name: *const c_char,
     pub application_version: u32,
     /// Nullable
+    /// Len: null-terminated
     pub engine_name: *const c_char,
     pub engine_version: u32,
     pub api_version: u32,
@@ -1838,6 +1844,7 @@ pub struct DeviceQueueCreateInfo<'a> {
     pub flags: DeviceQueueCreateFlags,
     pub queue_family_index: u32,
     pub queue_count: u32,
+    /// Len: `queue_count`
     pub queue_priorities: *const f32,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -1863,11 +1870,14 @@ pub struct DeviceCreateInfo<'a> {
     pub next: *const c_void,
     pub flags: DeviceCreateFlags,
     pub queue_create_info_count: u32,
+    /// Len: `queue_create_info_count`
     pub queue_create_infos: *const DeviceQueueCreateInfo<'a>,
     pub enabled_layer_count: u32,
     /// Ordered list of layer names to be enabled
+    /// Len: `enabled_layer_count`, null-terminated
     pub enabled_layer_names: *const *const c_char,
     pub enabled_extension_count: u32,
+    /// Len: `enabled_extension_count`, null-terminated
     pub enabled_extension_names: *const *const c_char,
     /// Nullable
     pub enabled_features: *const PhysicalDeviceFeatures,
@@ -1902,9 +1912,11 @@ pub struct InstanceCreateInfo<'a> {
     pub application_info: *const ApplicationInfo<'a>,
     pub enabled_layer_count: u32,
     /// Ordered list of layer names to be enabled
+    /// Len: `enabled_layer_count`, null-terminated
     pub enabled_layer_names: *const *const c_char,
     pub enabled_extension_count: u32,
     /// Extension names to be enabled
+    /// Len: `enabled_extension_count`, null-terminated
     pub enabled_extension_names: *const *const c_char,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -1951,8 +1963,10 @@ impl Default for QueueFamilyProperties {
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceMemoryProperties {
     pub memory_type_count: u32,
+    /// Len: `memory_type_count`
     pub memory_types: [MemoryType; MAX_MEMORY_TYPES as usize],
     pub memory_heap_count: u32,
+    /// Len: `memory_heap_count`
     pub memory_heaps: [MemoryHeap; MAX_MEMORY_HEAPS as usize],
 }
 impl Default for PhysicalDeviceMemoryProperties {
@@ -2222,10 +2236,13 @@ pub struct WriteDescriptorSet<'a> {
     /// Descriptor type to write (determines which members of the array pointed by pDescriptors are going to be used)
     pub descriptor_type: DescriptorType,
     /// Sampler, image view, and layout for SAMPLER, COMBINED_IMAGE_SAMPLER, {SAMPLED,STORAGE}_IMAGE, and INPUT_ATTACHMENT descriptor types.
+    /// Len: `descriptor_count`
     pub image_info: *const DescriptorImageInfo,
     /// Raw buffer, size, and offset for {UNIFORM,STORAGE}_BUFFER[_DYNAMIC] descriptor types.
+    /// Len: `descriptor_count`
     pub buffer_info: *const DescriptorBufferInfo,
     /// Buffer view to write to the descriptor for {UNIFORM,STORAGE}_TEXEL_BUFFER descriptor types.
+    /// Len: `descriptor_count`
     pub texel_buffer_view: *const BufferView,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -2322,6 +2339,7 @@ pub struct BufferCreateInfo<'a> {
     pub usage: BufferUsageFlags,
     pub sharing_mode: SharingMode,
     pub queue_family_index_count: u32,
+    /// Len: `queue_family_index_count`
     pub queue_family_indices: *const u32,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -2556,6 +2574,7 @@ pub struct ImageCreateInfo<'a> {
     /// Number of queue families to share across
     pub queue_family_index_count: u32,
     /// Array of queue family indices to share across
+    /// Len: `queue_family_index_count`
     pub queue_family_indices: *const u32,
     /// Initial image layout for all subresources
     pub initial_layout: ImageLayout,
@@ -2713,6 +2732,7 @@ impl Default for SparseImageMemoryBind {
 pub struct SparseBufferMemoryBindInfo<'a> {
     pub buffer: Buffer,
     pub bind_count: u32,
+    /// Len: `bind_count`
     pub binds: *const SparseMemoryBind,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -2732,6 +2752,7 @@ impl Default for SparseBufferMemoryBindInfo<'_> {
 pub struct SparseImageOpaqueMemoryBindInfo<'a> {
     pub image: Image,
     pub bind_count: u32,
+    /// Len: `bind_count`
     pub binds: *const SparseMemoryBind,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -2751,6 +2772,7 @@ impl Default for SparseImageOpaqueMemoryBindInfo<'_> {
 pub struct SparseImageMemoryBindInfo<'a> {
     pub image: Image,
     pub bind_count: u32,
+    /// Len: `bind_count`
     pub binds: *const SparseImageMemoryBind,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -2772,14 +2794,19 @@ pub struct BindSparseInfo<'a> {
     /// Nullable
     pub next: *const c_void,
     pub wait_semaphore_count: u32,
+    /// Len: `wait_semaphore_count`
     pub wait_semaphores: *const Semaphore,
     pub buffer_bind_count: u32,
+    /// Len: `buffer_bind_count`
     pub buffer_binds: *const SparseBufferMemoryBindInfo<'a>,
     pub image_opaque_bind_count: u32,
+    /// Len: `image_opaque_bind_count`
     pub image_opaque_binds: *const SparseImageOpaqueMemoryBindInfo<'a>,
     pub image_bind_count: u32,
+    /// Len: `image_bind_count`
     pub image_binds: *const SparseImageMemoryBindInfo<'a>,
     pub signal_semaphore_count: u32,
+    /// Len: `signal_semaphore_count`
     pub signal_semaphores: *const Semaphore,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -2971,6 +2998,7 @@ pub struct CopyMemoryToImageIndirectInfoKHR<'a> {
     pub copy_address_range: StridedDeviceAddressRangeKHR,
     pub dst_image: Image,
     pub dst_image_layout: ImageLayout,
+    /// Len: `copy_count`
     pub image_subresources: *const ImageSubresourceLayers,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -3023,6 +3051,7 @@ pub struct ShaderModuleCreateInfo<'a> {
     /// Specified in bytes
     pub code_size: usize,
     /// Binary code of size codeSize
+    /// Len: code_size / 4
     pub code: *const u32,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -3052,6 +3081,7 @@ pub struct DescriptorSetLayoutBinding<'a> {
     pub stage_flags: ShaderStageFlags,
     /// Immutable samplers (used if descriptor type is SAMPLER or COMBINED_IMAGE_SAMPLER, is either NULL or contains count number of elements)
     /// Nullable
+    /// Len: `descriptor_count`
     pub immutable_samplers: *const Sampler,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -3078,6 +3108,7 @@ pub struct DescriptorSetLayoutCreateInfo<'a> {
     /// Number of bindings in the descriptor set layout
     pub binding_count: u32,
     /// Array of descriptor set layout bindings
+    /// Len: `binding_count`
     pub bindings: *const DescriptorSetLayoutBinding<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -3118,6 +3149,7 @@ pub struct DescriptorPoolCreateInfo<'a> {
     pub flags: DescriptorPoolCreateFlags,
     pub max_sets: u32,
     pub pool_size_count: u32,
+    /// Len: `pool_size_count`
     pub pool_sizes: *const DescriptorPoolSize,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -3143,6 +3175,7 @@ pub struct DescriptorSetAllocateInfo<'a> {
     pub next: *const c_void,
     pub descriptor_pool: DescriptorPool,
     pub descriptor_set_count: u32,
+    /// Len: `descriptor_set_count`
     pub set_layouts: *const DescriptorSetLayout,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -3185,10 +3218,12 @@ pub struct SpecializationInfo<'a> {
     /// Number of entries in the map
     pub map_entry_count: u32,
     /// Array of map entries
+    /// Len: `map_entry_count`
     pub map_entries: *const SpecializationMapEntry,
     /// Size in bytes of pData
     pub data_size: usize,
     /// Pointer to SpecConstant data
+    /// Len: `data_size`
     pub data: *const c_void,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -3216,6 +3251,7 @@ pub struct PipelineShaderStageCreateInfo<'a> {
     /// Module containing entry point
     pub module: ShaderModule,
     /// Null-terminated entry point name
+    /// Len: null-terminated
     pub name: *const c_char,
     /// Nullable
     pub specialization_info: *const SpecializationInfo<'a>,
@@ -3367,9 +3403,11 @@ pub struct PipelineVertexInputStateCreateInfo<'a> {
     pub flags: PipelineVertexInputStateCreateFlags,
     /// number of bindings
     pub vertex_binding_description_count: u32,
+    /// Len: `vertex_binding_description_count`
     pub vertex_binding_descriptions: *const VertexInputBindingDescription,
     /// number of attributes
     pub vertex_attribute_description_count: u32,
+    /// Len: `vertex_attribute_description_count`
     pub vertex_attribute_descriptions: *const VertexInputAttributeDescription,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -3443,9 +3481,11 @@ pub struct PipelineViewportStateCreateInfo<'a> {
     pub flags: PipelineViewportStateCreateFlags,
     pub viewport_count: u32,
     /// Nullable
+    /// Len: `viewport_count`
     pub viewports: *const Viewport,
     pub scissor_count: u32,
     /// Nullable
+    /// Len: `scissor_count`
     pub scissors: *const Rect2D,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -3520,6 +3560,7 @@ pub struct PipelineMultisampleStateCreateInfo<'a> {
     pub min_sample_shading: f32,
     /// Array of sampleMask words
     /// Nullable
+    /// Len: (rasterization_samples / 32).ceil()
     pub sample_mask: *const SampleMask,
     pub alpha_to_coverage_enable: Bool32,
     pub alpha_to_one_enable: Bool32,
@@ -3581,6 +3622,7 @@ pub struct PipelineColorBlendStateCreateInfo<'a> {
     /// # of pAttachments
     pub attachment_count: u32,
     /// Nullable
+    /// Len: `attachment_count`
     pub attachments: *const PipelineColorBlendAttachmentState,
     pub blend_constants: [f32; 4],
     pub _marker: PhantomData<&'a ()>,
@@ -3609,6 +3651,7 @@ pub struct PipelineDynamicStateCreateInfo<'a> {
     pub next: *const c_void,
     pub flags: PipelineDynamicStateCreateFlags,
     pub dynamic_state_count: u32,
+    /// Len: `dynamic_state_count`
     pub dynamic_states: *const DynamicState,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -3700,6 +3743,7 @@ pub struct GraphicsPipelineCreateInfo<'a> {
     pub stage_count: u32,
     /// One entry for each active shader stage
     /// Nullable
+    /// Len: `stage_count`
     pub stages: *const PipelineShaderStageCreateInfo<'a>,
     /// Nullable
     pub vertex_input_state: *const PipelineVertexInputStateCreateInfo<'a>,
@@ -3766,6 +3810,7 @@ pub struct PipelineCacheCreateInfo<'a> {
     /// Size of initial data to populate cache, in bytes
     pub initial_data_size: usize,
     /// Initial data to populate cache
+    /// Len: `initial_data_size`
     pub initial_data: *const c_void,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -3941,6 +3986,7 @@ pub struct PipelineBinaryHandlesInfoKHR<'a> {
     pub next: *const c_void,
     pub pipeline_binary_count: u32,
     /// Nullable
+    /// Len: `pipeline_binary_count`
     pub pipeline_binaries: *mut PipelineBinaryKHR,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -3960,6 +4006,7 @@ impl Default for PipelineBinaryHandlesInfoKHR<'_> {
 #[derive(Copy, Clone, Debug)]
 pub struct PipelineBinaryDataKHR<'a> {
     pub data_size: usize,
+    /// Len: `data_size`
     pub data: *mut c_void,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -3977,7 +4024,9 @@ impl Default for PipelineBinaryDataKHR<'_> {
 #[derive(Copy, Clone, Debug)]
 pub struct PipelineBinaryKeysAndDataKHR<'a> {
     pub binary_count: u32,
+    /// Len: `binary_count`
     pub pipeline_binary_keys: *const PipelineBinaryKeyKHR<'a>,
+    /// Len: `binary_count`
     pub pipeline_binary_data: *const PipelineBinaryDataKHR<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -4022,6 +4071,7 @@ pub struct PipelineBinaryInfoKHR<'a> {
     /// Nullable
     pub next: *const c_void,
     pub binary_count: u32,
+    /// Len: `binary_count`
     pub pipeline_binaries: *const PipelineBinaryKHR,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -4107,10 +4157,12 @@ pub struct PipelineLayoutCreateInfo<'a> {
     pub set_layout_count: u32,
     /// Array of setCount number of descriptor set layout objects defining the layout of the
     /// Nullable
+    /// Len: `set_layout_count`
     pub set_layouts: *const DescriptorSetLayout,
     /// Number of push-constant ranges used by the pipeline
     pub push_constant_range_count: u32,
     /// Array of pushConstantRangeCount number of ranges used by various shader stages
+    /// Len: `push_constant_range_count`
     pub push_constant_ranges: *const PushConstantRange,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -4299,6 +4351,7 @@ pub struct RenderPassBeginInfo<'a> {
     pub framebuffer: Framebuffer,
     pub render_area: Rect2D,
     pub clear_value_count: u32,
+    /// Len: `clear_value_count`
     pub clear_values: *const ClearValue,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -4441,14 +4494,18 @@ pub struct SubpassDescription<'a> {
     /// Must be VK_PIPELINE_BIND_POINT_GRAPHICS for now
     pub pipeline_bind_point: PipelineBindPoint,
     pub input_attachment_count: u32,
+    /// Len: `input_attachment_count`
     pub input_attachments: *const AttachmentReference,
     pub color_attachment_count: u32,
+    /// Len: `color_attachment_count`
     pub color_attachments: *const AttachmentReference,
     /// Nullable
+    /// Len: `color_attachment_count`
     pub resolve_attachments: *const AttachmentReference,
     /// Nullable
     pub depth_stencil_attachment: *const AttachmentReference,
     pub preserve_attachment_count: u32,
+    /// Len: `preserve_attachment_count`
     pub preserve_attachments: *const u32,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -4505,10 +4562,13 @@ pub struct RenderPassCreateInfo<'a> {
     pub next: *const c_void,
     pub flags: RenderPassCreateFlags,
     pub attachment_count: u32,
+    /// Len: `attachment_count`
     pub attachments: *const AttachmentDescription,
     pub subpass_count: u32,
+    /// Len: `subpass_count`
     pub subpasses: *const SubpassDescription<'a>,
     pub dependency_count: u32,
+    /// Len: `dependency_count`
     pub dependencies: *const SubpassDependency,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -5161,6 +5221,7 @@ pub struct FramebufferCreateInfo<'a> {
     pub flags: FramebufferCreateFlags,
     pub render_pass: RenderPass,
     pub attachment_count: u32,
+    /// Len: `attachment_count`
     pub attachments: *const ImageView,
     pub width: u32,
     pub height: u32,
@@ -5276,12 +5337,16 @@ pub struct SubmitInfo<'a> {
     /// Nullable
     pub next: *const c_void,
     pub wait_semaphore_count: u32,
+    /// Len: `wait_semaphore_count`
     pub wait_semaphores: *const Semaphore,
     /// Nullable
+    /// Len: `wait_semaphore_count`
     pub wait_dst_stage_mask: *const PipelineStageFlags,
     pub command_buffer_count: u32,
+    /// Len: `command_buffer_count`
     pub command_buffers: *const vkCommandBuffer,
     pub signal_semaphore_count: u32,
+    /// Len: `signal_semaphore_count`
     pub signal_semaphores: *const Semaphore,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -5309,6 +5374,7 @@ pub struct DisplayPropertiesKHR<'a> {
     /// Handle of the display object
     pub display: DisplayKHR,
     /// Name of the display
+    /// Len: null-terminated
     pub display_name: *const c_char,
     /// In millimeters?
     pub physical_dimensions: Extent2D,
@@ -5812,7 +5878,7 @@ impl Default for ScreenSurfaceCreateInfoQNX<'_> {
 
 /// returned_only
 #[repr(C)]
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, Hash, PartialEq, Eq)]
 pub struct SurfaceFormatKHR {
     /// Supported pair of rendering format
     pub format: Format,
@@ -5854,6 +5920,7 @@ pub struct SwapchainCreateInfoKHR<'a> {
     /// Number of queue families having access to the images in case of concurrent sharing mode
     pub queue_family_index_count: u32,
     /// Array of queue family indices having access to the images in case of concurrent sharing mode
+    /// Len: `queue_family_index_count`
     pub queue_family_indices: *const u32,
     /// The transform, relative to the device's natural orientation, applied to the image content prior to presentation
     pub pre_transform: SurfaceTransformFlagsKHR,
@@ -5902,15 +5969,19 @@ pub struct PresentInfoKHR<'a> {
     /// Number of semaphores to wait for before presenting
     pub wait_semaphore_count: u32,
     /// Semaphores to wait for before presenting
+    /// Len: `wait_semaphore_count`
     pub wait_semaphores: *const Semaphore,
     /// Number of swapchains to present in this call
     pub swapchain_count: u32,
     /// Swapchains to present an image from
+    /// Len: `swapchain_count`
     pub swapchains: *const SwapchainKHR,
     /// Indices of which presentable images to present
+    /// Len: `swapchain_count`
     pub image_indices: *const u32,
     /// Optional (i.e. if non-NULL) VkResult for each swapchain
     /// Nullable
+    /// Len: `swapchain_count`
     pub results: *mut vkResult,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -5970,6 +6041,7 @@ pub struct ValidationFlagsEXT<'a> {
     /// Number of validation checks to disable
     pub disabled_validation_check_count: u32,
     /// Validation checks to disable
+    /// Len: `disabled_validation_check_count`
     pub disabled_validation_checks: *const ValidationCheckEXT,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -5996,10 +6068,12 @@ pub struct ValidationFeaturesEXT<'a> {
     /// Number of validation features to enable
     pub enabled_validation_feature_count: u32,
     /// Validation features to enable
+    /// Len: `enabled_validation_feature_count`
     pub enabled_validation_features: *const ValidationFeatureEnableEXT,
     /// Number of validation features to disable
     pub disabled_validation_feature_count: u32,
     /// Validation features to disable
+    /// Len: `disabled_validation_feature_count`
     pub disabled_validation_features: *const ValidationFeatureDisableEXT,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -6028,6 +6102,7 @@ pub struct LayerSettingsCreateInfoEXT<'a> {
     /// Number of settings to configure
     pub setting_count: u32,
     /// Validation features to enable
+    /// Len: `setting_count`
     pub settings: *const LayerSettingEXT<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -6046,13 +6121,16 @@ impl Default for LayerSettingsCreateInfoEXT<'_> {
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct LayerSettingEXT<'a> {
+    /// Len: null-terminated
     pub layer_name: *const c_char,
+    /// Len: null-terminated
     pub setting_name: *const c_char,
     /// The type of the object
     pub ty: LayerSettingTypeEXT,
     /// Number of values of the setting
     pub value_count: u32,
     /// Values to pass for a setting
+    /// Len: `value_count`
     pub values: *const c_void,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -6129,6 +6207,7 @@ pub struct DebugMarkerObjectNameInfoEXT<'a> {
     /// The handle of the object, cast to uint64_t
     pub object: u64,
     /// Name to apply to the object
+    /// Len: null-terminated
     pub object_name: *const c_char,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -6160,6 +6239,7 @@ pub struct DebugMarkerObjectTagInfoEXT<'a> {
     /// The length in bytes of the tag data
     pub tag_size: usize,
     /// Tag data to attach to the object
+    /// Len: `tag_size`
     pub tag: *const c_void,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -6185,6 +6265,7 @@ pub struct DebugMarkerMarkerInfoEXT<'a> {
     /// Nullable
     pub next: *const c_void,
     /// Name of the debug marker
+    /// Len: null-terminated
     pub marker_name: *const c_char,
     /// Optional color for debug marker
     pub color: [f32; 4],
@@ -6499,11 +6580,16 @@ pub struct Win32KeyedMutexAcquireReleaseInfoNV<'a> {
     /// Nullable
     pub next: *const c_void,
     pub acquire_count: u32,
+    /// Len: `acquire_count`
     pub acquire_syncs: *const DeviceMemory,
+    /// Len: `acquire_count`
     pub acquire_keys: *const u64,
+    /// Len: `acquire_count`
     pub acquire_timeout_milliseconds: *const u32,
     pub release_count: u32,
+    /// Len: `release_count`
     pub release_syncs: *const DeviceMemory,
+    /// Len: `release_count`
     pub release_keys: *const u64,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -7203,6 +7289,7 @@ pub struct GraphicsShaderGroupCreateInfoNV<'a> {
     /// Nullable
     pub next: *const c_void,
     pub stage_count: u32,
+    /// Len: `stage_count`
     pub stages: *const PipelineShaderStageCreateInfo<'a>,
     /// Nullable
     pub vertex_input_state: *const PipelineVertexInputStateCreateInfo<'a>,
@@ -7232,8 +7319,10 @@ pub struct GraphicsPipelineShaderGroupsCreateInfoNV<'a> {
     /// Nullable
     pub next: *const c_void,
     pub group_count: u32,
+    /// Len: `group_count`
     pub groups: *const GraphicsShaderGroupCreateInfoNV<'a>,
     pub pipeline_count: u32,
+    /// Len: `pipeline_count`
     pub pipelines: *const Pipeline,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -7339,7 +7428,9 @@ pub struct IndirectCommandsLayoutTokenNV<'a> {
     pub pushconstant_size: u32,
     pub indirect_state_flags: IndirectStateFlagsNV,
     pub index_type_count: u32,
+    /// Len: `index_type_count`
     pub index_types: *const IndexType,
+    /// Len: `index_type_count`
     pub index_type_values: *const u32,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -7375,8 +7466,10 @@ pub struct IndirectCommandsLayoutCreateInfoNV<'a> {
     pub flags: IndirectCommandsLayoutUsageFlagsNV,
     pub pipeline_bind_point: PipelineBindPoint,
     pub token_count: u32,
+    /// Len: `token_count`
     pub tokens: *const IndirectCommandsLayoutTokenNV<'a>,
     pub stream_count: u32,
+    /// Len: `stream_count`
     pub stream_strides: *const u32,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -7406,6 +7499,7 @@ pub struct GeneratedCommandsInfoNV<'a> {
     pub pipeline: Pipeline,
     pub indirect_commands_layout: IndirectCommandsLayoutNV,
     pub stream_count: u32,
+    /// Len: `stream_count`
     pub streams: *const IndirectCommandsStreamNV,
     pub sequences_count: u32,
     pub preprocess_buffer: Buffer,
@@ -7765,7 +7859,9 @@ pub struct PhysicalDeviceDriverProperties<'a> {
     /// Nullable
     pub next: *mut c_void,
     pub driver_id: DriverId,
+    /// Len: null-terminated
     pub driver_name: [c_char; MAX_DRIVER_NAME_SIZE as usize],
+    /// Len: null-terminated
     pub driver_info: [c_char; MAX_DRIVER_INFO_SIZE as usize],
     pub conformance_version: ConformanceVersion,
     pub _marker: PhantomData<&'a ()>,
@@ -7796,6 +7892,7 @@ pub struct PresentRegionsKHR<'a> {
     pub swapchain_count: u32,
     /// The regions that have changed
     /// Nullable
+    /// Len: `swapchain_count`
     pub regions: *const PresentRegionKHR<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -7818,6 +7915,7 @@ pub struct PresentRegionKHR<'a> {
     pub rectangle_count: u32,
     /// Array of rectangles that have changed in a swapchain's image(s)
     /// Nullable
+    /// Len: `rectangle_count`
     pub rectangles: *const RectLayerKHR,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -8319,11 +8417,16 @@ pub struct Win32KeyedMutexAcquireReleaseInfoKHR<'a> {
     /// Nullable
     pub next: *const c_void,
     pub acquire_count: u32,
+    /// Len: `acquire_count`
     pub acquire_syncs: *const DeviceMemory,
+    /// Len: `acquire_count`
     pub acquire_keys: *const u64,
+    /// Len: `acquire_count`
     pub acquire_timeouts: *const u32,
     pub release_count: u32,
+    /// Len: `release_count`
     pub release_syncs: *const DeviceMemory,
+    /// Len: `release_count`
     pub release_keys: *const u64,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -8543,9 +8646,11 @@ pub struct D3D12FenceSubmitInfoKHR<'a> {
     pub next: *const c_void,
     pub wait_semaphore_values_count: u32,
     /// Nullable
+    /// Len: `wait_semaphore_values_count`
     pub wait_semaphore_values: *const u64,
     pub signal_semaphore_values_count: u32,
     /// Nullable
+    /// Len: `signal_semaphore_values_count`
     pub signal_semaphore_values: *const u64,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -9212,10 +9317,13 @@ pub struct RenderPassMultiviewCreateInfo<'a> {
     /// Nullable
     pub next: *const c_void,
     pub subpass_count: u32,
+    /// Len: `subpass_count`
     pub view_masks: *const u32,
     pub dependency_count: u32,
+    /// Len: `dependency_count`
     pub view_offsets: *const i32,
     pub correlation_mask_count: u32,
+    /// Len: `correlation_mask_count`
     pub correlation_masks: *const u32,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -9376,6 +9484,7 @@ pub struct PhysicalDeviceGroupProperties<'a> {
     /// Nullable
     pub next: *mut c_void,
     pub physical_device_count: u32,
+    /// Len: `physical_device_count`
     pub physical_devices: [vkPhysicalDevice; MAX_DEVICE_GROUP_SIZE as usize],
     pub subset_allocation: Bool32,
     pub _marker: PhantomData<&'a ()>,
@@ -9451,6 +9560,7 @@ pub struct BindBufferMemoryDeviceGroupInfo<'a> {
     /// Nullable
     pub next: *const c_void,
     pub device_index_count: u32,
+    /// Len: `device_index_count`
     pub device_indices: *const u32,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -9500,8 +9610,10 @@ pub struct BindImageMemoryDeviceGroupInfo<'a> {
     /// Nullable
     pub next: *const c_void,
     pub device_index_count: u32,
+    /// Len: `device_index_count`
     pub device_indices: *const u32,
     pub split_instance_bind_region_count: u32,
+    /// Len: `split_instance_bind_region_count`
     pub split_instance_bind_regions: *const Rect2D,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -9529,6 +9641,7 @@ pub struct DeviceGroupRenderPassBeginInfo<'a> {
     pub next: *const c_void,
     pub device_mask: u32,
     pub device_render_area_count: u32,
+    /// Len: `device_render_area_count`
     pub device_render_areas: *const Rect2D,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -9576,10 +9689,13 @@ pub struct DeviceGroupSubmitInfo<'a> {
     /// Nullable
     pub next: *const c_void,
     pub wait_semaphore_count: u32,
+    /// Len: `wait_semaphore_count`
     pub wait_semaphore_device_indices: *const u32,
     pub command_buffer_count: u32,
+    /// Len: `command_buffer_count`
     pub command_buffer_device_masks: *const u32,
     pub signal_semaphore_count: u32,
+    /// Len: `signal_semaphore_count`
     pub signal_semaphore_device_indices: *const u32,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -9727,6 +9843,7 @@ pub struct DeviceGroupPresentInfoKHR<'a> {
     /// Nullable
     pub next: *const c_void,
     pub swapchain_count: u32,
+    /// Len: `swapchain_count`
     pub device_masks: *const u32,
     pub mode: DeviceGroupPresentModeFlagsKHR,
     pub _marker: PhantomData<&'a ()>,
@@ -9752,6 +9869,7 @@ pub struct DeviceGroupDeviceCreateInfo<'a> {
     /// Nullable
     pub next: *const c_void,
     pub physical_device_count: u32,
+    /// Len: `physical_device_count`
     pub physical_devices: *const vkPhysicalDevice,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -9829,6 +9947,7 @@ pub struct DescriptorUpdateTemplateCreateInfo<'a> {
     /// Number of descriptor update entries to use for the update template
     pub descriptor_update_entry_count: u32,
     /// Descriptor update entries for the template
+    /// Len: `descriptor_update_entry_count`
     pub descriptor_update_entries: *const DescriptorUpdateTemplateEntry,
     pub template_type: DescriptorUpdateTemplateType,
     pub descriptor_set_layout: DescriptorSetLayout,
@@ -9902,6 +10021,7 @@ pub struct PresentIdKHR<'a> {
     pub swapchain_count: u32,
     /// Present ID values for each swapchain
     /// Nullable
+    /// Len: `swapchain_count`
     pub present_ids: *const u64,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -9950,6 +10070,7 @@ pub struct PresentId2KHR<'a> {
     pub swapchain_count: u32,
     /// Present ID values for each swapchain
     /// Nullable
+    /// Len: `swapchain_count`
     pub present_ids: *const u64,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -10126,9 +10247,11 @@ pub struct SwapchainTimeDomainPropertiesEXT<'a> {
     pub time_domain_count: u32,
     /// Available time domains to use with the swapchain
     /// Nullable
+    /// Len: `time_domain_count`
     pub time_domains: *mut TimeDomainKHR,
     /// Unique identifier for a time domain
     /// Nullable
+    /// Len: `time_domain_count`
     pub time_domain_ids: *mut u64,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -10194,6 +10317,7 @@ pub struct PastPresentationTimingPropertiesEXT<'a> {
     pub timing_properties_counter: u64,
     pub time_domains_counter: u64,
     pub presentation_timing_count: u32,
+    /// Len: `presentation_timing_count`
     pub presentation_timings: *mut PastPresentationTimingEXT<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -10225,6 +10349,7 @@ pub struct PastPresentationTimingEXT<'a> {
     /// Number of present stages results available in pPresentStages
     pub present_stage_count: u32,
     /// Reported timings for each present stage
+    /// Len: `present_stage_count`
     pub present_stages: *mut PresentStageTimeEXT,
     /// Time domain of the present stages
     pub time_domain: TimeDomainKHR,
@@ -10262,6 +10387,7 @@ pub struct PresentTimingsInfoEXT<'a> {
     pub swapchain_count: u32,
     /// Present timing details for each swapchain
     /// Nullable
+    /// Len: `swapchain_count`
     pub timing_infos: *const PresentTimingInfoEXT<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -10384,6 +10510,7 @@ pub struct HdrVividDynamicMetadataHUAWEI<'a> {
     /// Specified in bytes
     pub dynamic_metadata_size: usize,
     /// Binary code of size dynamicMetadataSize
+    /// Len: `dynamic_metadata_size`
     pub dynamic_metadata: *const c_void,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -10495,6 +10622,7 @@ pub struct PresentTimesInfoGOOGLE<'a> {
     pub swapchain_count: u32,
     /// The earliest times to present images
     /// Nullable
+    /// Len: `swapchain_count`
     pub times: *const PresentTimeGOOGLE,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -10618,6 +10746,7 @@ pub struct PipelineViewportWScalingStateCreateInfoNV<'a> {
     pub viewport_w_scaling_enable: Bool32,
     pub viewport_count: u32,
     /// Nullable
+    /// Len: `viewport_count`
     pub viewport_w_scalings: *const ViewportWScalingNV,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -10662,6 +10791,7 @@ pub struct PipelineViewportSwizzleStateCreateInfoNV<'a> {
     pub next: *const c_void,
     pub flags: PipelineViewportSwizzleStateCreateFlagsNV,
     pub viewport_count: u32,
+    /// Len: `viewport_count`
     pub viewport_swizzles: *const ViewportSwizzleNV,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -10711,6 +10841,7 @@ pub struct PipelineDiscardRectangleStateCreateInfoEXT<'a> {
     pub flags: PipelineDiscardRectangleStateCreateFlagsEXT,
     pub discard_rectangle_mode: DiscardRectangleModeEXT,
     pub discard_rectangle_count: u32,
+    /// Len: `discard_rectangle_count`
     pub discard_rectangles: *const Rect2D,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -10776,6 +10907,7 @@ pub struct RenderPassInputAttachmentAspectCreateInfo<'a> {
     /// Nullable
     pub next: *const c_void,
     pub aspect_reference_count: u32,
+    /// Len: `aspect_reference_count`
     pub aspect_references: *const InputAttachmentAspectReference,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -11745,6 +11877,7 @@ pub struct SampleLocationsInfoEXT<'a> {
     pub sample_locations_per_pixel: SampleCountFlags,
     pub sample_location_grid_size: Extent2D,
     pub sample_locations_count: u32,
+    /// Len: `sample_locations_count`
     pub sample_locations: *const SampleLocationEXT,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -11804,8 +11937,10 @@ pub struct RenderPassSampleLocationsBeginInfoEXT<'a> {
     /// Nullable
     pub next: *const c_void,
     pub attachment_initial_sample_locations_count: u32,
+    /// Len: `attachment_initial_sample_locations_count`
     pub attachment_initial_sample_locations: *const AttachmentSampleLocationsEXT<'a>,
     pub post_subpass_sample_locations_count: u32,
+    /// Len: `post_subpass_sample_locations_count`
     pub post_subpass_sample_locations: *const SubpassSampleLocationsEXT<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -12083,6 +12218,7 @@ pub struct WriteDescriptorSetInlineUniformBlock<'a> {
     /// Nullable
     pub next: *const c_void,
     pub data_size: u32,
+    /// Len: `data_size`
     pub data: *const c_void,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -12134,6 +12270,7 @@ pub struct PipelineCoverageModulationStateCreateInfoNV<'a> {
     pub coverage_modulation_table_enable: Bool32,
     pub coverage_modulation_table_count: u32,
     /// Nullable
+    /// Len: `coverage_modulation_table_count`
     pub coverage_modulation_table: *const f32,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -12160,6 +12297,7 @@ pub struct ImageFormatListCreateInfo<'a> {
     /// Nullable
     pub next: *const c_void,
     pub view_format_count: u32,
+    /// Len: `view_format_count`
     pub view_formats: *const Format,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -12184,6 +12322,7 @@ pub struct ValidationCacheCreateInfoEXT<'a> {
     pub next: *const c_void,
     pub flags: ValidationCacheCreateFlagsEXT,
     pub initial_data_size: usize,
+    /// Len: `initial_data_size`
     pub initial_data: *const c_void,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -12462,6 +12601,7 @@ pub struct PhysicalDeviceLayeredApiPropertiesListKHR<'a> {
     pub layered_api_count: u32,
     /// Output list of layered implementations underneath the physical device
     /// Nullable
+    /// Len: `layered_api_count`
     pub layered_apis: *mut PhysicalDeviceLayeredApiPropertiesKHR<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -12669,6 +12809,7 @@ pub struct RenderingAreaInfo<'a> {
     pub next: *const c_void,
     pub view_mask: u32,
     pub color_attachment_count: u32,
+    /// Len: `color_attachment_count`
     pub color_attachment_formats: *const Format,
     pub depth_attachment_format: Format,
     pub stencil_attachment_format: Format,
@@ -12960,6 +13101,7 @@ pub struct QueueFamilyGlobalPriorityProperties<'a> {
     /// Nullable
     pub next: *mut c_void,
     pub priority_count: u32,
+    /// Len: `priority_count`
     pub priorities: [QueueGlobalPriority; MAX_GLOBAL_PRIORITY_SIZE as usize],
     pub _marker: PhantomData<&'a ()>,
 }
@@ -12987,6 +13129,7 @@ pub struct DebugUtilsObjectNameInfoEXT<'a> {
     pub object_type: ObjectType,
     pub object_handle: u64,
     /// Nullable
+    /// Len: null-terminated
     pub object_name: *const c_char,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -13013,6 +13156,7 @@ pub struct DebugUtilsObjectTagInfoEXT<'a> {
     pub object_handle: u64,
     pub tag_name: u64,
     pub tag_size: usize,
+    /// Len: `tag_size`
     pub tag: *const c_void,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -13037,6 +13181,7 @@ pub struct DebugUtilsLabelEXT<'a> {
     pub s_type: StructureType,
     /// Nullable
     pub next: *const c_void,
+    /// Len: null-terminated
     pub label_name: *const c_char,
     pub color: [f32; 4],
     pub _marker: PhantomData<&'a ()>,
@@ -13091,15 +13236,20 @@ pub struct DebugUtilsMessengerCallbackDataEXT<'a> {
     pub next: *const c_void,
     pub flags: DebugUtilsMessengerCallbackDataFlagsEXT,
     /// Nullable
+    /// Len: null-terminated
     pub message_id_name: *const c_char,
     pub message_id_number: i32,
     /// Nullable
+    /// Len: null-terminated
     pub message: *const c_char,
     pub queue_label_count: u32,
+    /// Len: `queue_label_count`
     pub queue_labels: *const DebugUtilsLabelEXT<'a>,
     pub cmd_buf_label_count: u32,
+    /// Len: `cmd_buf_label_count`
     pub cmd_buf_labels: *const DebugUtilsLabelEXT<'a>,
     pub object_count: u32,
+    /// Len: `object_count`
     pub objects: *const DebugUtilsObjectNameInfoEXT<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -13592,6 +13742,7 @@ pub struct DescriptorSetLayoutBindingFlagsCreateInfo<'a> {
     pub next: *const c_void,
     pub binding_count: u32,
     /// Nullable
+    /// Len: `binding_count`
     pub binding_flags: *const DescriptorBindingFlags,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -13617,6 +13768,7 @@ pub struct DescriptorSetVariableDescriptorCountAllocateInfo<'a> {
     /// Nullable
     pub next: *const c_void,
     pub descriptor_set_count: u32,
+    /// Len: `descriptor_set_count`
     pub descriptor_counts: *const u32,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -13734,14 +13886,18 @@ pub struct SubpassDescription2<'a> {
     pub pipeline_bind_point: PipelineBindPoint,
     pub view_mask: u32,
     pub input_attachment_count: u32,
+    /// Len: `input_attachment_count`
     pub input_attachments: *const AttachmentReference2<'a>,
     pub color_attachment_count: u32,
+    /// Len: `color_attachment_count`
     pub color_attachments: *const AttachmentReference2<'a>,
     /// Nullable
+    /// Len: `color_attachment_count`
     pub resolve_attachments: *const AttachmentReference2<'a>,
     /// Nullable
     pub depth_stencil_attachment: *const AttachmentReference2<'a>,
     pub preserve_attachment_count: u32,
+    /// Len: `preserve_attachment_count`
     pub preserve_attachments: *const u32,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -13810,12 +13966,16 @@ pub struct RenderPassCreateInfo2<'a> {
     pub next: *const c_void,
     pub flags: RenderPassCreateFlags,
     pub attachment_count: u32,
+    /// Len: `attachment_count`
     pub attachments: *const AttachmentDescription2<'a>,
     pub subpass_count: u32,
+    /// Len: `subpass_count`
     pub subpasses: *const SubpassDescription2<'a>,
     pub dependency_count: u32,
+    /// Len: `dependency_count`
     pub dependencies: *const SubpassDependency2<'a>,
     pub correlated_view_mask_count: u32,
+    /// Len: `correlated_view_mask_count`
     pub correlated_view_masks: *const u32,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -13959,9 +14119,11 @@ pub struct TimelineSemaphoreSubmitInfo<'a> {
     pub next: *const c_void,
     pub wait_semaphore_value_count: u32,
     /// Nullable
+    /// Len: `wait_semaphore_value_count`
     pub wait_semaphore_values: *const u64,
     pub signal_semaphore_value_count: u32,
     /// Nullable
+    /// Len: `signal_semaphore_value_count`
     pub signal_semaphore_values: *const u64,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -13988,7 +14150,9 @@ pub struct SemaphoreWaitInfo<'a> {
     pub next: *const c_void,
     pub flags: SemaphoreWaitFlags,
     pub semaphore_count: u32,
+    /// Len: `semaphore_count`
     pub semaphores: *const Semaphore,
+    /// Len: `semaphore_count`
     pub values: *const u64,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -14055,6 +14219,7 @@ pub struct PipelineVertexInputDivisorStateCreateInfo<'a> {
     /// Nullable
     pub next: *const c_void,
     pub vertex_binding_divisor_count: u32,
+    /// Len: `vertex_binding_divisor_count`
     pub vertex_binding_divisors: *const VertexInputBindingDivisorDescription,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -14842,6 +15007,7 @@ pub struct PipelineViewportExclusiveScissorStateCreateInfoNV<'a> {
     /// Nullable
     pub next: *const c_void,
     pub exclusive_scissor_count: u32,
+    /// Len: `exclusive_scissor_count`
     pub exclusive_scissors: *const Rect2D,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -15091,6 +15257,7 @@ pub type PhysicalDeviceMemoryDecompressionPropertiesNV<'a> =
 #[derive(Copy, Clone, Debug)]
 pub struct ShadingRatePaletteNV<'a> {
     pub shading_rate_palette_entry_count: u32,
+    /// Len: `shading_rate_palette_entry_count`
     pub shading_rate_palette_entries: *const ShadingRatePaletteEntryNV,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -15113,6 +15280,7 @@ pub struct PipelineViewportShadingRateImageStateCreateInfoNV<'a> {
     pub next: *const c_void,
     pub shading_rate_image_enable: Bool32,
     pub viewport_count: u32,
+    /// Len: `viewport_count`
     pub shading_rate_palettes: *const ShadingRatePaletteNV<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -15222,6 +15390,7 @@ pub struct CoarseSampleOrderCustomNV<'a> {
     pub shading_rate: ShadingRatePaletteEntryNV,
     pub sample_count: u32,
     pub sample_location_count: u32,
+    /// Len: `sample_location_count`
     pub sample_locations: *const CoarseSampleLocationNV,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -15246,6 +15415,7 @@ pub struct PipelineViewportCoarseSampleOrderStateCreateInfoNV<'a> {
     pub next: *const c_void,
     pub sample_order_type: CoarseSampleOrderTypeNV,
     pub custom_sample_order_count: u32,
+    /// Len: `custom_sample_order_count`
     pub custom_sample_orders: *const CoarseSampleOrderCustomNV<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -15537,8 +15707,10 @@ pub struct RayTracingPipelineCreateInfoNV<'a> {
     pub flags: PipelineCreateFlags,
     pub stage_count: u32,
     /// One entry for each active shader stage
+    /// Len: `stage_count`
     pub stages: *const PipelineShaderStageCreateInfo<'a>,
     pub group_count: u32,
+    /// Len: `group_count`
     pub groups: *const RayTracingShaderGroupCreateInfoNV<'a>,
     pub max_recursion_depth: u32,
     /// Interface layout of the pipeline
@@ -15578,8 +15750,10 @@ pub struct RayTracingPipelineCreateInfoKHR<'a> {
     pub flags: PipelineCreateFlags,
     pub stage_count: u32,
     /// One entry for each active shader stage
+    /// Len: `stage_count`
     pub stages: *const PipelineShaderStageCreateInfo<'a>,
     pub group_count: u32,
+    /// Len: `group_count`
     pub groups: *const RayTracingShaderGroupCreateInfoKHR<'a>,
     pub max_pipeline_ray_recursion_depth: u32,
     /// Nullable
@@ -15738,6 +15912,7 @@ pub struct AccelerationStructureInfoNV<'a> {
     pub flags: BuildAccelerationStructureFlagsNV,
     pub instance_count: u32,
     pub geometry_count: u32,
+    /// Len: `geometry_count`
     pub geometries: *const GeometryNV<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -15788,6 +15963,7 @@ pub struct BindAccelerationStructureMemoryInfoNV<'a> {
     pub memory: DeviceMemory,
     pub memory_offset: DeviceSize,
     pub device_index_count: u32,
+    /// Len: `device_index_count`
     pub device_indices: *const u32,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -15815,6 +15991,7 @@ pub struct WriteDescriptorSetAccelerationStructureKHR<'a> {
     pub next: *const c_void,
     pub acceleration_structure_count: u32,
     /// Nullable
+    /// Len: `acceleration_structure_count`
     pub acceleration_structures: *const AccelerationStructureKHR,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -15839,6 +16016,7 @@ pub struct WriteDescriptorSetAccelerationStructureNV<'a> {
     pub next: *const c_void,
     pub acceleration_structure_count: u32,
     /// Nullable
+    /// Len: `acceleration_structure_count`
     pub acceleration_structures: *const AccelerationStructureNV,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -16169,6 +16347,7 @@ pub struct DrmFormatModifierPropertiesListEXT<'a> {
     pub next: *mut c_void,
     pub drm_format_modifier_count: u32,
     /// Nullable
+    /// Len: `drm_format_modifier_count`
     pub drm_format_modifier_properties: *mut DrmFormatModifierPropertiesEXT,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -16212,6 +16391,7 @@ pub struct PhysicalDeviceImageDrmFormatModifierInfoEXT<'a> {
     pub drm_format_modifier: u64,
     pub sharing_mode: SharingMode,
     pub queue_family_index_count: u32,
+    /// Len: `queue_family_index_count`
     pub queue_family_indices: *const u32,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -16237,6 +16417,7 @@ pub struct ImageDrmFormatModifierListCreateInfoEXT<'a> {
     /// Nullable
     pub next: *const c_void,
     pub drm_format_modifier_count: u32,
+    /// Len: `drm_format_modifier_count`
     pub drm_format_modifiers: *const u64,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -16261,6 +16442,7 @@ pub struct ImageDrmFormatModifierExplicitCreateInfoEXT<'a> {
     pub next: *const c_void,
     pub drm_format_modifier: u64,
     pub drm_format_modifier_plane_count: u32,
+    /// Len: `drm_format_modifier_plane_count`
     pub plane_layouts: *const SubresourceLayout,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -16517,6 +16699,7 @@ pub struct RenderPassFragmentDensityMapOffsetEndInfoEXT<'a> {
     /// Nullable
     pub next: *const c_void,
     pub fragment_density_offset_count: u32,
+    /// Len: `fragment_density_offset_count`
     pub fragment_density_offsets: *const Offset2D,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -16932,6 +17115,7 @@ pub struct FramebufferAttachmentsCreateInfo<'a> {
     /// Nullable
     pub next: *const c_void,
     pub attachment_image_info_count: u32,
+    /// Len: `attachment_image_info_count`
     pub attachment_image_infos: *const FramebufferAttachmentImageInfo<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -16962,6 +17146,7 @@ pub struct FramebufferAttachmentImageInfo<'a> {
     pub height: u32,
     pub layer_count: u32,
     pub view_format_count: u32,
+    /// Len: `view_format_count`
     pub view_formats: *const Format,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -16991,6 +17176,7 @@ pub struct RenderPassAttachmentBeginInfo<'a> {
     /// Nullable
     pub next: *const c_void,
     pub attachment_count: u32,
+    /// Len: `attachment_count`
     pub attachments: *const ImageView,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -17227,6 +17413,7 @@ pub struct PipelineCreationFeedbackCreateInfo<'a> {
     pub pipeline_creation_feedback: *mut PipelineCreationFeedback,
     pub pipeline_stage_creation_feedback_count: u32,
     /// One entry for each shader stage specified in the parent Vk*PipelineCreateInfo struct
+    /// Len: `pipeline_stage_creation_feedback_count`
     pub pipeline_stage_creation_feedbacks: *mut PipelineCreationFeedback,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -17455,8 +17642,11 @@ pub struct PerformanceCounterDescriptionKHR<'a> {
     /// Nullable
     pub next: *mut c_void,
     pub flags: PerformanceCounterDescriptionFlagsKHR,
+    /// Len: null-terminated
     pub name: [c_char; MAX_DESCRIPTION_SIZE as usize],
+    /// Len: null-terminated
     pub category: [c_char; MAX_DESCRIPTION_SIZE as usize],
+    /// Len: null-terminated
     pub description: [c_char; MAX_DESCRIPTION_SIZE as usize],
     pub _marker: PhantomData<&'a ()>,
 }
@@ -17483,6 +17673,7 @@ pub struct QueryPoolPerformanceCreateInfoKHR<'a> {
     pub next: *const c_void,
     pub queue_family_index: u32,
     pub counter_index_count: u32,
+    /// Len: `counter_index_count`
     pub counter_indices: *const u32,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -18123,7 +18314,9 @@ pub struct PipelineExecutablePropertiesKHR<'a> {
     /// Nullable
     pub next: *mut c_void,
     pub stages: ShaderStageFlags,
+    /// Len: null-terminated
     pub name: [c_char; MAX_DESCRIPTION_SIZE as usize],
+    /// Len: null-terminated
     pub description: [c_char; MAX_DESCRIPTION_SIZE as usize],
     pub subgroup_size: u32,
     pub _marker: PhantomData<&'a ()>,
@@ -18192,7 +18385,9 @@ pub struct PipelineExecutableStatisticKHR<'a> {
     pub s_type: StructureType,
     /// Nullable
     pub next: *mut c_void,
+    /// Len: null-terminated
     pub name: [c_char; MAX_DESCRIPTION_SIZE as usize],
+    /// Len: null-terminated
     pub description: [c_char; MAX_DESCRIPTION_SIZE as usize],
     pub format: PipelineExecutableStatisticFormatKHR,
     pub value: PipelineExecutableStatisticValueKHR,
@@ -18219,11 +18414,14 @@ pub struct PipelineExecutableInternalRepresentationKHR<'a> {
     pub s_type: StructureType,
     /// Nullable
     pub next: *mut c_void,
+    /// Len: null-terminated
     pub name: [c_char; MAX_DESCRIPTION_SIZE as usize],
+    /// Len: null-terminated
     pub description: [c_char; MAX_DESCRIPTION_SIZE as usize],
     pub is_text: Bool32,
     pub data_size: usize,
     /// Nullable
+    /// Len: `data_size`
     pub data: *mut c_void,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -18865,7 +19063,9 @@ pub struct PhysicalDeviceVulkan12Properties<'a> {
     /// Nullable
     pub next: *mut c_void,
     pub driver_id: DriverId,
+    /// Len: null-terminated
     pub driver_name: [c_char; MAX_DRIVER_NAME_SIZE as usize],
+    /// Len: null-terminated
     pub driver_info: [c_char; MAX_DRIVER_INFO_SIZE as usize],
     pub conformance_version: ConformanceVersion,
     pub denorm_behavior_independence: ShaderFloatControlsIndependence,
@@ -19254,9 +19454,11 @@ pub struct PhysicalDeviceVulkan14Properties<'a> {
     pub default_robustness_images: PipelineRobustnessImageBehavior,
     pub copy_src_layout_count: u32,
     /// Nullable
+    /// Len: `copy_src_layout_count`
     pub copy_src_layouts: *mut ImageLayout,
     pub copy_dst_layout_count: u32,
     /// Nullable
+    /// Len: `copy_dst_layout_count`
     pub copy_dst_layouts: *mut ImageLayout,
     pub optimal_tiling_layout_uuid: [u8; UUID_SIZE as usize],
     pub identical_memory_type_requirements: Bool32,
@@ -19371,6 +19573,7 @@ pub struct FaultCallbackInfo<'a> {
     pub next: *const c_void,
     pub fault_count: u32,
     /// Nullable
+    /// Len: `fault_count`
     pub faults: *mut FaultData<'a>,
     pub pfn_fault_callback: PFN_vkFaultCallbackFunction,
     pub _marker: PhantomData<&'a ()>,
@@ -19395,10 +19598,14 @@ pub struct PhysicalDeviceToolProperties<'a> {
     pub s_type: StructureType,
     /// Nullable
     pub next: *mut c_void,
+    /// Len: null-terminated
     pub name: [c_char; MAX_EXTENSION_NAME_SIZE as usize],
+    /// Len: null-terminated
     pub version: [c_char; MAX_EXTENSION_NAME_SIZE as usize],
     pub purposes: ToolPurposeFlags,
+    /// Len: null-terminated
     pub description: [c_char; MAX_DESCRIPTION_SIZE as usize],
+    /// Len: null-terminated
     pub layer: [c_char; MAX_EXTENSION_NAME_SIZE as usize],
     pub _marker: PhantomData<&'a ()>,
 }
@@ -19797,8 +20004,10 @@ pub struct AccelerationStructureBuildGeometryInfoKHR<'a> {
     pub dst_acceleration_structure: AccelerationStructureKHR,
     pub geometry_count: u32,
     /// Nullable
+    /// Len: `geometry_count`
     pub geometries: *const AccelerationStructureGeometryKHR<'a>,
     /// Nullable
+    /// Len: `geometry_count`, `1`
     pub pp_geometries: *const *const AccelerationStructureGeometryKHR<'a>,
     pub scratch_data: DeviceOrHostAddressKHR,
     pub _marker: PhantomData<&'a ()>,
@@ -19960,6 +20169,7 @@ pub struct AccelerationStructureVersionInfoKHR<'a> {
     pub s_type: StructureType,
     /// Nullable
     pub next: *const c_void,
+    /// Len: 2 * UUID_SIZE
     pub version_data: *const u8,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -20076,6 +20286,7 @@ pub struct PipelineLibraryCreateInfoKHR<'a> {
     /// Nullable
     pub next: *const c_void,
     pub library_count: u32,
+    /// Len: `library_count`
     pub libraries: *const Pipeline,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -20115,6 +20326,7 @@ pub struct RefreshObjectListKHR<'a> {
     /// Nullable
     pub next: *const c_void,
     pub object_count: u32,
+    /// Len: `object_count`
     pub objects: *const RefreshObjectKHR,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -20541,6 +20753,7 @@ pub struct WriteDescriptorSetPartitionedAccelerationStructureNV<'a> {
     pub next: *mut c_void,
     pub acceleration_structure_count: u32,
     /// Nullable
+    /// Len: `acceleration_structure_count`
     pub acceleration_structures: *const DeviceAddress,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -21146,6 +21359,7 @@ pub struct CopyBufferInfo2<'a> {
     pub src_buffer: Buffer,
     pub dst_buffer: Buffer,
     pub region_count: u32,
+    /// Len: `region_count`
     pub regions: *const BufferCopy2<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -21175,6 +21389,7 @@ pub struct CopyImageInfo2<'a> {
     pub dst_image: Image,
     pub dst_image_layout: ImageLayout,
     pub region_count: u32,
+    /// Len: `region_count`
     pub regions: *const ImageCopy2<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -21206,6 +21421,7 @@ pub struct BlitImageInfo2<'a> {
     pub dst_image: Image,
     pub dst_image_layout: ImageLayout,
     pub region_count: u32,
+    /// Len: `region_count`
     pub regions: *const ImageBlit2<'a>,
     pub filter: Filter,
     pub _marker: PhantomData<&'a ()>,
@@ -21238,6 +21454,7 @@ pub struct CopyBufferToImageInfo2<'a> {
     pub dst_image: Image,
     pub dst_image_layout: ImageLayout,
     pub region_count: u32,
+    /// Len: `region_count`
     pub regions: *const BufferImageCopy2<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -21267,6 +21484,7 @@ pub struct CopyImageToBufferInfo2<'a> {
     pub src_image_layout: ImageLayout,
     pub dst_buffer: Buffer,
     pub region_count: u32,
+    /// Len: `region_count`
     pub regions: *const BufferImageCopy2<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -21297,6 +21515,7 @@ pub struct ResolveImageInfo2<'a> {
     pub dst_image: Image,
     pub dst_image_layout: ImageLayout,
     pub region_count: u32,
+    /// Len: `region_count`
     pub regions: *const ImageResolve2<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -21744,6 +21963,7 @@ pub type PhysicalDeviceMutableDescriptorTypeFeaturesVALVE<'a> =
 #[derive(Copy, Clone, Debug)]
 pub struct MutableDescriptorTypeListEXT<'a> {
     pub descriptor_type_count: u32,
+    /// Len: `descriptor_type_count`
     pub descriptor_types: *const DescriptorType,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -21766,6 +21986,7 @@ pub struct MutableDescriptorTypeCreateInfoEXT<'a> {
     /// Nullable
     pub next: *const c_void,
     pub mutable_descriptor_type_list_count: u32,
+    /// Len: `mutable_descriptor_type_list_count`
     pub mutable_descriptor_type_lists: *const MutableDescriptorTypeListEXT<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -21872,6 +22093,7 @@ pub struct CustomResolveCreateInfoEXT<'a> {
     pub next: *const c_void,
     pub custom_resolve: Bool32,
     pub color_attachment_count: u32,
+    /// Len: `color_attachment_count`
     pub color_attachment_formats: *const Format,
     pub depth_attachment_format: Format,
     pub stencil_attachment_format: Format,
@@ -21988,6 +22210,7 @@ pub struct GeneratedCommandsShaderInfoEXT<'a> {
     /// Nullable
     pub next: *mut c_void,
     pub shader_count: u32,
+    /// Len: `shader_count`
     pub shaders: *const ShaderEXT,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -22059,6 +22282,7 @@ pub struct IndirectExecutionSetShaderLayoutInfoEXT<'a> {
     pub next: *const c_void,
     pub set_layout_count: u32,
     /// Nullable
+    /// Len: `set_layout_count`
     pub set_layouts: *const DescriptorSetLayout,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -22081,11 +22305,14 @@ pub struct IndirectExecutionSetShaderInfoEXT<'a> {
     /// Nullable
     pub next: *const c_void,
     pub shader_count: u32,
+    /// Len: `shader_count`
     pub initial_shaders: *const ShaderEXT,
     /// Nullable
+    /// Len: `shader_count`
     pub set_layout_infos: *const IndirectExecutionSetShaderLayoutInfoEXT<'a>,
     pub max_shader_count: u32,
     pub push_constant_range_count: u32,
+    /// Len: `push_constant_range_count`
     pub push_constant_ranges: *const PushConstantRange,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -22238,6 +22465,7 @@ pub struct IndirectCommandsLayoutCreateInfoEXT<'a> {
     pub indirect_stride: u32,
     pub pipeline_layout: PipelineLayout,
     pub token_count: u32,
+    /// Len: `token_count`
     pub tokens: *const IndirectCommandsLayoutTokenEXT<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -22621,6 +22849,7 @@ pub struct PipelineColorWriteCreateInfoEXT<'a> {
     pub next: *const c_void,
     /// # of pAttachments
     pub attachment_count: u32,
+    /// Len: `attachment_count`
     pub color_write_enables: *const Bool32,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -22771,10 +23000,13 @@ pub struct DependencyInfo<'a> {
     pub next: *const c_void,
     pub dependency_flags: DependencyFlags,
     pub memory_barrier_count: u32,
+    /// Len: `memory_barrier_count`
     pub memory_barriers: *const MemoryBarrier2<'a>,
     pub buffer_memory_barrier_count: u32,
+    /// Len: `buffer_memory_barrier_count`
     pub buffer_memory_barriers: *const BufferMemoryBarrier2<'a>,
     pub image_memory_barrier_count: u32,
+    /// Len: `image_memory_barrier_count`
     pub image_memory_barriers: *const ImageMemoryBarrier2<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -22854,10 +23086,13 @@ pub struct SubmitInfo2<'a> {
     pub next: *const c_void,
     pub flags: SubmitFlags,
     pub wait_semaphore_info_count: u32,
+    /// Len: `wait_semaphore_info_count`
     pub wait_semaphore_infos: *const SemaphoreSubmitInfo<'a>,
     pub command_buffer_info_count: u32,
+    /// Len: `command_buffer_info_count`
     pub command_buffer_infos: *const CommandBufferSubmitInfo<'a>,
     pub signal_semaphore_info_count: u32,
+    /// Len: `signal_semaphore_info_count`
     pub signal_semaphore_infos: *const SemaphoreSubmitInfo<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -23000,9 +23235,11 @@ pub struct PhysicalDeviceHostImageCopyProperties<'a> {
     pub next: *mut c_void,
     pub copy_src_layout_count: u32,
     /// Nullable
+    /// Len: `copy_src_layout_count`
     pub copy_src_layouts: *mut ImageLayout,
     pub copy_dst_layout_count: u32,
     /// Nullable
+    /// Len: `copy_dst_layout_count`
     pub copy_dst_layouts: *mut ImageLayout,
     pub optimal_tiling_layout_uuid: [u8; UUID_SIZE as usize],
     pub identical_memory_type_requirements: Bool32,
@@ -23099,6 +23336,7 @@ pub struct CopyMemoryToImageInfo<'a> {
     pub dst_image: Image,
     pub dst_image_layout: ImageLayout,
     pub region_count: u32,
+    /// Len: `region_count`
     pub regions: *const MemoryToImageCopy<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -23128,6 +23366,7 @@ pub struct CopyImageToMemoryInfo<'a> {
     pub src_image: Image,
     pub src_image_layout: ImageLayout,
     pub region_count: u32,
+    /// Len: `region_count`
     pub regions: *const ImageToMemoryCopy<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -23159,6 +23398,7 @@ pub struct CopyImageToImageInfo<'a> {
     pub dst_image: Image,
     pub dst_image_layout: ImageLayout,
     pub region_count: u32,
+    /// Len: `region_count`
     pub regions: *const ImageCopy2<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -23344,8 +23584,10 @@ pub struct DeviceObjectReservationCreateInfo<'a> {
     /// Nullable
     pub next: *const c_void,
     pub pipeline_cache_create_info_count: u32,
+    /// Len: `pipeline_cache_create_info_count`
     pub pipeline_cache_create_infos: *const PipelineCacheCreateInfo<'a>,
     pub pipeline_pool_size_count: u32,
+    /// Len: `pipeline_pool_size_count`
     pub pipeline_pool_sizes: *const PipelinePoolSize<'a>,
     pub semaphore_request_count: u32,
     pub command_buffer_request_count: u32,
@@ -23735,6 +23977,7 @@ pub struct VideoProfileListInfoKHR<'a> {
     /// Nullable
     pub next: *const c_void,
     pub profile_count: u32,
+    /// Len: `profile_count`
     pub profiles: *const VideoProfileInfoKHR<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -24186,6 +24429,7 @@ pub struct VideoDecodeInfoKHR<'a> {
     /// Nullable
     pub setup_reference_slot: *const VideoReferenceSlotInfoKHR<'a>,
     pub reference_slot_count: u32,
+    /// Len: `reference_slot_count`
     pub reference_slots: *const VideoReferenceSlotInfoKHR<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -24329,9 +24573,11 @@ pub struct VideoDecodeH264SessionParametersAddInfoKHR<'a> {
     /// Nullable
     pub next: *const c_void,
     pub sps_count: u32,
+    /// Len: `sps_count`
     pub sp_ss: *const H264SequenceParameterSet<'a>,
     pub pps_count: u32,
     /// List of Picture Parameters associated with the spsStd, above
+    /// Len: `pps_count`
     pub pp_ss: *const H264PictureParameterSet<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -24409,6 +24655,7 @@ pub struct VideoDecodeH264PictureInfoKHR<'a> {
     pub next: *const c_void,
     pub picture_info: *const DecodeH264PictureInfo,
     pub slice_count: u32,
+    /// Len: `slice_count`
     pub slice_offsets: *const u32,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -24497,11 +24744,14 @@ pub struct VideoDecodeH265SessionParametersAddInfoKHR<'a> {
     /// Nullable
     pub next: *const c_void,
     pub vps_count: u32,
+    /// Len: `vps_count`
     pub vp_ss: *const H265VideoParameterSet<'a>,
     pub sps_count: u32,
+    /// Len: `sps_count`
     pub sp_ss: *const H265SequenceParameterSet<'a>,
     pub pps_count: u32,
     /// List of Picture Parameters associated with the spsStd, above
+    /// Len: `pps_count`
     pub pp_ss: *const H265PictureParameterSet<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -24586,6 +24836,7 @@ pub struct VideoDecodeH265PictureInfoKHR<'a> {
     pub next: *const c_void,
     pub picture_info: *const DecodeH265PictureInfo,
     pub slice_segment_count: u32,
+    /// Len: `slice_segment_count`
     pub slice_segment_offsets: *const u32,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -24815,7 +25066,9 @@ pub struct VideoDecodeAV1PictureInfoKHR<'a> {
     pub reference_name_slot_indices: [i32; MAX_VIDEO_AV1_REFERENCES_PER_FRAME_KHR as usize],
     pub frame_header_offset: u32,
     pub tile_count: u32,
+    /// Len: `tile_count`
     pub tile_offsets: *const u32,
+    /// Len: `tile_count`
     pub tile_sizes: *const u32,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -24987,6 +25240,7 @@ pub struct VideoBeginCodingInfoKHR<'a> {
     pub video_session: VideoSessionKHR,
     pub video_session_parameters: VideoSessionParametersKHR,
     pub reference_slot_count: u32,
+    /// Len: `reference_slot_count`
     pub reference_slots: *const VideoReferenceSlotInfoKHR<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -25084,6 +25338,7 @@ pub struct VideoEncodeInfoKHR<'a> {
     /// Nullable
     pub setup_reference_slot: *const VideoReferenceSlotInfoKHR<'a>,
     pub reference_slot_count: u32,
+    /// Len: `reference_slot_count`
     pub reference_slots: *const VideoReferenceSlotInfoKHR<'a>,
     pub preceding_externally_encoded_bytes: u32,
     pub _marker: PhantomData<&'a ()>,
@@ -25269,6 +25524,7 @@ pub struct VideoEncodeRateControlInfoKHR<'a> {
     pub flags: VideoEncodeRateControlFlagsKHR,
     pub rate_control_mode: VideoEncodeRateControlModeFlagsKHR,
     pub layer_count: u32,
+    /// Len: `layer_count`
     pub layers: *const VideoEncodeRateControlLayerInfoKHR<'a>,
     pub virtual_buffer_size_in_ms: u32,
     pub initial_virtual_buffer_size_in_ms: u32,
@@ -25466,10 +25722,12 @@ pub struct VideoEncodeH264SessionParametersAddInfoKHR<'a> {
     pub next: *const c_void,
     pub sps_count: u32,
     /// Nullable
+    /// Len: `sps_count`
     pub sp_ss: *const H264SequenceParameterSet<'a>,
     pub pps_count: u32,
     /// List of Picture Parameters associated with the spsStd, above
     /// Nullable
+    /// Len: `pps_count`
     pub pp_ss: *const H264PictureParameterSet<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -25593,6 +25851,7 @@ pub struct VideoEncodeH264PictureInfoKHR<'a> {
     /// Nullable
     pub next: *const c_void,
     pub nalu_slice_entry_count: u32,
+    /// Len: `nalu_slice_entry_count`
     pub nalu_slice_entries: *const VideoEncodeH264NaluSliceInfoKHR<'a>,
     pub picture_info: *const EncodeH264PictureInfo<'a>,
     pub generate_prefix_nalu: Bool32,
@@ -25896,13 +26155,16 @@ pub struct VideoEncodeH265SessionParametersAddInfoKHR<'a> {
     pub next: *const c_void,
     pub vps_count: u32,
     /// Nullable
+    /// Len: `vps_count`
     pub vp_ss: *const H265VideoParameterSet<'a>,
     pub sps_count: u32,
     /// Nullable
+    /// Len: `sps_count`
     pub sp_ss: *const H265SequenceParameterSet<'a>,
     pub pps_count: u32,
     /// List of Picture Parameters associated with the spsStd, above
     /// Nullable
+    /// Len: `pps_count`
     pub pp_ss: *const H265PictureParameterSet<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -26015,6 +26277,7 @@ pub struct VideoEncodeH265PictureInfoKHR<'a> {
     /// Nullable
     pub next: *const c_void,
     pub nalu_slice_segment_entry_count: u32,
+    /// Len: `nalu_slice_segment_entry_count`
     pub nalu_slice_segment_entries: *const VideoEncodeH265NaluSliceSegmentInfoKHR<'a>,
     pub picture_info: *const EncodeH265PictureInfo<'a>,
     pub _marker: PhantomData<&'a ()>,
@@ -26391,6 +26654,7 @@ pub struct VideoEncodeAV1SessionParametersCreateInfoKHR<'a> {
     pub decoder_model_info: *const EncodeAV1DecoderModelInfo,
     pub operating_point_count: u32,
     /// Nullable
+    /// Len: `operating_point_count`
     pub operating_points: *const EncodeAV1OperatingPointInfo,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -26862,6 +27126,7 @@ pub struct CuModuleCreateInfoNVX<'a> {
     /// Nullable
     pub next: *const c_void,
     pub data_size: usize,
+    /// Len: `data_size`
     pub data: *const c_void,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -26905,6 +27170,7 @@ pub struct CuFunctionCreateInfoNVX<'a> {
     /// Nullable
     pub next: *const c_void,
     pub module: CuModuleNVX,
+    /// Len: null-terminated
     pub name: *const c_char,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -26935,8 +27201,10 @@ pub struct CuLaunchInfoNVX<'a> {
     pub block_dim_z: u32,
     pub shared_mem_bytes: u32,
     pub param_count: usize,
+    /// Len: `param_count`
     pub params: *const *const c_void,
     pub extra_count: usize,
+    /// Len: `extra_count`
     pub extras: *const *const c_void,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -27996,6 +28264,7 @@ pub struct ImageFormatConstraintsInfoFUCHSIA<'a> {
     pub flags: ImageFormatConstraintsFlagsFUCHSIA,
     pub sysmem_pixel_format: u64,
     pub color_space_count: u32,
+    /// Len: `color_space_count`
     pub color_spaces: *const SysmemColorSpaceFUCHSIA<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -28022,6 +28291,7 @@ pub struct ImageConstraintsInfoFUCHSIA<'a> {
     /// Nullable
     pub next: *const c_void,
     pub format_constraints_count: u32,
+    /// Len: `format_constraints_count`
     pub format_constraints: *const ImageFormatConstraintsInfoFUCHSIA<'a>,
     pub buffer_collection_constraints: BufferCollectionConstraintsInfoFUCHSIA<'a>,
     pub flags: ImageConstraintsInfoFlagsFUCHSIA,
@@ -28124,6 +28394,7 @@ pub struct CudaModuleCreateInfoNV<'a> {
     /// Nullable
     pub next: *const c_void,
     pub data_size: usize,
+    /// Len: `data_size`
     pub data: *const c_void,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -28146,6 +28417,7 @@ pub struct CudaFunctionCreateInfoNV<'a> {
     /// Nullable
     pub next: *const c_void,
     pub module: CudaModuleNV,
+    /// Len: null-terminated
     pub name: *const c_char,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -28176,8 +28448,10 @@ pub struct CudaLaunchInfoNV<'a> {
     pub block_dim_z: u32,
     pub shared_mem_bytes: u32,
     pub param_count: usize,
+    /// Len: `param_count`
     pub params: *const *const c_void,
     pub extra_count: usize,
+    /// Len: `extra_count`
     pub extras: *const *const c_void,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -28261,6 +28535,7 @@ pub struct DrmFormatModifierPropertiesList2EXT<'a> {
     pub next: *mut c_void,
     pub drm_format_modifier_count: u32,
     /// Nullable
+    /// Len: `drm_format_modifier_count`
     pub drm_format_modifier_properties: *mut DrmFormatModifierProperties2EXT,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -28339,6 +28614,7 @@ pub struct PipelineRenderingCreateInfo<'a> {
     pub next: *const c_void,
     pub view_mask: u32,
     pub color_attachment_count: u32,
+    /// Len: `color_attachment_count`
     pub color_attachment_formats: *const Format,
     pub depth_attachment_format: Format,
     pub stencil_attachment_format: Format,
@@ -28371,6 +28647,7 @@ pub struct RenderingInfo<'a> {
     pub layer_count: u32,
     pub view_mask: u32,
     pub color_attachment_count: u32,
+    /// Len: `color_attachment_count`
     pub color_attachments: *const RenderingAttachmentInfo<'a>,
     /// Nullable
     pub depth_attachment: *const RenderingAttachmentInfo<'a>,
@@ -28531,6 +28808,7 @@ pub struct CommandBufferInheritanceRenderingInfo<'a> {
     pub flags: RenderingFlags,
     pub view_mask: u32,
     pub color_attachment_count: u32,
+    /// Len: `color_attachment_count`
     pub color_attachment_formats: *const Format,
     pub depth_attachment_format: Format,
     pub stencil_attachment_format: Format,
@@ -28563,6 +28841,7 @@ pub struct AttachmentSampleCountInfoAMD<'a> {
     /// Nullable
     pub next: *const c_void,
     pub color_attachment_count: u32,
+    /// Len: `color_attachment_count`
     pub color_attachment_samples: *const SampleCountFlags,
     pub depth_stencil_attachment_samples: SampleCountFlags,
     pub _marker: PhantomData<&'a ()>,
@@ -28995,6 +29274,7 @@ pub struct PipelineShaderStageModuleIdentifierCreateInfoEXT<'a> {
     /// Nullable
     pub next: *const c_void,
     pub identifier_size: u32,
+    /// Len: `identifier_size`
     pub identifier: *const u8,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -29018,6 +29298,7 @@ pub struct ShaderModuleIdentifierEXT<'a> {
     /// Nullable
     pub next: *mut c_void,
     pub identifier_size: u32,
+    /// Len: `identifier_size`
     pub identifier: [u8; MAX_SHADER_MODULE_IDENTIFIER_SIZE_EXT as usize],
     pub _marker: PhantomData<&'a ()>,
 }
@@ -29042,6 +29323,7 @@ pub struct ImageCompressionControlEXT<'a> {
     pub next: *const c_void,
     pub flags: ImageCompressionFlagsEXT,
     pub compression_control_plane_count: u32,
+    /// Len: `compression_control_plane_count`
     pub fixed_rate_flags: *mut ImageCompressionFixedRateFlagsEXT,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -29230,6 +29512,7 @@ impl Default for RenderPassCreationFeedbackCreateInfoEXT<'_> {
 #[derive(Copy, Clone, Debug)]
 pub struct RenderPassSubpassFeedbackInfoEXT {
     pub subpass_merge_status: SubpassMergeStatusEXT,
+    /// Len: null-terminated
     pub description: [c_char; MAX_DESCRIPTION_SIZE as usize],
     pub post_merge_index: u32,
 }
@@ -29297,8 +29580,10 @@ pub struct MicromapBuildInfoEXT<'a> {
     pub dst_micromap: MicromapEXT,
     pub usage_counts_count: u32,
     /// Nullable
+    /// Len: `usage_counts_count`
     pub usage_counts: *const MicromapUsageEXT,
     /// Nullable
+    /// Len: `usage_counts_count`, `1`
     pub pp_usage_counts: *const *const MicromapUsageEXT,
     pub data: DeviceOrHostAddressConstKHR,
     pub scratch_data: DeviceOrHostAddressKHR,
@@ -29364,6 +29649,7 @@ pub struct MicromapVersionInfoEXT<'a> {
     pub s_type: StructureType,
     /// Nullable
     pub next: *const c_void,
+    /// Len: 2 * UUID_SIZE
     pub version_data: *const u8,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -29572,8 +29858,10 @@ pub struct AccelerationStructureTrianglesOpacityMicromapEXT<'a> {
     pub base_triangle: u32,
     pub usage_counts_count: u32,
     /// Nullable
+    /// Len: `usage_counts_count`
     pub usage_counts: *const MicromapUsageEXT,
     /// Nullable
+    /// Len: `usage_counts_count`, `1`
     pub pp_usage_counts: *const *const MicromapUsageEXT,
     pub micromap: MicromapEXT,
     pub _marker: PhantomData<&'a ()>,
@@ -29660,8 +29948,10 @@ pub struct AccelerationStructureTrianglesDisplacementMicromapNV<'a> {
     pub base_triangle: u32,
     pub usage_counts_count: u32,
     /// Nullable
+    /// Len: `usage_counts_count`
     pub usage_counts: *const MicromapUsageEXT,
     /// Nullable
+    /// Len: `usage_counts_count`, `1`
     pub pp_usage_counts: *const *const MicromapUsageEXT,
     pub micromap: MicromapEXT,
     pub _marker: PhantomData<&'a ()>,
@@ -30647,6 +30937,7 @@ pub struct OpticalFlowExecuteInfoNV<'a> {
     pub next: *mut c_void,
     pub flags: OpticalFlowExecuteFlagsNV,
     pub region_count: u32,
+    /// Len: `region_count`
     pub regions: *const Rect2D,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -30707,6 +30998,7 @@ impl Default for DeviceFaultAddressInfoEXT {
 #[derive(Copy, Clone, Debug)]
 pub struct DeviceFaultVendorInfoEXT {
     /// Free-form description of the fault
+    /// Len: null-terminated
     pub description: [c_char; MAX_DESCRIPTION_SIZE as usize],
     pub vendor_fault_code: u64,
     pub vendor_fault_data: u64,
@@ -30754,6 +31046,7 @@ pub struct DeviceFaultInfoEXT<'a> {
     /// Nullable
     pub next: *mut c_void,
     /// Free-form description of the fault
+    /// Len: null-terminated
     pub description: [c_char; MAX_DESCRIPTION_SIZE as usize],
     /// Nullable
     pub address_infos: *mut DeviceFaultAddressInfoEXT,
@@ -30930,6 +31223,7 @@ pub struct DecompressMemoryInfoEXT<'a> {
     pub next: *const c_void,
     pub decompression_method: MemoryDecompressionMethodFlagsEXT,
     pub region_count: u32,
+    /// Len: `region_count`
     pub regions: *const DecompressMemoryRegionEXT,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -31004,13 +31298,16 @@ pub struct FrameBoundaryEXT<'a> {
     pub frame_id: u64,
     pub image_count: u32,
     /// Nullable
+    /// Len: `image_count`
     pub images: *const Image,
     pub buffer_count: u32,
     /// Nullable
+    /// Len: `buffer_count`
     pub buffers: *const Buffer,
     pub tag_name: u64,
     pub tag_size: usize,
     /// Nullable
+    /// Len: `tag_size`
     pub tag: *const c_void,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -31160,6 +31457,7 @@ pub struct SurfacePresentModeCompatibilityKHR<'a> {
     pub present_mode_count: u32,
     /// Output list of present modes compatible with the one specified in VkSurfacePresentModeKHR
     /// Nullable
+    /// Len: `present_mode_count`
     pub present_modes: *mut PresentModeKHR,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -31210,6 +31508,7 @@ pub struct SwapchainPresentFenceInfoKHR<'a> {
     pub swapchain_count: u32,
     /// Fence to signal for each swapchain
     /// Nullable
+    /// Len: `swapchain_count`
     pub fences: *const Fence,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -31234,6 +31533,7 @@ pub struct SwapchainPresentModesCreateInfoKHR<'a> {
     /// Nullable
     pub next: *const c_void,
     pub present_mode_count: u32,
+    /// Len: `present_mode_count`
     pub present_modes: *const PresentModeKHR,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -31260,6 +31560,7 @@ pub struct SwapchainPresentModeInfoKHR<'a> {
     /// Copy of VkPresentInfoKHR::swapchainCount
     pub swapchain_count: u32,
     /// Presentation mode for each swapchain
+    /// Len: `swapchain_count`
     pub present_modes: *const PresentModeKHR,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -31313,6 +31614,7 @@ pub struct ReleaseSwapchainImagesInfoKHR<'a> {
     /// Number of indices to release
     pub image_index_count: u32,
     /// Indices of which presentable images to release
+    /// Len: `image_index_count`
     pub image_indices: *const u32,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -31526,6 +31828,7 @@ pub struct DirectDriverLoadingListLUNARG<'a> {
     pub next: *const c_void,
     pub mode: DirectDriverLoadingModeLUNARG,
     pub driver_count: u32,
+    /// Len: `driver_count`
     pub drivers: *const DirectDriverLoadingInfoLUNARG<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -31662,6 +31965,7 @@ pub struct MultiviewPerViewRenderAreasRenderPassBeginInfoQCOM<'a> {
     /// Nullable
     pub next: *const c_void,
     pub per_view_render_area_count: u32,
+    /// Len: `per_view_render_area_count`
     pub per_view_render_areas: *const Rect2D,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -31804,14 +32108,18 @@ pub struct ShaderCreateInfoEXT<'a> {
     pub next_stage: ShaderStageFlags,
     pub code_type: ShaderCodeTypeEXT,
     pub code_size: usize,
+    /// Len: `code_size`
     pub code: *const c_void,
     /// Nullable
+    /// Len: null-terminated
     pub name: *const c_char,
     pub set_layout_count: u32,
     /// Nullable
+    /// Len: `set_layout_count`
     pub set_layouts: *const DescriptorSetLayout,
     pub push_constant_range_count: u32,
     /// Nullable
+    /// Len: `push_constant_range_count`
     pub push_constant_ranges: *const PushConstantRange,
     /// Nullable
     pub specialization_info: *const SpecializationInfo<'a>,
@@ -32162,6 +32470,7 @@ pub struct ExecutionGraphPipelineCreateInfoAMDX<'a> {
     pub flags: PipelineCreateFlags,
     pub stage_count: u32,
     /// Nullable
+    /// Len: `stage_count`
     pub stages: *const PipelineShaderStageCreateInfo<'a>,
     /// Nullable
     pub library_info: *const PipelineLibraryCreateInfoKHR<'a>,
@@ -32196,6 +32505,7 @@ pub struct PipelineShaderStageNodeCreateInfoAMDX<'a> {
     /// Nullable
     pub next: *const c_void,
     /// Nullable
+    /// Len: null-terminated
     pub name: *const c_char,
     pub index: u32,
     pub _marker: PhantomData<&'a ()>,
@@ -32460,9 +32770,11 @@ pub struct BindDescriptorSetsInfo<'a> {
     pub layout: PipelineLayout,
     pub first_set: u32,
     pub descriptor_set_count: u32,
+    /// Len: `descriptor_set_count`
     pub descriptor_sets: *const DescriptorSet,
     pub dynamic_offset_count: u32,
     /// Nullable
+    /// Len: `dynamic_offset_count`
     pub dynamic_offsets: *const u32,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -32494,6 +32806,7 @@ pub struct PushConstantsInfo<'a> {
     pub stage_flags: ShaderStageFlags,
     pub offset: u32,
     pub size: u32,
+    /// Len: `size`
     pub values: *const c_void,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -32523,6 +32836,7 @@ pub struct PushDescriptorSetInfo<'a> {
     pub layout: PipelineLayout,
     pub set: u32,
     pub descriptor_write_count: u32,
+    /// Len: `descriptor_write_count`
     pub descriptor_writes: *const WriteDescriptorSet<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -32579,7 +32893,9 @@ pub struct SetDescriptorBufferOffsetsInfoEXT<'a> {
     pub layout: PipelineLayout,
     pub first_set: u32,
     pub set_count: u32,
+    /// Len: `set_count`
     pub buffer_indices: *const u32,
+    /// Len: `set_count`
     pub offsets: *const DeviceSize,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -33028,6 +33344,7 @@ pub struct GetLatencyMarkerInfoNV<'a> {
     pub next: *const c_void,
     pub timing_count: u32,
     /// Nullable
+    /// Len: `timing_count`
     pub timings: *mut LatencyTimingsFrameReportNV<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -33161,6 +33478,7 @@ pub struct LatencySurfaceCapabilitiesNV<'a> {
     pub next: *const c_void,
     pub present_mode_count: u32,
     /// Nullable
+    /// Len: `present_mode_count`
     pub present_modes: *mut PresentModeKHR,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -33379,6 +33697,7 @@ pub struct RenderPassStripeBeginInfoARM<'a> {
     /// Nullable
     pub next: *const c_void,
     pub stripe_info_count: u32,
+    /// Len: `stripe_info_count`
     pub stripe_infos: *const RenderPassStripeInfoARM<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -33402,6 +33721,7 @@ pub struct RenderPassStripeSubmitInfoARM<'a> {
     /// Nullable
     pub next: *const c_void,
     pub stripe_semaphore_info_count: u32,
+    /// Len: `stripe_semaphore_info_count`
     pub stripe_semaphore_infos: *const SemaphoreSubmitInfo<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -33561,6 +33881,7 @@ pub struct RenderingAttachmentLocationInfo<'a> {
     /// Nullable
     pub next: *const c_void,
     pub color_attachment_count: u32,
+    /// Len: `color_attachment_count`
     pub color_attachment_locations: *const u32,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -33586,6 +33907,7 @@ pub struct RenderingInputAttachmentIndexInfo<'a> {
     pub next: *const c_void,
     pub color_attachment_count: u32,
     /// Nullable
+    /// Len: `color_attachment_count`
     pub color_attachment_input_indices: *const u32,
     /// Nullable
     pub depth_input_attachment_index: *const u32,
@@ -34666,8 +34988,10 @@ pub struct TensorDescriptionARM<'a> {
     pub tiling: TensorTilingARM,
     pub format: Format,
     pub dimension_count: u32,
+    /// Len: `dimension_count`
     pub dimensions: *const i64,
     /// Nullable
+    /// Len: `dimension_count`
     pub strides: *const i64,
     pub usage: TensorUsageFlagsARM,
     pub _marker: PhantomData<&'a ()>,
@@ -34698,6 +35022,7 @@ pub struct TensorCreateInfoARM<'a> {
     pub description: *const TensorDescriptionARM<'a>,
     pub sharing_mode: SharingMode,
     pub queue_family_index_count: u32,
+    /// Len: `queue_family_index_count`
     pub queue_family_indices: *const u32,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -34793,6 +35118,7 @@ pub struct WriteDescriptorSetTensorARM<'a> {
     pub next: *const c_void,
     pub tensor_view_count: u32,
     /// Nullable
+    /// Len: `tensor_view_count`
     pub tensor_views: *const TensorViewARM,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -34994,6 +35320,7 @@ pub struct CopyTensorInfoARM<'a> {
     pub src_tensor: TensorARM,
     pub dst_tensor: TensorARM,
     pub region_count: u32,
+    /// Len: `region_count`
     pub regions: *const TensorCopyARM<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -35019,10 +35346,13 @@ pub struct TensorCopyARM<'a> {
     pub next: *const c_void,
     pub dimension_count: u32,
     /// Nullable
+    /// Len: `dimension_count`
     pub src_offset: *const u64,
     /// Nullable
+    /// Len: `dimension_count`
     pub dst_offset: *const u64,
     /// Nullable
+    /// Len: `dimension_count`
     pub extent: *const u64,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -35177,6 +35507,7 @@ pub struct FrameBoundaryTensorsARM<'a> {
     /// Nullable
     pub next: *const c_void,
     pub tensor_count: u32,
+    /// Len: `tensor_count`
     pub tensors: *const TensorARM,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -35409,6 +35740,7 @@ pub struct DataGraphPipelineCompilerControlCreateInfoARM<'a> {
     pub s_type: StructureType,
     /// Nullable
     pub next: *const c_void,
+    /// Len: null-terminated
     pub vendor_options: *const c_char,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -35432,6 +35764,7 @@ pub struct DataGraphPipelineCreateInfoARM<'a> {
     pub flags: PipelineCreateFlags2KHR,
     pub layout: PipelineLayout,
     pub resource_info_count: u32,
+    /// Len: `resource_info_count`
     pub resource_infos: *const DataGraphPipelineResourceInfoARM<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -35457,11 +35790,13 @@ pub struct DataGraphPipelineShaderModuleCreateInfoARM<'a> {
     /// Nullable
     pub next: *const c_void,
     pub module: ShaderModule,
+    /// Len: null-terminated
     pub name: *const c_char,
     /// Nullable
     pub specialization_info: *const SpecializationInfo<'a>,
     pub constant_count: u32,
     /// Nullable
+    /// Len: `constant_count`
     pub constants: *const DataGraphPipelineConstantARM<'a>,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -35629,6 +35964,7 @@ pub struct DataGraphPipelinePropertyQueryResultARM<'a> {
     pub is_text: Bool32,
     pub data_size: usize,
     /// Nullable
+    /// Len: `data_size`
     pub data: *mut c_void,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -35654,6 +35990,7 @@ pub struct DataGraphPipelineIdentifierCreateInfoARM<'a> {
     /// Nullable
     pub next: *const c_void,
     pub identifier_size: u32,
+    /// Len: `identifier_size`
     pub identifier: *const u8,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -35708,6 +36045,7 @@ impl Default for PhysicalDeviceDataGraphProcessingEngineARM {
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceDataGraphOperationSupportARM {
     pub operation_type: PhysicalDeviceDataGraphOperationTypeARM,
+    /// Len: null-terminated
     pub name: [c_char; MAX_PHYSICAL_DEVICE_DATA_GRAPH_OPERATION_SET_NAME_SIZE_ARM as usize],
     pub version: u32,
 }
@@ -35797,6 +36135,7 @@ pub struct DataGraphProcessingEngineCreateInfoARM<'a> {
     /// Nullable
     pub next: *const c_void,
     pub processing_engine_count: u32,
+    /// Len: `processing_engine_count`
     pub processing_engines: *mut PhysicalDeviceDataGraphProcessingEngineARM,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -36237,6 +36576,7 @@ pub struct PerformanceCounterDescriptionARM<'a> {
     /// Nullable
     pub next: *mut c_void,
     pub flags: PerformanceCounterDescriptionFlagsARM,
+    /// Len: null-terminated
     pub name: [c_char; MAX_DESCRIPTION_SIZE as usize],
     pub _marker: PhantomData<&'a ()>,
 }
@@ -36413,6 +36753,7 @@ impl Default for PhysicalDeviceShaderSubgroupPartitionedFeaturesEXT<'_> {
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct HostAddressRangeEXT<'a> {
+    /// Len: `size`
     pub address: *mut c_void,
     pub size: usize,
     pub _marker: PhantomData<&'a ()>,
@@ -36430,6 +36771,7 @@ impl Default for HostAddressRangeEXT<'_> {
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct HostAddressRangeConstEXT<'a> {
+    /// Len: `size`
     pub address: *const c_void,
     pub size: usize,
     pub _marker: PhantomData<&'a ()>,
@@ -36854,6 +37196,7 @@ pub struct ShaderDescriptorSetAndBindingMappingInfoEXT<'a> {
     /// Nullable
     pub next: *const c_void,
     pub mapping_count: u32,
+    /// Len: `mapping_count`
     pub mappings: *const DescriptorSetAndBindingMappingEXT<'a>,
     pub _marker: PhantomData<&'a ()>,
 }

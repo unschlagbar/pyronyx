@@ -284,6 +284,7 @@ pub struct H264SequenceParameterSet<'a> {
     pub frame_crop_bottom_offset: u32,
     /// Reserved for future use and must be initialized with 0.
     pub reserved2: u32,
+    /// Len: `num_ref_frames_in_pic_order_cnt_cycle`
     pub offset_for_ref_frame: *const i32,
     /// Must be a valid pointer if seq_scaling_matrix_present_flag is set
     /// Nullable
@@ -690,10 +691,13 @@ pub struct EncodeH264ReferenceListsInfo<'a> {
     /// Reserved for future use and must be initialized with 0.
     pub reserved1: [u8; 7],
     /// Must be a valid pointer to an array with size refList0ModOpCount if ref_pic_list_modification_flag_l0 is set and contains the RefList0 modification parameters as defined in section 7.4.3.1
+    /// Len: `ref_list0_mod_op_count`
     pub ref_list0_mod_operations: *const EncodeH264RefListModEntry,
     /// Must be a valid pointer to an array with size refList1ModOpCount if ref_pic_list_modification_flag_l1 is set and contains the RefList1 modification parameters as defined in section 7.4.3.1
+    /// Len: `ref_list1_mod_op_count`
     pub ref_list1_mod_operations: *const EncodeH264RefListModEntry,
     /// Must be a valid pointer to an array with size refPicMarkingOpCount and contains the reference picture markings as defined in section 7.4.3.3
+    /// Len: `ref_pic_marking_op_count`
     pub ref_pic_marking_operations: *const EncodeH264RefPicMarkingEntry,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -946,9 +950,11 @@ pub struct H265HrdParameters<'a> {
     pub reserved: [u16; 3],
     /// if flags.nal_hrd_parameters_present_flag is set, then this must be a ptr to an array of StdVideoH265SubLayerHrdParameters with a size specified by sps_max_sub_layers_minus1 + 1 or vps_max_sub_layers_minus1 + 1, depending on whether the HRD parameters are part of the SPS or VPS, respectively.
     /// Nullable
+    /// Len: `max_sub_layers_minus1_1`
     pub sub_layer_hrd_parameters_nal: *const H265SubLayerHrdParameters,
     /// if flags.vcl_hrd_parameters_present_flag is set, then this must be a ptr to an array of StdVideoH265SubLayerHrdParameters with a size specified by sps_max_sub_layers_minus1 + 1 or vps_max_sub_layers_minus1 + 1, depending on whether the HRD parameters are part of the SPS or VPS, respectively.
     /// Nullable
+    /// Len: `max_sub_layers_minus1_1`
     pub sub_layer_hrd_parameters_vcl: *const H265SubLayerHrdParameters,
     pub _marker: PhantomData<&'a ()>,
 }
@@ -1393,6 +1399,7 @@ pub struct H265SequenceParameterSet<'a> {
     /// Nullable
     pub scaling_lists: *const H265ScalingLists,
     /// Must be a valid pointer to an array with size num_short_term_ref_pic_sets if num_short_term_ref_pic_sets is not 0.
+    /// Len: `num_short_term_ref_pic_sets`
     pub short_term_ref_pic_set: *const H265ShortTermRefPicSet,
     /// Must be a valid pointer if long_term_ref_pics_present_flag is set
     /// Nullable
@@ -2570,12 +2577,16 @@ pub struct AV1TileInfo<'a> {
     /// Reserved for future use and must be initialized with 0.
     pub reserved1: [u8; 7],
     /// TileCols number of elements
+    /// Len: `tile_cols`
     pub mi_col_starts: *const u16,
     /// TileRows number of elements
+    /// Len: `tile_rows`
     pub mi_row_starts: *const u16,
     /// TileCols number of elements
+    /// Len: `tile_cols`
     pub width_in_sbs_minus1: *const u16,
     /// TileRows number of elements
+    /// Len: `tile_rows`
     pub height_in_sbs_minus1: *const u16,
     pub _marker: PhantomData<&'a ()>,
 }

@@ -7,7 +7,7 @@
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/StdVideoH264ChromaFormatIdc.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum H264ChromaFormatIdc {
     #[default]
     Monochrome = 0,
@@ -19,7 +19,7 @@ pub enum H264ChromaFormatIdc {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/StdVideoH264ProfileIdc.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum H264ProfileIdc {
     /// Only constrained baseline is supported
     #[default]
@@ -32,7 +32,7 @@ pub enum H264ProfileIdc {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/StdVideoH264LevelIdc.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum H264LevelIdc {
     #[default]
     Type10 = 0,
@@ -59,7 +59,7 @@ pub enum H264LevelIdc {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/StdVideoH264PocType.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum H264PocType {
     #[default]
     Type0 = 0,
@@ -70,7 +70,7 @@ pub enum H264PocType {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/StdVideoH264AspectRatioIdc.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum H264AspectRatioIdc {
     #[default]
     Unspecified = 0,
@@ -96,7 +96,7 @@ pub enum H264AspectRatioIdc {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/StdVideoH264WeightedBipredIdc.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum H264WeightedBipredIdc {
     #[default]
     Default = 0,
@@ -107,7 +107,7 @@ pub enum H264WeightedBipredIdc {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/StdVideoH264ModificationOfPicNumsIdc.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum H264ModificationOfPicNumsIdc {
     #[default]
     ShortTermSubtract = 0,
@@ -119,7 +119,7 @@ pub enum H264ModificationOfPicNumsIdc {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/StdVideoH264MemMgmtControlOp.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum H264MemMgmtControlOp {
     #[default]
     End = 0,
@@ -134,7 +134,7 @@ pub enum H264MemMgmtControlOp {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/StdVideoH264CabacInitIdc.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum H264CabacInitIdc {
     #[default]
     Type0 = 0,
@@ -145,7 +145,7 @@ pub enum H264CabacInitIdc {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/StdVideoH264DisableDeblockingFilterIdc.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum H264DisableDeblockingFilterIdc {
     #[default]
     Disabled = 0,
@@ -156,7 +156,7 @@ pub enum H264DisableDeblockingFilterIdc {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/StdVideoH264SliceType.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum H264SliceType {
     #[default]
     P = 0,
@@ -167,7 +167,7 @@ pub enum H264SliceType {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/StdVideoH264PictureType.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum H264PictureType {
     #[default]
     P = 0,
@@ -179,7 +179,7 @@ pub enum H264PictureType {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/StdVideoH264NonVclNaluType.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum H264NonVclNaluType {
     #[default]
     Sps = 0,
@@ -194,7 +194,7 @@ pub enum H264NonVclNaluType {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/StdVideoDecodeH264FieldOrderCount.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum DecodeH264FieldOrderCount {
     #[default]
     Top = 0,
@@ -204,7 +204,7 @@ pub enum DecodeH264FieldOrderCount {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/StdVideoH265ChromaFormatIdc.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum H265ChromaFormatIdc {
     #[default]
     Monochrome = 0,
@@ -216,7 +216,7 @@ pub enum H265ChromaFormatIdc {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/StdVideoH265ProfileIdc.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum H265ProfileIdc {
     #[default]
     Main = 1,
@@ -229,7 +229,7 @@ pub enum H265ProfileIdc {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/StdVideoH265LevelIdc.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum H265LevelIdc {
     #[default]
     Type10 = 0,
@@ -250,7 +250,7 @@ pub enum H265LevelIdc {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/StdVideoH265SliceType.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum H265SliceType {
     #[default]
     B = 0,
@@ -261,7 +261,7 @@ pub enum H265SliceType {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/StdVideoH265PictureType.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum H265PictureType {
     #[default]
     P = 0,
@@ -273,7 +273,7 @@ pub enum H265PictureType {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/StdVideoH265AspectRatioIdc.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum H265AspectRatioIdc {
     #[default]
     Unspecified = 0,
@@ -299,7 +299,7 @@ pub enum H265AspectRatioIdc {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/StdVideoVP9Profile.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum VP9Profile {
     #[default]
     Type0 = 0,
@@ -311,7 +311,7 @@ pub enum VP9Profile {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/StdVideoVP9Level.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum VP9Level {
     #[default]
     Type10 = 0,
@@ -333,7 +333,7 @@ pub enum VP9Level {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/StdVideoVP9FrameType.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum VP9FrameType {
     #[default]
     Key = 0,
@@ -343,7 +343,7 @@ pub enum VP9FrameType {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/StdVideoVP9ReferenceName.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum VP9ReferenceName {
     #[default]
     IntraFrame = 0,
@@ -355,7 +355,7 @@ pub enum VP9ReferenceName {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/StdVideoVP9InterpolationFilter.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum VP9InterpolationFilter {
     #[default]
     Eighttap = 0,
@@ -368,7 +368,7 @@ pub enum VP9InterpolationFilter {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/StdVideoVP9ColorSpace.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum VP9ColorSpace {
     #[default]
     Unknown = 0,
@@ -384,7 +384,7 @@ pub enum VP9ColorSpace {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/StdVideoAV1Profile.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum AV1Profile {
     #[default]
     Main = 0,
@@ -395,7 +395,7 @@ pub enum AV1Profile {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/StdVideoAV1Level.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum AV1Level {
     #[default]
     Type20 = 0,
@@ -427,7 +427,7 @@ pub enum AV1Level {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/StdVideoAV1FrameType.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum AV1FrameType {
     #[default]
     Key = 0,
@@ -439,7 +439,7 @@ pub enum AV1FrameType {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/StdVideoAV1ReferenceName.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum AV1ReferenceName {
     #[default]
     IntraFrame = 0,
@@ -455,7 +455,7 @@ pub enum AV1ReferenceName {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/StdVideoAV1InterpolationFilter.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum AV1InterpolationFilter {
     #[default]
     Eighttap = 0,
@@ -468,7 +468,7 @@ pub enum AV1InterpolationFilter {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/StdVideoAV1TxMode.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum AV1TxMode {
     #[default]
     Only4x4 = 0,
@@ -479,7 +479,7 @@ pub enum AV1TxMode {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/StdVideoAV1FrameRestorationType.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum AV1FrameRestorationType {
     #[default]
     None = 0,
@@ -491,7 +491,7 @@ pub enum AV1FrameRestorationType {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/StdVideoAV1ColorPrimaries.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum AV1ColorPrimaries {
     #[default]
     Bt709 = 1,
@@ -511,7 +511,7 @@ pub enum AV1ColorPrimaries {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/StdVideoAV1TransferCharacteristics.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum AV1TransferCharacteristics {
     #[default]
     Reserved0 = 0,
@@ -538,7 +538,7 @@ pub enum AV1TransferCharacteristics {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/StdVideoAV1MatrixCoefficients.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum AV1MatrixCoefficients {
     #[default]
     Identity = 0,
@@ -561,7 +561,7 @@ pub enum AV1MatrixCoefficients {
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/StdVideoAV1ChromaSamplePosition.html>
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum AV1ChromaSamplePosition {
     #[default]
     Unknown = 0,
