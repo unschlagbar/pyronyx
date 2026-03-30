@@ -11,37 +11,6 @@ use core::ptr::{from_ref, null};
 pub const NAME: &CStr = c"VK_KHR_wayland_surface";
 pub const SPEC_VERSION: u32 = 6;
 
-pub trait WaylandSurfacePhysicalDevice {
-    fn get_wayland_presentation_support(
-        &self,
-        queue_family_index: u32,
-        display: *mut wl_display,
-    ) -> Bool32;
-}
-
-impl WaylandSurfacePhysicalDevice for PhysicalDevice {
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceWaylandPresentationSupportKHR.html>
-    #[inline]
-    fn get_wayland_presentation_support(
-        &self,
-        queue_family_index: u32,
-        display: *mut wl_display,
-    ) -> Bool32 {
-        unsafe {
-            (self
-                .fns()
-                .khr_wayland_surface
-                .as_ref()
-                .unwrap()
-                .get_physical_device_wayland_presentation_support_khr)(
-                self.handle,
-                queue_family_index,
-                display,
-            )
-        }
-    }
-}
-
 pub trait WaylandSurfaceInstance {
     fn create_wayland_surface(
         &self,
@@ -73,5 +42,36 @@ impl WaylandSurfaceInstance for Instance {
             )
         }
         .init_on_success(out)
+    }
+}
+
+pub trait WaylandSurfacePhysicalDevice {
+    fn get_wayland_presentation_support(
+        &self,
+        queue_family_index: u32,
+        display: *mut wl_display,
+    ) -> Bool32;
+}
+
+impl WaylandSurfacePhysicalDevice for PhysicalDevice {
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceWaylandPresentationSupportKHR.html>
+    #[inline]
+    fn get_wayland_presentation_support(
+        &self,
+        queue_family_index: u32,
+        display: *mut wl_display,
+    ) -> Bool32 {
+        unsafe {
+            (self
+                .fns()
+                .khr_wayland_surface
+                .as_ref()
+                .unwrap()
+                .get_physical_device_wayland_presentation_support_khr)(
+                self.handle,
+                queue_family_index,
+                display,
+            )
+        }
     }
 }

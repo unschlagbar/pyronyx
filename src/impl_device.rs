@@ -1372,16 +1372,6 @@ impl Device {
         };
     }
 
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetDeviceQueue2.html>
-    #[inline]
-    pub fn get_device_queue2(&self, queue_info: &DeviceQueueInfo2) -> vkQueue {
-        let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self.fns().v1_1.get_device_queue2.unwrap())(self.handle, queue_info, out.as_mut_ptr())
-        };
-        unsafe { out.assume_init() }
-    }
-
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetDescriptorSetLayoutSupport.html>
     #[inline]
     pub fn get_descriptor_set_layout_support(

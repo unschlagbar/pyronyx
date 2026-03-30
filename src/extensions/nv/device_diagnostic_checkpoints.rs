@@ -10,6 +10,25 @@ use core::ffi::c_void;
 pub const NAME: &CStr = c"VK_NV_device_diagnostic_checkpoints";
 pub const SPEC_VERSION: u32 = 2;
 
+pub trait DeviceDiagnosticCheckpointsCommandBuffer {
+    fn set_checkpoint(&self, checkpoint_marker: &c_void);
+}
+
+impl DeviceDiagnosticCheckpointsCommandBuffer for CommandBuffer {
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetCheckpointNV.html>
+    #[inline]
+    fn set_checkpoint(&self, checkpoint_marker: &c_void) {
+        unsafe {
+            (self
+                .fns()
+                .nv_device_diagnostic_checkpoints
+                .as_ref()
+                .unwrap()
+                .set_checkpoint_nv)(self.handle, checkpoint_marker)
+        };
+    }
+}
+
 pub trait DeviceDiagnosticCheckpointsQueue {
     fn get_checkpoint_data(&self, checkpoint_data: &mut [CheckpointDataNV]);
 
@@ -48,25 +67,6 @@ impl DeviceDiagnosticCheckpointsQueue for Queue {
                 checkpoint_data.len() as *mut u32,
                 checkpoint_data.as_mut_ptr(),
             )
-        };
-    }
-}
-
-pub trait DeviceDiagnosticCheckpointsCommandBuffer {
-    fn set_checkpoint(&self, checkpoint_marker: &c_void);
-}
-
-impl DeviceDiagnosticCheckpointsCommandBuffer for CommandBuffer {
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetCheckpointNV.html>
-    #[inline]
-    fn set_checkpoint(&self, checkpoint_marker: &c_void) {
-        unsafe {
-            (self
-                .fns()
-                .nv_device_diagnostic_checkpoints
-                .as_ref()
-                .unwrap()
-                .set_checkpoint_nv)(self.handle, checkpoint_marker)
         };
     }
 }

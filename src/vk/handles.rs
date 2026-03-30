@@ -134,23 +134,40 @@ impl Instance {
         Ok(out)
     }
 
-    /// Enumerates all physical devices available on this instance.
+    /// Returns all [`PhysicalDevice`]s from this [`Instance`] as a wrapped with v_tables.
+    ///
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetDeviceQueue.html>
+    ///
+    /// Unlike [`Instance::enumerate_physical_devices_raw`], which returns raw handles, this method returns
+    /// [`PhysicalDevice`] objects that are ready to use with their associated function tables.
     ///
     /// # Safety
-    /// The returned `PhysicalDevice`s borrow their function table from this
-    /// `Instance`. Dropping the `Instance` while any `PhysicalDevice` is still
-    /// alive is undefined behaviour.
+    /// The returned [`PhysicalDevice`] borrows its function table from this
+    /// [`Instance`]. Dropping the `Device` while any [`PhysicalDevice`] is still
+    /// in use is undefined behaviour.
     ///
-    /// # Vulkan documentation
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkEnumeratePhysicalDevices.html>
+    /// All methods called on this may result in undefined behaviour
+    /// if there are invalid pointers in the parameter structs,
+    /// use the `VK_LAYER_KHRONOS_validation` layer in [`InstanceCreateInfo`]
+    /// together with the Vulkan SDK to catch these bugs!
     #[inline]
     pub unsafe fn enumerate_physical_devices(&self) -> Result<Vec<PhysicalDevice>, vkResult> {
-        Ok(read_into_vec_result(|count, data| unsafe {
+        self.enumerate_physical_devices_raw().map(|p| {
+            p.into_iter()
+                .map(|d| unsafe { d.to_physical_device(self) })
+                .collect()
+        })
+    }
+
+    /// Returns al PhysicalDevices from this [`Instance`] without v_tables.
+    /// to obtain the v_tables call [`vkPhysicalDevice::to_physical_device`] or directly [`Instance::enumerate_physical_devices`]
+    ///
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkEnumeratePhysicalDevices.html>
+    #[inline]
+    pub fn enumerate_physical_devices_raw(&self) -> Result<Vec<vkPhysicalDevice>, vkResult> {
+        read_into_vec_result(|count, data| unsafe {
             (self.fns().v1_0.enumerate_physical_devices.unwrap())(self.handle(), count, data)
-        })?
-        .into_iter()
-        .map(|d| unsafe { d.to_physical_device(self) })
-        .collect())
+        })
     }
 }
 
@@ -260,13 +277,34 @@ impl Device {
         &self.v_table.device
     }
 
-    /// Returns a queue from this device.
+    /// Returns a queue from this device as a wrapped [`Queue`] object with v_table.
+    ///
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetDeviceQueue.html>
+    ///
+    /// Unlike [`Device::get_device_queue_raw`], which returns raw handles, this method returns
+    /// [`Queue`] objects that are ready to use with their associated function tables.
     ///
     /// # Safety
-    /// The returned `Queue` borrows its function table from this `Device`.
-    /// Dropping the `Device` while any `Queue` is still alive is undefined
-    /// behaviour.
+    /// The returned [`Queue`] borrows its function table from this
+    /// [`Device`]. Dropping the `Device` while any [`Queue`] is still
+    /// in use is undefined behaviour.
+    ///
+    /// All methods called on this may result in undefined behaviour
+    /// if there are invalid pointers in the parameter structs,
+    /// use the `VK_LAYER_KHRONOS_validation` layer in [`InstanceCreateInfo`]
+    /// together with the Vulkan SDK to catch these bugs!
     pub unsafe fn get_device_queue(&self, queue_family_index: u32, queue_index: u32) -> Queue {
+        let handle = self.get_device_queue_raw(queue_family_index, queue_index);
+        let v_table = &self.v_table().queue;
+        let v_table = unsafe { transmute(v_table) };
+        Queue { handle, v_table }
+    }
+
+    /// Returns a queue from this device without v_table.
+    /// to obtain the v_table call [`vkQueue::to_queue`] or directly [`Device::get_device_queue`]
+    ///
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetDeviceQueue.html>
+    pub fn get_device_queue_raw(&self, queue_family_index: u32, queue_index: u32) -> vkQueue {
         let mut out = MaybeUninit::uninit();
         unsafe {
             (self.fns().v1_0.get_device_queue.unwrap())(
@@ -276,25 +314,82 @@ impl Device {
                 out.as_mut_ptr(),
             )
         }
-        let handle = unsafe { out.assume_init() };
-        let v_table = &self.v_table().queue;
-        let v_table = unsafe { transmute(v_table) };
+        unsafe { out.assume_init() }
+    }
+
+    /// Returns a queue from this device using `VkDeviceQueueInfo2` as a wrapped [`Queue`] with v_table.
+    ///
+    /// Use this instead of [`Device::get_device_queue`] when you need to query queues
+    /// created with [`vk::DeviceQueueCreateFlags`] (e.g. `PROTECTED_BIT`).
+    ///
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetDeviceQueue2.html>
+    ///
+    /// # Safety
+    /// The returned [`Queue`] borrows its function table from this
+    /// [`Device`]. Dropping the `Device` while any [`Queue`] is still
+    /// in use is undefined behaviour.
+    ///
+    /// Requires Vulkan 1.1 or `VK_KHR_get_physical_device_properties2`.
+    pub unsafe fn get_device_queue2(&self, queue_info: &vk::DeviceQueueInfo2) -> Queue {
+        let handle = self.get_device_queue2_raw(queue_info);
+        let v_table: &'static QueueFn = unsafe { transmute(&self.v_table().queue) };
         Queue { handle, v_table }
     }
 
-    /// Allocates command buffers.
+    /// Returns a queue from this device using `VkDeviceQueueInfo2` without v_table.
     ///
-    /// This is a generated convenience wrapper that returns a `Vec` and
-    /// automatically sets the correct length.
+    /// To obtain the v_table call [`vkQueue::to_queue`] or use [`Device::get_device_queue2`] directly.
+    ///
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetDeviceQueue2.html>
+    ///
+    /// Requires Vulkan 1.1 or `VK_KHR_get_physical_device_properties2`.
+    pub fn get_device_queue2_raw(&self, queue_info: &vk::DeviceQueueInfo2) -> vkQueue {
+        let mut out = MaybeUninit::uninit();
+        unsafe {
+            (self
+                .fns()
+                .v1_1 // Vulkan 1.1 dispatch table
+                .get_device_queue2
+                .unwrap())(self.handle(), queue_info, out.as_mut_ptr())
+        }
+        unsafe { out.assume_init() }
+    }
+
+    /// Allocates command buffers and returns wrapped [`CommandBuffer`] objects with v_tables.
+    ///
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkAllocateCommandBuffers.html>
+    ///
+    /// Unlike [`Device::allocate_command_buffers_raw`], which returns raw handles, this method returns
+    /// [`CommandBuffer`] objects that are ready to use with their associated function tables.
     ///
     /// # Safety
-    /// All returned `CommandBuffer`s borrow their function table from this
-    /// `Device`. Dropping the `Device` while any `CommandBuffer` is still alive
-    /// is undefined behaviour.
+    /// The returned [`CommandBuffer`] borrows their function table from this
+    /// `Device`. Dropping the `Device` while any [`CommandBuffer`] is still
+    /// in use is undefined behaviour.
+    ///
+    /// All methods called on this may result in undefined behaviour
+    /// if there are invalid pointers in the parameter structs,
+    /// use the `VK_LAYER_KHRONOS_validation` layer in [`InstanceCreateInfo`]
+    /// together with the Vulkan SDK to catch these bugs!
     pub unsafe fn allocate_command_buffers(
         &self,
         allocate_info: &CommandBufferAllocateInfo,
     ) -> Result<Vec<CommandBuffer>, vkResult> {
+        self.allocate_command_buffers_raw(allocate_info).map(|c| {
+            c.into_iter()
+                .map(|c| unsafe { c.to_command_buffer(self) })
+                .collect()
+        })
+    }
+
+    /// Allocates command buffers without v_tables.
+    /// to obtain the v_tables call [`vkCommandBuffer::to_command_buffer`] or directly [`Device::allocate_command_buffers`]
+    ///
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkAllocateCommandBuffers.html>
+    pub fn allocate_command_buffers_raw(
+        &self,
+        allocate_info: &CommandBufferAllocateInfo,
+    ) -> Result<Vec<vkCommandBuffer>, vkResult> {
         let mut buffers = Vec::with_capacity(allocate_info.command_buffer_count as usize);
         let result = unsafe {
             (self.fns().v1_0.allocate_command_buffers.unwrap())(
@@ -309,14 +404,7 @@ impl Device {
             return Err(e);
         }
 
-        let v_table = &self.v_table().command_buffer;
-        let v_table = unsafe { transmute(v_table) };
-
-        result.map(|c| {
-            c.into_iter()
-                .map(|c| CommandBuffer { handle: c, v_table })
-                .collect()
-        })
+        result
     }
 }
 

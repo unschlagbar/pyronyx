@@ -11,40 +11,6 @@ use core::ptr::{from_ref, null};
 pub const NAME: &CStr = c"VK_KHR_display";
 pub const SPEC_VERSION: u32 = 23;
 
-pub trait DisplayInstance {
-    fn create_display_plane_surface(
-        &self,
-        create_info: &DisplaySurfaceCreateInfoKHR,
-        allocator: Option<&AllocationCallbacks>,
-    ) -> Result<SurfaceKHR, vkResult>;
-}
-
-impl DisplayInstance for Instance {
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCreateDisplayPlaneSurfaceKHR.html>
-    #[inline]
-    fn create_display_plane_surface(
-        &self,
-        create_info: &DisplaySurfaceCreateInfoKHR,
-        allocator: Option<&AllocationCallbacks>,
-    ) -> Result<SurfaceKHR, vkResult> {
-        let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .khr_display
-                .as_ref()
-                .unwrap()
-                .create_display_plane_surface_khr)(
-                self.handle,
-                create_info,
-                allocator.map_or(null(), from_ref),
-                out.as_mut_ptr(),
-            )
-        }
-        .init_on_success(out)
-    }
-}
-
 pub trait DisplayPhysicalDevice {
     fn get_display_properties(
         &self,
@@ -215,6 +181,40 @@ impl DisplayPhysicalDevice for PhysicalDevice {
                 self.handle,
                 mode,
                 plane_index,
+                out.as_mut_ptr(),
+            )
+        }
+        .init_on_success(out)
+    }
+}
+
+pub trait DisplayInstance {
+    fn create_display_plane_surface(
+        &self,
+        create_info: &DisplaySurfaceCreateInfoKHR,
+        allocator: Option<&AllocationCallbacks>,
+    ) -> Result<SurfaceKHR, vkResult>;
+}
+
+impl DisplayInstance for Instance {
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCreateDisplayPlaneSurfaceKHR.html>
+    #[inline]
+    fn create_display_plane_surface(
+        &self,
+        create_info: &DisplaySurfaceCreateInfoKHR,
+        allocator: Option<&AllocationCallbacks>,
+    ) -> Result<SurfaceKHR, vkResult> {
+        let mut out = MaybeUninit::uninit();
+        unsafe {
+            (self
+                .fns()
+                .khr_display
+                .as_ref()
+                .unwrap()
+                .create_display_plane_surface_khr)(
+                self.handle,
+                create_info,
+                allocator.map_or(null(), from_ref),
                 out.as_mut_ptr(),
             )
         }

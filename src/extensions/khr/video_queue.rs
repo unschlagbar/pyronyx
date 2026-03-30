@@ -11,52 +11,63 @@ use core::ptr::{from_ref, null};
 pub const NAME: &CStr = c"VK_KHR_video_queue";
 pub const SPEC_VERSION: u32 = 8;
 
-pub trait VideoQueueCommandBuffer {
-    fn begin_video_coding(&self, begin_info: &VideoBeginCodingInfoKHR);
+pub trait VideoQueuePhysicalDevice {
+    fn get_video_capabilities(
+        &self,
+        video_profile: &VideoProfileInfoKHR,
+    ) -> Result<VideoCapabilitiesKHR<'_>, vkResult>;
 
-    fn control_video_coding(&self, coding_control_info: &VideoCodingControlInfoKHR);
-
-    fn end_video_coding(&self, end_coding_info: &VideoEndCodingInfoKHR);
+    fn get_video_format_properties(
+        &self,
+        video_format_info: &PhysicalDeviceVideoFormatInfoKHR,
+        video_format_properties: &mut [VideoFormatPropertiesKHR],
+    ) -> Result<(), vkResult>;
 }
 
-impl VideoQueueCommandBuffer for CommandBuffer {
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBeginVideoCodingKHR.html>
+impl VideoQueuePhysicalDevice for PhysicalDevice {
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceVideoCapabilitiesKHR.html>
     #[inline]
-    fn begin_video_coding(&self, begin_info: &VideoBeginCodingInfoKHR) {
+    fn get_video_capabilities(
+        &self,
+        video_profile: &VideoProfileInfoKHR,
+    ) -> Result<VideoCapabilitiesKHR<'_>, vkResult> {
+        let mut out = MaybeUninit::uninit();
         unsafe {
             (self
                 .fns()
                 .khr_video_queue
                 .as_ref()
                 .unwrap()
-                .begin_video_coding_khr)(self.handle, begin_info)
-        };
+                .get_physical_device_video_capabilities_khr)(
+                self.handle,
+                video_profile,
+                out.as_mut_ptr(),
+            )
+        }
+        .init_on_success(out)
     }
 
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdControlVideoCodingKHR.html>
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceVideoFormatPropertiesKHR.html>
     #[inline]
-    fn control_video_coding(&self, coding_control_info: &VideoCodingControlInfoKHR) {
+    fn get_video_format_properties(
+        &self,
+        video_format_info: &PhysicalDeviceVideoFormatInfoKHR,
+        video_format_properties: &mut [VideoFormatPropertiesKHR],
+    ) -> Result<(), vkResult> {
         unsafe {
             (self
                 .fns()
                 .khr_video_queue
                 .as_ref()
                 .unwrap()
-                .control_video_coding_khr)(self.handle, coding_control_info)
-        };
-    }
-
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdEndVideoCodingKHR.html>
-    #[inline]
-    fn end_video_coding(&self, end_coding_info: &VideoEndCodingInfoKHR) {
-        unsafe {
-            (self
-                .fns()
-                .khr_video_queue
-                .as_ref()
-                .unwrap()
-                .end_video_coding_khr)(self.handle, end_coding_info)
-        };
+                .get_physical_device_video_format_properties_khr)(
+                self.handle,
+                video_format_info,
+                video_format_properties.len() as *mut u32,
+                video_format_properties.as_mut_ptr(),
+            )
+        }
+        .result()
     }
 }
 
@@ -264,62 +275,51 @@ impl VideoQueueDevice for Device {
     }
 }
 
-pub trait VideoQueuePhysicalDevice {
-    fn get_video_capabilities(
-        &self,
-        video_profile: &VideoProfileInfoKHR,
-    ) -> Result<VideoCapabilitiesKHR<'_>, vkResult>;
+pub trait VideoQueueCommandBuffer {
+    fn begin_video_coding(&self, begin_info: &VideoBeginCodingInfoKHR);
 
-    fn get_video_format_properties(
-        &self,
-        video_format_info: &PhysicalDeviceVideoFormatInfoKHR,
-        video_format_properties: &mut [VideoFormatPropertiesKHR],
-    ) -> Result<(), vkResult>;
+    fn control_video_coding(&self, coding_control_info: &VideoCodingControlInfoKHR);
+
+    fn end_video_coding(&self, end_coding_info: &VideoEndCodingInfoKHR);
 }
 
-impl VideoQueuePhysicalDevice for PhysicalDevice {
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceVideoCapabilitiesKHR.html>
+impl VideoQueueCommandBuffer for CommandBuffer {
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBeginVideoCodingKHR.html>
     #[inline]
-    fn get_video_capabilities(
-        &self,
-        video_profile: &VideoProfileInfoKHR,
-    ) -> Result<VideoCapabilitiesKHR<'_>, vkResult> {
-        let mut out = MaybeUninit::uninit();
+    fn begin_video_coding(&self, begin_info: &VideoBeginCodingInfoKHR) {
         unsafe {
             (self
                 .fns()
                 .khr_video_queue
                 .as_ref()
                 .unwrap()
-                .get_physical_device_video_capabilities_khr)(
-                self.handle,
-                video_profile,
-                out.as_mut_ptr(),
-            )
-        }
-        .init_on_success(out)
+                .begin_video_coding_khr)(self.handle, begin_info)
+        };
     }
 
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceVideoFormatPropertiesKHR.html>
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdControlVideoCodingKHR.html>
     #[inline]
-    fn get_video_format_properties(
-        &self,
-        video_format_info: &PhysicalDeviceVideoFormatInfoKHR,
-        video_format_properties: &mut [VideoFormatPropertiesKHR],
-    ) -> Result<(), vkResult> {
+    fn control_video_coding(&self, coding_control_info: &VideoCodingControlInfoKHR) {
         unsafe {
             (self
                 .fns()
                 .khr_video_queue
                 .as_ref()
                 .unwrap()
-                .get_physical_device_video_format_properties_khr)(
-                self.handle,
-                video_format_info,
-                video_format_properties.len() as *mut u32,
-                video_format_properties.as_mut_ptr(),
-            )
-        }
-        .result()
+                .control_video_coding_khr)(self.handle, coding_control_info)
+        };
+    }
+
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdEndVideoCodingKHR.html>
+    #[inline]
+    fn end_video_coding(&self, end_coding_info: &VideoEndCodingInfoKHR) {
+        unsafe {
+            (self
+                .fns()
+                .khr_video_queue
+                .as_ref()
+                .unwrap()
+                .end_video_coding_khr)(self.handle, end_coding_info)
+        };
     }
 }

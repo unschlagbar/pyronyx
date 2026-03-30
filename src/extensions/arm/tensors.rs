@@ -12,23 +12,6 @@ use core::ptr::{from_ref, null};
 pub const NAME: &CStr = c"VK_ARM_tensors";
 pub const SPEC_VERSION: u32 = 1;
 
-pub trait TensorsCommandBuffer {
-    fn copy_tensor(&self, copy_tensor_info: &CopyTensorInfoARM);
-}
-
-impl TensorsCommandBuffer for CommandBuffer {
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyTensorARM.html>
-    #[inline]
-    fn copy_tensor(&self, copy_tensor_info: &CopyTensorInfoARM) {
-        unsafe {
-            (self.fns().arm_tensors.as_ref().unwrap().copy_tensor_arm)(
-                self.handle,
-                copy_tensor_info,
-            )
-        };
-    }
-}
-
 pub trait TensorsDevice {
     fn create_tensor(
         &self,
@@ -244,6 +227,23 @@ impl TensorsDevice for Device {
             )
         }
         .init_on_success(out)
+    }
+}
+
+pub trait TensorsCommandBuffer {
+    fn copy_tensor(&self, copy_tensor_info: &CopyTensorInfoARM);
+}
+
+impl TensorsCommandBuffer for CommandBuffer {
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyTensorARM.html>
+    #[inline]
+    fn copy_tensor(&self, copy_tensor_info: &CopyTensorInfoARM) {
+        unsafe {
+            (self.fns().arm_tensors.as_ref().unwrap().copy_tensor_arm)(
+                self.handle,
+                copy_tensor_info,
+            )
+        };
     }
 }
 

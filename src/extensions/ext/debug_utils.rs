@@ -59,6 +59,104 @@ impl DebugUtilsDevice for Device {
     }
 }
 
+pub trait DebugUtilsQueue {
+    fn begin_debug_utils_label(&self, label_info: &DebugUtilsLabelEXT);
+
+    fn end_debug_utils_label(&self);
+
+    fn insert_debug_utils_label(&self, label_info: &DebugUtilsLabelEXT);
+}
+
+impl DebugUtilsQueue for Queue {
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkQueueBeginDebugUtilsLabelEXT.html>
+    #[inline]
+    fn begin_debug_utils_label(&self, label_info: &DebugUtilsLabelEXT) {
+        unsafe {
+            (self
+                .fns()
+                .ext_debug_utils
+                .as_ref()
+                .unwrap()
+                .queue_begin_debug_utils_label_ext)(self.handle, label_info)
+        };
+    }
+
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkQueueEndDebugUtilsLabelEXT.html>
+    #[inline]
+    fn end_debug_utils_label(&self) {
+        unsafe {
+            (self
+                .fns()
+                .ext_debug_utils
+                .as_ref()
+                .unwrap()
+                .queue_end_debug_utils_label_ext)(self.handle)
+        };
+    }
+
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkQueueInsertDebugUtilsLabelEXT.html>
+    #[inline]
+    fn insert_debug_utils_label(&self, label_info: &DebugUtilsLabelEXT) {
+        unsafe {
+            (self
+                .fns()
+                .ext_debug_utils
+                .as_ref()
+                .unwrap()
+                .queue_insert_debug_utils_label_ext)(self.handle, label_info)
+        };
+    }
+}
+
+pub trait DebugUtilsCommandBuffer {
+    fn begin_debug_utils_label(&self, label_info: &DebugUtilsLabelEXT);
+
+    fn end_debug_utils_label(&self);
+
+    fn insert_debug_utils_label(&self, label_info: &DebugUtilsLabelEXT);
+}
+
+impl DebugUtilsCommandBuffer for CommandBuffer {
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBeginDebugUtilsLabelEXT.html>
+    #[inline]
+    fn begin_debug_utils_label(&self, label_info: &DebugUtilsLabelEXT) {
+        unsafe {
+            (self
+                .fns()
+                .ext_debug_utils
+                .as_ref()
+                .unwrap()
+                .begin_debug_utils_label_ext)(self.handle, label_info)
+        };
+    }
+
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdEndDebugUtilsLabelEXT.html>
+    #[inline]
+    fn end_debug_utils_label(&self) {
+        unsafe {
+            (self
+                .fns()
+                .ext_debug_utils
+                .as_ref()
+                .unwrap()
+                .end_debug_utils_label_ext)(self.handle)
+        };
+    }
+
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdInsertDebugUtilsLabelEXT.html>
+    #[inline]
+    fn insert_debug_utils_label(&self, label_info: &DebugUtilsLabelEXT) {
+        unsafe {
+            (self
+                .fns()
+                .ext_debug_utils
+                .as_ref()
+                .unwrap()
+                .insert_debug_utils_label_ext)(self.handle, label_info)
+        };
+    }
+}
+
 pub trait DebugUtilsInstance {
     fn create_debug_utils_messenger(
         &self,
@@ -146,104 +244,6 @@ impl DebugUtilsInstance for Instance {
                 message_types,
                 callback_data,
             )
-        };
-    }
-}
-
-pub trait DebugUtilsCommandBuffer {
-    fn begin_debug_utils_label(&self, label_info: &DebugUtilsLabelEXT);
-
-    fn end_debug_utils_label(&self);
-
-    fn insert_debug_utils_label(&self, label_info: &DebugUtilsLabelEXT);
-}
-
-impl DebugUtilsCommandBuffer for CommandBuffer {
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBeginDebugUtilsLabelEXT.html>
-    #[inline]
-    fn begin_debug_utils_label(&self, label_info: &DebugUtilsLabelEXT) {
-        unsafe {
-            (self
-                .fns()
-                .ext_debug_utils
-                .as_ref()
-                .unwrap()
-                .begin_debug_utils_label_ext)(self.handle, label_info)
-        };
-    }
-
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdEndDebugUtilsLabelEXT.html>
-    #[inline]
-    fn end_debug_utils_label(&self) {
-        unsafe {
-            (self
-                .fns()
-                .ext_debug_utils
-                .as_ref()
-                .unwrap()
-                .end_debug_utils_label_ext)(self.handle)
-        };
-    }
-
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdInsertDebugUtilsLabelEXT.html>
-    #[inline]
-    fn insert_debug_utils_label(&self, label_info: &DebugUtilsLabelEXT) {
-        unsafe {
-            (self
-                .fns()
-                .ext_debug_utils
-                .as_ref()
-                .unwrap()
-                .insert_debug_utils_label_ext)(self.handle, label_info)
-        };
-    }
-}
-
-pub trait DebugUtilsQueue {
-    fn begin_debug_utils_label(&self, label_info: &DebugUtilsLabelEXT);
-
-    fn end_debug_utils_label(&self);
-
-    fn insert_debug_utils_label(&self, label_info: &DebugUtilsLabelEXT);
-}
-
-impl DebugUtilsQueue for Queue {
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkQueueBeginDebugUtilsLabelEXT.html>
-    #[inline]
-    fn begin_debug_utils_label(&self, label_info: &DebugUtilsLabelEXT) {
-        unsafe {
-            (self
-                .fns()
-                .ext_debug_utils
-                .as_ref()
-                .unwrap()
-                .queue_begin_debug_utils_label_ext)(self.handle, label_info)
-        };
-    }
-
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkQueueEndDebugUtilsLabelEXT.html>
-    #[inline]
-    fn end_debug_utils_label(&self) {
-        unsafe {
-            (self
-                .fns()
-                .ext_debug_utils
-                .as_ref()
-                .unwrap()
-                .queue_end_debug_utils_label_ext)(self.handle)
-        };
-    }
-
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkQueueInsertDebugUtilsLabelEXT.html>
-    #[inline]
-    fn insert_debug_utils_label(&self, label_info: &DebugUtilsLabelEXT) {
-        unsafe {
-            (self
-                .fns()
-                .ext_debug_utils
-                .as_ref()
-                .unwrap()
-                .queue_insert_debug_utils_label_ext)(self.handle, label_info)
         };
     }
 }

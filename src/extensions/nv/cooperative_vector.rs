@@ -9,32 +9,6 @@ use core::ffi::CStr;
 pub const NAME: &CStr = c"VK_NV_cooperative_vector";
 pub const SPEC_VERSION: u32 = 4;
 
-pub trait CooperativeVectorDevice {
-    fn convert_cooperative_vector_matrix(
-        &self,
-        info: &ConvertCooperativeVectorMatrixInfoNV,
-    ) -> Result<(), vkResult>;
-}
-
-impl CooperativeVectorDevice for Device {
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkConvertCooperativeVectorMatrixNV.html>
-    #[inline]
-    fn convert_cooperative_vector_matrix(
-        &self,
-        info: &ConvertCooperativeVectorMatrixInfoNV,
-    ) -> Result<(), vkResult> {
-        unsafe {
-            (self
-                .fns()
-                .nv_cooperative_vector
-                .as_ref()
-                .unwrap()
-                .convert_cooperative_vector_matrix_nv)(self.handle, info)
-        }
-        .result()
-    }
-}
-
 pub trait CooperativeVectorPhysicalDevice {
     fn get_cooperative_vector_properties(
         &self,
@@ -60,6 +34,32 @@ impl CooperativeVectorPhysicalDevice for PhysicalDevice {
                 properties.len() as *mut u32,
                 properties.as_mut_ptr(),
             )
+        }
+        .result()
+    }
+}
+
+pub trait CooperativeVectorDevice {
+    fn convert_cooperative_vector_matrix(
+        &self,
+        info: &ConvertCooperativeVectorMatrixInfoNV,
+    ) -> Result<(), vkResult>;
+}
+
+impl CooperativeVectorDevice for Device {
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkConvertCooperativeVectorMatrixNV.html>
+    #[inline]
+    fn convert_cooperative_vector_matrix(
+        &self,
+        info: &ConvertCooperativeVectorMatrixInfoNV,
+    ) -> Result<(), vkResult> {
+        unsafe {
+            (self
+                .fns()
+                .nv_cooperative_vector
+                .as_ref()
+                .unwrap()
+                .convert_cooperative_vector_matrix_nv)(self.handle, info)
         }
         .result()
     }

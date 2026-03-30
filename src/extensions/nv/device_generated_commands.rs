@@ -11,6 +11,82 @@ use core::ptr::{from_ref, null};
 pub const NAME: &CStr = c"VK_NV_device_generated_commands";
 pub const SPEC_VERSION: u32 = 3;
 
+pub trait DeviceGeneratedCommandsCommandBuffer {
+    fn execute_generated_commands(
+        &self,
+        is_preprocessed: bool,
+        generated_commands_info: &GeneratedCommandsInfoNV,
+    );
+
+    fn preprocess_generated_commands(&self, generated_commands_info: &GeneratedCommandsInfoNV);
+
+    fn bind_pipeline_shader_group(
+        &self,
+        pipeline_bind_point: PipelineBindPoint,
+        pipeline: Pipeline,
+        group_index: u32,
+    );
+}
+
+impl DeviceGeneratedCommandsCommandBuffer for CommandBuffer {
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdExecuteGeneratedCommandsNV.html>
+    #[inline]
+    fn execute_generated_commands(
+        &self,
+        is_preprocessed: bool,
+        generated_commands_info: &GeneratedCommandsInfoNV,
+    ) {
+        unsafe {
+            (self
+                .fns()
+                .nv_device_generated_commands
+                .as_ref()
+                .unwrap()
+                .execute_generated_commands_nv)(
+                self.handle,
+                is_preprocessed as _,
+                generated_commands_info,
+            )
+        };
+    }
+
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdPreprocessGeneratedCommandsNV.html>
+    #[inline]
+    fn preprocess_generated_commands(&self, generated_commands_info: &GeneratedCommandsInfoNV) {
+        unsafe {
+            (self
+                .fns()
+                .nv_device_generated_commands
+                .as_ref()
+                .unwrap()
+                .preprocess_generated_commands_nv)(self.handle, generated_commands_info)
+        };
+    }
+
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBindPipelineShaderGroupNV.html>
+    #[inline]
+    fn bind_pipeline_shader_group(
+        &self,
+        pipeline_bind_point: PipelineBindPoint,
+        pipeline: Pipeline,
+        group_index: u32,
+    ) {
+        unsafe {
+            (self
+                .fns()
+                .nv_device_generated_commands
+                .as_ref()
+                .unwrap()
+                .bind_pipeline_shader_group_nv)(
+                self.handle,
+                pipeline_bind_point,
+                pipeline,
+                group_index,
+            )
+        };
+    }
+}
+
 pub trait DeviceGeneratedCommandsDevice {
     fn get_generated_commands_memory_requirements(
         &self,
@@ -92,82 +168,6 @@ impl DeviceGeneratedCommandsDevice for Device {
                 self.handle,
                 indirect_commands_layout,
                 allocator.map_or(null(), from_ref),
-            )
-        };
-    }
-}
-
-pub trait DeviceGeneratedCommandsCommandBuffer {
-    fn execute_generated_commands(
-        &self,
-        is_preprocessed: bool,
-        generated_commands_info: &GeneratedCommandsInfoNV,
-    );
-
-    fn preprocess_generated_commands(&self, generated_commands_info: &GeneratedCommandsInfoNV);
-
-    fn bind_pipeline_shader_group(
-        &self,
-        pipeline_bind_point: PipelineBindPoint,
-        pipeline: Pipeline,
-        group_index: u32,
-    );
-}
-
-impl DeviceGeneratedCommandsCommandBuffer for CommandBuffer {
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdExecuteGeneratedCommandsNV.html>
-    #[inline]
-    fn execute_generated_commands(
-        &self,
-        is_preprocessed: bool,
-        generated_commands_info: &GeneratedCommandsInfoNV,
-    ) {
-        unsafe {
-            (self
-                .fns()
-                .nv_device_generated_commands
-                .as_ref()
-                .unwrap()
-                .execute_generated_commands_nv)(
-                self.handle,
-                is_preprocessed as _,
-                generated_commands_info,
-            )
-        };
-    }
-
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdPreprocessGeneratedCommandsNV.html>
-    #[inline]
-    fn preprocess_generated_commands(&self, generated_commands_info: &GeneratedCommandsInfoNV) {
-        unsafe {
-            (self
-                .fns()
-                .nv_device_generated_commands
-                .as_ref()
-                .unwrap()
-                .preprocess_generated_commands_nv)(self.handle, generated_commands_info)
-        };
-    }
-
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBindPipelineShaderGroupNV.html>
-    #[inline]
-    fn bind_pipeline_shader_group(
-        &self,
-        pipeline_bind_point: PipelineBindPoint,
-        pipeline: Pipeline,
-        group_index: u32,
-    ) {
-        unsafe {
-            (self
-                .fns()
-                .nv_device_generated_commands
-                .as_ref()
-                .unwrap()
-                .bind_pipeline_shader_group_nv)(
-                self.handle,
-                pipeline_bind_point,
-                pipeline,
-                group_index,
             )
         };
     }

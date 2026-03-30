@@ -10,25 +10,6 @@ use core::mem::MaybeUninit;
 pub const NAME: &CStr = c"VK_EXT_descriptor_heap";
 pub const SPEC_VERSION: u32 = 1;
 
-pub trait DescriptorHeapPhysicalDevice {
-    fn get_descriptor_size(&self, descriptor_type: DescriptorType) -> DeviceSize;
-}
-
-impl DescriptorHeapPhysicalDevice for PhysicalDevice {
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceDescriptorSizeEXT.html>
-    #[inline]
-    fn get_descriptor_size(&self, descriptor_type: DescriptorType) -> DeviceSize {
-        unsafe {
-            (self
-                .fns()
-                .ext_descriptor_heap
-                .as_ref()
-                .unwrap()
-                .get_physical_device_descriptor_size_ext)(self.handle, descriptor_type)
-        }
-    }
-}
-
 pub trait DescriptorHeapDevice {
     fn write_sampler_descriptors(
         &self,
@@ -244,5 +225,24 @@ impl DescriptorHeapCommandBuffer for CommandBuffer {
                 .unwrap()
                 .push_data_ext)(self.handle, push_data_info)
         };
+    }
+}
+
+pub trait DescriptorHeapPhysicalDevice {
+    fn get_descriptor_size(&self, descriptor_type: DescriptorType) -> DeviceSize;
+}
+
+impl DescriptorHeapPhysicalDevice for PhysicalDevice {
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceDescriptorSizeEXT.html>
+    #[inline]
+    fn get_descriptor_size(&self, descriptor_type: DescriptorType) -> DeviceSize {
+        unsafe {
+            (self
+                .fns()
+                .ext_descriptor_heap
+                .as_ref()
+                .unwrap()
+                .get_physical_device_descriptor_size_ext)(self.handle, descriptor_type)
+        }
     }
 }

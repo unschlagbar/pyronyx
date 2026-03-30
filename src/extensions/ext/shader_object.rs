@@ -12,75 +12,6 @@ use core::ptr::{from_ref, null};
 pub const NAME: &CStr = c"VK_EXT_shader_object";
 pub const SPEC_VERSION: u32 = 1;
 
-pub trait ShaderObjectDevice {
-    fn create_shaders(
-        &self,
-        create_infos: &[ShaderCreateInfoEXT],
-        allocator: Option<&AllocationCallbacks>,
-        shaders: &mut [ShaderEXT],
-    ) -> Result<(), vkResult>;
-
-    fn destroy_shader(&self, shader: ShaderEXT, allocator: Option<&AllocationCallbacks>);
-
-    fn get_shader_binary_data(&self, shader: ShaderEXT) -> Result<Vec<c_void>, vkResult>;
-}
-
-impl ShaderObjectDevice for Device {
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCreateShadersEXT.html>
-    #[inline]
-    fn create_shaders(
-        &self,
-        create_infos: &[ShaderCreateInfoEXT],
-        allocator: Option<&AllocationCallbacks>,
-        shaders: &mut [ShaderEXT],
-    ) -> Result<(), vkResult> {
-        assert_eq!(create_infos.len(), shaders.len());
-        unsafe {
-            (self
-                .fns()
-                .ext_shader_object
-                .as_ref()
-                .unwrap()
-                .create_shaders_ext)(
-                self.handle,
-                create_infos.len() as u32,
-                create_infos.as_ptr(),
-                allocator.map_or(null(), from_ref),
-                shaders.as_mut_ptr(),
-            )
-        }
-        .result()
-    }
-
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkDestroyShaderEXT.html>
-    #[inline]
-    fn destroy_shader(&self, shader: ShaderEXT, allocator: Option<&AllocationCallbacks>) {
-        unsafe {
-            (self
-                .fns()
-                .ext_shader_object
-                .as_ref()
-                .unwrap()
-                .destroy_shader_ext)(
-                self.handle, shader, allocator.map_or(null(), from_ref)
-            )
-        };
-    }
-
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetShaderBinaryDataEXT.html>
-    #[inline]
-    fn get_shader_binary_data(&self, shader: ShaderEXT) -> Result<Vec<c_void>, vkResult> {
-        read_into_vec_result(|count, data| unsafe {
-            (self
-                .fns()
-                .ext_shader_object
-                .as_ref()
-                .unwrap()
-                .get_shader_binary_data_ext)(self.handle, shader, count, data)
-        })
-    }
-}
-
 pub trait ShaderObjectCommandBuffer {
     fn set_patch_control_points(&self, patch_control_points: u32);
 
@@ -714,5 +645,74 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
                 shaders.as_ptr(),
             )
         };
+    }
+}
+
+pub trait ShaderObjectDevice {
+    fn create_shaders(
+        &self,
+        create_infos: &[ShaderCreateInfoEXT],
+        allocator: Option<&AllocationCallbacks>,
+        shaders: &mut [ShaderEXT],
+    ) -> Result<(), vkResult>;
+
+    fn destroy_shader(&self, shader: ShaderEXT, allocator: Option<&AllocationCallbacks>);
+
+    fn get_shader_binary_data(&self, shader: ShaderEXT) -> Result<Vec<c_void>, vkResult>;
+}
+
+impl ShaderObjectDevice for Device {
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCreateShadersEXT.html>
+    #[inline]
+    fn create_shaders(
+        &self,
+        create_infos: &[ShaderCreateInfoEXT],
+        allocator: Option<&AllocationCallbacks>,
+        shaders: &mut [ShaderEXT],
+    ) -> Result<(), vkResult> {
+        assert_eq!(create_infos.len(), shaders.len());
+        unsafe {
+            (self
+                .fns()
+                .ext_shader_object
+                .as_ref()
+                .unwrap()
+                .create_shaders_ext)(
+                self.handle,
+                create_infos.len() as u32,
+                create_infos.as_ptr(),
+                allocator.map_or(null(), from_ref),
+                shaders.as_mut_ptr(),
+            )
+        }
+        .result()
+    }
+
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkDestroyShaderEXT.html>
+    #[inline]
+    fn destroy_shader(&self, shader: ShaderEXT, allocator: Option<&AllocationCallbacks>) {
+        unsafe {
+            (self
+                .fns()
+                .ext_shader_object
+                .as_ref()
+                .unwrap()
+                .destroy_shader_ext)(
+                self.handle, shader, allocator.map_or(null(), from_ref)
+            )
+        };
+    }
+
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetShaderBinaryDataEXT.html>
+    #[inline]
+    fn get_shader_binary_data(&self, shader: ShaderEXT) -> Result<Vec<c_void>, vkResult> {
+        read_into_vec_result(|count, data| unsafe {
+            (self
+                .fns()
+                .ext_shader_object
+                .as_ref()
+                .unwrap()
+                .get_shader_binary_data_ext)(self.handle, shader, count, data)
+        })
     }
 }

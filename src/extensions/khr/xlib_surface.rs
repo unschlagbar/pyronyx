@@ -11,40 +11,6 @@ use core::ptr::{from_ref, null};
 pub const NAME: &CStr = c"VK_KHR_xlib_surface";
 pub const SPEC_VERSION: u32 = 6;
 
-pub trait XlibSurfacePhysicalDevice {
-    fn get_xlib_presentation_support(
-        &self,
-        queue_family_index: u32,
-        dpy: *mut Display,
-        visual_id: VisualID,
-    ) -> Bool32;
-}
-
-impl XlibSurfacePhysicalDevice for PhysicalDevice {
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceXlibPresentationSupportKHR.html>
-    #[inline]
-    fn get_xlib_presentation_support(
-        &self,
-        queue_family_index: u32,
-        dpy: *mut Display,
-        visual_id: VisualID,
-    ) -> Bool32 {
-        unsafe {
-            (self
-                .fns()
-                .khr_xlib_surface
-                .as_ref()
-                .unwrap()
-                .get_physical_device_xlib_presentation_support_khr)(
-                self.handle,
-                queue_family_index,
-                dpy,
-                visual_id,
-            )
-        }
-    }
-}
-
 pub trait XlibSurfaceInstance {
     fn create_xlib_surface(
         &self,
@@ -76,5 +42,39 @@ impl XlibSurfaceInstance for Instance {
             )
         }
         .init_on_success(out)
+    }
+}
+
+pub trait XlibSurfacePhysicalDevice {
+    fn get_xlib_presentation_support(
+        &self,
+        queue_family_index: u32,
+        dpy: *mut Display,
+        visual_id: VisualID,
+    ) -> Bool32;
+}
+
+impl XlibSurfacePhysicalDevice for PhysicalDevice {
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceXlibPresentationSupportKHR.html>
+    #[inline]
+    fn get_xlib_presentation_support(
+        &self,
+        queue_family_index: u32,
+        dpy: *mut Display,
+        visual_id: VisualID,
+    ) -> Bool32 {
+        unsafe {
+            (self
+                .fns()
+                .khr_xlib_surface
+                .as_ref()
+                .unwrap()
+                .get_physical_device_xlib_presentation_support_khr)(
+                self.handle,
+                queue_family_index,
+                dpy,
+                visual_id,
+            )
+        }
     }
 }

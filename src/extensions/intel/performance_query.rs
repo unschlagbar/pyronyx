@@ -10,76 +10,6 @@ use core::mem::MaybeUninit;
 pub const NAME: &CStr = c"VK_INTEL_performance_query";
 pub const SPEC_VERSION: u32 = 2;
 
-pub trait PerformanceQueryCommandBuffer {
-    fn set_performance_marker(
-        &self,
-        marker_info: &PerformanceMarkerInfoINTEL,
-    ) -> Result<(), vkResult>;
-
-    fn set_performance_stream_marker(
-        &self,
-        marker_info: &PerformanceStreamMarkerInfoINTEL,
-    ) -> Result<(), vkResult>;
-
-    fn set_performance_override(
-        &self,
-        override_info: &PerformanceOverrideInfoINTEL,
-    ) -> Result<(), vkResult>;
-}
-
-impl PerformanceQueryCommandBuffer for CommandBuffer {
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetPerformanceMarkerINTEL.html>
-    #[inline]
-    fn set_performance_marker(
-        &self,
-        marker_info: &PerformanceMarkerInfoINTEL,
-    ) -> Result<(), vkResult> {
-        unsafe {
-            (self
-                .fns()
-                .intel_performance_query
-                .as_ref()
-                .unwrap()
-                .set_performance_marker_intel)(self.handle, marker_info)
-        }
-        .result()
-    }
-
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetPerformanceStreamMarkerINTEL.html>
-    #[inline]
-    fn set_performance_stream_marker(
-        &self,
-        marker_info: &PerformanceStreamMarkerInfoINTEL,
-    ) -> Result<(), vkResult> {
-        unsafe {
-            (self
-                .fns()
-                .intel_performance_query
-                .as_ref()
-                .unwrap()
-                .set_performance_stream_marker_intel)(self.handle, marker_info)
-        }
-        .result()
-    }
-
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetPerformanceOverrideINTEL.html>
-    #[inline]
-    fn set_performance_override(
-        &self,
-        override_info: &PerformanceOverrideInfoINTEL,
-    ) -> Result<(), vkResult> {
-        unsafe {
-            (self
-                .fns()
-                .intel_performance_query
-                .as_ref()
-                .unwrap()
-                .set_performance_override_intel)(self.handle, override_info)
-        }
-        .result()
-    }
-}
-
 pub trait PerformanceQueryDevice {
     fn initialize_performance_api(
         &self,
@@ -192,6 +122,76 @@ impl PerformanceQueryDevice for Device {
             )
         }
         .init_on_success(out)
+    }
+}
+
+pub trait PerformanceQueryCommandBuffer {
+    fn set_performance_marker(
+        &self,
+        marker_info: &PerformanceMarkerInfoINTEL,
+    ) -> Result<(), vkResult>;
+
+    fn set_performance_stream_marker(
+        &self,
+        marker_info: &PerformanceStreamMarkerInfoINTEL,
+    ) -> Result<(), vkResult>;
+
+    fn set_performance_override(
+        &self,
+        override_info: &PerformanceOverrideInfoINTEL,
+    ) -> Result<(), vkResult>;
+}
+
+impl PerformanceQueryCommandBuffer for CommandBuffer {
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetPerformanceMarkerINTEL.html>
+    #[inline]
+    fn set_performance_marker(
+        &self,
+        marker_info: &PerformanceMarkerInfoINTEL,
+    ) -> Result<(), vkResult> {
+        unsafe {
+            (self
+                .fns()
+                .intel_performance_query
+                .as_ref()
+                .unwrap()
+                .set_performance_marker_intel)(self.handle, marker_info)
+        }
+        .result()
+    }
+
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetPerformanceStreamMarkerINTEL.html>
+    #[inline]
+    fn set_performance_stream_marker(
+        &self,
+        marker_info: &PerformanceStreamMarkerInfoINTEL,
+    ) -> Result<(), vkResult> {
+        unsafe {
+            (self
+                .fns()
+                .intel_performance_query
+                .as_ref()
+                .unwrap()
+                .set_performance_stream_marker_intel)(self.handle, marker_info)
+        }
+        .result()
+    }
+
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetPerformanceOverrideINTEL.html>
+    #[inline]
+    fn set_performance_override(
+        &self,
+        override_info: &PerformanceOverrideInfoINTEL,
+    ) -> Result<(), vkResult> {
+        unsafe {
+            (self
+                .fns()
+                .intel_performance_query
+                .as_ref()
+                .unwrap()
+                .set_performance_override_intel)(self.handle, override_info)
+        }
+        .result()
     }
 }
 

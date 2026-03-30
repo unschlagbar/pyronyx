@@ -9,6 +9,25 @@ use core::ffi::CStr;
 pub const NAME: &CStr = c"VK_KHR_object_refresh";
 pub const SPEC_VERSION: u32 = 1;
 
+pub trait ObjectRefreshCommandBuffer {
+    fn refresh_objects(&self, refresh_objects: &RefreshObjectListKHR);
+}
+
+impl ObjectRefreshCommandBuffer for CommandBuffer {
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdRefreshObjectsKHR.html>
+    #[inline]
+    fn refresh_objects(&self, refresh_objects: &RefreshObjectListKHR) {
+        unsafe {
+            (self
+                .fns()
+                .khr_object_refresh
+                .as_ref()
+                .unwrap()
+                .refresh_objects_khr)(self.handle, refresh_objects)
+        };
+    }
+}
+
 pub trait ObjectRefreshPhysicalDevice {
     fn get_refreshable_object_types(
         &self,
@@ -36,24 +55,5 @@ impl ObjectRefreshPhysicalDevice for PhysicalDevice {
             )
         }
         .result()
-    }
-}
-
-pub trait ObjectRefreshCommandBuffer {
-    fn refresh_objects(&self, refresh_objects: &RefreshObjectListKHR);
-}
-
-impl ObjectRefreshCommandBuffer for CommandBuffer {
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdRefreshObjectsKHR.html>
-    #[inline]
-    fn refresh_objects(&self, refresh_objects: &RefreshObjectListKHR) {
-        unsafe {
-            (self
-                .fns()
-                .khr_object_refresh
-                .as_ref()
-                .unwrap()
-                .refresh_objects_khr)(self.handle, refresh_objects)
-        };
     }
 }
