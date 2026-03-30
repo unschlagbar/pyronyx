@@ -1809,6 +1809,29 @@ impl Default for ApplicationInfo<'_> {
     }
 }
 
+pub trait ExtendsApplicationInfo {}
+impl<'a> ApplicationInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsApplicationInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct AllocationCallbacks<'a> {
@@ -1862,6 +1885,29 @@ impl Default for DeviceQueueCreateInfo<'_> {
     }
 }
 
+pub trait ExtendsDeviceQueueCreateInfo {}
+impl<'a> DeviceQueueCreateInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsDeviceQueueCreateInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct DeviceCreateInfo<'a> {
@@ -1901,6 +1947,29 @@ impl Default for DeviceCreateInfo<'_> {
     }
 }
 
+pub trait ExtendsDeviceCreateInfo {}
+impl<'a> DeviceCreateInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsDeviceCreateInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct InstanceCreateInfo<'a> {
@@ -1933,6 +2002,29 @@ impl Default for InstanceCreateInfo<'_> {
             enabled_extension_names: ptr::null_mut(),
             _marker: PhantomData,
         }
+    }
+}
+
+pub trait ExtendsInstanceCreateInfo {}
+impl<'a> InstanceCreateInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsInstanceCreateInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -2001,6 +2093,29 @@ impl Default for MemoryAllocateInfo<'_> {
             memory_type_index: 0,
             _marker: PhantomData,
         }
+    }
+}
+
+pub trait ExtendsMemoryAllocateInfo {}
+impl<'a> MemoryAllocateInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsMemoryAllocateInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -2264,6 +2379,29 @@ impl Default for WriteDescriptorSet<'_> {
     }
 }
 
+pub trait ExtendsWriteDescriptorSet {}
+impl<'a> WriteDescriptorSet<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsWriteDescriptorSet>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct CopyDescriptorSet<'a> {
@@ -2303,7 +2441,7 @@ impl Default for CopyDescriptorSet<'_> {
     }
 }
 
-// structextends: VkBufferViewCreateInfo,VkBufferCreateInfo,VkPhysicalDeviceExternalBufferInfo,VkDescriptorBufferBindingInfoEXT
+/// Extends: `BufferViewCreateInfo`, `BufferCreateInfo`, `PhysicalDeviceExternalBufferInfo`, `DescriptorBufferBindingInfoEXT`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct BufferUsageFlags2CreateInfo<'a> {
@@ -2323,6 +2461,11 @@ impl Default for BufferUsageFlags2CreateInfo<'_> {
         }
     }
 }
+
+impl ExtendsBufferViewCreateInfo for BufferUsageFlags2CreateInfo<'_> {}
+impl ExtendsBufferCreateInfo for BufferUsageFlags2CreateInfo<'_> {}
+impl ExtendsPhysicalDeviceExternalBufferInfo for BufferUsageFlags2CreateInfo<'_> {}
+impl ExtendsDescriptorBufferBindingInfoEXT for BufferUsageFlags2CreateInfo<'_> {}
 
 pub type BufferUsageFlags2CreateInfoKHR<'a> = BufferUsageFlags2CreateInfo<'a>;
 #[repr(C)]
@@ -2359,6 +2502,29 @@ impl Default for BufferCreateInfo<'_> {
     }
 }
 
+pub trait ExtendsBufferCreateInfo {}
+impl<'a> BufferCreateInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsBufferCreateInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct BufferViewCreateInfo<'a> {
@@ -2387,6 +2553,29 @@ impl Default for BufferViewCreateInfo<'_> {
             range: Default::default(),
             _marker: PhantomData,
         }
+    }
+}
+
+pub trait ExtendsBufferViewCreateInfo {}
+impl<'a> BufferViewCreateInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsBufferViewCreateInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -2510,6 +2699,29 @@ impl Default for BufferMemoryBarrier<'_> {
     }
 }
 
+pub trait ExtendsBufferMemoryBarrier {}
+impl<'a> BufferMemoryBarrier<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsBufferMemoryBarrier>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ImageMemoryBarrier<'a> {
@@ -2549,6 +2761,29 @@ impl Default for ImageMemoryBarrier<'_> {
             subresource_range: Default::default(),
             _marker: PhantomData,
         }
+    }
+}
+
+pub trait ExtendsImageMemoryBarrier {}
+impl<'a> ImageMemoryBarrier<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsImageMemoryBarrier>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -2600,6 +2835,29 @@ impl Default for ImageCreateInfo<'_> {
             initial_layout: Default::default(),
             _marker: PhantomData,
         }
+    }
+}
+
+pub trait ExtendsImageCreateInfo {}
+impl<'a> ImageCreateInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsImageCreateInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -2656,6 +2914,29 @@ impl Default for ImageViewCreateInfo<'_> {
             subresource_range: Default::default(),
             _marker: PhantomData,
         }
+    }
+}
+
+pub trait ExtendsImageViewCreateInfo {}
+impl<'a> ImageViewCreateInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsImageViewCreateInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -2827,6 +3108,29 @@ impl Default for BindSparseInfo<'_> {
             signal_semaphores: ptr::null_mut(),
             _marker: PhantomData,
         }
+    }
+}
+
+pub trait ExtendsBindSparseInfo {}
+impl<'a> BindSparseInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsBindSparseInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -3039,7 +3343,7 @@ impl Default for ImageResolve {
     }
 }
 
-// structextends: VkPipelineShaderStageCreateInfo,VkDataGraphPipelineCreateInfoARM
+/// Extends: `PipelineShaderStageCreateInfo`, `DataGraphPipelineCreateInfoARM`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ShaderModuleCreateInfo<'a> {
@@ -3065,6 +3369,31 @@ impl Default for ShaderModuleCreateInfo<'_> {
             code: ptr::null_mut(),
             _marker: PhantomData,
         }
+    }
+}
+
+impl ExtendsPipelineShaderStageCreateInfo for ShaderModuleCreateInfo<'_> {}
+impl ExtendsDataGraphPipelineCreateInfoARM for ShaderModuleCreateInfo<'_> {}
+pub trait ExtendsShaderModuleCreateInfo {}
+impl<'a> ShaderModuleCreateInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsShaderModuleCreateInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -3125,6 +3454,29 @@ impl Default for DescriptorSetLayoutCreateInfo<'_> {
     }
 }
 
+pub trait ExtendsDescriptorSetLayoutCreateInfo {}
+impl<'a> DescriptorSetLayoutCreateInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsDescriptorSetLayoutCreateInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct DescriptorPoolSize {
@@ -3167,6 +3519,29 @@ impl Default for DescriptorPoolCreateInfo<'_> {
     }
 }
 
+pub trait ExtendsDescriptorPoolCreateInfo {}
+impl<'a> DescriptorPoolCreateInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsDescriptorPoolCreateInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct DescriptorSetAllocateInfo<'a> {
@@ -3189,6 +3564,29 @@ impl Default for DescriptorSetAllocateInfo<'_> {
             set_layouts: ptr::null_mut(),
             _marker: PhantomData,
         }
+    }
+}
+
+pub trait ExtendsDescriptorSetAllocateInfo {}
+impl<'a> DescriptorSetAllocateInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsDescriptorSetAllocateInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -3272,6 +3670,29 @@ impl Default for PipelineShaderStageCreateInfo<'_> {
     }
 }
 
+pub trait ExtendsPipelineShaderStageCreateInfo {}
+impl<'a> PipelineShaderStageCreateInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsPipelineShaderStageCreateInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ComputePipelineCreateInfo<'a> {
@@ -3304,7 +3725,30 @@ impl Default for ComputePipelineCreateInfo<'_> {
     }
 }
 
-// structextends: VkComputePipelineCreateInfo
+pub trait ExtendsComputePipelineCreateInfo {}
+impl<'a> ComputePipelineCreateInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsComputePipelineCreateInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
+/// Extends: `ComputePipelineCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ComputePipelineIndirectBufferInfoNV<'a> {
@@ -3329,7 +3773,9 @@ impl Default for ComputePipelineIndirectBufferInfoNV<'_> {
     }
 }
 
-// structextends: VkComputePipelineCreateInfo,VkGraphicsPipelineCreateInfo,VkRayTracingPipelineCreateInfoNV,VkRayTracingPipelineCreateInfoKHR
+impl ExtendsComputePipelineCreateInfo for ComputePipelineIndirectBufferInfoNV<'_> {}
+
+/// Extends: `ComputePipelineCreateInfo`, `GraphicsPipelineCreateInfo`, `RayTracingPipelineCreateInfoNV`, `RayTracingPipelineCreateInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PipelineCreateFlags2CreateInfo<'a> {
@@ -3349,6 +3795,11 @@ impl Default for PipelineCreateFlags2CreateInfo<'_> {
         }
     }
 }
+
+impl ExtendsComputePipelineCreateInfo for PipelineCreateFlags2CreateInfo<'_> {}
+impl ExtendsGraphicsPipelineCreateInfo for PipelineCreateFlags2CreateInfo<'_> {}
+impl ExtendsRayTracingPipelineCreateInfoNV for PipelineCreateFlags2CreateInfo<'_> {}
+impl ExtendsRayTracingPipelineCreateInfoKHR for PipelineCreateFlags2CreateInfo<'_> {}
 
 pub type PipelineCreateFlags2CreateInfoKHR<'a> = PipelineCreateFlags2CreateInfo<'a>;
 #[repr(C)]
@@ -3426,6 +3877,29 @@ impl Default for PipelineVertexInputStateCreateInfo<'_> {
     }
 }
 
+pub trait ExtendsPipelineVertexInputStateCreateInfo {}
+impl<'a> PipelineVertexInputStateCreateInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsPipelineVertexInputStateCreateInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PipelineInputAssemblyStateCreateInfo<'a> {
@@ -3472,6 +3946,29 @@ impl Default for PipelineTessellationStateCreateInfo<'_> {
     }
 }
 
+pub trait ExtendsPipelineTessellationStateCreateInfo {}
+impl<'a> PipelineTessellationStateCreateInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsPipelineTessellationStateCreateInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PipelineViewportStateCreateInfo<'a> {
@@ -3501,6 +3998,29 @@ impl Default for PipelineViewportStateCreateInfo<'_> {
             scissors: ptr::null_mut(),
             _marker: PhantomData,
         }
+    }
+}
+
+pub trait ExtendsPipelineViewportStateCreateInfo {}
+impl<'a> PipelineViewportStateCreateInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsPipelineViewportStateCreateInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -3545,6 +4065,29 @@ impl Default for PipelineRasterizationStateCreateInfo<'_> {
     }
 }
 
+pub trait ExtendsPipelineRasterizationStateCreateInfo {}
+impl<'a> PipelineRasterizationStateCreateInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsPipelineRasterizationStateCreateInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PipelineMultisampleStateCreateInfo<'a> {
@@ -3580,6 +4123,29 @@ impl Default for PipelineMultisampleStateCreateInfo<'_> {
             alpha_to_one_enable: FALSE,
             _marker: PhantomData,
         }
+    }
+}
+
+pub trait ExtendsPipelineMultisampleStateCreateInfo {}
+impl<'a> PipelineMultisampleStateCreateInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsPipelineMultisampleStateCreateInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -3640,6 +4206,29 @@ impl Default for PipelineColorBlendStateCreateInfo<'_> {
             blend_constants: unsafe { mem::zeroed() },
             _marker: PhantomData,
         }
+    }
+}
+
+pub trait ExtendsPipelineColorBlendStateCreateInfo {}
+impl<'a> PipelineColorBlendStateCreateInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsPipelineColorBlendStateCreateInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -3797,6 +4386,29 @@ impl Default for GraphicsPipelineCreateInfo<'_> {
             base_pipeline_index: 0,
             _marker: PhantomData,
         }
+    }
+}
+
+pub trait ExtendsGraphicsPipelineCreateInfo {}
+impl<'a> GraphicsPipelineCreateInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsGraphicsPipelineCreateInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -4063,7 +4675,7 @@ impl Default for PipelineBinaryKeyKHR<'_> {
     }
 }
 
-// structextends: VkGraphicsPipelineCreateInfo,VkComputePipelineCreateInfo,VkRayTracingPipelineCreateInfoKHR
+/// Extends: `GraphicsPipelineCreateInfo`, `ComputePipelineCreateInfo`, `RayTracingPipelineCreateInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PipelineBinaryInfoKHR<'a> {
@@ -4086,6 +4698,10 @@ impl Default for PipelineBinaryInfoKHR<'_> {
         }
     }
 }
+
+impl ExtendsGraphicsPipelineCreateInfo for PipelineBinaryInfoKHR<'_> {}
+impl ExtendsComputePipelineCreateInfo for PipelineBinaryInfoKHR<'_> {}
+impl ExtendsRayTracingPipelineCreateInfoKHR for PipelineBinaryInfoKHR<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -4145,7 +4761,7 @@ impl Default for PipelineCreateInfoKHR<'_> {
     }
 }
 
-// structextends: VkBindDescriptorSetsInfo,VkPushConstantsInfo,VkPushDescriptorSetInfo,VkPushDescriptorSetWithTemplateInfo,VkSetDescriptorBufferOffsetsInfoEXT,VkBindDescriptorBufferEmbeddedSamplersInfoEXT,VkIndirectCommandsLayoutCreateInfoEXT
+/// Extends: `BindDescriptorSetsInfo`, `PushConstantsInfo`, `PushDescriptorSetInfo`, `PushDescriptorSetWithTemplateInfo`, `SetDescriptorBufferOffsetsInfoEXT`, `BindDescriptorBufferEmbeddedSamplersInfoEXT`, `IndirectCommandsLayoutCreateInfoEXT`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PipelineLayoutCreateInfo<'a> {
@@ -4180,6 +4796,14 @@ impl Default for PipelineLayoutCreateInfo<'_> {
         }
     }
 }
+
+impl ExtendsBindDescriptorSetsInfo for PipelineLayoutCreateInfo<'_> {}
+impl ExtendsPushConstantsInfo for PipelineLayoutCreateInfo<'_> {}
+impl ExtendsPushDescriptorSetInfo for PipelineLayoutCreateInfo<'_> {}
+impl ExtendsPushDescriptorSetWithTemplateInfo for PipelineLayoutCreateInfo<'_> {}
+impl ExtendsSetDescriptorBufferOffsetsInfoEXT for PipelineLayoutCreateInfo<'_> {}
+impl ExtendsBindDescriptorBufferEmbeddedSamplersInfoEXT for PipelineLayoutCreateInfo<'_> {}
+impl ExtendsIndirectCommandsLayoutCreateInfoEXT for PipelineLayoutCreateInfo<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -4234,6 +4858,29 @@ impl Default for SamplerCreateInfo<'_> {
     }
 }
 
+pub trait ExtendsSamplerCreateInfo {}
+impl<'a> SamplerCreateInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsSamplerCreateInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct CommandPoolCreateInfo<'a> {
@@ -4254,6 +4901,29 @@ impl Default for CommandPoolCreateInfo<'_> {
             queue_family_index: 0,
             _marker: PhantomData,
         }
+    }
+}
+
+pub trait ExtendsCommandPoolCreateInfo {}
+impl<'a> CommandPoolCreateInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsCommandPoolCreateInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -4316,6 +4986,29 @@ impl Default for CommandBufferInheritanceInfo<'_> {
     }
 }
 
+pub trait ExtendsCommandBufferInheritanceInfo {}
+impl<'a> CommandBufferInheritanceInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsCommandBufferInheritanceInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct CommandBufferBeginInfo<'a> {
@@ -4338,6 +5031,29 @@ impl Default for CommandBufferBeginInfo<'_> {
             inheritance_info: ptr::null_mut(),
             _marker: PhantomData,
         }
+    }
+}
+
+pub trait ExtendsCommandBufferBeginInfo {}
+impl<'a> CommandBufferBeginInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsCommandBufferBeginInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -4367,6 +5083,29 @@ impl Default for RenderPassBeginInfo<'_> {
             clear_values: ptr::null_mut(),
             _marker: PhantomData,
         }
+    }
+}
+
+pub trait ExtendsRenderPassBeginInfo {}
+impl<'a> RenderPassBeginInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsRenderPassBeginInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -4589,6 +5328,29 @@ impl Default for RenderPassCreateInfo<'_> {
     }
 }
 
+pub trait ExtendsRenderPassCreateInfo {}
+impl<'a> RenderPassCreateInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsRenderPassCreateInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct EventCreateInfo<'a> {
@@ -4610,6 +5372,29 @@ impl Default for EventCreateInfo<'_> {
     }
 }
 
+pub trait ExtendsEventCreateInfo {}
+impl<'a> EventCreateInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsEventCreateInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct FenceCreateInfo<'a> {
@@ -4628,6 +5413,29 @@ impl Default for FenceCreateInfo<'_> {
             flags: Default::default(),
             _marker: PhantomData,
         }
+    }
+}
+
+pub trait ExtendsFenceCreateInfo {}
+impl<'a> FenceCreateInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsFenceCreateInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -5185,6 +5993,29 @@ impl Default for SemaphoreCreateInfo<'_> {
     }
 }
 
+pub trait ExtendsSemaphoreCreateInfo {}
+impl<'a> SemaphoreCreateInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsSemaphoreCreateInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct QueryPoolCreateInfo<'a> {
@@ -5209,6 +6040,29 @@ impl Default for QueryPoolCreateInfo<'_> {
             pipeline_statistics: Default::default(),
             _marker: PhantomData,
         }
+    }
+}
+
+pub trait ExtendsQueryPoolCreateInfo {}
+impl<'a> QueryPoolCreateInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsQueryPoolCreateInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -5242,6 +6096,29 @@ impl Default for FramebufferCreateInfo<'_> {
             layers: 0,
             _marker: PhantomData,
         }
+    }
+}
+
+pub trait ExtendsFramebufferCreateInfo {}
+impl<'a> FramebufferCreateInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsFramebufferCreateInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -5364,6 +6241,29 @@ impl Default for SubmitInfo<'_> {
             signal_semaphores: ptr::null_mut(),
             _marker: PhantomData,
         }
+    }
+}
+
+pub trait ExtendsSubmitInfo {}
+impl<'a> SubmitInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsSubmitInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -5552,7 +6452,30 @@ impl Default for DisplaySurfaceCreateInfoKHR<'_> {
     }
 }
 
-// structextends: VkDisplaySurfaceCreateInfoKHR
+pub trait ExtendsDisplaySurfaceCreateInfoKHR {}
+impl<'a> DisplaySurfaceCreateInfoKHR<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsDisplaySurfaceCreateInfoKHR>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
+/// Extends: `DisplaySurfaceCreateInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct DisplaySurfaceStereoCreateInfoNV<'a> {
@@ -5574,7 +6497,9 @@ impl Default for DisplaySurfaceStereoCreateInfoNV<'_> {
     }
 }
 
-// structextends: VkPresentInfoKHR
+impl ExtendsDisplaySurfaceCreateInfoKHR for DisplaySurfaceStereoCreateInfoNV<'_> {}
+
+/// Extends: `PresentInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct DisplayPresentInfoKHR<'a> {
@@ -5601,6 +6526,8 @@ impl Default for DisplayPresentInfoKHR<'_> {
         }
     }
 }
+
+impl ExtendsPresentInfoKHR for DisplayPresentInfoKHR<'_> {}
 
 /// returned_only
 #[repr(C)]
@@ -5960,6 +6887,29 @@ impl Default for SwapchainCreateInfoKHR<'_> {
     }
 }
 
+pub trait ExtendsSwapchainCreateInfoKHR {}
+impl<'a> SwapchainCreateInfoKHR<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsSwapchainCreateInfoKHR>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PresentInfoKHR<'a> {
@@ -6001,7 +6951,30 @@ impl Default for PresentInfoKHR<'_> {
     }
 }
 
-// structextends: VkInstanceCreateInfo
+pub trait ExtendsPresentInfoKHR {}
+impl<'a> PresentInfoKHR<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsPresentInfoKHR>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
+/// Extends: `InstanceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct DebugReportCallbackCreateInfoEXT<'a> {
@@ -6030,7 +7003,9 @@ impl Default for DebugReportCallbackCreateInfoEXT<'_> {
     }
 }
 
-// structextends: VkInstanceCreateInfo
+impl ExtendsInstanceCreateInfo for DebugReportCallbackCreateInfoEXT<'_> {}
+
+/// Extends: `InstanceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ValidationFlagsEXT<'a> {
@@ -6057,7 +7032,9 @@ impl Default for ValidationFlagsEXT<'_> {
     }
 }
 
-// structextends: VkInstanceCreateInfo,VkShaderModuleCreateInfo,VkShaderCreateInfoEXT
+impl ExtendsInstanceCreateInfo for ValidationFlagsEXT<'_> {}
+
+/// Extends: `InstanceCreateInfo`, `ShaderModuleCreateInfo`, `ShaderCreateInfoEXT`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ValidationFeaturesEXT<'a> {
@@ -6091,7 +7068,11 @@ impl Default for ValidationFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkInstanceCreateInfo
+impl ExtendsInstanceCreateInfo for ValidationFeaturesEXT<'_> {}
+impl ExtendsShaderModuleCreateInfo for ValidationFeaturesEXT<'_> {}
+impl ExtendsShaderCreateInfoEXT for ValidationFeaturesEXT<'_> {}
+
+/// Extends: `InstanceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct LayerSettingsCreateInfoEXT<'a> {
@@ -6117,6 +7098,8 @@ impl Default for LayerSettingsCreateInfoEXT<'_> {
         }
     }
 }
+
+impl ExtendsInstanceCreateInfo for LayerSettingsCreateInfoEXT<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -6147,7 +7130,7 @@ impl Default for LayerSettingEXT<'_> {
     }
 }
 
-// structextends: VkApplicationInfo,VkDeviceCreateInfo
+/// Extends: `ApplicationInfo`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ApplicationParametersEXT<'a> {
@@ -6174,7 +7157,10 @@ impl Default for ApplicationParametersEXT<'_> {
     }
 }
 
-// structextends: VkPipelineRasterizationStateCreateInfo
+impl ExtendsApplicationInfo for ApplicationParametersEXT<'_> {}
+impl ExtendsDeviceCreateInfo for ApplicationParametersEXT<'_> {}
+
+/// Extends: `PipelineRasterizationStateCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PipelineRasterizationStateRasterizationOrderAMD<'a> {
@@ -6194,6 +7180,11 @@ impl Default for PipelineRasterizationStateRasterizationOrderAMD<'_> {
             _marker: PhantomData,
         }
     }
+}
+
+impl ExtendsPipelineRasterizationStateCreateInfo
+    for PipelineRasterizationStateRasterizationOrderAMD<'_>
+{
 }
 
 #[repr(C)]
@@ -6283,7 +7274,7 @@ impl Default for DebugMarkerMarkerInfoEXT<'_> {
     }
 }
 
-// structextends: VkImageCreateInfo
+/// Extends: `ImageCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct DedicatedAllocationImageCreateInfoNV<'a> {
@@ -6305,7 +7296,9 @@ impl Default for DedicatedAllocationImageCreateInfoNV<'_> {
     }
 }
 
-// structextends: VkBufferCreateInfo
+impl ExtendsImageCreateInfo for DedicatedAllocationImageCreateInfoNV<'_> {}
+
+/// Extends: `BufferCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct DedicatedAllocationBufferCreateInfoNV<'a> {
@@ -6327,7 +7320,9 @@ impl Default for DedicatedAllocationBufferCreateInfoNV<'_> {
     }
 }
 
-// structextends: VkMemoryAllocateInfo
+impl ExtendsBufferCreateInfo for DedicatedAllocationBufferCreateInfoNV<'_> {}
+
+/// Extends: `MemoryAllocateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct DedicatedAllocationMemoryAllocateInfoNV<'a> {
@@ -6352,6 +7347,8 @@ impl Default for DedicatedAllocationMemoryAllocateInfoNV<'_> {
     }
 }
 
+impl ExtendsMemoryAllocateInfo for DedicatedAllocationMemoryAllocateInfoNV<'_> {}
+
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -6372,7 +7369,7 @@ impl Default for ExternalImageFormatPropertiesNV {
     }
 }
 
-// structextends: VkImageCreateInfo
+/// Extends: `ImageCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ExternalMemoryImageCreateInfoNV<'a> {
@@ -6393,7 +7390,9 @@ impl Default for ExternalMemoryImageCreateInfoNV<'_> {
     }
 }
 
-// structextends: VkMemoryAllocateInfo
+impl ExtendsImageCreateInfo for ExternalMemoryImageCreateInfoNV<'_> {}
+
+/// Extends: `MemoryAllocateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ExportMemoryAllocateInfoNV<'a> {
@@ -6414,7 +7413,9 @@ impl Default for ExportMemoryAllocateInfoNV<'_> {
     }
 }
 
-// structextends: VkMemoryAllocateInfo
+impl ExtendsMemoryAllocateInfo for ExportMemoryAllocateInfoNV<'_> {}
+
+/// Extends: `MemoryAllocateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ImportMemoryWin32HandleInfoNV<'a> {
@@ -6437,7 +7438,9 @@ impl Default for ImportMemoryWin32HandleInfoNV<'_> {
     }
 }
 
-// structextends: VkMemoryAllocateInfo
+impl ExtendsMemoryAllocateInfo for ImportMemoryWin32HandleInfoNV<'_> {}
+
+/// Extends: `MemoryAllocateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ExportMemoryWin32HandleInfoNV<'a> {
@@ -6461,7 +7464,9 @@ impl Default for ExportMemoryWin32HandleInfoNV<'_> {
     }
 }
 
-// structextends: VkMemoryAllocateInfo
+impl ExtendsMemoryAllocateInfo for ExportMemoryWin32HandleInfoNV<'_> {}
+
+/// Extends: `MemoryAllocateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ExportMemorySciBufInfoNV<'a> {
@@ -6482,7 +7487,9 @@ impl Default for ExportMemorySciBufInfoNV<'_> {
     }
 }
 
-// structextends: VkMemoryAllocateInfo
+impl ExtendsMemoryAllocateInfo for ExportMemorySciBufInfoNV<'_> {}
+
+/// Extends: `MemoryAllocateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ImportMemorySciBufInfoNV<'a> {
@@ -6504,6 +7511,8 @@ impl Default for ImportMemorySciBufInfoNV<'_> {
         }
     }
 }
+
+impl ExtendsMemoryAllocateInfo for ImportMemorySciBufInfoNV<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -6547,7 +7556,7 @@ impl Default for MemorySciBufPropertiesNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceExternalMemorySciBufFeaturesNV<'a> {
@@ -6570,9 +7579,12 @@ impl Default for PhysicalDeviceExternalMemorySciBufFeaturesNV<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceExternalMemorySciBufFeaturesNV<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceExternalMemorySciBufFeaturesNV<'_> {}
+
 pub type PhysicalDeviceExternalSciBufFeaturesNV<'a> =
     PhysicalDeviceExternalMemorySciBufFeaturesNV<'a>;
-// structextends: VkSubmitInfo,VkSubmitInfo2
+/// Extends: `SubmitInfo`, `SubmitInfo2`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct Win32KeyedMutexAcquireReleaseInfoNV<'a> {
@@ -6610,7 +7622,10 @@ impl Default for Win32KeyedMutexAcquireReleaseInfoNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsSubmitInfo for Win32KeyedMutexAcquireReleaseInfoNV<'_> {}
+impl ExtendsSubmitInfo2 for Win32KeyedMutexAcquireReleaseInfoNV<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceDeviceGeneratedCommandsFeaturesNV<'a> {
@@ -6631,7 +7646,10 @@ impl Default for PhysicalDeviceDeviceGeneratedCommandsFeaturesNV<'_> {
     }
 }
 
-// structextends: VkDescriptorSetAndBindingMappingEXT,VkPushDataInfoEXT,VkPushConstantsInfo,VkIndirectCommandsLayoutTokenEXT
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceDeviceGeneratedCommandsFeaturesNV<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceDeviceGeneratedCommandsFeaturesNV<'_> {}
+
+/// Extends: `DescriptorSetAndBindingMappingEXT`, `PushDataInfoEXT`, `PushConstantsInfo`, `IndirectCommandsLayoutTokenEXT`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PushConstantBankInfoNV<'a> {
@@ -6652,7 +7670,12 @@ impl Default for PushConstantBankInfoNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsDescriptorSetAndBindingMappingEXT for PushConstantBankInfoNV<'_> {}
+impl ExtendsPushDataInfoEXT for PushConstantBankInfoNV<'_> {}
+impl ExtendsPushConstantsInfo for PushConstantBankInfoNV<'_> {}
+impl ExtendsIndirectCommandsLayoutTokenEXT for PushConstantBankInfoNV<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDevicePushConstantBankFeaturesNV<'a> {
@@ -6673,7 +7696,10 @@ impl Default for PhysicalDevicePushConstantBankFeaturesNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDevicePushConstantBankFeaturesNV<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDevicePushConstantBankFeaturesNV<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -6701,7 +7727,9 @@ impl Default for PhysicalDevicePushConstantBankPropertiesNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDevicePushConstantBankPropertiesNV<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV<'a> {
@@ -6726,7 +7754,10 @@ impl Default for PhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV<'_> {
     }
 }
 
-// structextends: VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV<'_> {}
+
+/// Extends: `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct DevicePrivateDataCreateInfo<'a> {
@@ -6746,6 +7777,8 @@ impl Default for DevicePrivateDataCreateInfo<'_> {
         }
     }
 }
+
+impl ExtendsDeviceCreateInfo for DevicePrivateDataCreateInfo<'_> {}
 
 pub type DevicePrivateDataCreateInfoEXT<'a> = DevicePrivateDataCreateInfo<'a>;
 #[repr(C)]
@@ -6769,7 +7802,7 @@ impl Default for PrivateDataSlotCreateInfo<'_> {
 }
 
 pub type PrivateDataSlotCreateInfoEXT<'a> = PrivateDataSlotCreateInfo<'a>;
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDevicePrivateDataFeatures<'a> {
@@ -6790,8 +7823,11 @@ impl Default for PhysicalDevicePrivateDataFeatures<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDevicePrivateDataFeatures<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDevicePrivateDataFeatures<'_> {}
+
 pub type PhysicalDevicePrivateDataFeaturesEXT<'a> = PhysicalDevicePrivateDataFeatures<'a>;
-// structextends: VkPhysicalDeviceProperties2
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -6829,7 +7865,9 @@ impl Default for PhysicalDeviceDeviceGeneratedCommandsPropertiesNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceDeviceGeneratedCommandsPropertiesNV<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceClusterAccelerationStructureFeaturesNV<'a> {
@@ -6850,7 +7888,10 @@ impl Default for PhysicalDeviceClusterAccelerationStructureFeaturesNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceClusterAccelerationStructureFeaturesNV<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceClusterAccelerationStructureFeaturesNV<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -6886,6 +7927,11 @@ impl Default for PhysicalDeviceClusterAccelerationStructurePropertiesNV<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceProperties2
+    for PhysicalDeviceClusterAccelerationStructurePropertiesNV<'_>
+{
+}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct StridedDeviceAddressNV {
@@ -6902,7 +7948,7 @@ impl Default for StridedDeviceAddressNV {
     }
 }
 
-// structextends: VkRayTracingPipelineCreateInfoKHR
+/// Extends: `RayTracingPipelineCreateInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct RayTracingPipelineClusterAccelerationStructureCreateInfoNV<'a> {
@@ -6921,6 +7967,11 @@ impl Default for RayTracingPipelineClusterAccelerationStructureCreateInfoNV<'_> 
             _marker: PhantomData,
         }
     }
+}
+
+impl ExtendsRayTracingPipelineCreateInfoKHR
+    for RayTracingPipelineClusterAccelerationStructureCreateInfoNV<'_>
+{
 }
 
 #[repr(C)]
@@ -7260,7 +8311,7 @@ impl Default for ClusterAccelerationStructureCommandsInfoNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -7281,6 +8332,8 @@ impl Default for PhysicalDeviceMultiDrawPropertiesEXT<'_> {
         }
     }
 }
+
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceMultiDrawPropertiesEXT<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -7311,7 +8364,7 @@ impl Default for GraphicsShaderGroupCreateInfoNV<'_> {
     }
 }
 
-// structextends: VkGraphicsPipelineCreateInfo
+/// Extends: `GraphicsPipelineCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct GraphicsPipelineShaderGroupsCreateInfoNV<'a> {
@@ -7339,6 +8392,8 @@ impl Default for GraphicsPipelineShaderGroupsCreateInfoNV<'_> {
         }
     }
 }
+
+impl ExtendsGraphicsPipelineCreateInfo for GraphicsPipelineShaderGroupsCreateInfoNV<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -7454,6 +8509,29 @@ impl Default for IndirectCommandsLayoutTokenNV<'_> {
             index_type_values: ptr::null_mut(),
             _marker: PhantomData,
         }
+    }
+}
+
+pub trait ExtendsIndirectCommandsLayoutTokenNV {}
+impl<'a> IndirectCommandsLayoutTokenNV<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsIndirectCommandsLayoutTokenNV>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -7595,7 +8673,7 @@ impl Default for BindPipelineIndirectCommandNV {
     }
 }
 
-// structextends: VkDeviceCreateInfo
+/// Extends: `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceFeatures2<'a> {
@@ -7613,6 +8691,30 @@ impl Default for PhysicalDeviceFeatures2<'_> {
             features: Default::default(),
             _marker: PhantomData,
         }
+    }
+}
+
+impl ExtendsDeviceCreateInfo for PhysicalDeviceFeatures2<'_> {}
+pub trait ExtendsPhysicalDeviceFeatures2 {}
+impl<'a> PhysicalDeviceFeatures2<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsPhysicalDeviceFeatures2>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -7638,6 +8740,29 @@ impl Default for PhysicalDeviceProperties2<'_> {
     }
 }
 
+pub trait ExtendsPhysicalDeviceProperties2 {}
+impl<'a> PhysicalDeviceProperties2<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsPhysicalDeviceProperties2>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 pub type PhysicalDeviceProperties2KHR<'a> = PhysicalDeviceProperties2<'a>;
 /// returned_only
 #[repr(C)]
@@ -7660,6 +8785,29 @@ impl Default for FormatProperties2<'_> {
     }
 }
 
+pub trait ExtendsFormatProperties2 {}
+impl<'a> FormatProperties2<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsFormatProperties2>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 pub type FormatProperties2KHR<'a> = FormatProperties2<'a>;
 /// returned_only
 #[repr(C)]
@@ -7679,6 +8827,29 @@ impl Default for ImageFormatProperties2<'_> {
             image_format_properties: Default::default(),
             _marker: PhantomData,
         }
+    }
+}
+
+pub trait ExtendsImageFormatProperties2 {}
+impl<'a> ImageFormatProperties2<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsImageFormatProperties2>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -7711,6 +8882,29 @@ impl Default for PhysicalDeviceImageFormatInfo2<'_> {
     }
 }
 
+pub trait ExtendsPhysicalDeviceImageFormatInfo2 {}
+impl<'a> PhysicalDeviceImageFormatInfo2<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsPhysicalDeviceImageFormatInfo2>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 pub type PhysicalDeviceImageFormatInfo2KHR<'a> = PhysicalDeviceImageFormatInfo2<'a>;
 /// returned_only
 #[repr(C)]
@@ -7733,6 +8927,29 @@ impl Default for QueueFamilyProperties2<'_> {
     }
 }
 
+pub trait ExtendsQueueFamilyProperties2 {}
+impl<'a> QueueFamilyProperties2<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsQueueFamilyProperties2>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 pub type QueueFamilyProperties2KHR<'a> = QueueFamilyProperties2<'a>;
 /// returned_only
 #[repr(C)]
@@ -7752,6 +8969,29 @@ impl Default for PhysicalDeviceMemoryProperties2<'_> {
             memory_properties: Default::default(),
             _marker: PhantomData,
         }
+    }
+}
+
+pub trait ExtendsPhysicalDeviceMemoryProperties2 {}
+impl<'a> PhysicalDeviceMemoryProperties2<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsPhysicalDeviceMemoryProperties2>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -7807,7 +9047,7 @@ impl Default for PhysicalDeviceSparseImageFormatInfo2<'_> {
 }
 
 pub type PhysicalDeviceSparseImageFormatInfo2KHR<'a> = PhysicalDeviceSparseImageFormatInfo2<'a>;
-// structextends: VkPhysicalDeviceProperties2
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -7828,6 +9068,8 @@ impl Default for PhysicalDevicePushDescriptorProperties<'_> {
         }
     }
 }
+
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDevicePushDescriptorProperties<'_> {}
 
 pub type PhysicalDevicePushDescriptorPropertiesKHR<'a> = PhysicalDevicePushDescriptorProperties<'a>;
 #[repr(C)]
@@ -7850,7 +9092,7 @@ impl Default for ConformanceVersion {
 }
 
 pub type ConformanceVersionKHR = ConformanceVersion;
-// structextends: VkPhysicalDeviceProperties2
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -7880,8 +9122,10 @@ impl Default for PhysicalDeviceDriverProperties<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceDriverProperties<'_> {}
+
 pub type PhysicalDeviceDriverPropertiesKHR<'a> = PhysicalDeviceDriverProperties<'a>;
-// structextends: VkPresentInfoKHR
+/// Extends: `PresentInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PresentRegionsKHR<'a> {
@@ -7907,6 +9151,8 @@ impl Default for PresentRegionsKHR<'_> {
         }
     }
 }
+
+impl ExtendsPresentInfoKHR for PresentRegionsKHR<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -7949,7 +9195,7 @@ impl Default for RectLayerKHR {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceVariablePointersFeatures<'a> {
@@ -7971,6 +9217,9 @@ impl Default for PhysicalDeviceVariablePointersFeatures<'_> {
         }
     }
 }
+
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceVariablePointersFeatures<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceVariablePointersFeatures<'_> {}
 
 pub type PhysicalDeviceVariablePointersFeaturesKHR<'a> = PhysicalDeviceVariablePointersFeatures<'a>;
 pub type PhysicalDeviceVariablePointerFeaturesKHR<'a> = PhysicalDeviceVariablePointersFeatures<'a>;
@@ -7994,7 +9243,7 @@ impl Default for ExternalMemoryProperties {
 }
 
 pub type ExternalMemoryPropertiesKHR = ExternalMemoryProperties;
-// structextends: VkPhysicalDeviceImageFormatInfo2
+/// Extends: `PhysicalDeviceImageFormatInfo2`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceExternalImageFormatInfo<'a> {
@@ -8015,8 +9264,10 @@ impl Default for PhysicalDeviceExternalImageFormatInfo<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceImageFormatInfo2 for PhysicalDeviceExternalImageFormatInfo<'_> {}
+
 pub type PhysicalDeviceExternalImageFormatInfoKHR<'a> = PhysicalDeviceExternalImageFormatInfo<'a>;
-// structextends: VkImageFormatProperties2
+/// Extends: `ImageFormatProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -8037,6 +9288,8 @@ impl Default for ExternalImageFormatProperties<'_> {
         }
     }
 }
+
+impl ExtendsImageFormatProperties2 for ExternalImageFormatProperties<'_> {}
 
 pub type ExternalImageFormatPropertiesKHR<'a> = ExternalImageFormatProperties<'a>;
 #[repr(C)]
@@ -8063,6 +9316,29 @@ impl Default for PhysicalDeviceExternalBufferInfo<'_> {
     }
 }
 
+pub trait ExtendsPhysicalDeviceExternalBufferInfo {}
+impl<'a> PhysicalDeviceExternalBufferInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsPhysicalDeviceExternalBufferInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 pub type PhysicalDeviceExternalBufferInfoKHR<'a> = PhysicalDeviceExternalBufferInfo<'a>;
 /// returned_only
 #[repr(C)]
@@ -8086,7 +9362,7 @@ impl Default for ExternalBufferProperties<'_> {
 }
 
 pub type ExternalBufferPropertiesKHR<'a> = ExternalBufferProperties<'a>;
-// structextends: VkPhysicalDeviceProperties2
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -8116,8 +9392,10 @@ impl Default for PhysicalDeviceIDProperties<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceIDProperties<'_> {}
+
 pub type PhysicalDeviceIDPropertiesKHR<'a> = PhysicalDeviceIDProperties<'a>;
-// structextends: VkImageCreateInfo
+/// Extends: `ImageCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ExternalMemoryImageCreateInfo<'a> {
@@ -8138,8 +9416,10 @@ impl Default for ExternalMemoryImageCreateInfo<'_> {
     }
 }
 
+impl ExtendsImageCreateInfo for ExternalMemoryImageCreateInfo<'_> {}
+
 pub type ExternalMemoryImageCreateInfoKHR<'a> = ExternalMemoryImageCreateInfo<'a>;
-// structextends: VkBufferCreateInfo
+/// Extends: `BufferCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ExternalMemoryBufferCreateInfo<'a> {
@@ -8160,8 +9440,10 @@ impl Default for ExternalMemoryBufferCreateInfo<'_> {
     }
 }
 
+impl ExtendsBufferCreateInfo for ExternalMemoryBufferCreateInfo<'_> {}
+
 pub type ExternalMemoryBufferCreateInfoKHR<'a> = ExternalMemoryBufferCreateInfo<'a>;
-// structextends: VkMemoryAllocateInfo
+/// Extends: `MemoryAllocateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ExportMemoryAllocateInfo<'a> {
@@ -8182,8 +9464,10 @@ impl Default for ExportMemoryAllocateInfo<'_> {
     }
 }
 
+impl ExtendsMemoryAllocateInfo for ExportMemoryAllocateInfo<'_> {}
+
 pub type ExportMemoryAllocateInfoKHR<'a> = ExportMemoryAllocateInfo<'a>;
-// structextends: VkMemoryAllocateInfo
+/// Extends: `MemoryAllocateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ImportMemoryWin32HandleInfoKHR<'a> {
@@ -8208,7 +9492,9 @@ impl Default for ImportMemoryWin32HandleInfoKHR<'_> {
     }
 }
 
-// structextends: VkMemoryAllocateInfo
+impl ExtendsMemoryAllocateInfo for ImportMemoryWin32HandleInfoKHR<'_> {}
+
+/// Extends: `MemoryAllocateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ExportMemoryWin32HandleInfoKHR<'a> {
@@ -8234,7 +9520,9 @@ impl Default for ExportMemoryWin32HandleInfoKHR<'_> {
     }
 }
 
-// structextends: VkMemoryAllocateInfo
+impl ExtendsMemoryAllocateInfo for ExportMemoryWin32HandleInfoKHR<'_> {}
+
+/// Extends: `MemoryAllocateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ImportMemoryZirconHandleInfoFUCHSIA<'a> {
@@ -8256,6 +9544,8 @@ impl Default for ImportMemoryZirconHandleInfoFUCHSIA<'_> {
         }
     }
 }
+
+impl ExtendsMemoryAllocateInfo for ImportMemoryZirconHandleInfoFUCHSIA<'_> {}
 
 /// returned_only
 #[repr(C)]
@@ -8343,7 +9633,7 @@ impl Default for MemoryGetWin32HandleInfoKHR<'_> {
     }
 }
 
-// structextends: VkMemoryAllocateInfo
+/// Extends: `MemoryAllocateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ImportMemoryFdInfoKHR<'a> {
@@ -8365,6 +9655,8 @@ impl Default for ImportMemoryFdInfoKHR<'_> {
         }
     }
 }
+
+impl ExtendsMemoryAllocateInfo for ImportMemoryFdInfoKHR<'_> {}
 
 /// returned_only
 #[repr(C)]
@@ -8409,7 +9701,7 @@ impl Default for MemoryGetFdInfoKHR<'_> {
     }
 }
 
-// structextends: VkSubmitInfo,VkSubmitInfo2
+/// Extends: `SubmitInfo`, `SubmitInfo2`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct Win32KeyedMutexAcquireReleaseInfoKHR<'a> {
@@ -8447,7 +9739,10 @@ impl Default for Win32KeyedMutexAcquireReleaseInfoKHR<'_> {
     }
 }
 
-// structextends: VkMemoryAllocateInfo
+impl ExtendsSubmitInfo for Win32KeyedMutexAcquireReleaseInfoKHR<'_> {}
+impl ExtendsSubmitInfo2 for Win32KeyedMutexAcquireReleaseInfoKHR<'_> {}
+
+/// Extends: `MemoryAllocateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ImportMemoryMetalHandleInfoEXT<'a> {
@@ -8470,6 +9765,8 @@ impl Default for ImportMemoryMetalHandleInfoEXT<'_> {
         }
     }
 }
+
+impl ExtendsMemoryAllocateInfo for ImportMemoryMetalHandleInfoEXT<'_> {}
 
 /// returned_only
 #[repr(C)]
@@ -8534,6 +9831,29 @@ impl Default for PhysicalDeviceExternalSemaphoreInfo<'_> {
     }
 }
 
+pub trait ExtendsPhysicalDeviceExternalSemaphoreInfo {}
+impl<'a> PhysicalDeviceExternalSemaphoreInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsPhysicalDeviceExternalSemaphoreInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 pub type PhysicalDeviceExternalSemaphoreInfoKHR<'a> = PhysicalDeviceExternalSemaphoreInfo<'a>;
 /// returned_only
 #[repr(C)]
@@ -8561,7 +9881,7 @@ impl Default for ExternalSemaphoreProperties<'_> {
 }
 
 pub type ExternalSemaphorePropertiesKHR<'a> = ExternalSemaphoreProperties<'a>;
-// structextends: VkSemaphoreCreateInfo
+/// Extends: `SemaphoreCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ExportSemaphoreCreateInfo<'a> {
@@ -8581,6 +9901,8 @@ impl Default for ExportSemaphoreCreateInfo<'_> {
         }
     }
 }
+
+impl ExtendsSemaphoreCreateInfo for ExportSemaphoreCreateInfo<'_> {}
 
 pub type ExportSemaphoreCreateInfoKHR<'a> = ExportSemaphoreCreateInfo<'a>;
 #[repr(C)]
@@ -8611,7 +9933,7 @@ impl Default for ImportSemaphoreWin32HandleInfoKHR<'_> {
     }
 }
 
-// structextends: VkSemaphoreCreateInfo
+/// Extends: `SemaphoreCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ExportSemaphoreWin32HandleInfoKHR<'a> {
@@ -8637,7 +9959,9 @@ impl Default for ExportSemaphoreWin32HandleInfoKHR<'_> {
     }
 }
 
-// structextends: VkSubmitInfo
+impl ExtendsSemaphoreCreateInfo for ExportSemaphoreWin32HandleInfoKHR<'_> {}
+
+/// Extends: `SubmitInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct D3D12FenceSubmitInfoKHR<'a> {
@@ -8667,6 +9991,8 @@ impl Default for D3D12FenceSubmitInfoKHR<'_> {
         }
     }
 }
+
+impl ExtendsSubmitInfo for D3D12FenceSubmitInfoKHR<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -8833,7 +10159,7 @@ impl Default for ExternalFenceProperties<'_> {
 }
 
 pub type ExternalFencePropertiesKHR<'a> = ExternalFenceProperties<'a>;
-// structextends: VkFenceCreateInfo
+/// Extends: `FenceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ExportFenceCreateInfo<'a> {
@@ -8853,6 +10179,8 @@ impl Default for ExportFenceCreateInfo<'_> {
         }
     }
 }
+
+impl ExtendsFenceCreateInfo for ExportFenceCreateInfo<'_> {}
 
 pub type ExportFenceCreateInfoKHR<'a> = ExportFenceCreateInfo<'a>;
 #[repr(C)]
@@ -8883,7 +10211,7 @@ impl Default for ImportFenceWin32HandleInfoKHR<'_> {
     }
 }
 
-// structextends: VkFenceCreateInfo
+/// Extends: `FenceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ExportFenceWin32HandleInfoKHR<'a> {
@@ -8908,6 +10236,8 @@ impl Default for ExportFenceWin32HandleInfoKHR<'_> {
         }
     }
 }
+
+impl ExtendsFenceCreateInfo for ExportFenceWin32HandleInfoKHR<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -8979,7 +10309,7 @@ impl Default for FenceGetFdInfoKHR<'_> {
     }
 }
 
-// structextends: VkFenceCreateInfo
+/// Extends: `FenceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ExportFenceSciSyncInfoNV<'a> {
@@ -8999,6 +10329,8 @@ impl Default for ExportFenceSciSyncInfoNV<'_> {
         }
     }
 }
+
+impl ExtendsFenceCreateInfo for ExportFenceSciSyncInfoNV<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -9046,7 +10378,7 @@ impl Default for FenceGetSciSyncInfoNV<'_> {
     }
 }
 
-// structextends: VkSemaphoreCreateInfo
+/// Extends: `SemaphoreCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ExportSemaphoreSciSyncInfoNV<'a> {
@@ -9066,6 +10398,8 @@ impl Default for ExportSemaphoreSciSyncInfoNV<'_> {
         }
     }
 }
+
+impl ExtendsSemaphoreCreateInfo for ExportSemaphoreSciSyncInfoNV<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -9135,7 +10469,7 @@ impl Default for SciSyncAttributesInfoNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceExternalSciSyncFeaturesNV<'a> {
@@ -9162,7 +10496,10 @@ impl Default for PhysicalDeviceExternalSciSyncFeaturesNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceExternalSciSyncFeaturesNV<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceExternalSciSyncFeaturesNV<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceExternalSciSync2FeaturesNV<'a> {
@@ -9189,6 +10526,9 @@ impl Default for PhysicalDeviceExternalSciSync2FeaturesNV<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceExternalSciSync2FeaturesNV<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceExternalSciSync2FeaturesNV<'_> {}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct SemaphoreSciSyncPoolCreateInfoNV<'a> {
@@ -9209,7 +10549,7 @@ impl Default for SemaphoreSciSyncPoolCreateInfoNV<'_> {
     }
 }
 
-// structextends: VkSemaphoreCreateInfo
+/// Extends: `SemaphoreCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct SemaphoreSciSyncCreateInfoNV<'a> {
@@ -9232,7 +10572,9 @@ impl Default for SemaphoreSciSyncCreateInfoNV<'_> {
     }
 }
 
-// structextends: VkDeviceCreateInfo
+impl ExtendsSemaphoreCreateInfo for SemaphoreSciSyncCreateInfoNV<'_> {}
+
+/// Extends: `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct DeviceSemaphoreSciSyncPoolReservationCreateInfoNV<'a> {
@@ -9253,7 +10595,9 @@ impl Default for DeviceSemaphoreSciSyncPoolReservationCreateInfoNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsDeviceCreateInfo for DeviceSemaphoreSciSyncPoolReservationCreateInfoNV<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceMultiviewFeatures<'a> {
@@ -9281,8 +10625,11 @@ impl Default for PhysicalDeviceMultiviewFeatures<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceMultiviewFeatures<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceMultiviewFeatures<'_> {}
+
 pub type PhysicalDeviceMultiviewFeaturesKHR<'a> = PhysicalDeviceMultiviewFeatures<'a>;
-// structextends: VkPhysicalDeviceProperties2
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -9308,8 +10655,10 @@ impl Default for PhysicalDeviceMultiviewProperties<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceMultiviewProperties<'_> {}
+
 pub type PhysicalDeviceMultiviewPropertiesKHR<'a> = PhysicalDeviceMultiviewProperties<'a>;
-// structextends: VkRenderPassCreateInfo
+/// Extends: `RenderPassCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct RenderPassMultiviewCreateInfo<'a> {
@@ -9342,6 +10691,8 @@ impl Default for RenderPassMultiviewCreateInfo<'_> {
         }
     }
 }
+
+impl ExtendsRenderPassCreateInfo for RenderPassMultiviewCreateInfo<'_> {}
 
 pub type RenderPassMultiviewCreateInfoKHR<'a> = RenderPassMultiviewCreateInfo<'a>;
 /// returned_only
@@ -9455,7 +10806,7 @@ impl Default for DisplayEventInfoEXT<'_> {
     }
 }
 
-// structextends: VkSwapchainCreateInfoKHR
+/// Extends: `SwapchainCreateInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct SwapchainCounterCreateInfoEXT<'a> {
@@ -9475,6 +10826,8 @@ impl Default for SwapchainCounterCreateInfoEXT<'_> {
         }
     }
 }
+
+impl ExtendsSwapchainCreateInfoKHR for SwapchainCounterCreateInfoEXT<'_> {}
 
 /// returned_only
 #[repr(C)]
@@ -9503,7 +10856,7 @@ impl Default for PhysicalDeviceGroupProperties<'_> {
 }
 
 pub type PhysicalDeviceGroupPropertiesKHR<'a> = PhysicalDeviceGroupProperties<'a>;
-// structextends: VkMemoryAllocateInfo
+/// Extends: `MemoryAllocateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct MemoryAllocateFlagsInfo<'a> {
@@ -9525,6 +10878,8 @@ impl Default for MemoryAllocateFlagsInfo<'_> {
         }
     }
 }
+
+impl ExtendsMemoryAllocateInfo for MemoryAllocateFlagsInfo<'_> {}
 
 pub type MemoryAllocateFlagsInfoKHR<'a> = MemoryAllocateFlagsInfo<'a>;
 #[repr(C)]
@@ -9551,8 +10906,31 @@ impl Default for BindBufferMemoryInfo<'_> {
     }
 }
 
+pub trait ExtendsBindBufferMemoryInfo {}
+impl<'a> BindBufferMemoryInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsBindBufferMemoryInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 pub type BindBufferMemoryInfoKHR<'a> = BindBufferMemoryInfo<'a>;
-// structextends: VkBindBufferMemoryInfo
+/// Extends: `BindBufferMemoryInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct BindBufferMemoryDeviceGroupInfo<'a> {
@@ -9575,6 +10953,8 @@ impl Default for BindBufferMemoryDeviceGroupInfo<'_> {
         }
     }
 }
+
+impl ExtendsBindBufferMemoryInfo for BindBufferMemoryDeviceGroupInfo<'_> {}
 
 pub type BindBufferMemoryDeviceGroupInfoKHR<'a> = BindBufferMemoryDeviceGroupInfo<'a>;
 #[repr(C)]
@@ -9601,8 +10981,31 @@ impl Default for BindImageMemoryInfo<'_> {
     }
 }
 
+pub trait ExtendsBindImageMemoryInfo {}
+impl<'a> BindImageMemoryInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsBindImageMemoryInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 pub type BindImageMemoryInfoKHR<'a> = BindImageMemoryInfo<'a>;
-// structextends: VkBindImageMemoryInfo
+/// Extends: `BindImageMemoryInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct BindImageMemoryDeviceGroupInfo<'a> {
@@ -9631,8 +11034,10 @@ impl Default for BindImageMemoryDeviceGroupInfo<'_> {
     }
 }
 
+impl ExtendsBindImageMemoryInfo for BindImageMemoryDeviceGroupInfo<'_> {}
+
 pub type BindImageMemoryDeviceGroupInfoKHR<'a> = BindImageMemoryDeviceGroupInfo<'a>;
-// structextends: VkRenderPassBeginInfo,VkRenderingInfo
+/// Extends: `RenderPassBeginInfo`, `RenderingInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct DeviceGroupRenderPassBeginInfo<'a> {
@@ -9658,8 +11063,11 @@ impl Default for DeviceGroupRenderPassBeginInfo<'_> {
     }
 }
 
+impl ExtendsRenderPassBeginInfo for DeviceGroupRenderPassBeginInfo<'_> {}
+impl ExtendsRenderingInfo for DeviceGroupRenderPassBeginInfo<'_> {}
+
 pub type DeviceGroupRenderPassBeginInfoKHR<'a> = DeviceGroupRenderPassBeginInfo<'a>;
-// structextends: VkCommandBufferBeginInfo
+/// Extends: `CommandBufferBeginInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct DeviceGroupCommandBufferBeginInfo<'a> {
@@ -9680,8 +11088,10 @@ impl Default for DeviceGroupCommandBufferBeginInfo<'_> {
     }
 }
 
+impl ExtendsCommandBufferBeginInfo for DeviceGroupCommandBufferBeginInfo<'_> {}
+
 pub type DeviceGroupCommandBufferBeginInfoKHR<'a> = DeviceGroupCommandBufferBeginInfo<'a>;
-// structextends: VkSubmitInfo
+/// Extends: `SubmitInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct DeviceGroupSubmitInfo<'a> {
@@ -9715,8 +11125,10 @@ impl Default for DeviceGroupSubmitInfo<'_> {
     }
 }
 
+impl ExtendsSubmitInfo for DeviceGroupSubmitInfo<'_> {}
+
 pub type DeviceGroupSubmitInfoKHR<'a> = DeviceGroupSubmitInfo<'a>;
-// structextends: VkBindSparseInfo
+/// Extends: `BindSparseInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct DeviceGroupBindSparseInfo<'a> {
@@ -9738,6 +11150,8 @@ impl Default for DeviceGroupBindSparseInfo<'_> {
         }
     }
 }
+
+impl ExtendsBindSparseInfo for DeviceGroupBindSparseInfo<'_> {}
 
 pub type DeviceGroupBindSparseInfoKHR<'a> = DeviceGroupBindSparseInfo<'a>;
 /// returned_only
@@ -9763,7 +11177,7 @@ impl Default for DeviceGroupPresentCapabilitiesKHR<'_> {
     }
 }
 
-// structextends: VkImageCreateInfo
+/// Extends: `ImageCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ImageSwapchainCreateInfoKHR<'a> {
@@ -9784,7 +11198,9 @@ impl Default for ImageSwapchainCreateInfoKHR<'_> {
     }
 }
 
-// structextends: VkBindImageMemoryInfo
+impl ExtendsImageCreateInfo for ImageSwapchainCreateInfoKHR<'_> {}
+
+/// Extends: `BindImageMemoryInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct BindImageMemorySwapchainInfoKHR<'a> {
@@ -9806,6 +11222,8 @@ impl Default for BindImageMemorySwapchainInfoKHR<'_> {
         }
     }
 }
+
+impl ExtendsBindImageMemoryInfo for BindImageMemorySwapchainInfoKHR<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -9835,7 +11253,7 @@ impl Default for AcquireNextImageInfoKHR<'_> {
     }
 }
 
-// structextends: VkPresentInfoKHR
+/// Extends: `PresentInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct DeviceGroupPresentInfoKHR<'a> {
@@ -9861,7 +11279,9 @@ impl Default for DeviceGroupPresentInfoKHR<'_> {
     }
 }
 
-// structextends: VkDeviceCreateInfo
+impl ExtendsPresentInfoKHR for DeviceGroupPresentInfoKHR<'_> {}
+
+/// Extends: `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct DeviceGroupDeviceCreateInfo<'a> {
@@ -9885,8 +11305,10 @@ impl Default for DeviceGroupDeviceCreateInfo<'_> {
     }
 }
 
+impl ExtendsDeviceCreateInfo for DeviceGroupDeviceCreateInfo<'_> {}
+
 pub type DeviceGroupDeviceCreateInfoKHR<'a> = DeviceGroupDeviceCreateInfo<'a>;
-// structextends: VkSwapchainCreateInfoKHR
+/// Extends: `SwapchainCreateInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct DeviceGroupSwapchainCreateInfoKHR<'a> {
@@ -9906,6 +11328,8 @@ impl Default for DeviceGroupSwapchainCreateInfoKHR<'_> {
         }
     }
 }
+
+impl ExtendsSwapchainCreateInfoKHR for DeviceGroupSwapchainCreateInfoKHR<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -9988,7 +11412,7 @@ impl Default for XYColorEXT {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDevicePresentIdFeaturesKHR<'a> {
@@ -10010,7 +11434,10 @@ impl Default for PhysicalDevicePresentIdFeaturesKHR<'_> {
     }
 }
 
-// structextends: VkPresentInfoKHR
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDevicePresentIdFeaturesKHR<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDevicePresentIdFeaturesKHR<'_> {}
+
+/// Extends: `PresentInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PresentIdKHR<'a> {
@@ -10037,7 +11464,9 @@ impl Default for PresentIdKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPresentInfoKHR for PresentIdKHR<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDevicePresentId2FeaturesKHR<'a> {
@@ -10059,7 +11488,10 @@ impl Default for PhysicalDevicePresentId2FeaturesKHR<'_> {
     }
 }
 
-// structextends: VkPresentInfoKHR
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDevicePresentId2FeaturesKHR<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDevicePresentId2FeaturesKHR<'_> {}
+
+/// Extends: `PresentInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PresentId2KHR<'a> {
@@ -10086,6 +11518,8 @@ impl Default for PresentId2KHR<'_> {
     }
 }
 
+impl ExtendsPresentInfoKHR for PresentId2KHR<'_> {}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PresentWait2InfoKHR<'a> {
@@ -10108,7 +11542,7 @@ impl Default for PresentWait2InfoKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDevicePresentWaitFeaturesKHR<'a> {
@@ -10130,7 +11564,10 @@ impl Default for PhysicalDevicePresentWaitFeaturesKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDevicePresentWaitFeaturesKHR<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDevicePresentWaitFeaturesKHR<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDevicePresentWait2FeaturesKHR<'a> {
@@ -10152,7 +11589,10 @@ impl Default for PhysicalDevicePresentWait2FeaturesKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDevicePresentWait2FeaturesKHR<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDevicePresentWait2FeaturesKHR<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDevicePresentTimingFeaturesEXT<'a> {
@@ -10180,7 +11620,10 @@ impl Default for PhysicalDevicePresentTimingFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkSurfaceCapabilities2KHR
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDevicePresentTimingFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDevicePresentTimingFeaturesEXT<'_> {}
+
+/// Extends: `SurfaceCapabilities2KHR`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -10211,6 +11654,8 @@ impl Default for PresentTimingSurfaceCapabilitiesEXT<'_> {
         }
     }
 }
+
+impl ExtendsSurfaceCapabilities2KHR for PresentTimingSurfaceCapabilitiesEXT<'_> {}
 
 /// returned_only
 #[repr(C)]
@@ -10376,7 +11821,7 @@ impl Default for PastPresentationTimingEXT<'_> {
     }
 }
 
-// structextends: VkPresentInfoKHR
+/// Extends: `PresentInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PresentTimingsInfoEXT<'a> {
@@ -10402,6 +11847,8 @@ impl Default for PresentTimingsInfoEXT<'_> {
         }
     }
 }
+
+impl ExtendsPresentInfoKHR for PresentTimingsInfoEXT<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -10434,7 +11881,7 @@ impl Default for PresentTimingInfoEXT<'_> {
     }
 }
 
-// structextends: VkCalibratedTimestampInfoKHR
+/// Extends: `CalibratedTimestampInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct SwapchainCalibratedTimestampInfoEXT<'a> {
@@ -10458,6 +11905,8 @@ impl Default for SwapchainCalibratedTimestampInfoEXT<'_> {
         }
     }
 }
+
+impl ExtendsCalibratedTimestampInfoKHR for SwapchainCalibratedTimestampInfoEXT<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -10500,7 +11949,30 @@ impl Default for HdrMetadataEXT<'_> {
     }
 }
 
-// structextends: VkHdrMetadataEXT
+pub trait ExtendsHdrMetadataEXT {}
+impl<'a> HdrMetadataEXT<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsHdrMetadataEXT>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
+/// Extends: `HdrMetadataEXT`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct HdrVividDynamicMetadataHUAWEI<'a> {
@@ -10526,7 +11998,9 @@ impl Default for HdrVividDynamicMetadataHUAWEI<'_> {
     }
 }
 
-// structextends: VkSurfaceCapabilities2KHR
+impl ExtendsHdrMetadataEXT for HdrVividDynamicMetadataHUAWEI<'_> {}
+
+/// Extends: `SurfaceCapabilities2KHR`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -10548,7 +12022,9 @@ impl Default for DisplayNativeHdrSurfaceCapabilitiesAMD<'_> {
     }
 }
 
-// structextends: VkSwapchainCreateInfoKHR
+impl ExtendsSurfaceCapabilities2KHR for DisplayNativeHdrSurfaceCapabilitiesAMD<'_> {}
+
+/// Extends: `SwapchainCreateInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct SwapchainDisplayNativeHdrCreateInfoAMD<'a> {
@@ -10568,6 +12044,8 @@ impl Default for SwapchainDisplayNativeHdrCreateInfoAMD<'_> {
         }
     }
 }
+
+impl ExtendsSwapchainCreateInfoKHR for SwapchainDisplayNativeHdrCreateInfoAMD<'_> {}
 
 /// returned_only
 #[repr(C)]
@@ -10611,7 +12089,7 @@ impl Default for PastPresentationTimingGOOGLE {
     }
 }
 
-// structextends: VkPresentInfoKHR
+/// Extends: `PresentInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PresentTimesInfoGOOGLE<'a> {
@@ -10637,6 +12115,8 @@ impl Default for PresentTimesInfoGOOGLE<'_> {
         }
     }
 }
+
+impl ExtendsPresentInfoKHR for PresentTimesInfoGOOGLE<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -10736,7 +12216,7 @@ impl Default for ViewportWScalingNV {
     }
 }
 
-// structextends: VkPipelineViewportStateCreateInfo
+/// Extends: `PipelineViewportStateCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PipelineViewportWScalingStateCreateInfoNV<'a> {
@@ -10763,6 +12243,8 @@ impl Default for PipelineViewportWScalingStateCreateInfoNV<'_> {
     }
 }
 
+impl ExtendsPipelineViewportStateCreateInfo for PipelineViewportWScalingStateCreateInfoNV<'_> {}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ViewportSwizzleNV {
@@ -10782,7 +12264,7 @@ impl Default for ViewportSwizzleNV {
     }
 }
 
-// structextends: VkPipelineViewportStateCreateInfo
+/// Extends: `PipelineViewportStateCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PipelineViewportSwizzleStateCreateInfoNV<'a> {
@@ -10808,7 +12290,9 @@ impl Default for PipelineViewportSwizzleStateCreateInfoNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPipelineViewportStateCreateInfo for PipelineViewportSwizzleStateCreateInfoNV<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -10831,7 +12315,9 @@ impl Default for PhysicalDeviceDiscardRectanglePropertiesEXT<'_> {
     }
 }
 
-// structextends: VkGraphicsPipelineCreateInfo
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceDiscardRectanglePropertiesEXT<'_> {}
+
+/// Extends: `GraphicsPipelineCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PipelineDiscardRectangleStateCreateInfoEXT<'a> {
@@ -10859,7 +12345,9 @@ impl Default for PipelineDiscardRectangleStateCreateInfoEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsGraphicsPipelineCreateInfo for PipelineDiscardRectangleStateCreateInfoEXT<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -10881,6 +12369,11 @@ impl Default for PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceProperties2
+    for PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX<'_>
+{
+}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct InputAttachmentAspectReference {
@@ -10899,7 +12392,7 @@ impl Default for InputAttachmentAspectReference {
 }
 
 pub type InputAttachmentAspectReferenceKHR = InputAttachmentAspectReference;
-// structextends: VkRenderPassCreateInfo
+/// Extends: `RenderPassCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct RenderPassInputAttachmentAspectCreateInfo<'a> {
@@ -10923,6 +12416,8 @@ impl Default for RenderPassInputAttachmentAspectCreateInfo<'_> {
     }
 }
 
+impl ExtendsRenderPassCreateInfo for RenderPassInputAttachmentAspectCreateInfo<'_> {}
+
 pub type RenderPassInputAttachmentAspectCreateInfoKHR<'a> =
     RenderPassInputAttachmentAspectCreateInfo<'a>;
 #[repr(C)]
@@ -10942,6 +12437,29 @@ impl Default for PhysicalDeviceSurfaceInfo2KHR<'_> {
             surface: Default::default(),
             _marker: PhantomData,
         }
+    }
+}
+
+pub trait ExtendsPhysicalDeviceSurfaceInfo2KHR {}
+impl<'a> PhysicalDeviceSurfaceInfo2KHR<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsPhysicalDeviceSurfaceInfo2KHR>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -10966,6 +12484,29 @@ impl Default for SurfaceCapabilities2KHR<'_> {
     }
 }
 
+pub trait ExtendsSurfaceCapabilities2KHR {}
+impl<'a> SurfaceCapabilities2KHR<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsSurfaceCapabilities2KHR>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -10984,6 +12525,29 @@ impl Default for SurfaceFormat2KHR<'_> {
             surface_format: Default::default(),
             _marker: PhantomData,
         }
+    }
+}
+
+pub trait ExtendsSurfaceFormat2KHR {}
+impl<'a> SurfaceFormat2KHR<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsSurfaceFormat2KHR>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -11050,7 +12614,30 @@ impl Default for DisplayModeProperties2KHR<'_> {
     }
 }
 
-// structextends: VkDisplayModeProperties2KHR
+pub trait ExtendsDisplayModeProperties2KHR {}
+impl<'a> DisplayModeProperties2KHR<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsDisplayModeProperties2KHR>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
+/// Extends: `DisplayModeProperties2KHR`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -11072,6 +12659,8 @@ impl Default for DisplayModeStereoPropertiesNV<'_> {
         }
     }
 }
+
+impl ExtendsDisplayModeProperties2KHR for DisplayModeStereoPropertiesNV<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -11116,7 +12705,7 @@ impl Default for DisplayPlaneCapabilities2KHR<'_> {
     }
 }
 
-// structextends: VkSurfaceCapabilities2KHR
+/// Extends: `SurfaceCapabilities2KHR`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -11139,7 +12728,9 @@ impl Default for SharedPresentSurfaceCapabilitiesKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsSurfaceCapabilities2KHR for SharedPresentSurfaceCapabilitiesKHR<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDevice16BitStorageFeatures<'a> {
@@ -11170,8 +12761,11 @@ impl Default for PhysicalDevice16BitStorageFeatures<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDevice16BitStorageFeatures<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDevice16BitStorageFeatures<'_> {}
+
 pub type PhysicalDevice16BitStorageFeaturesKHR<'a> = PhysicalDevice16BitStorageFeatures<'a>;
-// structextends: VkPhysicalDeviceProperties2
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -11203,7 +12797,9 @@ impl Default for PhysicalDeviceSubgroupProperties<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceSubgroupProperties<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceShaderSubgroupExtendedTypesFeatures<'a> {
@@ -11224,6 +12820,9 @@ impl Default for PhysicalDeviceShaderSubgroupExtendedTypesFeatures<'_> {
         }
     }
 }
+
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceShaderSubgroupExtendedTypesFeatures<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceShaderSubgroupExtendedTypesFeatures<'_> {}
 
 pub type PhysicalDeviceShaderSubgroupExtendedTypesFeaturesKHR<'a> =
     PhysicalDeviceShaderSubgroupExtendedTypesFeatures<'a>;
@@ -11286,6 +12885,29 @@ impl Default for ImageMemoryRequirementsInfo2<'_> {
             image: Default::default(),
             _marker: PhantomData,
         }
+    }
+}
+
+pub trait ExtendsImageMemoryRequirementsInfo2 {}
+impl<'a> ImageMemoryRequirementsInfo2<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsImageMemoryRequirementsInfo2>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -11355,6 +12977,29 @@ impl Default for MemoryRequirements2<'_> {
     }
 }
 
+pub trait ExtendsMemoryRequirements2 {}
+impl<'a> MemoryRequirements2<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsMemoryRequirements2>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 pub type MemoryRequirements2KHR<'a> = MemoryRequirements2<'a>;
 /// returned_only
 #[repr(C)]
@@ -11378,7 +13023,7 @@ impl Default for SparseImageMemoryRequirements2<'_> {
 }
 
 pub type SparseImageMemoryRequirements2KHR<'a> = SparseImageMemoryRequirements2<'a>;
-// structextends: VkPhysicalDeviceProperties2
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -11400,8 +13045,10 @@ impl Default for PhysicalDevicePointClippingProperties<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDevicePointClippingProperties<'_> {}
+
 pub type PhysicalDevicePointClippingPropertiesKHR<'a> = PhysicalDevicePointClippingProperties<'a>;
-// structextends: VkMemoryRequirements2
+/// Extends: `MemoryRequirements2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -11425,8 +13072,10 @@ impl Default for MemoryDedicatedRequirements<'_> {
     }
 }
 
+impl ExtendsMemoryRequirements2 for MemoryDedicatedRequirements<'_> {}
+
 pub type MemoryDedicatedRequirementsKHR<'a> = MemoryDedicatedRequirements<'a>;
-// structextends: VkMemoryAllocateInfo
+/// Extends: `MemoryAllocateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct MemoryDedicatedAllocateInfo<'a> {
@@ -11451,8 +13100,10 @@ impl Default for MemoryDedicatedAllocateInfo<'_> {
     }
 }
 
+impl ExtendsMemoryAllocateInfo for MemoryDedicatedAllocateInfo<'_> {}
+
 pub type MemoryDedicatedAllocateInfoKHR<'a> = MemoryDedicatedAllocateInfo<'a>;
-// structextends: VkImageViewCreateInfo
+/// Extends: `ImageViewCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ImageViewUsageCreateInfo<'a> {
@@ -11473,7 +13124,9 @@ impl Default for ImageViewUsageCreateInfo<'_> {
     }
 }
 
-// structextends: VkImageViewCreateInfo
+impl ExtendsImageViewCreateInfo for ImageViewUsageCreateInfo<'_> {}
+
+/// Extends: `ImageViewCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ImageViewSlicedCreateInfoEXT<'a> {
@@ -11496,8 +13149,10 @@ impl Default for ImageViewSlicedCreateInfoEXT<'_> {
     }
 }
 
+impl ExtendsImageViewCreateInfo for ImageViewSlicedCreateInfoEXT<'_> {}
+
 pub type ImageViewUsageCreateInfoKHR<'a> = ImageViewUsageCreateInfo<'a>;
-// structextends: VkPipelineTessellationStateCreateInfo
+/// Extends: `PipelineTessellationStateCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PipelineTessellationDomainOriginStateCreateInfo<'a> {
@@ -11518,9 +13173,14 @@ impl Default for PipelineTessellationDomainOriginStateCreateInfo<'_> {
     }
 }
 
+impl ExtendsPipelineTessellationStateCreateInfo
+    for PipelineTessellationDomainOriginStateCreateInfo<'_>
+{
+}
+
 pub type PipelineTessellationDomainOriginStateCreateInfoKHR<'a> =
     PipelineTessellationDomainOriginStateCreateInfo<'a>;
-// structextends: VkSamplerCreateInfo,VkImageViewCreateInfo
+/// Extends: `SamplerCreateInfo`, `ImageViewCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct SamplerYcbcrConversionInfo<'a> {
@@ -11540,6 +13200,9 @@ impl Default for SamplerYcbcrConversionInfo<'_> {
         }
     }
 }
+
+impl ExtendsSamplerCreateInfo for SamplerYcbcrConversionInfo<'_> {}
+impl ExtendsImageViewCreateInfo for SamplerYcbcrConversionInfo<'_> {}
 
 pub type SamplerYcbcrConversionInfoKHR<'a> = SamplerYcbcrConversionInfo<'a>;
 #[repr(C)]
@@ -11576,8 +13239,31 @@ impl Default for SamplerYcbcrConversionCreateInfo<'_> {
     }
 }
 
+pub trait ExtendsSamplerYcbcrConversionCreateInfo {}
+impl<'a> SamplerYcbcrConversionCreateInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsSamplerYcbcrConversionCreateInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 pub type SamplerYcbcrConversionCreateInfoKHR<'a> = SamplerYcbcrConversionCreateInfo<'a>;
-// structextends: VkBindImageMemoryInfo
+/// Extends: `BindImageMemoryInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct BindImagePlaneMemoryInfo<'a> {
@@ -11598,8 +13284,10 @@ impl Default for BindImagePlaneMemoryInfo<'_> {
     }
 }
 
+impl ExtendsBindImageMemoryInfo for BindImagePlaneMemoryInfo<'_> {}
+
 pub type BindImagePlaneMemoryInfoKHR<'a> = BindImagePlaneMemoryInfo<'a>;
-// structextends: VkImageMemoryRequirementsInfo2
+/// Extends: `ImageMemoryRequirementsInfo2`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ImagePlaneMemoryRequirementsInfo<'a> {
@@ -11620,8 +13308,10 @@ impl Default for ImagePlaneMemoryRequirementsInfo<'_> {
     }
 }
 
+impl ExtendsImageMemoryRequirementsInfo2 for ImagePlaneMemoryRequirementsInfo<'_> {}
+
 pub type ImagePlaneMemoryRequirementsInfoKHR<'a> = ImagePlaneMemoryRequirementsInfo<'a>;
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceSamplerYcbcrConversionFeatures<'a> {
@@ -11643,9 +13333,12 @@ impl Default for PhysicalDeviceSamplerYcbcrConversionFeatures<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceSamplerYcbcrConversionFeatures<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceSamplerYcbcrConversionFeatures<'_> {}
+
 pub type PhysicalDeviceSamplerYcbcrConversionFeaturesKHR<'a> =
     PhysicalDeviceSamplerYcbcrConversionFeatures<'a>;
-// structextends: VkImageFormatProperties2
+/// Extends: `ImageFormatProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -11667,9 +13360,11 @@ impl Default for SamplerYcbcrConversionImageFormatProperties<'_> {
     }
 }
 
+impl ExtendsImageFormatProperties2 for SamplerYcbcrConversionImageFormatProperties<'_> {}
+
 pub type SamplerYcbcrConversionImageFormatPropertiesKHR<'a> =
     SamplerYcbcrConversionImageFormatProperties<'a>;
-// structextends: VkImageFormatProperties2
+/// Extends: `ImageFormatProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -11690,6 +13385,8 @@ impl Default for TextureLODGatherFormatPropertiesAMD<'_> {
         }
     }
 }
+
+impl ExtendsImageFormatProperties2 for TextureLODGatherFormatPropertiesAMD<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -11715,7 +13412,7 @@ impl Default for ConditionalRenderingBeginInfoEXT<'_> {
     }
 }
 
-// structextends: VkSubmitInfo
+/// Extends: `SubmitInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ProtectedSubmitInfo<'a> {
@@ -11737,7 +13434,9 @@ impl Default for ProtectedSubmitInfo<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsSubmitInfo for ProtectedSubmitInfo<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceProtectedMemoryFeatures<'a> {
@@ -11758,7 +13457,10 @@ impl Default for PhysicalDeviceProtectedMemoryFeatures<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceProtectedMemoryFeatures<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceProtectedMemoryFeatures<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -11779,6 +13481,8 @@ impl Default for PhysicalDeviceProtectedMemoryProperties<'_> {
         }
     }
 }
+
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceProtectedMemoryProperties<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -11804,7 +13508,7 @@ impl Default for DeviceQueueInfo2<'_> {
     }
 }
 
-// structextends: VkPipelineMultisampleStateCreateInfo
+/// Extends: `PipelineMultisampleStateCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PipelineCoverageToColorStateCreateInfoNV<'a> {
@@ -11829,7 +13533,9 @@ impl Default for PipelineCoverageToColorStateCreateInfoNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPipelineMultisampleStateCreateInfo for PipelineCoverageToColorStateCreateInfoNV<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -11853,6 +13559,8 @@ impl Default for PhysicalDeviceSamplerFilterMinmaxProperties<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceSamplerFilterMinmaxProperties<'_> {}
+
 pub type PhysicalDeviceSamplerFilterMinmaxPropertiesEXT<'a> =
     PhysicalDeviceSamplerFilterMinmaxProperties<'a>;
 #[repr(C)]
@@ -11867,7 +13575,7 @@ impl Default for SampleLocationEXT {
     }
 }
 
-// structextends: VkImageMemoryBarrier,VkImageMemoryBarrier2
+/// Extends: `ImageMemoryBarrier`, `ImageMemoryBarrier2`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct SampleLocationsInfoEXT<'a> {
@@ -11894,6 +13602,9 @@ impl Default for SampleLocationsInfoEXT<'_> {
         }
     }
 }
+
+impl ExtendsImageMemoryBarrier for SampleLocationsInfoEXT<'_> {}
+impl ExtendsImageMemoryBarrier2 for SampleLocationsInfoEXT<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -11929,7 +13640,7 @@ impl Default for SubpassSampleLocationsEXT<'_> {
     }
 }
 
-// structextends: VkRenderPassBeginInfo
+/// Extends: `RenderPassBeginInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct RenderPassSampleLocationsBeginInfoEXT<'a> {
@@ -11958,7 +13669,9 @@ impl Default for RenderPassSampleLocationsBeginInfoEXT<'_> {
     }
 }
 
-// structextends: VkPipelineMultisampleStateCreateInfo
+impl ExtendsRenderPassBeginInfo for RenderPassSampleLocationsBeginInfoEXT<'_> {}
+
+/// Extends: `PipelineMultisampleStateCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PipelineSampleLocationsStateCreateInfoEXT<'a> {
@@ -11981,7 +13694,9 @@ impl Default for PipelineSampleLocationsStateCreateInfoEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPipelineMultisampleStateCreateInfo for PipelineSampleLocationsStateCreateInfoEXT<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -12011,6 +13726,8 @@ impl Default for PhysicalDeviceSampleLocationsPropertiesEXT<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceSampleLocationsPropertiesEXT<'_> {}
+
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -12032,7 +13749,7 @@ impl Default for MultisamplePropertiesEXT<'_> {
     }
 }
 
-// structextends: VkSamplerCreateInfo
+/// Extends: `SamplerCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct SamplerReductionModeCreateInfo<'a> {
@@ -12053,8 +13770,10 @@ impl Default for SamplerReductionModeCreateInfo<'_> {
     }
 }
 
+impl ExtendsSamplerCreateInfo for SamplerReductionModeCreateInfo<'_> {}
+
 pub type SamplerReductionModeCreateInfoEXT<'a> = SamplerReductionModeCreateInfo<'a>;
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceBlendOperationAdvancedFeaturesEXT<'a> {
@@ -12075,7 +13794,10 @@ impl Default for PhysicalDeviceBlendOperationAdvancedFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceBlendOperationAdvancedFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceBlendOperationAdvancedFeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceMultiDrawFeaturesEXT<'a> {
@@ -12096,7 +13818,10 @@ impl Default for PhysicalDeviceMultiDrawFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceMultiDrawFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceMultiDrawFeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -12128,7 +13853,9 @@ impl Default for PhysicalDeviceBlendOperationAdvancedPropertiesEXT<'_> {
     }
 }
 
-// structextends: VkPipelineColorBlendStateCreateInfo
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceBlendOperationAdvancedPropertiesEXT<'_> {}
+
+/// Extends: `PipelineColorBlendStateCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PipelineColorBlendAdvancedStateCreateInfoEXT<'a> {
@@ -12153,7 +13880,9 @@ impl Default for PipelineColorBlendAdvancedStateCreateInfoEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPipelineColorBlendStateCreateInfo for PipelineColorBlendAdvancedStateCreateInfoEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceInlineUniformBlockFeatures<'a> {
@@ -12176,9 +13905,12 @@ impl Default for PhysicalDeviceInlineUniformBlockFeatures<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceInlineUniformBlockFeatures<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceInlineUniformBlockFeatures<'_> {}
+
 pub type PhysicalDeviceInlineUniformBlockFeaturesEXT<'a> =
     PhysicalDeviceInlineUniformBlockFeatures<'a>;
-// structextends: VkPhysicalDeviceProperties2
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -12208,9 +13940,11 @@ impl Default for PhysicalDeviceInlineUniformBlockProperties<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceInlineUniformBlockProperties<'_> {}
+
 pub type PhysicalDeviceInlineUniformBlockPropertiesEXT<'a> =
     PhysicalDeviceInlineUniformBlockProperties<'a>;
-// structextends: VkWriteDescriptorSet
+/// Extends: `WriteDescriptorSet`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct WriteDescriptorSetInlineUniformBlock<'a> {
@@ -12234,8 +13968,10 @@ impl Default for WriteDescriptorSetInlineUniformBlock<'_> {
     }
 }
 
+impl ExtendsWriteDescriptorSet for WriteDescriptorSetInlineUniformBlock<'_> {}
+
 pub type WriteDescriptorSetInlineUniformBlockEXT<'a> = WriteDescriptorSetInlineUniformBlock<'a>;
-// structextends: VkDescriptorPoolCreateInfo
+/// Extends: `DescriptorPoolCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct DescriptorPoolInlineUniformBlockCreateInfo<'a> {
@@ -12256,9 +13992,11 @@ impl Default for DescriptorPoolInlineUniformBlockCreateInfo<'_> {
     }
 }
 
+impl ExtendsDescriptorPoolCreateInfo for DescriptorPoolInlineUniformBlockCreateInfo<'_> {}
+
 pub type DescriptorPoolInlineUniformBlockCreateInfoEXT<'a> =
     DescriptorPoolInlineUniformBlockCreateInfo<'a>;
-// structextends: VkPipelineMultisampleStateCreateInfo
+/// Extends: `PipelineMultisampleStateCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PipelineCoverageModulationStateCreateInfoNV<'a> {
@@ -12289,7 +14027,9 @@ impl Default for PipelineCoverageModulationStateCreateInfoNV<'_> {
     }
 }
 
-// structextends: VkImageCreateInfo,VkSwapchainCreateInfoKHR,VkPhysicalDeviceImageFormatInfo2
+impl ExtendsPipelineMultisampleStateCreateInfo for PipelineCoverageModulationStateCreateInfoNV<'_> {}
+
+/// Extends: `ImageCreateInfo`, `SwapchainCreateInfoKHR`, `PhysicalDeviceImageFormatInfo2`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ImageFormatListCreateInfo<'a> {
@@ -12312,6 +14052,10 @@ impl Default for ImageFormatListCreateInfo<'_> {
         }
     }
 }
+
+impl ExtendsImageCreateInfo for ImageFormatListCreateInfo<'_> {}
+impl ExtendsSwapchainCreateInfoKHR for ImageFormatListCreateInfo<'_> {}
+impl ExtendsPhysicalDeviceImageFormatInfo2 for ImageFormatListCreateInfo<'_> {}
 
 pub type ImageFormatListCreateInfoKHR<'a> = ImageFormatListCreateInfo<'a>;
 #[repr(C)]
@@ -12339,7 +14083,7 @@ impl Default for ValidationCacheCreateInfoEXT<'_> {
     }
 }
 
-// structextends: VkShaderModuleCreateInfo,VkPipelineShaderStageCreateInfo
+/// Extends: `ShaderModuleCreateInfo`, `PipelineShaderStageCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ShaderModuleValidationCacheCreateInfoEXT<'a> {
@@ -12360,7 +14104,10 @@ impl Default for ShaderModuleValidationCacheCreateInfoEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsShaderModuleCreateInfo for ShaderModuleValidationCacheCreateInfoEXT<'_> {}
+impl ExtendsPipelineShaderStageCreateInfo for ShaderModuleValidationCacheCreateInfoEXT<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -12384,8 +14131,10 @@ impl Default for PhysicalDeviceMaintenance3Properties<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceMaintenance3Properties<'_> {}
+
 pub type PhysicalDeviceMaintenance3PropertiesKHR<'a> = PhysicalDeviceMaintenance3Properties<'a>;
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceMaintenance4Features<'a> {
@@ -12406,8 +14155,11 @@ impl Default for PhysicalDeviceMaintenance4Features<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceMaintenance4Features<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceMaintenance4Features<'_> {}
+
 pub type PhysicalDeviceMaintenance4FeaturesKHR<'a> = PhysicalDeviceMaintenance4Features<'a>;
-// structextends: VkPhysicalDeviceProperties2
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -12429,8 +14181,10 @@ impl Default for PhysicalDeviceMaintenance4Properties<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceMaintenance4Properties<'_> {}
+
 pub type PhysicalDeviceMaintenance4PropertiesKHR<'a> = PhysicalDeviceMaintenance4Properties<'a>;
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceMaintenance5Features<'a> {
@@ -12451,8 +14205,11 @@ impl Default for PhysicalDeviceMaintenance5Features<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceMaintenance5Features<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceMaintenance5Features<'_> {}
+
 pub type PhysicalDeviceMaintenance5FeaturesKHR<'a> = PhysicalDeviceMaintenance5Features<'a>;
-// structextends: VkPhysicalDeviceProperties2
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -12484,8 +14241,10 @@ impl Default for PhysicalDeviceMaintenance5Properties<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceMaintenance5Properties<'_> {}
+
 pub type PhysicalDeviceMaintenance5PropertiesKHR<'a> = PhysicalDeviceMaintenance5Properties<'a>;
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceMaintenance6Features<'a> {
@@ -12506,8 +14265,11 @@ impl Default for PhysicalDeviceMaintenance6Features<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceMaintenance6Features<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceMaintenance6Features<'_> {}
+
 pub type PhysicalDeviceMaintenance6FeaturesKHR<'a> = PhysicalDeviceMaintenance6Features<'a>;
-// structextends: VkPhysicalDeviceProperties2
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -12533,8 +14295,10 @@ impl Default for PhysicalDeviceMaintenance6Properties<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceMaintenance6Properties<'_> {}
+
 pub type PhysicalDeviceMaintenance6PropertiesKHR<'a> = PhysicalDeviceMaintenance6Properties<'a>;
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceMaintenance7FeaturesKHR<'a> {
@@ -12555,7 +14319,10 @@ impl Default for PhysicalDeviceMaintenance7FeaturesKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceMaintenance7FeaturesKHR<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceMaintenance7FeaturesKHR<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -12591,7 +14358,9 @@ impl Default for PhysicalDeviceMaintenance7PropertiesKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceMaintenance7PropertiesKHR<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceLayeredApiPropertiesListKHR<'a> {
@@ -12616,6 +14385,8 @@ impl Default for PhysicalDeviceLayeredApiPropertiesListKHR<'_> {
         }
     }
 }
+
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceLayeredApiPropertiesListKHR<'_> {}
 
 /// returned_only
 #[repr(C)]
@@ -12644,7 +14415,33 @@ impl Default for PhysicalDeviceLayeredApiPropertiesKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceLayeredApiPropertiesKHR
+pub trait ExtendsPhysicalDeviceLayeredApiPropertiesKHR {}
+impl<'a> PhysicalDeviceLayeredApiPropertiesKHR<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsPhysicalDeviceLayeredApiPropertiesKHR>(
+        mut self,
+        next: &'a mut T,
+    ) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
+/// Extends: `PhysicalDeviceLayeredApiPropertiesKHR`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -12666,7 +14463,12 @@ impl Default for PhysicalDeviceLayeredApiVulkanPropertiesKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceLayeredApiPropertiesKHR
+    for PhysicalDeviceLayeredApiVulkanPropertiesKHR<'_>
+{
+}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceMaintenance8FeaturesKHR<'a> {
@@ -12687,7 +14489,10 @@ impl Default for PhysicalDeviceMaintenance8FeaturesKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceMaintenance8FeaturesKHR<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceMaintenance8FeaturesKHR<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceMaintenance9FeaturesKHR<'a> {
@@ -12708,7 +14513,10 @@ impl Default for PhysicalDeviceMaintenance9FeaturesKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceMaintenance9FeaturesKHR<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceMaintenance9FeaturesKHR<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -12732,7 +14540,9 @@ impl Default for PhysicalDeviceMaintenance9PropertiesKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceMaintenance9PropertiesKHR<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -12758,7 +14568,9 @@ impl Default for PhysicalDeviceMaintenance10PropertiesKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceMaintenance10PropertiesKHR<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceMaintenance10FeaturesKHR<'a> {
@@ -12779,7 +14591,10 @@ impl Default for PhysicalDeviceMaintenance10FeaturesKHR<'_> {
     }
 }
 
-// structextends: VkQueueFamilyProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceMaintenance10FeaturesKHR<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceMaintenance10FeaturesKHR<'_> {}
+
+/// Extends: `QueueFamilyProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -12800,6 +14615,8 @@ impl Default for QueueFamilyOwnershipTransferPropertiesKHR<'_> {
         }
     }
 }
+
+impl ExtendsQueueFamilyProperties2 for QueueFamilyOwnershipTransferPropertiesKHR<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -12852,8 +14669,31 @@ impl Default for DescriptorSetLayoutSupport<'_> {
     }
 }
 
+pub trait ExtendsDescriptorSetLayoutSupport {}
+impl<'a> DescriptorSetLayoutSupport<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsDescriptorSetLayoutSupport>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 pub type DescriptorSetLayoutSupportKHR<'a> = DescriptorSetLayoutSupport<'a>;
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceShaderDrawParametersFeatures<'a> {
@@ -12874,9 +14714,12 @@ impl Default for PhysicalDeviceShaderDrawParametersFeatures<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceShaderDrawParametersFeatures<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceShaderDrawParametersFeatures<'_> {}
+
 pub type PhysicalDeviceShaderDrawParameterFeatures<'a> =
     PhysicalDeviceShaderDrawParametersFeatures<'a>;
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceShaderFloat16Int8Features<'a> {
@@ -12901,10 +14744,13 @@ impl Default for PhysicalDeviceShaderFloat16Int8Features<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceShaderFloat16Int8Features<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceShaderFloat16Int8Features<'_> {}
+
 pub type PhysicalDeviceShaderFloat16Int8FeaturesKHR<'a> =
     PhysicalDeviceShaderFloat16Int8Features<'a>;
 pub type PhysicalDeviceFloat16Int8FeaturesKHR<'a> = PhysicalDeviceShaderFloat16Int8Features<'a>;
-// structextends: VkPhysicalDeviceProperties2
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -12973,8 +14819,10 @@ impl Default for PhysicalDeviceFloatControlsProperties<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceFloatControlsProperties<'_> {}
+
 pub type PhysicalDeviceFloatControlsPropertiesKHR<'a> = PhysicalDeviceFloatControlsProperties<'a>;
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceHostQueryResetFeatures<'a> {
@@ -12994,6 +14842,9 @@ impl Default for PhysicalDeviceHostQueryResetFeatures<'_> {
         }
     }
 }
+
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceHostQueryResetFeatures<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceHostQueryResetFeatures<'_> {}
 
 pub type PhysicalDeviceHostQueryResetFeaturesEXT<'a> = PhysicalDeviceHostQueryResetFeatures<'a>;
 /// returned_only
@@ -13044,7 +14895,7 @@ impl Default for ShaderStatisticsInfoAMD {
     }
 }
 
-// structextends: VkDeviceQueueCreateInfo
+/// Extends: `DeviceQueueCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct DeviceQueueGlobalPriorityCreateInfo<'a> {
@@ -13065,9 +14916,11 @@ impl Default for DeviceQueueGlobalPriorityCreateInfo<'_> {
     }
 }
 
+impl ExtendsDeviceQueueCreateInfo for DeviceQueueGlobalPriorityCreateInfo<'_> {}
+
 pub type DeviceQueueGlobalPriorityCreateInfoKHR<'a> = DeviceQueueGlobalPriorityCreateInfo<'a>;
 pub type DeviceQueueGlobalPriorityCreateInfoEXT<'a> = DeviceQueueGlobalPriorityCreateInfo<'a>;
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceGlobalPriorityQueryFeatures<'a> {
@@ -13088,11 +14941,14 @@ impl Default for PhysicalDeviceGlobalPriorityQueryFeatures<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceGlobalPriorityQueryFeatures<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceGlobalPriorityQueryFeatures<'_> {}
+
 pub type PhysicalDeviceGlobalPriorityQueryFeaturesKHR<'a> =
     PhysicalDeviceGlobalPriorityQueryFeatures<'a>;
 pub type PhysicalDeviceGlobalPriorityQueryFeaturesEXT<'a> =
     PhysicalDeviceGlobalPriorityQueryFeatures<'a>;
-// structextends: VkQueueFamilyProperties2
+/// Extends: `QueueFamilyProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -13117,9 +14973,11 @@ impl Default for QueueFamilyGlobalPriorityProperties<'_> {
     }
 }
 
+impl ExtendsQueueFamilyProperties2 for QueueFamilyGlobalPriorityProperties<'_> {}
+
 pub type QueueFamilyGlobalPriorityPropertiesKHR<'a> = QueueFamilyGlobalPriorityProperties<'a>;
 pub type QueueFamilyGlobalPriorityPropertiesEXT<'a> = QueueFamilyGlobalPriorityProperties<'a>;
-// structextends: VkPipelineShaderStageCreateInfo,VkResourceDescriptorInfoEXT,VkSamplerCreateInfo
+/// Extends: `PipelineShaderStageCreateInfo`, `ResourceDescriptorInfoEXT`, `SamplerCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct DebugUtilsObjectNameInfoEXT<'a> {
@@ -13145,6 +15003,10 @@ impl Default for DebugUtilsObjectNameInfoEXT<'_> {
         }
     }
 }
+
+impl ExtendsPipelineShaderStageCreateInfo for DebugUtilsObjectNameInfoEXT<'_> {}
+impl ExtendsResourceDescriptorInfoEXT for DebugUtilsObjectNameInfoEXT<'_> {}
+impl ExtendsSamplerCreateInfo for DebugUtilsObjectNameInfoEXT<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -13198,7 +15060,7 @@ impl Default for DebugUtilsLabelEXT<'_> {
     }
 }
 
-// structextends: VkInstanceCreateInfo
+/// Extends: `InstanceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct DebugUtilsMessengerCreateInfoEXT<'a> {
@@ -13227,6 +15089,8 @@ impl Default for DebugUtilsMessengerCreateInfoEXT<'_> {
         }
     }
 }
+
+impl ExtendsInstanceCreateInfo for DebugUtilsMessengerCreateInfoEXT<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -13273,7 +15137,30 @@ impl Default for DebugUtilsMessengerCallbackDataEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+pub trait ExtendsDebugUtilsMessengerCallbackDataEXT {}
+impl<'a> DebugUtilsMessengerCallbackDataEXT<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsDebugUtilsMessengerCallbackDataEXT>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceDeviceMemoryReportFeaturesEXT<'a> {
@@ -13294,7 +15181,10 @@ impl Default for PhysicalDeviceDeviceMemoryReportFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceDeviceMemoryReportFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceDeviceMemoryReportFeaturesEXT<'_> {}
+
+/// Extends: `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct DeviceDeviceMemoryReportCreateInfoEXT<'a> {
@@ -13319,6 +15209,8 @@ impl Default for DeviceDeviceMemoryReportCreateInfoEXT<'_> {
         }
     }
 }
+
+impl ExtendsDeviceCreateInfo for DeviceDeviceMemoryReportCreateInfoEXT<'_> {}
 
 /// returned_only
 #[repr(C)]
@@ -13353,7 +15245,7 @@ impl Default for DeviceMemoryReportCallbackDataEXT<'_> {
     }
 }
 
-// structextends: VkMemoryAllocateInfo
+/// Extends: `MemoryAllocateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ImportMemoryHostPointerInfoEXT<'a> {
@@ -13376,6 +15268,8 @@ impl Default for ImportMemoryHostPointerInfoEXT<'_> {
     }
 }
 
+impl ExtendsMemoryAllocateInfo for ImportMemoryHostPointerInfoEXT<'_> {}
+
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -13397,7 +15291,7 @@ impl Default for MemoryHostPointerPropertiesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -13419,7 +15313,9 @@ impl Default for PhysicalDeviceExternalMemoryHostPropertiesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceExternalMemoryHostPropertiesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -13466,6 +15362,8 @@ impl Default for PhysicalDeviceConservativeRasterizationPropertiesEXT<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceConservativeRasterizationPropertiesEXT<'_> {}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct CalibratedTimestampInfoKHR<'a> {
@@ -13486,8 +15384,31 @@ impl Default for CalibratedTimestampInfoKHR<'_> {
     }
 }
 
+pub trait ExtendsCalibratedTimestampInfoKHR {}
+impl<'a> CalibratedTimestampInfoKHR<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsCalibratedTimestampInfoKHR>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 pub type CalibratedTimestampInfoEXT<'a> = CalibratedTimestampInfoKHR<'a>;
-// structextends: VkPhysicalDeviceProperties2
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -13549,7 +15470,9 @@ impl Default for PhysicalDeviceShaderCorePropertiesAMD<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceShaderCorePropertiesAMD<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -13576,7 +15499,9 @@ impl Default for PhysicalDeviceShaderCoreProperties2AMD<'_> {
     }
 }
 
-// structextends: VkPipelineRasterizationStateCreateInfo
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceShaderCoreProperties2AMD<'_> {}
+
+/// Extends: `PipelineRasterizationStateCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PipelineRasterizationConservativeStateCreateInfoEXT<'a> {
@@ -13604,7 +15529,12 @@ impl Default for PipelineRasterizationConservativeStateCreateInfoEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPipelineRasterizationStateCreateInfo
+    for PipelineRasterizationConservativeStateCreateInfoEXT<'_>
+{
+}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceDescriptorIndexingFeatures<'a> {
@@ -13663,9 +15593,12 @@ impl Default for PhysicalDeviceDescriptorIndexingFeatures<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceDescriptorIndexingFeatures<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceDescriptorIndexingFeatures<'_> {}
+
 pub type PhysicalDeviceDescriptorIndexingFeaturesEXT<'a> =
     PhysicalDeviceDescriptorIndexingFeatures<'a>;
-// structextends: VkPhysicalDeviceProperties2
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -13731,9 +15664,11 @@ impl Default for PhysicalDeviceDescriptorIndexingProperties<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceDescriptorIndexingProperties<'_> {}
+
 pub type PhysicalDeviceDescriptorIndexingPropertiesEXT<'a> =
     PhysicalDeviceDescriptorIndexingProperties<'a>;
-// structextends: VkDescriptorSetLayoutCreateInfo
+/// Extends: `DescriptorSetLayoutCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct DescriptorSetLayoutBindingFlagsCreateInfo<'a> {
@@ -13758,9 +15693,11 @@ impl Default for DescriptorSetLayoutBindingFlagsCreateInfo<'_> {
     }
 }
 
+impl ExtendsDescriptorSetLayoutCreateInfo for DescriptorSetLayoutBindingFlagsCreateInfo<'_> {}
+
 pub type DescriptorSetLayoutBindingFlagsCreateInfoEXT<'a> =
     DescriptorSetLayoutBindingFlagsCreateInfo<'a>;
-// structextends: VkDescriptorSetAllocateInfo
+/// Extends: `DescriptorSetAllocateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct DescriptorSetVariableDescriptorCountAllocateInfo<'a> {
@@ -13784,9 +15721,11 @@ impl Default for DescriptorSetVariableDescriptorCountAllocateInfo<'_> {
     }
 }
 
+impl ExtendsDescriptorSetAllocateInfo for DescriptorSetVariableDescriptorCountAllocateInfo<'_> {}
+
 pub type DescriptorSetVariableDescriptorCountAllocateInfoEXT<'a> =
     DescriptorSetVariableDescriptorCountAllocateInfo<'a>;
-// structextends: VkDescriptorSetLayoutSupport
+/// Extends: `DescriptorSetLayoutSupport`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -13807,6 +15746,8 @@ impl Default for DescriptorSetVariableDescriptorCountLayoutSupport<'_> {
         }
     }
 }
+
+impl ExtendsDescriptorSetLayoutSupport for DescriptorSetVariableDescriptorCountLayoutSupport<'_> {}
 
 pub type DescriptorSetVariableDescriptorCountLayoutSupportEXT<'a> =
     DescriptorSetVariableDescriptorCountLayoutSupport<'a>;
@@ -13850,6 +15791,29 @@ impl Default for AttachmentDescription2<'_> {
     }
 }
 
+pub trait ExtendsAttachmentDescription2 {}
+impl<'a> AttachmentDescription2<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsAttachmentDescription2>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 pub type AttachmentDescription2KHR<'a> = AttachmentDescription2<'a>;
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -13872,6 +15836,29 @@ impl Default for AttachmentReference2<'_> {
             aspect_mask: Default::default(),
             _marker: PhantomData,
         }
+    }
+}
+
+pub trait ExtendsAttachmentReference2 {}
+impl<'a> AttachmentReference2<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsAttachmentReference2>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -13922,6 +15909,29 @@ impl Default for SubpassDescription2<'_> {
     }
 }
 
+pub trait ExtendsSubpassDescription2 {}
+impl<'a> SubpassDescription2<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsSubpassDescription2>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 pub type SubpassDescription2KHR<'a> = SubpassDescription2<'a>;
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -13954,6 +15964,29 @@ impl Default for SubpassDependency2<'_> {
             view_offset: 0,
             _marker: PhantomData,
         }
+    }
+}
+
+pub trait ExtendsSubpassDependency2 {}
+impl<'a> SubpassDependency2<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsSubpassDependency2>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -13998,6 +16031,29 @@ impl Default for RenderPassCreateInfo2<'_> {
     }
 }
 
+pub trait ExtendsRenderPassCreateInfo2 {}
+impl<'a> RenderPassCreateInfo2<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsRenderPassCreateInfo2>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 pub type RenderPassCreateInfo2KHR<'a> = RenderPassCreateInfo2<'a>;
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -14038,8 +16094,31 @@ impl Default for SubpassEndInfo<'_> {
     }
 }
 
+pub trait ExtendsSubpassEndInfo {}
+impl<'a> SubpassEndInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsSubpassEndInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 pub type SubpassEndInfoKHR<'a> = SubpassEndInfo<'a>;
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceTimelineSemaphoreFeatures<'a> {
@@ -14060,9 +16139,12 @@ impl Default for PhysicalDeviceTimelineSemaphoreFeatures<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceTimelineSemaphoreFeatures<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceTimelineSemaphoreFeatures<'_> {}
+
 pub type PhysicalDeviceTimelineSemaphoreFeaturesKHR<'a> =
     PhysicalDeviceTimelineSemaphoreFeatures<'a>;
-// structextends: VkPhysicalDeviceProperties2
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -14084,9 +16166,11 @@ impl Default for PhysicalDeviceTimelineSemaphoreProperties<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceTimelineSemaphoreProperties<'_> {}
+
 pub type PhysicalDeviceTimelineSemaphorePropertiesKHR<'a> =
     PhysicalDeviceTimelineSemaphoreProperties<'a>;
-// structextends: VkSemaphoreCreateInfo,VkPhysicalDeviceExternalSemaphoreInfo
+/// Extends: `SemaphoreCreateInfo`, `PhysicalDeviceExternalSemaphoreInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct SemaphoreTypeCreateInfo<'a> {
@@ -14109,8 +16193,11 @@ impl Default for SemaphoreTypeCreateInfo<'_> {
     }
 }
 
+impl ExtendsSemaphoreCreateInfo for SemaphoreTypeCreateInfo<'_> {}
+impl ExtendsPhysicalDeviceExternalSemaphoreInfo for SemaphoreTypeCreateInfo<'_> {}
+
 pub type SemaphoreTypeCreateInfoKHR<'a> = SemaphoreTypeCreateInfo<'a>;
-// structextends: VkSubmitInfo,VkBindSparseInfo
+/// Extends: `SubmitInfo`, `BindSparseInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct TimelineSemaphoreSubmitInfo<'a> {
@@ -14140,6 +16227,9 @@ impl Default for TimelineSemaphoreSubmitInfo<'_> {
         }
     }
 }
+
+impl ExtendsSubmitInfo for TimelineSemaphoreSubmitInfo<'_> {}
+impl ExtendsBindSparseInfo for TimelineSemaphoreSubmitInfo<'_> {}
 
 pub type TimelineSemaphoreSubmitInfoKHR<'a> = TimelineSemaphoreSubmitInfo<'a>;
 #[repr(C)]
@@ -14211,7 +16301,7 @@ impl Default for VertexInputBindingDivisorDescription {
 
 pub type VertexInputBindingDivisorDescriptionKHR = VertexInputBindingDivisorDescription;
 pub type VertexInputBindingDivisorDescriptionEXT = VertexInputBindingDivisorDescription;
-// structextends: VkPipelineVertexInputStateCreateInfo
+/// Extends: `PipelineVertexInputStateCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PipelineVertexInputDivisorStateCreateInfo<'a> {
@@ -14235,11 +16325,13 @@ impl Default for PipelineVertexInputDivisorStateCreateInfo<'_> {
     }
 }
 
+impl ExtendsPipelineVertexInputStateCreateInfo for PipelineVertexInputDivisorStateCreateInfo<'_> {}
+
 pub type PipelineVertexInputDivisorStateCreateInfoKHR<'a> =
     PipelineVertexInputDivisorStateCreateInfo<'a>;
 pub type PipelineVertexInputDivisorStateCreateInfoEXT<'a> =
     PipelineVertexInputDivisorStateCreateInfo<'a>;
-// structextends: VkPhysicalDeviceProperties2
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -14262,7 +16354,9 @@ impl Default for PhysicalDeviceVertexAttributeDivisorPropertiesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceVertexAttributeDivisorPropertiesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -14287,9 +16381,11 @@ impl Default for PhysicalDeviceVertexAttributeDivisorProperties<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceVertexAttributeDivisorProperties<'_> {}
+
 pub type PhysicalDeviceVertexAttributeDivisorPropertiesKHR<'a> =
     PhysicalDeviceVertexAttributeDivisorProperties<'a>;
-// structextends: VkPhysicalDeviceProperties2
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -14317,7 +16413,9 @@ impl Default for PhysicalDevicePCIBusInfoPropertiesEXT<'_> {
     }
 }
 
-// structextends: VkMemoryAllocateInfo
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDevicePCIBusInfoPropertiesEXT<'_> {}
+
+/// Extends: `MemoryAllocateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ImportAndroidHardwareBufferInfoANDROID<'a> {
@@ -14338,7 +16436,9 @@ impl Default for ImportAndroidHardwareBufferInfoANDROID<'_> {
     }
 }
 
-// structextends: VkImageFormatProperties2
+impl ExtendsMemoryAllocateInfo for ImportAndroidHardwareBufferInfoANDROID<'_> {}
+
+/// Extends: `ImageFormatProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -14359,6 +16459,8 @@ impl Default for AndroidHardwareBufferUsageANDROID<'_> {
         }
     }
 }
+
+impl ExtendsImageFormatProperties2 for AndroidHardwareBufferUsageANDROID<'_> {}
 
 /// returned_only
 #[repr(C)]
@@ -14383,6 +16485,32 @@ impl Default for AndroidHardwareBufferPropertiesANDROID<'_> {
     }
 }
 
+pub trait ExtendsAndroidHardwareBufferPropertiesANDROID {}
+impl<'a> AndroidHardwareBufferPropertiesANDROID<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsAndroidHardwareBufferPropertiesANDROID>(
+        mut self,
+        next: &'a mut T,
+    ) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct MemoryGetAndroidHardwareBufferInfoANDROID<'a> {
@@ -14403,7 +16531,7 @@ impl Default for MemoryGetAndroidHardwareBufferInfoANDROID<'_> {
     }
 }
 
-// structextends: VkAndroidHardwareBufferPropertiesANDROID
+/// Extends: `AndroidHardwareBufferPropertiesANDROID`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -14439,7 +16567,12 @@ impl Default for AndroidHardwareBufferFormatPropertiesANDROID<'_> {
     }
 }
 
-// structextends: VkCommandBufferInheritanceInfo
+impl ExtendsAndroidHardwareBufferPropertiesANDROID
+    for AndroidHardwareBufferFormatPropertiesANDROID<'_>
+{
+}
+
+/// Extends: `CommandBufferInheritanceInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct CommandBufferInheritanceConditionalRenderingInfoEXT<'a> {
@@ -14461,7 +16594,12 @@ impl Default for CommandBufferInheritanceConditionalRenderingInfoEXT<'_> {
     }
 }
 
-// structextends: VkImageCreateInfo,VkSamplerYcbcrConversionCreateInfo,VkAttachmentDescription2,VkGraphicsPipelineCreateInfo,VkCommandBufferInheritanceInfo
+impl ExtendsCommandBufferInheritanceInfo
+    for CommandBufferInheritanceConditionalRenderingInfoEXT<'_>
+{
+}
+
+/// Extends: `ImageCreateInfo`, `SamplerYcbcrConversionCreateInfo`, `AttachmentDescription2`, `GraphicsPipelineCreateInfo`, `CommandBufferInheritanceInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ExternalFormatANDROID<'a> {
@@ -14482,7 +16620,13 @@ impl Default for ExternalFormatANDROID<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsImageCreateInfo for ExternalFormatANDROID<'_> {}
+impl ExtendsSamplerYcbcrConversionCreateInfo for ExternalFormatANDROID<'_> {}
+impl ExtendsAttachmentDescription2 for ExternalFormatANDROID<'_> {}
+impl ExtendsGraphicsPipelineCreateInfo for ExternalFormatANDROID<'_> {}
+impl ExtendsCommandBufferInheritanceInfo for ExternalFormatANDROID<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDevice8BitStorageFeatures<'a> {
@@ -14510,8 +16654,11 @@ impl Default for PhysicalDevice8BitStorageFeatures<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDevice8BitStorageFeatures<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDevice8BitStorageFeatures<'_> {}
+
 pub type PhysicalDevice8BitStorageFeaturesKHR<'a> = PhysicalDevice8BitStorageFeatures<'a>;
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceConditionalRenderingFeaturesEXT<'a> {
@@ -14534,7 +16681,10 @@ impl Default for PhysicalDeviceConditionalRenderingFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceConditionalRenderingFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceConditionalRenderingFeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceVulkanMemoryModelFeatures<'a> {
@@ -14559,9 +16709,12 @@ impl Default for PhysicalDeviceVulkanMemoryModelFeatures<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceVulkanMemoryModelFeatures<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceVulkanMemoryModelFeatures<'_> {}
+
 pub type PhysicalDeviceVulkanMemoryModelFeaturesKHR<'a> =
     PhysicalDeviceVulkanMemoryModelFeatures<'a>;
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceShaderAtomicInt64Features<'a> {
@@ -14584,9 +16737,12 @@ impl Default for PhysicalDeviceShaderAtomicInt64Features<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceShaderAtomicInt64Features<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceShaderAtomicInt64Features<'_> {}
+
 pub type PhysicalDeviceShaderAtomicInt64FeaturesKHR<'a> =
     PhysicalDeviceShaderAtomicInt64Features<'a>;
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceShaderAtomicFloatFeaturesEXT<'a> {
@@ -14629,7 +16785,10 @@ impl Default for PhysicalDeviceShaderAtomicFloatFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceShaderAtomicFloatFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceShaderAtomicFloatFeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceShaderAtomicFloat2FeaturesEXT<'a> {
@@ -14672,7 +16831,10 @@ impl Default for PhysicalDeviceShaderAtomicFloat2FeaturesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceShaderAtomicFloat2FeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceShaderAtomicFloat2FeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceVertexAttributeDivisorFeatures<'a> {
@@ -14695,11 +16857,14 @@ impl Default for PhysicalDeviceVertexAttributeDivisorFeatures<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceVertexAttributeDivisorFeatures<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceVertexAttributeDivisorFeatures<'_> {}
+
 pub type PhysicalDeviceVertexAttributeDivisorFeaturesKHR<'a> =
     PhysicalDeviceVertexAttributeDivisorFeatures<'a>;
 pub type PhysicalDeviceVertexAttributeDivisorFeaturesEXT<'a> =
     PhysicalDeviceVertexAttributeDivisorFeatures<'a>;
-// structextends: VkQueueFamilyProperties2
+/// Extends: `QueueFamilyProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -14720,6 +16885,8 @@ impl Default for QueueFamilyCheckpointPropertiesNV<'_> {
         }
     }
 }
+
+impl ExtendsQueueFamilyProperties2 for QueueFamilyCheckpointPropertiesNV<'_> {}
 
 /// returned_only
 #[repr(C)]
@@ -14744,7 +16911,7 @@ impl Default for CheckpointDataNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -14776,9 +16943,11 @@ impl Default for PhysicalDeviceDepthStencilResolveProperties<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceDepthStencilResolveProperties<'_> {}
+
 pub type PhysicalDeviceDepthStencilResolvePropertiesKHR<'a> =
     PhysicalDeviceDepthStencilResolveProperties<'a>;
-// structextends: VkSubpassDescription2
+/// Extends: `SubpassDescription2`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct SubpassDescriptionDepthStencilResolve<'a> {
@@ -14807,8 +16976,10 @@ impl Default for SubpassDescriptionDepthStencilResolve<'_> {
     }
 }
 
+impl ExtendsSubpassDescription2 for SubpassDescriptionDepthStencilResolve<'_> {}
+
 pub type SubpassDescriptionDepthStencilResolveKHR<'a> = SubpassDescriptionDepthStencilResolve<'a>;
-// structextends: VkImageViewCreateInfo
+/// Extends: `ImageViewCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ImageViewASTCDecodeModeEXT<'a> {
@@ -14829,7 +17000,9 @@ impl Default for ImageViewASTCDecodeModeEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsImageViewCreateInfo for ImageViewASTCDecodeModeEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceASTCDecodeFeaturesEXT<'a> {
@@ -14850,7 +17023,10 @@ impl Default for PhysicalDeviceASTCDecodeFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceASTCDecodeFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceASTCDecodeFeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceTransformFeedbackFeaturesEXT<'a> {
@@ -14873,7 +17049,10 @@ impl Default for PhysicalDeviceTransformFeedbackFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceTransformFeedbackFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceTransformFeedbackFeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -14913,7 +17092,9 @@ impl Default for PhysicalDeviceTransformFeedbackPropertiesEXT<'_> {
     }
 }
 
-// structextends: VkPipelineRasterizationStateCreateInfo
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceTransformFeedbackPropertiesEXT<'_> {}
+
+/// Extends: `PipelineRasterizationStateCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PipelineRasterizationStateStreamCreateInfoEXT<'a> {
@@ -14936,7 +17117,12 @@ impl Default for PipelineRasterizationStateStreamCreateInfoEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPipelineRasterizationStateCreateInfo
+    for PipelineRasterizationStateStreamCreateInfoEXT<'_>
+{
+}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceRepresentativeFragmentTestFeaturesNV<'a> {
@@ -14957,7 +17143,10 @@ impl Default for PhysicalDeviceRepresentativeFragmentTestFeaturesNV<'_> {
     }
 }
 
-// structextends: VkGraphicsPipelineCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceRepresentativeFragmentTestFeaturesNV<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceRepresentativeFragmentTestFeaturesNV<'_> {}
+
+/// Extends: `GraphicsPipelineCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PipelineRepresentativeFragmentTestStateCreateInfoNV<'a> {
@@ -14978,7 +17167,9 @@ impl Default for PipelineRepresentativeFragmentTestStateCreateInfoNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsGraphicsPipelineCreateInfo for PipelineRepresentativeFragmentTestStateCreateInfoNV<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceExclusiveScissorFeaturesNV<'a> {
@@ -14999,7 +17190,10 @@ impl Default for PhysicalDeviceExclusiveScissorFeaturesNV<'_> {
     }
 }
 
-// structextends: VkPipelineViewportStateCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceExclusiveScissorFeaturesNV<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceExclusiveScissorFeaturesNV<'_> {}
+
+/// Extends: `PipelineViewportStateCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PipelineViewportExclusiveScissorStateCreateInfoNV<'a> {
@@ -15023,7 +17217,12 @@ impl Default for PipelineViewportExclusiveScissorStateCreateInfoNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPipelineViewportStateCreateInfo
+    for PipelineViewportExclusiveScissorStateCreateInfoNV<'_>
+{
+}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceCornerSampledImageFeaturesNV<'a> {
@@ -15044,7 +17243,10 @@ impl Default for PhysicalDeviceCornerSampledImageFeaturesNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceCornerSampledImageFeaturesNV<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceCornerSampledImageFeaturesNV<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceComputeShaderDerivativesFeaturesKHR<'a> {
@@ -15067,9 +17269,12 @@ impl Default for PhysicalDeviceComputeShaderDerivativesFeaturesKHR<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceComputeShaderDerivativesFeaturesKHR<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceComputeShaderDerivativesFeaturesKHR<'_> {}
+
 pub type PhysicalDeviceComputeShaderDerivativesFeaturesNV<'a> =
     PhysicalDeviceComputeShaderDerivativesFeaturesKHR<'a>;
-// structextends: VkPhysicalDeviceProperties2
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -15091,9 +17296,11 @@ impl Default for PhysicalDeviceComputeShaderDerivativesPropertiesKHR<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceComputeShaderDerivativesPropertiesKHR<'_> {}
+
 pub type PhysicalDeviceFragmentShaderBarycentricFeaturesNV<'a> =
     PhysicalDeviceFragmentShaderBarycentricFeaturesKHR<'a>;
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceShaderImageFootprintFeaturesNV<'a> {
@@ -15114,7 +17321,10 @@ impl Default for PhysicalDeviceShaderImageFootprintFeaturesNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceShaderImageFootprintFeaturesNV<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceShaderImageFootprintFeaturesNV<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV<'a> {
@@ -15135,7 +17345,13 @@ impl Default for PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2
+    for PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV<'_>
+{
+}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceCopyMemoryIndirectFeaturesKHR<'a> {
@@ -15158,7 +17374,10 @@ impl Default for PhysicalDeviceCopyMemoryIndirectFeaturesKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceCopyMemoryIndirectFeaturesKHR<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceCopyMemoryIndirectFeaturesKHR<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceCopyMemoryIndirectFeaturesNV<'a> {
@@ -15179,7 +17398,10 @@ impl Default for PhysicalDeviceCopyMemoryIndirectFeaturesNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceCopyMemoryIndirectFeaturesNV<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceCopyMemoryIndirectFeaturesNV<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -15202,9 +17424,11 @@ impl Default for PhysicalDeviceCopyMemoryIndirectPropertiesKHR<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceCopyMemoryIndirectPropertiesKHR<'_> {}
+
 pub type PhysicalDeviceCopyMemoryIndirectPropertiesNV<'a> =
     PhysicalDeviceCopyMemoryIndirectPropertiesKHR<'a>;
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceMemoryDecompressionFeaturesEXT<'a> {
@@ -15225,9 +17449,12 @@ impl Default for PhysicalDeviceMemoryDecompressionFeaturesEXT<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceMemoryDecompressionFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceMemoryDecompressionFeaturesEXT<'_> {}
+
 pub type PhysicalDeviceMemoryDecompressionFeaturesNV<'a> =
     PhysicalDeviceMemoryDecompressionFeaturesEXT<'a>;
-// structextends: VkPhysicalDeviceProperties2
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -15251,6 +17478,8 @@ impl Default for PhysicalDeviceMemoryDecompressionPropertiesEXT<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceMemoryDecompressionPropertiesEXT<'_> {}
+
 pub type PhysicalDeviceMemoryDecompressionPropertiesNV<'a> =
     PhysicalDeviceMemoryDecompressionPropertiesEXT<'a>;
 #[repr(C)]
@@ -15271,7 +17500,7 @@ impl Default for ShadingRatePaletteNV<'_> {
     }
 }
 
-// structextends: VkPipelineViewportStateCreateInfo
+/// Extends: `PipelineViewportStateCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PipelineViewportShadingRateImageStateCreateInfoNV<'a> {
@@ -15297,7 +17526,12 @@ impl Default for PipelineViewportShadingRateImageStateCreateInfoNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPipelineViewportStateCreateInfo
+    for PipelineViewportShadingRateImageStateCreateInfoNV<'_>
+{
+}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceShadingRateImageFeaturesNV<'a> {
@@ -15320,7 +17554,10 @@ impl Default for PhysicalDeviceShadingRateImageFeaturesNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceShadingRateImageFeaturesNV<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceShadingRateImageFeaturesNV<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -15346,7 +17583,9 @@ impl Default for PhysicalDeviceShadingRateImagePropertiesNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceShadingRateImagePropertiesNV<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceInvocationMaskFeaturesHUAWEI<'a> {
@@ -15366,6 +17605,9 @@ impl Default for PhysicalDeviceInvocationMaskFeaturesHUAWEI<'_> {
         }
     }
 }
+
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceInvocationMaskFeaturesHUAWEI<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceInvocationMaskFeaturesHUAWEI<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -15406,7 +17648,7 @@ impl Default for CoarseSampleOrderCustomNV<'_> {
     }
 }
 
-// structextends: VkPipelineViewportStateCreateInfo
+/// Extends: `PipelineViewportStateCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PipelineViewportCoarseSampleOrderStateCreateInfoNV<'a> {
@@ -15432,7 +17674,12 @@ impl Default for PipelineViewportCoarseSampleOrderStateCreateInfoNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPipelineViewportStateCreateInfo
+    for PipelineViewportCoarseSampleOrderStateCreateInfoNV<'_>
+{
+}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceMeshShaderFeaturesNV<'a> {
@@ -15455,7 +17702,10 @@ impl Default for PhysicalDeviceMeshShaderFeaturesNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceMeshShaderFeaturesNV<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceMeshShaderFeaturesNV<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -15501,6 +17751,8 @@ impl Default for PhysicalDeviceMeshShaderPropertiesNV<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceMeshShaderPropertiesNV<'_> {}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct DrawMeshTasksIndirectCommandNV {
@@ -15516,7 +17768,7 @@ impl Default for DrawMeshTasksIndirectCommandNV {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceMeshShaderFeaturesEXT<'a> {
@@ -15545,7 +17797,10 @@ impl Default for PhysicalDeviceMeshShaderFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceMeshShaderFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceMeshShaderFeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -15620,6 +17875,8 @@ impl Default for PhysicalDeviceMeshShaderPropertiesEXT<'_> {
         }
     }
 }
+
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceMeshShaderPropertiesEXT<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -15740,6 +17997,29 @@ impl Default for RayTracingPipelineCreateInfoNV<'_> {
     }
 }
 
+pub trait ExtendsRayTracingPipelineCreateInfoNV {}
+impl<'a> RayTracingPipelineCreateInfoNV<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsRayTracingPipelineCreateInfoNV>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct RayTracingPipelineCreateInfoKHR<'a> {
@@ -15789,6 +18069,29 @@ impl Default for RayTracingPipelineCreateInfoKHR<'_> {
             base_pipeline_index: 0,
             _marker: PhantomData,
         }
+    }
+}
+
+pub trait ExtendsRayTracingPipelineCreateInfoKHR {}
+impl<'a> RayTracingPipelineCreateInfoKHR<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsRayTracingPipelineCreateInfoKHR>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -15953,6 +18256,29 @@ impl Default for AccelerationStructureCreateInfoNV<'_> {
     }
 }
 
+pub trait ExtendsAccelerationStructureCreateInfoNV {}
+impl<'a> AccelerationStructureCreateInfoNV<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsAccelerationStructureCreateInfoNV>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct BindAccelerationStructureMemoryInfoNV<'a> {
@@ -15982,7 +18308,7 @@ impl Default for BindAccelerationStructureMemoryInfoNV<'_> {
     }
 }
 
-// structextends: VkWriteDescriptorSet
+/// Extends: `WriteDescriptorSet`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct WriteDescriptorSetAccelerationStructureKHR<'a> {
@@ -16007,7 +18333,9 @@ impl Default for WriteDescriptorSetAccelerationStructureKHR<'_> {
     }
 }
 
-// structextends: VkWriteDescriptorSet
+impl ExtendsWriteDescriptorSet for WriteDescriptorSetAccelerationStructureKHR<'_> {}
+
+/// Extends: `WriteDescriptorSet`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct WriteDescriptorSetAccelerationStructureNV<'a> {
@@ -16032,6 +18360,8 @@ impl Default for WriteDescriptorSetAccelerationStructureNV<'_> {
     }
 }
 
+impl ExtendsWriteDescriptorSet for WriteDescriptorSetAccelerationStructureNV<'_> {}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct AccelerationStructureMemoryRequirementsInfoNV<'a> {
@@ -16054,7 +18384,7 @@ impl Default for AccelerationStructureMemoryRequirementsInfoNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceAccelerationStructureFeaturesKHR<'a> {
@@ -16083,7 +18413,10 @@ impl Default for PhysicalDeviceAccelerationStructureFeaturesKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceAccelerationStructureFeaturesKHR<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceAccelerationStructureFeaturesKHR<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceRayTracingPipelineFeaturesKHR<'a> {
@@ -16112,7 +18445,10 @@ impl Default for PhysicalDeviceRayTracingPipelineFeaturesKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceRayTracingPipelineFeaturesKHR<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceRayTracingPipelineFeaturesKHR<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceRayQueryFeaturesKHR<'a> {
@@ -16133,7 +18469,10 @@ impl Default for PhysicalDeviceRayQueryFeaturesKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceRayQueryFeaturesKHR<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceRayQueryFeaturesKHR<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -16169,7 +18508,9 @@ impl Default for PhysicalDeviceAccelerationStructurePropertiesKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceAccelerationStructurePropertiesKHR<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -16205,7 +18546,9 @@ impl Default for PhysicalDeviceRayTracingPipelinePropertiesKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceRayTracingPipelinePropertiesKHR<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -16240,6 +18583,8 @@ impl Default for PhysicalDeviceRayTracingPropertiesNV<'_> {
         }
     }
 }
+
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceRayTracingPropertiesNV<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -16314,7 +18659,7 @@ impl Default for TraceRaysIndirectCommand2KHR {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceRayTracingMaintenance1FeaturesKHR<'a> {
@@ -16337,7 +18682,10 @@ impl Default for PhysicalDeviceRayTracingMaintenance1FeaturesKHR<'_> {
     }
 }
 
-// structextends: VkFormatProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceRayTracingMaintenance1FeaturesKHR<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceRayTracingMaintenance1FeaturesKHR<'_> {}
+
+/// Extends: `FormatProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -16363,6 +18711,8 @@ impl Default for DrmFormatModifierPropertiesListEXT<'_> {
     }
 }
 
+impl ExtendsFormatProperties2 for DrmFormatModifierPropertiesListEXT<'_> {}
+
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -16381,7 +18731,7 @@ impl Default for DrmFormatModifierPropertiesEXT {
     }
 }
 
-// structextends: VkPhysicalDeviceImageFormatInfo2
+/// Extends: `PhysicalDeviceImageFormatInfo2`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceImageDrmFormatModifierInfoEXT<'a> {
@@ -16409,7 +18759,9 @@ impl Default for PhysicalDeviceImageDrmFormatModifierInfoEXT<'_> {
     }
 }
 
-// structextends: VkImageCreateInfo
+impl ExtendsPhysicalDeviceImageFormatInfo2 for PhysicalDeviceImageDrmFormatModifierInfoEXT<'_> {}
+
+/// Extends: `ImageCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ImageDrmFormatModifierListCreateInfoEXT<'a> {
@@ -16433,7 +18785,9 @@ impl Default for ImageDrmFormatModifierListCreateInfoEXT<'_> {
     }
 }
 
-// structextends: VkImageCreateInfo
+impl ExtendsImageCreateInfo for ImageDrmFormatModifierListCreateInfoEXT<'_> {}
+
+/// Extends: `ImageCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ImageDrmFormatModifierExplicitCreateInfoEXT<'a> {
@@ -16459,6 +18813,8 @@ impl Default for ImageDrmFormatModifierExplicitCreateInfoEXT<'_> {
     }
 }
 
+impl ExtendsImageCreateInfo for ImageDrmFormatModifierExplicitCreateInfoEXT<'_> {}
+
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -16480,7 +18836,7 @@ impl Default for ImageDrmFormatModifierPropertiesEXT<'_> {
     }
 }
 
-// structextends: VkImageCreateInfo,VkPhysicalDeviceImageFormatInfo2
+/// Extends: `ImageCreateInfo`, `PhysicalDeviceImageFormatInfo2`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ImageStencilUsageCreateInfo<'a> {
@@ -16501,8 +18857,11 @@ impl Default for ImageStencilUsageCreateInfo<'_> {
     }
 }
 
+impl ExtendsImageCreateInfo for ImageStencilUsageCreateInfo<'_> {}
+impl ExtendsPhysicalDeviceImageFormatInfo2 for ImageStencilUsageCreateInfo<'_> {}
+
 pub type ImageStencilUsageCreateInfoEXT<'a> = ImageStencilUsageCreateInfo<'a>;
-// structextends: VkDeviceCreateInfo
+/// Extends: `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct DeviceMemoryOverallocationCreateInfoAMD<'a> {
@@ -16523,7 +18882,9 @@ impl Default for DeviceMemoryOverallocationCreateInfoAMD<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsDeviceCreateInfo for DeviceMemoryOverallocationCreateInfoAMD<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceFragmentDensityMapFeaturesEXT<'a> {
@@ -16548,7 +18909,10 @@ impl Default for PhysicalDeviceFragmentDensityMapFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceFragmentDensityMapFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceFragmentDensityMapFeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceFragmentDensityMap2FeaturesEXT<'a> {
@@ -16569,7 +18933,10 @@ impl Default for PhysicalDeviceFragmentDensityMap2FeaturesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceFragmentDensityMap2FeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceFragmentDensityMap2FeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceFragmentDensityMapOffsetFeaturesEXT<'a> {
@@ -16590,9 +18957,12 @@ impl Default for PhysicalDeviceFragmentDensityMapOffsetFeaturesEXT<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceFragmentDensityMapOffsetFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceFragmentDensityMapOffsetFeaturesEXT<'_> {}
+
 pub type PhysicalDeviceFragmentDensityMapOffsetFeaturesQCOM<'a> =
     PhysicalDeviceFragmentDensityMapOffsetFeaturesEXT<'a>;
-// structextends: VkPhysicalDeviceProperties2
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -16618,7 +18988,9 @@ impl Default for PhysicalDeviceFragmentDensityMapPropertiesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceFragmentDensityMapPropertiesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -16646,7 +19018,9 @@ impl Default for PhysicalDeviceFragmentDensityMap2PropertiesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceFragmentDensityMap2PropertiesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -16668,9 +19042,11 @@ impl Default for PhysicalDeviceFragmentDensityMapOffsetPropertiesEXT<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceFragmentDensityMapOffsetPropertiesEXT<'_> {}
+
 pub type PhysicalDeviceFragmentDensityMapOffsetPropertiesQCOM<'a> =
     PhysicalDeviceFragmentDensityMapOffsetPropertiesEXT<'a>;
-// structextends: VkRenderPassCreateInfo,VkRenderPassCreateInfo2
+/// Extends: `RenderPassCreateInfo`, `RenderPassCreateInfo2`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct RenderPassFragmentDensityMapCreateInfoEXT<'a> {
@@ -16691,7 +19067,10 @@ impl Default for RenderPassFragmentDensityMapCreateInfoEXT<'_> {
     }
 }
 
-// structextends: VkSubpassEndInfo,VkRenderingEndInfoKHR
+impl ExtendsRenderPassCreateInfo for RenderPassFragmentDensityMapCreateInfoEXT<'_> {}
+impl ExtendsRenderPassCreateInfo2 for RenderPassFragmentDensityMapCreateInfoEXT<'_> {}
+
+/// Extends: `SubpassEndInfo`, `RenderingEndInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct RenderPassFragmentDensityMapOffsetEndInfoEXT<'a> {
@@ -16715,9 +19094,12 @@ impl Default for RenderPassFragmentDensityMapOffsetEndInfoEXT<'_> {
     }
 }
 
+impl ExtendsSubpassEndInfo for RenderPassFragmentDensityMapOffsetEndInfoEXT<'_> {}
+impl ExtendsRenderingEndInfoKHR for RenderPassFragmentDensityMapOffsetEndInfoEXT<'_> {}
+
 pub type SubpassFragmentDensityMapOffsetEndInfoQCOM<'a> =
     RenderPassFragmentDensityMapOffsetEndInfoEXT<'a>;
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceScalarBlockLayoutFeatures<'a> {
@@ -16738,9 +19120,12 @@ impl Default for PhysicalDeviceScalarBlockLayoutFeatures<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceScalarBlockLayoutFeatures<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceScalarBlockLayoutFeatures<'_> {}
+
 pub type PhysicalDeviceScalarBlockLayoutFeaturesEXT<'a> =
     PhysicalDeviceScalarBlockLayoutFeatures<'a>;
-// structextends: VkSurfaceCapabilities2KHR
+/// Extends: `SurfaceCapabilities2KHR`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -16763,7 +19148,9 @@ impl Default for SurfaceProtectedCapabilitiesKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsSurfaceCapabilities2KHR for SurfaceProtectedCapabilitiesKHR<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceUniformBufferStandardLayoutFeatures<'a> {
@@ -16784,9 +19171,12 @@ impl Default for PhysicalDeviceUniformBufferStandardLayoutFeatures<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceUniformBufferStandardLayoutFeatures<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceUniformBufferStandardLayoutFeatures<'_> {}
+
 pub type PhysicalDeviceUniformBufferStandardLayoutFeaturesKHR<'a> =
     PhysicalDeviceUniformBufferStandardLayoutFeatures<'a>;
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceDepthClipEnableFeaturesEXT<'a> {
@@ -16807,7 +19197,10 @@ impl Default for PhysicalDeviceDepthClipEnableFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkPipelineRasterizationStateCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceDepthClipEnableFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceDepthClipEnableFeaturesEXT<'_> {}
+
+/// Extends: `PipelineRasterizationStateCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PipelineRasterizationDepthClipStateCreateInfoEXT<'a> {
@@ -16831,7 +19224,12 @@ impl Default for PipelineRasterizationDepthClipStateCreateInfoEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceMemoryProperties2
+impl ExtendsPipelineRasterizationStateCreateInfo
+    for PipelineRasterizationDepthClipStateCreateInfoEXT<'_>
+{
+}
+
+/// Extends: `PhysicalDeviceMemoryProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -16855,7 +19253,9 @@ impl Default for PhysicalDeviceMemoryBudgetPropertiesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceMemoryProperties2 for PhysicalDeviceMemoryBudgetPropertiesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceMemoryPriorityFeaturesEXT<'a> {
@@ -16876,7 +19276,10 @@ impl Default for PhysicalDeviceMemoryPriorityFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkMemoryAllocateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceMemoryPriorityFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceMemoryPriorityFeaturesEXT<'_> {}
+
+/// Extends: `MemoryAllocateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct MemoryPriorityAllocateInfoEXT<'a> {
@@ -16897,7 +19300,9 @@ impl Default for MemoryPriorityAllocateInfoEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsMemoryAllocateInfo for MemoryPriorityAllocateInfoEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDevicePageableDeviceLocalMemoryFeaturesEXT<'a> {
@@ -16918,7 +19323,10 @@ impl Default for PhysicalDevicePageableDeviceLocalMemoryFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDevicePageableDeviceLocalMemoryFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDevicePageableDeviceLocalMemoryFeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceBufferDeviceAddressFeatures<'a> {
@@ -16943,9 +19351,12 @@ impl Default for PhysicalDeviceBufferDeviceAddressFeatures<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceBufferDeviceAddressFeatures<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceBufferDeviceAddressFeatures<'_> {}
+
 pub type PhysicalDeviceBufferDeviceAddressFeaturesKHR<'a> =
     PhysicalDeviceBufferDeviceAddressFeatures<'a>;
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceBufferDeviceAddressFeaturesEXT<'a> {
@@ -16969,6 +19380,9 @@ impl Default for PhysicalDeviceBufferDeviceAddressFeaturesEXT<'_> {
         }
     }
 }
+
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceBufferDeviceAddressFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceBufferDeviceAddressFeaturesEXT<'_> {}
 
 pub type PhysicalDeviceBufferAddressFeaturesEXT<'a> =
     PhysicalDeviceBufferDeviceAddressFeaturesEXT<'a>;
@@ -16994,7 +19408,7 @@ impl Default for BufferDeviceAddressInfo<'_> {
 
 pub type BufferDeviceAddressInfoKHR<'a> = BufferDeviceAddressInfo<'a>;
 pub type BufferDeviceAddressInfoEXT<'a> = BufferDeviceAddressInfo<'a>;
-// structextends: VkBufferCreateInfo
+/// Extends: `BufferCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct BufferOpaqueCaptureAddressCreateInfo<'a> {
@@ -17015,8 +19429,10 @@ impl Default for BufferOpaqueCaptureAddressCreateInfo<'_> {
     }
 }
 
+impl ExtendsBufferCreateInfo for BufferOpaqueCaptureAddressCreateInfo<'_> {}
+
 pub type BufferOpaqueCaptureAddressCreateInfoKHR<'a> = BufferOpaqueCaptureAddressCreateInfo<'a>;
-// structextends: VkBufferCreateInfo
+/// Extends: `BufferCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct BufferDeviceAddressCreateInfoEXT<'a> {
@@ -17037,7 +19453,9 @@ impl Default for BufferDeviceAddressCreateInfoEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceImageFormatInfo2
+impl ExtendsBufferCreateInfo for BufferDeviceAddressCreateInfoEXT<'_> {}
+
+/// Extends: `PhysicalDeviceImageFormatInfo2`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceImageViewImageFormatInfoEXT<'a> {
@@ -17058,7 +19476,9 @@ impl Default for PhysicalDeviceImageViewImageFormatInfoEXT<'_> {
     }
 }
 
-// structextends: VkImageFormatProperties2
+impl ExtendsPhysicalDeviceImageFormatInfo2 for PhysicalDeviceImageViewImageFormatInfoEXT<'_> {}
+
+/// Extends: `ImageFormatProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -17084,7 +19504,9 @@ impl Default for FilterCubicImageViewImageFormatPropertiesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsImageFormatProperties2 for FilterCubicImageViewImageFormatPropertiesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceImagelessFramebufferFeatures<'a> {
@@ -17105,9 +19527,12 @@ impl Default for PhysicalDeviceImagelessFramebufferFeatures<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceImagelessFramebufferFeatures<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceImagelessFramebufferFeatures<'_> {}
+
 pub type PhysicalDeviceImagelessFramebufferFeaturesKHR<'a> =
     PhysicalDeviceImagelessFramebufferFeatures<'a>;
-// structextends: VkFramebufferCreateInfo
+/// Extends: `FramebufferCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct FramebufferAttachmentsCreateInfo<'a> {
@@ -17130,6 +19555,8 @@ impl Default for FramebufferAttachmentsCreateInfo<'_> {
         }
     }
 }
+
+impl ExtendsFramebufferCreateInfo for FramebufferAttachmentsCreateInfo<'_> {}
 
 pub type FramebufferAttachmentsCreateInfoKHR<'a> = FramebufferAttachmentsCreateInfo<'a>;
 #[repr(C)]
@@ -17168,7 +19595,7 @@ impl Default for FramebufferAttachmentImageInfo<'_> {
 }
 
 pub type FramebufferAttachmentImageInfoKHR<'a> = FramebufferAttachmentImageInfo<'a>;
-// structextends: VkRenderPassBeginInfo
+/// Extends: `RenderPassBeginInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct RenderPassAttachmentBeginInfo<'a> {
@@ -17192,8 +19619,10 @@ impl Default for RenderPassAttachmentBeginInfo<'_> {
     }
 }
 
+impl ExtendsRenderPassBeginInfo for RenderPassAttachmentBeginInfo<'_> {}
+
 pub type RenderPassAttachmentBeginInfoKHR<'a> = RenderPassAttachmentBeginInfo<'a>;
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceTextureCompressionASTCHDRFeatures<'a> {
@@ -17214,9 +19643,12 @@ impl Default for PhysicalDeviceTextureCompressionASTCHDRFeatures<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceTextureCompressionASTCHDRFeatures<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceTextureCompressionASTCHDRFeatures<'_> {}
+
 pub type PhysicalDeviceTextureCompressionASTCHDRFeaturesEXT<'a> =
     PhysicalDeviceTextureCompressionASTCHDRFeatures<'a>;
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceCooperativeMatrixFeaturesNV<'a> {
@@ -17239,7 +19671,10 @@ impl Default for PhysicalDeviceCooperativeMatrixFeaturesNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceCooperativeMatrixFeaturesNV<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceCooperativeMatrixFeaturesNV<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -17260,6 +19695,8 @@ impl Default for PhysicalDeviceCooperativeMatrixPropertiesNV<'_> {
         }
     }
 }
+
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceCooperativeMatrixPropertiesNV<'_> {}
 
 /// returned_only
 #[repr(C)]
@@ -17296,7 +19733,7 @@ impl Default for CooperativeMatrixPropertiesNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceYcbcrImageArraysFeaturesEXT<'a> {
@@ -17316,6 +19753,9 @@ impl Default for PhysicalDeviceYcbcrImageArraysFeaturesEXT<'_> {
         }
     }
 }
+
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceYcbcrImageArraysFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceYcbcrImageArraysFeaturesEXT<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -17364,7 +19804,7 @@ impl Default for ImageViewAddressPropertiesNVX<'_> {
     }
 }
 
-// structextends: VkPresentInfoKHR
+/// Extends: `PresentInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PresentFrameTokenGGP<'a> {
@@ -17385,6 +19825,8 @@ impl Default for PresentFrameTokenGGP<'_> {
     }
 }
 
+impl ExtendsPresentInfoKHR for PresentFrameTokenGGP<'_> {}
+
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -17402,7 +19844,7 @@ impl Default for PipelineCreationFeedback {
 }
 
 pub type PipelineCreationFeedbackEXT = PipelineCreationFeedback;
-// structextends: VkGraphicsPipelineCreateInfo,VkComputePipelineCreateInfo,VkRayTracingPipelineCreateInfoNV,VkRayTracingPipelineCreateInfoKHR,VkExecutionGraphPipelineCreateInfoAMDX,VkDataGraphPipelineCreateInfoARM
+/// Extends: `GraphicsPipelineCreateInfo`, `ComputePipelineCreateInfo`, `RayTracingPipelineCreateInfoNV`, `RayTracingPipelineCreateInfoKHR`, `ExecutionGraphPipelineCreateInfoAMDX`, `DataGraphPipelineCreateInfoARM`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PipelineCreationFeedbackCreateInfo<'a> {
@@ -17430,8 +19872,15 @@ impl Default for PipelineCreationFeedbackCreateInfo<'_> {
     }
 }
 
+impl ExtendsGraphicsPipelineCreateInfo for PipelineCreationFeedbackCreateInfo<'_> {}
+impl ExtendsComputePipelineCreateInfo for PipelineCreationFeedbackCreateInfo<'_> {}
+impl ExtendsRayTracingPipelineCreateInfoNV for PipelineCreationFeedbackCreateInfo<'_> {}
+impl ExtendsRayTracingPipelineCreateInfoKHR for PipelineCreationFeedbackCreateInfo<'_> {}
+impl ExtendsExecutionGraphPipelineCreateInfoAMDX for PipelineCreationFeedbackCreateInfo<'_> {}
+impl ExtendsDataGraphPipelineCreateInfoARM for PipelineCreationFeedbackCreateInfo<'_> {}
+
 pub type PipelineCreationFeedbackCreateInfoEXT<'a> = PipelineCreationFeedbackCreateInfo<'a>;
-// structextends: VkPhysicalDeviceSurfaceInfo2KHR,VkSwapchainCreateInfoKHR
+/// Extends: `PhysicalDeviceSurfaceInfo2KHR`, `SwapchainCreateInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct SurfaceFullScreenExclusiveInfoEXT<'a> {
@@ -17452,7 +19901,10 @@ impl Default for SurfaceFullScreenExclusiveInfoEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceSurfaceInfo2KHR,VkSwapchainCreateInfoKHR
+impl ExtendsPhysicalDeviceSurfaceInfo2KHR for SurfaceFullScreenExclusiveInfoEXT<'_> {}
+impl ExtendsSwapchainCreateInfoKHR for SurfaceFullScreenExclusiveInfoEXT<'_> {}
+
+/// Extends: `PhysicalDeviceSurfaceInfo2KHR`, `SwapchainCreateInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct SurfaceFullScreenExclusiveWin32InfoEXT<'a> {
@@ -17473,7 +19925,10 @@ impl Default for SurfaceFullScreenExclusiveWin32InfoEXT<'_> {
     }
 }
 
-// structextends: VkSurfaceCapabilities2KHR
+impl ExtendsPhysicalDeviceSurfaceInfo2KHR for SurfaceFullScreenExclusiveWin32InfoEXT<'_> {}
+impl ExtendsSwapchainCreateInfoKHR for SurfaceFullScreenExclusiveWin32InfoEXT<'_> {}
+
+/// Extends: `SurfaceCapabilities2KHR`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -17495,7 +19950,9 @@ impl Default for SurfaceCapabilitiesFullScreenExclusiveEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsSurfaceCapabilities2KHR for SurfaceCapabilitiesFullScreenExclusiveEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDevicePresentBarrierFeaturesNV<'a> {
@@ -17516,7 +19973,10 @@ impl Default for PhysicalDevicePresentBarrierFeaturesNV<'_> {
     }
 }
 
-// structextends: VkSurfaceCapabilities2KHR
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDevicePresentBarrierFeaturesNV<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDevicePresentBarrierFeaturesNV<'_> {}
+
+/// Extends: `SurfaceCapabilities2KHR`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -17538,7 +19998,9 @@ impl Default for SurfaceCapabilitiesPresentBarrierNV<'_> {
     }
 }
 
-// structextends: VkSwapchainCreateInfoKHR
+impl ExtendsSurfaceCapabilities2KHR for SurfaceCapabilitiesPresentBarrierNV<'_> {}
+
+/// Extends: `SwapchainCreateInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct SwapchainPresentBarrierCreateInfoNV<'a> {
@@ -17559,7 +20021,9 @@ impl Default for SwapchainPresentBarrierCreateInfoNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsSwapchainCreateInfoKHR for SwapchainPresentBarrierCreateInfoNV<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDevicePerformanceQueryFeaturesKHR<'a> {
@@ -17584,7 +20048,10 @@ impl Default for PhysicalDevicePerformanceQueryFeaturesKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDevicePerformanceQueryFeaturesKHR<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDevicePerformanceQueryFeaturesKHR<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -17606,6 +20073,8 @@ impl Default for PhysicalDevicePerformanceQueryPropertiesKHR<'_> {
         }
     }
 }
+
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDevicePerformanceQueryPropertiesKHR<'_> {}
 
 /// returned_only
 #[repr(C)]
@@ -17664,7 +20133,7 @@ impl Default for PerformanceCounterDescriptionKHR<'_> {
     }
 }
 
-// structextends: VkQueryPoolCreateInfo
+/// Extends: `QueryPoolCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct QueryPoolPerformanceCreateInfoKHR<'a> {
@@ -17689,6 +20158,8 @@ impl Default for QueryPoolPerformanceCreateInfoKHR<'_> {
         }
     }
 }
+
+impl ExtendsQueryPoolCreateInfo for QueryPoolPerformanceCreateInfoKHR<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone)]
@@ -17735,7 +20206,7 @@ impl Default for AcquireProfilingLockInfoKHR<'_> {
     }
 }
 
-// structextends: VkSubmitInfo,VkSubmitInfo2
+/// Extends: `SubmitInfo`, `SubmitInfo2`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PerformanceQuerySubmitInfoKHR<'a> {
@@ -17757,7 +20228,10 @@ impl Default for PerformanceQuerySubmitInfoKHR<'_> {
     }
 }
 
-// structextends: VkDeviceCreateInfo
+impl ExtendsSubmitInfo for PerformanceQuerySubmitInfoKHR<'_> {}
+impl ExtendsSubmitInfo2 for PerformanceQuerySubmitInfoKHR<'_> {}
+
+/// Extends: `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PerformanceQueryReservationInfoKHR<'a> {
@@ -17779,6 +20253,8 @@ impl Default for PerformanceQueryReservationInfoKHR<'_> {
     }
 }
 
+impl ExtendsDeviceCreateInfo for PerformanceQueryReservationInfoKHR<'_> {}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct HeadlessSurfaceCreateInfoEXT<'a> {
@@ -17799,7 +20275,7 @@ impl Default for HeadlessSurfaceCreateInfoEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceCoverageReductionModeFeaturesNV<'a> {
@@ -17820,7 +20296,10 @@ impl Default for PhysicalDeviceCoverageReductionModeFeaturesNV<'_> {
     }
 }
 
-// structextends: VkPipelineMultisampleStateCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceCoverageReductionModeFeaturesNV<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceCoverageReductionModeFeaturesNV<'_> {}
+
+/// Extends: `PipelineMultisampleStateCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PipelineCoverageReductionStateCreateInfoNV<'a> {
@@ -17842,6 +20321,8 @@ impl Default for PipelineCoverageReductionStateCreateInfoNV<'_> {
         }
     }
 }
+
+impl ExtendsPipelineMultisampleStateCreateInfo for PipelineCoverageReductionStateCreateInfoNV<'_> {}
 
 /// returned_only
 #[repr(C)]
@@ -17870,7 +20351,7 @@ impl Default for FramebufferMixedSamplesCombinationNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL<'a> {
@@ -17890,6 +20371,9 @@ impl Default for PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL<'_> {
         }
     }
 }
+
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceShaderIntegerFunctions2FeaturesINTEL<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone)]
@@ -17949,7 +20433,7 @@ impl Default for InitializePerformanceApiInfoINTEL<'_> {
     }
 }
 
-// structextends: VkQueryPoolCreateInfo
+/// Extends: `QueryPoolCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct QueryPoolPerformanceQueryCreateInfoINTEL<'a> {
@@ -17969,6 +20453,8 @@ impl Default for QueryPoolPerformanceQueryCreateInfoINTEL<'_> {
         }
     }
 }
+
+impl ExtendsQueryPoolCreateInfo for QueryPoolPerformanceQueryCreateInfoINTEL<'_> {}
 
 pub type QueryPoolCreateInfoINTEL<'a> = QueryPoolPerformanceQueryCreateInfoINTEL<'a>;
 #[repr(C)]
@@ -18055,7 +20541,7 @@ impl Default for PerformanceConfigurationAcquireInfoINTEL<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceShaderClockFeaturesKHR<'a> {
@@ -18078,7 +20564,10 @@ impl Default for PhysicalDeviceShaderClockFeaturesKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceShaderClockFeaturesKHR<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceShaderClockFeaturesKHR<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceIndexTypeUint8Features<'a> {
@@ -18099,9 +20588,12 @@ impl Default for PhysicalDeviceIndexTypeUint8Features<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceIndexTypeUint8Features<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceIndexTypeUint8Features<'_> {}
+
 pub type PhysicalDeviceIndexTypeUint8FeaturesKHR<'a> = PhysicalDeviceIndexTypeUint8Features<'a>;
 pub type PhysicalDeviceIndexTypeUint8FeaturesEXT<'a> = PhysicalDeviceIndexTypeUint8Features<'a>;
-// structextends: VkPhysicalDeviceProperties2
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -18125,7 +20617,9 @@ impl Default for PhysicalDeviceShaderSMBuiltinsPropertiesNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceShaderSMBuiltinsPropertiesNV<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceShaderSMBuiltinsFeaturesNV<'a> {
@@ -18146,7 +20640,10 @@ impl Default for PhysicalDeviceShaderSMBuiltinsFeaturesNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceShaderSMBuiltinsFeaturesNV<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceShaderSMBuiltinsFeaturesNV<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceFragmentShaderInterlockFeaturesEXT<'a> {
@@ -18172,7 +20669,10 @@ impl Default for PhysicalDeviceFragmentShaderInterlockFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceFragmentShaderInterlockFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceFragmentShaderInterlockFeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceSeparateDepthStencilLayoutsFeatures<'a> {
@@ -18193,9 +20693,12 @@ impl Default for PhysicalDeviceSeparateDepthStencilLayoutsFeatures<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceSeparateDepthStencilLayoutsFeatures<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceSeparateDepthStencilLayoutsFeatures<'_> {}
+
 pub type PhysicalDeviceSeparateDepthStencilLayoutsFeaturesKHR<'a> =
     PhysicalDeviceSeparateDepthStencilLayoutsFeatures<'a>;
-// structextends: VkAttachmentReference2
+/// Extends: `AttachmentReference2`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct AttachmentReferenceStencilLayout<'a> {
@@ -18216,7 +20719,9 @@ impl Default for AttachmentReferenceStencilLayout<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsAttachmentReference2 for AttachmentReferenceStencilLayout<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDevicePrimitiveTopologyListRestartFeaturesEXT<'a> {
@@ -18239,8 +20744,11 @@ impl Default for PhysicalDevicePrimitiveTopologyListRestartFeaturesEXT<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDevicePrimitiveTopologyListRestartFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDevicePrimitiveTopologyListRestartFeaturesEXT<'_> {}
+
 pub type AttachmentReferenceStencilLayoutKHR<'a> = AttachmentReferenceStencilLayout<'a>;
-// structextends: VkAttachmentDescription2
+/// Extends: `AttachmentDescription2`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct AttachmentDescriptionStencilLayout<'a> {
@@ -18263,8 +20771,10 @@ impl Default for AttachmentDescriptionStencilLayout<'_> {
     }
 }
 
+impl ExtendsAttachmentDescription2 for AttachmentDescriptionStencilLayout<'_> {}
+
 pub type AttachmentDescriptionStencilLayoutKHR<'a> = AttachmentDescriptionStencilLayout<'a>;
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDevicePipelineExecutablePropertiesFeaturesKHR<'a> {
@@ -18284,6 +20794,9 @@ impl Default for PhysicalDevicePipelineExecutablePropertiesFeaturesKHR<'_> {
         }
     }
 }
+
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDevicePipelineExecutablePropertiesFeaturesKHR<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDevicePipelineExecutablePropertiesFeaturesKHR<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -18440,7 +20953,7 @@ impl Default for PipelineExecutableInternalRepresentationKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceShaderDemoteToHelperInvocationFeatures<'a> {
@@ -18461,9 +20974,12 @@ impl Default for PhysicalDeviceShaderDemoteToHelperInvocationFeatures<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceShaderDemoteToHelperInvocationFeatures<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceShaderDemoteToHelperInvocationFeatures<'_> {}
+
 pub type PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT<'a> =
     PhysicalDeviceShaderDemoteToHelperInvocationFeatures<'a>;
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceTexelBufferAlignmentFeaturesEXT<'a> {
@@ -18484,7 +21000,10 @@ impl Default for PhysicalDeviceTexelBufferAlignmentFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceTexelBufferAlignmentFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceTexelBufferAlignmentFeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -18512,9 +21031,11 @@ impl Default for PhysicalDeviceTexelBufferAlignmentProperties<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceTexelBufferAlignmentProperties<'_> {}
+
 pub type PhysicalDeviceTexelBufferAlignmentPropertiesEXT<'a> =
     PhysicalDeviceTexelBufferAlignmentProperties<'a>;
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceSubgroupSizeControlFeatures<'a> {
@@ -18537,9 +21058,12 @@ impl Default for PhysicalDeviceSubgroupSizeControlFeatures<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceSubgroupSizeControlFeatures<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceSubgroupSizeControlFeatures<'_> {}
+
 pub type PhysicalDeviceSubgroupSizeControlFeaturesEXT<'a> =
     PhysicalDeviceSubgroupSizeControlFeatures<'a>;
-// structextends: VkPhysicalDeviceProperties2
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -18571,9 +21095,11 @@ impl Default for PhysicalDeviceSubgroupSizeControlProperties<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceSubgroupSizeControlProperties<'_> {}
+
 pub type PhysicalDeviceSubgroupSizeControlPropertiesEXT<'a> =
     PhysicalDeviceSubgroupSizeControlProperties<'a>;
-// structextends: VkPipelineShaderStageCreateInfo,VkShaderCreateInfoEXT
+/// Extends: `PipelineShaderStageCreateInfo`, `ShaderCreateInfoEXT`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PipelineShaderStageRequiredSubgroupSizeCreateInfo<'a> {
@@ -18594,11 +21120,17 @@ impl Default for PipelineShaderStageRequiredSubgroupSizeCreateInfo<'_> {
     }
 }
 
+impl ExtendsPipelineShaderStageCreateInfo
+    for PipelineShaderStageRequiredSubgroupSizeCreateInfo<'_>
+{
+}
+impl ExtendsShaderCreateInfoEXT for PipelineShaderStageRequiredSubgroupSizeCreateInfo<'_> {}
+
 pub type PipelineShaderStageRequiredSubgroupSizeCreateInfoEXT<'a> =
     PipelineShaderStageRequiredSubgroupSizeCreateInfo<'a>;
 pub type ShaderRequiredSubgroupSizeCreateInfoEXT<'a> =
     PipelineShaderStageRequiredSubgroupSizeCreateInfo<'a>;
-// structextends: VkComputePipelineCreateInfo
+/// Extends: `ComputePipelineCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct SubpassShadingPipelineCreateInfoHUAWEI<'a> {
@@ -18621,7 +21153,9 @@ impl Default for SubpassShadingPipelineCreateInfoHUAWEI<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsComputePipelineCreateInfo for SubpassShadingPipelineCreateInfoHUAWEI<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -18643,7 +21177,9 @@ impl Default for PhysicalDeviceSubpassShadingPropertiesHUAWEI<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceSubpassShadingPropertiesHUAWEI<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -18671,7 +21207,9 @@ impl Default for PhysicalDeviceClusterCullingShaderPropertiesHUAWEI<'_> {
     }
 }
 
-// structextends: VkMemoryAllocateInfo
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceClusterCullingShaderPropertiesHUAWEI<'_> {}
+
+/// Extends: `MemoryAllocateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct MemoryOpaqueCaptureAddressAllocateInfo<'a> {
@@ -18691,6 +21229,8 @@ impl Default for MemoryOpaqueCaptureAddressAllocateInfo<'_> {
         }
     }
 }
+
+impl ExtendsMemoryAllocateInfo for MemoryOpaqueCaptureAddressAllocateInfo<'_> {}
 
 pub type MemoryOpaqueCaptureAddressAllocateInfoKHR<'a> = MemoryOpaqueCaptureAddressAllocateInfo<'a>;
 #[repr(C)]
@@ -18714,7 +21254,7 @@ impl Default for DeviceMemoryOpaqueCaptureAddressInfo<'_> {
 }
 
 pub type DeviceMemoryOpaqueCaptureAddressInfoKHR<'a> = DeviceMemoryOpaqueCaptureAddressInfo<'a>;
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceLineRasterizationFeatures<'a> {
@@ -18745,11 +21285,14 @@ impl Default for PhysicalDeviceLineRasterizationFeatures<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceLineRasterizationFeatures<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceLineRasterizationFeatures<'_> {}
+
 pub type PhysicalDeviceLineRasterizationFeaturesKHR<'a> =
     PhysicalDeviceLineRasterizationFeatures<'a>;
 pub type PhysicalDeviceLineRasterizationFeaturesEXT<'a> =
     PhysicalDeviceLineRasterizationFeatures<'a>;
-// structextends: VkPhysicalDeviceProperties2
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -18771,11 +21314,13 @@ impl Default for PhysicalDeviceLineRasterizationProperties<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceLineRasterizationProperties<'_> {}
+
 pub type PhysicalDeviceLineRasterizationPropertiesKHR<'a> =
     PhysicalDeviceLineRasterizationProperties<'a>;
 pub type PhysicalDeviceLineRasterizationPropertiesEXT<'a> =
     PhysicalDeviceLineRasterizationProperties<'a>;
-// structextends: VkPipelineRasterizationStateCreateInfo
+/// Extends: `PipelineRasterizationStateCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PipelineRasterizationLineStateCreateInfo<'a> {
@@ -18802,11 +21347,13 @@ impl Default for PipelineRasterizationLineStateCreateInfo<'_> {
     }
 }
 
+impl ExtendsPipelineRasterizationStateCreateInfo for PipelineRasterizationLineStateCreateInfo<'_> {}
+
 pub type PipelineRasterizationLineStateCreateInfoKHR<'a> =
     PipelineRasterizationLineStateCreateInfo<'a>;
 pub type PipelineRasterizationLineStateCreateInfoEXT<'a> =
     PipelineRasterizationLineStateCreateInfo<'a>;
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDevicePipelineCreationCacheControlFeatures<'a> {
@@ -18827,9 +21374,12 @@ impl Default for PhysicalDevicePipelineCreationCacheControlFeatures<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDevicePipelineCreationCacheControlFeatures<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDevicePipelineCreationCacheControlFeatures<'_> {}
+
 pub type PhysicalDevicePipelineCreationCacheControlFeaturesEXT<'a> =
     PhysicalDevicePipelineCreationCacheControlFeatures<'a>;
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceVulkan11Features<'a> {
@@ -18880,7 +21430,10 @@ impl Default for PhysicalDeviceVulkan11Features<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceVulkan11Features<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceVulkan11Features<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -18936,7 +21489,9 @@ impl Default for PhysicalDeviceVulkan11Properties<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceVulkan11Properties<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceVulkan12Features<'a> {
@@ -19054,7 +21609,10 @@ impl Default for PhysicalDeviceVulkan12Features<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceVulkan12Features<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceVulkan12Features<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -19199,7 +21757,9 @@ impl Default for PhysicalDeviceVulkan12Properties<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceVulkan12Properties<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceVulkan13Features<'a> {
@@ -19248,7 +21808,10 @@ impl Default for PhysicalDeviceVulkan13Features<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceVulkan13Features<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceVulkan13Features<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -19363,7 +21926,9 @@ _marker: PhantomData,
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceVulkan13Properties<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceVulkan14Features<'a> {
@@ -19424,7 +21989,10 @@ impl Default for PhysicalDeviceVulkan14Features<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceVulkan14Features<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceVulkan14Features<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -19499,7 +22067,9 @@ impl Default for PhysicalDeviceVulkan14Properties<'_> {
     }
 }
 
-// structextends: VkGraphicsPipelineCreateInfo,VkComputePipelineCreateInfo,VkExecutionGraphPipelineCreateInfoAMDX
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceVulkan14Properties<'_> {}
+
+/// Extends: `GraphicsPipelineCreateInfo`, `ComputePipelineCreateInfo`, `ExecutionGraphPipelineCreateInfoAMDX`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PipelineCompilerControlCreateInfoAMD<'a> {
@@ -19520,7 +22090,11 @@ impl Default for PipelineCompilerControlCreateInfoAMD<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsGraphicsPipelineCreateInfo for PipelineCompilerControlCreateInfoAMD<'_> {}
+impl ExtendsComputePipelineCreateInfo for PipelineCompilerControlCreateInfoAMD<'_> {}
+impl ExtendsExecutionGraphPipelineCreateInfoAMDX for PipelineCompilerControlCreateInfoAMD<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceCoherentMemoryFeaturesAMD<'a> {
@@ -19540,6 +22114,9 @@ impl Default for PhysicalDeviceCoherentMemoryFeaturesAMD<'_> {
         }
     }
 }
+
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceCoherentMemoryFeaturesAMD<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceCoherentMemoryFeaturesAMD<'_> {}
 
 /// returned_only
 #[repr(C)]
@@ -19564,7 +22141,7 @@ impl Default for FaultData<'_> {
     }
 }
 
-// structextends: VkDeviceCreateInfo
+/// Extends: `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct FaultCallbackInfo<'a> {
@@ -19590,6 +22167,8 @@ impl Default for FaultCallbackInfo<'_> {
         }
     }
 }
+
+impl ExtendsDeviceCreateInfo for FaultCallbackInfo<'_> {}
 
 /// returned_only
 #[repr(C)]
@@ -19625,7 +22204,7 @@ impl Default for PhysicalDeviceToolProperties<'_> {
 }
 
 pub type PhysicalDeviceToolPropertiesEXT<'a> = PhysicalDeviceToolProperties<'a>;
-// structextends: VkSamplerCreateInfo
+/// Extends: `SamplerCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct SamplerCustomBorderColorCreateInfoEXT<'a> {
@@ -19648,7 +22227,9 @@ impl Default for SamplerCustomBorderColorCreateInfoEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsSamplerCreateInfo for SamplerCustomBorderColorCreateInfoEXT<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -19670,7 +22251,9 @@ impl Default for PhysicalDeviceCustomBorderColorPropertiesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceCustomBorderColorPropertiesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceCustomBorderColorFeaturesEXT<'a> {
@@ -19693,7 +22276,10 @@ impl Default for PhysicalDeviceCustomBorderColorFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkSamplerCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceCustomBorderColorFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceCustomBorderColorFeaturesEXT<'_> {}
+
+/// Extends: `SamplerCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct SamplerBorderColorComponentMappingCreateInfoEXT<'a> {
@@ -19716,7 +22302,9 @@ impl Default for SamplerBorderColorComponentMappingCreateInfoEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsSamplerCreateInfo for SamplerBorderColorComponentMappingCreateInfoEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceBorderColorSwizzleFeaturesEXT<'a> {
@@ -19738,6 +22326,9 @@ impl Default for PhysicalDeviceBorderColorSwizzleFeaturesEXT<'_> {
         }
     }
 }
+
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceBorderColorSwizzleFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceBorderColorSwizzleFeaturesEXT<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone)]
@@ -19825,6 +22416,32 @@ impl Default for AccelerationStructureGeometryTrianglesDataKHR<'_> {
     }
 }
 
+pub trait ExtendsAccelerationStructureGeometryTrianglesDataKHR {}
+impl<'a> AccelerationStructureGeometryTrianglesDataKHR<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsAccelerationStructureGeometryTrianglesDataKHR>(
+        mut self,
+        next: &'a mut T,
+    ) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct AccelerationStructureGeometryAabbsDataKHR<'a> {
@@ -19869,7 +22486,7 @@ impl Default for AccelerationStructureGeometryInstancesDataKHR<'_> {
     }
 }
 
-// structextends: VkAccelerationStructureGeometryKHR
+/// Extends: `AccelerationStructureGeometryKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct AccelerationStructureGeometryLinearSweptSpheresDataNV<'a> {
@@ -19910,7 +22527,12 @@ impl Default for AccelerationStructureGeometryLinearSweptSpheresDataNV<'_> {
     }
 }
 
-// structextends: VkAccelerationStructureGeometryKHR
+impl ExtendsAccelerationStructureGeometryKHR
+    for AccelerationStructureGeometryLinearSweptSpheresDataNV<'_>
+{
+}
+
+/// Extends: `AccelerationStructureGeometryKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct AccelerationStructureGeometrySpheresDataNV<'a> {
@@ -19946,6 +22568,8 @@ impl Default for AccelerationStructureGeometrySpheresDataNV<'_> {
         }
     }
 }
+
+impl ExtendsAccelerationStructureGeometryKHR for AccelerationStructureGeometrySpheresDataNV<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone)]
@@ -19988,6 +22612,29 @@ impl Default for AccelerationStructureGeometryKHR<'_> {
             flags: Default::default(),
             _marker: PhantomData,
         }
+    }
+}
+
+pub trait ExtendsAccelerationStructureGeometryKHR {}
+impl<'a> AccelerationStructureGeometryKHR<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsAccelerationStructureGeometryKHR>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -20078,6 +22725,29 @@ impl Default for AccelerationStructureCreateInfoKHR<'_> {
             device_address: Default::default(),
             _marker: PhantomData,
         }
+    }
+}
+
+pub trait ExtendsAccelerationStructureCreateInfoKHR {}
+impl<'a> AccelerationStructureCreateInfoKHR<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsAccelerationStructureCreateInfoKHR>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -20278,7 +22948,7 @@ impl Default for RayTracingPipelineInterfaceCreateInfoKHR<'_> {
     }
 }
 
-// structextends: VkGraphicsPipelineCreateInfo
+/// Extends: `GraphicsPipelineCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PipelineLibraryCreateInfoKHR<'a> {
@@ -20301,6 +22971,8 @@ impl Default for PipelineLibraryCreateInfoKHR<'_> {
         }
     }
 }
+
+impl ExtendsGraphicsPipelineCreateInfo for PipelineLibraryCreateInfoKHR<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -20342,7 +23014,7 @@ impl Default for RefreshObjectListKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceExtendedDynamicStateFeaturesEXT<'a> {
@@ -20363,7 +23035,10 @@ impl Default for PhysicalDeviceExtendedDynamicStateFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceExtendedDynamicStateFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceExtendedDynamicStateFeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceExtendedDynamicState2FeaturesEXT<'a> {
@@ -20388,7 +23063,10 @@ impl Default for PhysicalDeviceExtendedDynamicState2FeaturesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceExtendedDynamicState2FeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceExtendedDynamicState2FeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceExtendedDynamicState3FeaturesEXT<'a> {
@@ -20469,7 +23147,10 @@ impl Default for PhysicalDeviceExtendedDynamicState3FeaturesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceExtendedDynamicState3FeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceExtendedDynamicState3FeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -20490,6 +23171,8 @@ impl Default for PhysicalDeviceExtendedDynamicState3PropertiesEXT<'_> {
         }
     }
 }
+
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceExtendedDynamicState3PropertiesEXT<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -20535,7 +23218,7 @@ impl Default for ColorBlendAdvancedEXT {
     }
 }
 
-// structextends: VkRenderPassBeginInfo
+/// Extends: `RenderPassBeginInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct RenderPassTransformBeginInfoQCOM<'a> {
@@ -20557,7 +23240,9 @@ impl Default for RenderPassTransformBeginInfoQCOM<'_> {
     }
 }
 
-// structextends: VkBufferImageCopy2,VkImageBlit2
+impl ExtendsRenderPassBeginInfo for RenderPassTransformBeginInfoQCOM<'_> {}
+
+/// Extends: `BufferImageCopy2`, `ImageBlit2`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct CopyCommandTransformInfoQCOM<'a> {
@@ -20578,7 +23263,10 @@ impl Default for CopyCommandTransformInfoQCOM<'_> {
     }
 }
 
-// structextends: VkCommandBufferInheritanceInfo
+impl ExtendsBufferImageCopy2 for CopyCommandTransformInfoQCOM<'_> {}
+impl ExtendsImageBlit2 for CopyCommandTransformInfoQCOM<'_> {}
+
+/// Extends: `CommandBufferInheritanceInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct CommandBufferInheritanceRenderPassTransformInfoQCOM<'a> {
@@ -20602,7 +23290,12 @@ impl Default for CommandBufferInheritanceRenderPassTransformInfoQCOM<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsCommandBufferInheritanceInfo
+    for CommandBufferInheritanceRenderPassTransformInfoQCOM<'_>
+{
+}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDevicePartitionedAccelerationStructureFeaturesNV<'a> {
@@ -20623,7 +23316,13 @@ impl Default for PhysicalDevicePartitionedAccelerationStructureFeaturesNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2
+    for PhysicalDevicePartitionedAccelerationStructureFeaturesNV<'_>
+{
+}
+impl ExtendsDeviceCreateInfo for PhysicalDevicePartitionedAccelerationStructureFeaturesNV<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -20645,6 +23344,11 @@ impl Default for PhysicalDevicePartitionedAccelerationStructurePropertiesNV<'_> 
     }
 }
 
+impl ExtendsPhysicalDeviceProperties2
+    for PhysicalDevicePartitionedAccelerationStructurePropertiesNV<'_>
+{
+}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct BuildPartitionedAccelerationStructureIndirectCommandNV {
@@ -20662,7 +23366,7 @@ impl Default for BuildPartitionedAccelerationStructureIndirectCommandNV {
     }
 }
 
-// structextends: VkPartitionedAccelerationStructureInstancesInputNV
+/// Extends: `PartitionedAccelerationStructureInstancesInputNV`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PartitionedAccelerationStructureFlagsNV<'a> {
@@ -20681,6 +23385,11 @@ impl Default for PartitionedAccelerationStructureFlagsNV<'_> {
             _marker: PhantomData,
         }
     }
+}
+
+impl ExtendsPartitionedAccelerationStructureInstancesInputNV
+    for PartitionedAccelerationStructureFlagsNV<'_>
+{
 }
 
 #[repr(C)]
@@ -20744,7 +23453,7 @@ impl Default for PartitionedAccelerationStructureWritePartitionTranslationDataNV
     }
 }
 
-// structextends: VkWriteDescriptorSet
+/// Extends: `WriteDescriptorSet`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct WriteDescriptorSetPartitionedAccelerationStructureNV<'a> {
@@ -20768,6 +23477,8 @@ impl Default for WriteDescriptorSetPartitionedAccelerationStructureNV<'_> {
         }
     }
 }
+
+impl ExtendsWriteDescriptorSet for WriteDescriptorSetPartitionedAccelerationStructureNV<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -20794,6 +23505,32 @@ impl Default for PartitionedAccelerationStructureInstancesInputNV<'_> {
             max_instance_in_global_partition_count: 0,
             _marker: PhantomData,
         }
+    }
+}
+
+pub trait ExtendsPartitionedAccelerationStructureInstancesInputNV {}
+impl<'a> PartitionedAccelerationStructureInstancesInputNV<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsPartitionedAccelerationStructureInstancesInputNV>(
+        mut self,
+        next: &'a mut T,
+    ) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -20827,7 +23564,7 @@ impl Default for BuildPartitionedAccelerationStructureInfoNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceDiagnosticsConfigFeaturesNV<'a> {
@@ -20848,7 +23585,10 @@ impl Default for PhysicalDeviceDiagnosticsConfigFeaturesNV<'_> {
     }
 }
 
-// structextends: VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceDiagnosticsConfigFeaturesNV<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceDiagnosticsConfigFeaturesNV<'_> {}
+
+/// Extends: `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct DeviceDiagnosticsConfigCreateInfoNV<'a> {
@@ -20869,7 +23609,9 @@ impl Default for DeviceDiagnosticsConfigCreateInfoNV<'_> {
     }
 }
 
-// structextends: VkGraphicsPipelineCreateInfo,VkComputePipelineCreateInfo,VkRayTracingPipelineCreateInfoKHR,VkRayTracingPipelineCreateInfoNV
+impl ExtendsDeviceCreateInfo for DeviceDiagnosticsConfigCreateInfoNV<'_> {}
+
+/// Extends: `GraphicsPipelineCreateInfo`, `ComputePipelineCreateInfo`, `RayTracingPipelineCreateInfoKHR`, `RayTracingPipelineCreateInfoNV`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PipelineOfflineCreateInfo<'a> {
@@ -20894,7 +23636,12 @@ impl Default for PipelineOfflineCreateInfo<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsGraphicsPipelineCreateInfo for PipelineOfflineCreateInfo<'_> {}
+impl ExtendsComputePipelineCreateInfo for PipelineOfflineCreateInfo<'_> {}
+impl ExtendsRayTracingPipelineCreateInfoKHR for PipelineOfflineCreateInfo<'_> {}
+impl ExtendsRayTracingPipelineCreateInfoNV for PipelineOfflineCreateInfo<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures<'a> {
@@ -20915,9 +23662,12 @@ impl Default for PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures<'_> {}
+
 pub type PhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR<'a> =
     PhysicalDeviceZeroInitializeWorkgroupMemoryFeatures<'a>;
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR<'a> {
@@ -20938,7 +23688,13 @@ impl Default for PhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2
+    for PhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR<'_>
+{
+}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceRobustness2FeaturesKHR<'a> {
@@ -20963,8 +23719,11 @@ impl Default for PhysicalDeviceRobustness2FeaturesKHR<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceRobustness2FeaturesKHR<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceRobustness2FeaturesKHR<'_> {}
+
 pub type PhysicalDeviceRobustness2FeaturesEXT<'a> = PhysicalDeviceRobustness2FeaturesKHR<'a>;
-// structextends: VkPhysicalDeviceProperties2
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -20988,8 +23747,10 @@ impl Default for PhysicalDeviceRobustness2PropertiesKHR<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceRobustness2PropertiesKHR<'_> {}
+
 pub type PhysicalDeviceRobustness2PropertiesEXT<'a> = PhysicalDeviceRobustness2PropertiesKHR<'a>;
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceImageRobustnessFeatures<'a> {
@@ -21010,8 +23771,11 @@ impl Default for PhysicalDeviceImageRobustnessFeatures<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceImageRobustnessFeatures<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceImageRobustnessFeatures<'_> {}
+
 pub type PhysicalDeviceImageRobustnessFeaturesEXT<'a> = PhysicalDeviceImageRobustnessFeatures<'a>;
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR<'a> {
@@ -21038,7 +23802,10 @@ impl Default for PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDevicePortabilitySubsetFeaturesKHR<'a> {
@@ -21087,7 +23854,10 @@ impl Default for PhysicalDevicePortabilitySubsetFeaturesKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDevicePortabilitySubsetFeaturesKHR<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDevicePortabilitySubsetFeaturesKHR<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -21109,7 +23879,9 @@ impl Default for PhysicalDevicePortabilitySubsetPropertiesKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDevicePortabilitySubsetPropertiesKHR<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDevice4444FormatsFeaturesEXT<'a> {
@@ -21132,7 +23904,10 @@ impl Default for PhysicalDevice4444FormatsFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDevice4444FormatsFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDevice4444FormatsFeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceSubpassShadingFeaturesHUAWEI<'a> {
@@ -21153,7 +23928,10 @@ impl Default for PhysicalDeviceSubpassShadingFeaturesHUAWEI<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceSubpassShadingFeaturesHUAWEI<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceSubpassShadingFeaturesHUAWEI<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceClusterCullingShaderFeaturesHUAWEI<'a> {
@@ -21176,7 +23954,35 @@ impl Default for PhysicalDeviceClusterCullingShaderFeaturesHUAWEI<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceClusterCullingShaderFeaturesHUAWEI
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceClusterCullingShaderFeaturesHUAWEI<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceClusterCullingShaderFeaturesHUAWEI<'_> {}
+pub trait ExtendsPhysicalDeviceClusterCullingShaderFeaturesHUAWEI {}
+impl<'a> PhysicalDeviceClusterCullingShaderFeaturesHUAWEI<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsPhysicalDeviceClusterCullingShaderFeaturesHUAWEI>(
+        mut self,
+        next: &'a mut T,
+    ) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
+/// Extends: `PhysicalDeviceClusterCullingShaderFeaturesHUAWEI`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceClusterCullingShaderVrsFeaturesHUAWEI<'a> {
@@ -21195,6 +24001,11 @@ impl Default for PhysicalDeviceClusterCullingShaderVrsFeaturesHUAWEI<'_> {
             _marker: PhantomData,
         }
     }
+}
+
+impl ExtendsPhysicalDeviceClusterCullingShaderFeaturesHUAWEI
+    for PhysicalDeviceClusterCullingShaderVrsFeaturesHUAWEI<'_>
+{
 }
 
 #[repr(C)]
@@ -21285,6 +24096,29 @@ impl Default for ImageBlit2<'_> {
     }
 }
 
+pub trait ExtendsImageBlit2 {}
+impl<'a> ImageBlit2<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsImageBlit2>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 pub type ImageBlit2KHR<'a> = ImageBlit2<'a>;
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -21317,6 +24151,29 @@ impl Default for BufferImageCopy2<'_> {
             image_extent: Default::default(),
             _marker: PhantomData,
         }
+    }
+}
+
+pub trait ExtendsBufferImageCopy2 {}
+impl<'a> BufferImageCopy2<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsBufferImageCopy2>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -21443,6 +24300,29 @@ impl Default for BlitImageInfo2<'_> {
     }
 }
 
+pub trait ExtendsBlitImageInfo2 {}
+impl<'a> BlitImageInfo2<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsBlitImageInfo2>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 pub type BlitImageInfo2KHR<'a> = BlitImageInfo2<'a>;
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -21535,8 +24415,31 @@ impl Default for ResolveImageInfo2<'_> {
     }
 }
 
+pub trait ExtendsResolveImageInfo2 {}
+impl<'a> ResolveImageInfo2<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsResolveImageInfo2>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 pub type ResolveImageInfo2KHR<'a> = ResolveImageInfo2<'a>;
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceShaderImageAtomicInt64FeaturesEXT<'a> {
@@ -21559,7 +24462,10 @@ impl Default for PhysicalDeviceShaderImageAtomicInt64FeaturesEXT<'_> {
     }
 }
 
-// structextends: VkSubpassDescription2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceShaderImageAtomicInt64FeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceShaderImageAtomicInt64FeaturesEXT<'_> {}
+
+/// Extends: `SubpassDescription2`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct FragmentShadingRateAttachmentInfoKHR<'a> {
@@ -21583,7 +24489,9 @@ impl Default for FragmentShadingRateAttachmentInfoKHR<'_> {
     }
 }
 
-// structextends: VkGraphicsPipelineCreateInfo
+impl ExtendsSubpassDescription2 for FragmentShadingRateAttachmentInfoKHR<'_> {}
+
+/// Extends: `GraphicsPipelineCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PipelineFragmentShadingRateStateCreateInfoKHR<'a> {
@@ -21606,7 +24514,9 @@ impl Default for PipelineFragmentShadingRateStateCreateInfoKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsGraphicsPipelineCreateInfo for PipelineFragmentShadingRateStateCreateInfoKHR<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceFragmentShadingRateFeaturesKHR<'a> {
@@ -21631,7 +24541,10 @@ impl Default for PhysicalDeviceFragmentShadingRateFeaturesKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceFragmentShadingRateFeaturesKHR<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceFragmentShadingRateFeaturesKHR<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -21685,6 +24598,8 @@ impl Default for PhysicalDeviceFragmentShadingRatePropertiesKHR<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceFragmentShadingRatePropertiesKHR<'_> {}
+
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -21708,7 +24623,7 @@ impl Default for PhysicalDeviceFragmentShadingRateKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceShaderTerminateInvocationFeatures<'a> {
@@ -21729,9 +24644,12 @@ impl Default for PhysicalDeviceShaderTerminateInvocationFeatures<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceShaderTerminateInvocationFeatures<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceShaderTerminateInvocationFeatures<'_> {}
+
 pub type PhysicalDeviceShaderTerminateInvocationFeaturesKHR<'a> =
     PhysicalDeviceShaderTerminateInvocationFeatures<'a>;
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceFragmentShadingRateEnumsFeaturesNV<'a> {
@@ -21756,7 +24674,10 @@ impl Default for PhysicalDeviceFragmentShadingRateEnumsFeaturesNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceFragmentShadingRateEnumsFeaturesNV<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceFragmentShadingRateEnumsFeaturesNV<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -21778,7 +24699,9 @@ impl Default for PhysicalDeviceFragmentShadingRateEnumsPropertiesNV<'_> {
     }
 }
 
-// structextends: VkGraphicsPipelineCreateInfo
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceFragmentShadingRateEnumsPropertiesNV<'_> {}
+
+/// Extends: `GraphicsPipelineCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PipelineFragmentShadingRateEnumStateCreateInfoNV<'a> {
@@ -21802,6 +24725,8 @@ impl Default for PipelineFragmentShadingRateEnumStateCreateInfoNV<'_> {
         }
     }
 }
+
+impl ExtendsGraphicsPipelineCreateInfo for PipelineFragmentShadingRateEnumStateCreateInfoNV<'_> {}
 
 /// returned_only
 #[repr(C)]
@@ -21828,7 +24753,7 @@ impl Default for AccelerationStructureBuildSizesInfoKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceImage2DViewOf3DFeaturesEXT<'a> {
@@ -21851,7 +24776,10 @@ impl Default for PhysicalDeviceImage2DViewOf3DFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceImage2DViewOf3DFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceImage2DViewOf3DFeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceImageSlicedViewOf3DFeaturesEXT<'a> {
@@ -21872,7 +24800,10 @@ impl Default for PhysicalDeviceImageSlicedViewOf3DFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceImageSlicedViewOf3DFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceImageSlicedViewOf3DFeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceAttachmentFeedbackLoopDynamicStateFeaturesEXT<'a> {
@@ -21893,7 +24824,13 @@ impl Default for PhysicalDeviceAttachmentFeedbackLoopDynamicStateFeaturesEXT<'_>
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2
+    for PhysicalDeviceAttachmentFeedbackLoopDynamicStateFeaturesEXT<'_>
+{
+}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceAttachmentFeedbackLoopDynamicStateFeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceLegacyVertexAttributesFeaturesEXT<'a> {
@@ -21914,7 +24851,10 @@ impl Default for PhysicalDeviceLegacyVertexAttributesFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceLegacyVertexAttributesFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceLegacyVertexAttributesFeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -21936,7 +24876,9 @@ impl Default for PhysicalDeviceLegacyVertexAttributesPropertiesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceLegacyVertexAttributesPropertiesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceMutableDescriptorTypeFeaturesEXT<'a> {
@@ -21956,6 +24898,9 @@ impl Default for PhysicalDeviceMutableDescriptorTypeFeaturesEXT<'_> {
         }
     }
 }
+
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceMutableDescriptorTypeFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceMutableDescriptorTypeFeaturesEXT<'_> {}
 
 pub type PhysicalDeviceMutableDescriptorTypeFeaturesVALVE<'a> =
     PhysicalDeviceMutableDescriptorTypeFeaturesEXT<'a>;
@@ -21978,7 +24923,7 @@ impl Default for MutableDescriptorTypeListEXT<'_> {
 }
 
 pub type MutableDescriptorTypeListVALVE<'a> = MutableDescriptorTypeListEXT<'a>;
-// structextends: VkDescriptorSetLayoutCreateInfo,VkDescriptorPoolCreateInfo
+/// Extends: `DescriptorSetLayoutCreateInfo`, `DescriptorPoolCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct MutableDescriptorTypeCreateInfoEXT<'a> {
@@ -22002,8 +24947,11 @@ impl Default for MutableDescriptorTypeCreateInfoEXT<'_> {
     }
 }
 
+impl ExtendsDescriptorSetLayoutCreateInfo for MutableDescriptorTypeCreateInfoEXT<'_> {}
+impl ExtendsDescriptorPoolCreateInfo for MutableDescriptorTypeCreateInfoEXT<'_> {}
+
 pub type MutableDescriptorTypeCreateInfoVALVE<'a> = MutableDescriptorTypeCreateInfoEXT<'a>;
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceDepthClipControlFeaturesEXT<'a> {
@@ -22024,7 +24972,10 @@ impl Default for PhysicalDeviceDepthClipControlFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceDepthClipControlFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceDepthClipControlFeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT<'a> {
@@ -22045,6 +24996,9 @@ impl Default for PhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT<'_> {}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct BeginCustomResolveInfoEXT<'a> {
@@ -22063,7 +25017,7 @@ impl Default for BeginCustomResolveInfoEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceCustomResolveFeaturesEXT<'a> {
@@ -22084,7 +25038,10 @@ impl Default for PhysicalDeviceCustomResolveFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkGraphicsPipelineCreateInfo,VkCommandBufferInheritanceInfo,VkShaderCreateInfoEXT
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceCustomResolveFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceCustomResolveFeaturesEXT<'_> {}
+
+/// Extends: `GraphicsPipelineCreateInfo`, `CommandBufferInheritanceInfo`, `ShaderCreateInfoEXT`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct CustomResolveCreateInfoEXT<'a> {
@@ -22114,7 +25071,11 @@ impl Default for CustomResolveCreateInfoEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsGraphicsPipelineCreateInfo for CustomResolveCreateInfoEXT<'_> {}
+impl ExtendsCommandBufferInheritanceInfo for CustomResolveCreateInfoEXT<'_> {}
+impl ExtendsShaderCreateInfoEXT for CustomResolveCreateInfoEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceDeviceGeneratedCommandsFeaturesEXT<'a> {
@@ -22137,7 +25098,10 @@ impl Default for PhysicalDeviceDeviceGeneratedCommandsFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceDeviceGeneratedCommandsFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceDeviceGeneratedCommandsFeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -22181,7 +25145,9 @@ impl Default for PhysicalDeviceDeviceGeneratedCommandsPropertiesEXT<'_> {
     }
 }
 
-// structextends: VkGeneratedCommandsInfoEXT,VkGeneratedCommandsMemoryRequirementsInfoEXT
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceDeviceGeneratedCommandsPropertiesEXT<'_> {}
+
+/// Extends: `GeneratedCommandsInfoEXT`, `GeneratedCommandsMemoryRequirementsInfoEXT`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct GeneratedCommandsPipelineInfoEXT<'a> {
@@ -22202,7 +25168,10 @@ impl Default for GeneratedCommandsPipelineInfoEXT<'_> {
     }
 }
 
-// structextends: VkGeneratedCommandsInfoEXT,VkGeneratedCommandsMemoryRequirementsInfoEXT
+impl ExtendsGeneratedCommandsInfoEXT for GeneratedCommandsPipelineInfoEXT<'_> {}
+impl ExtendsGeneratedCommandsMemoryRequirementsInfoEXT for GeneratedCommandsPipelineInfoEXT<'_> {}
+
+/// Extends: `GeneratedCommandsInfoEXT`, `GeneratedCommandsMemoryRequirementsInfoEXT`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct GeneratedCommandsShaderInfoEXT<'a> {
@@ -22225,6 +25194,9 @@ impl Default for GeneratedCommandsShaderInfoEXT<'_> {
         }
     }
 }
+
+impl ExtendsGeneratedCommandsInfoEXT for GeneratedCommandsShaderInfoEXT<'_> {}
+impl ExtendsGeneratedCommandsMemoryRequirementsInfoEXT for GeneratedCommandsShaderInfoEXT<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -22249,6 +25221,32 @@ impl Default for GeneratedCommandsMemoryRequirementsInfoEXT<'_> {
             max_draw_count: 0,
             _marker: PhantomData,
         }
+    }
+}
+
+pub trait ExtendsGeneratedCommandsMemoryRequirementsInfoEXT {}
+impl<'a> GeneratedCommandsMemoryRequirementsInfoEXT<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsGeneratedCommandsMemoryRequirementsInfoEXT>(
+        mut self,
+        next: &'a mut T,
+    ) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -22410,6 +25408,29 @@ impl Default for GeneratedCommandsInfoEXT<'_> {
     }
 }
 
+pub trait ExtendsGeneratedCommandsInfoEXT {}
+impl<'a> GeneratedCommandsInfoEXT<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsGeneratedCommandsInfoEXT>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct WriteIndirectExecutionSetPipelineEXT<'a> {
@@ -22485,6 +25506,29 @@ impl Default for IndirectCommandsLayoutCreateInfoEXT<'_> {
     }
 }
 
+pub trait ExtendsIndirectCommandsLayoutCreateInfoEXT {}
+impl<'a> IndirectCommandsLayoutCreateInfoEXT<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsIndirectCommandsLayoutCreateInfoEXT>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct IndirectCommandsLayoutTokenEXT<'a> {
@@ -22506,6 +25550,29 @@ impl Default for IndirectCommandsLayoutTokenEXT<'_> {
             offset: 0,
             _marker: PhantomData,
         }
+    }
+}
+
+pub trait ExtendsIndirectCommandsLayoutTokenEXT {}
+impl<'a> IndirectCommandsLayoutTokenEXT<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsIndirectCommandsLayoutTokenEXT>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -22634,7 +25701,7 @@ impl fmt::Debug for IndirectCommandsTokenDataEXT {
     }
 }
 
-// structextends: VkPipelineViewportStateCreateInfo
+/// Extends: `PipelineViewportStateCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PipelineViewportDepthClipControlCreateInfoEXT<'a> {
@@ -22655,7 +25722,9 @@ impl Default for PipelineViewportDepthClipControlCreateInfoEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPipelineViewportStateCreateInfo for PipelineViewportDepthClipControlCreateInfoEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceDepthClampControlFeaturesEXT<'a> {
@@ -22676,7 +25745,10 @@ impl Default for PhysicalDeviceDepthClampControlFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkPipelineViewportStateCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceDepthClampControlFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceDepthClampControlFeaturesEXT<'_> {}
+
+/// Extends: `PipelineViewportStateCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PipelineViewportDepthClampControlCreateInfoEXT<'a> {
@@ -22700,7 +25772,9 @@ impl Default for PipelineViewportDepthClampControlCreateInfoEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPipelineViewportStateCreateInfo for PipelineViewportDepthClampControlCreateInfoEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceVertexInputDynamicStateFeaturesEXT<'a> {
@@ -22721,7 +25795,10 @@ impl Default for PhysicalDeviceVertexInputDynamicStateFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceVertexInputDynamicStateFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceVertexInputDynamicStateFeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceExternalMemoryRDMAFeaturesNV<'a> {
@@ -22742,7 +25819,10 @@ impl Default for PhysicalDeviceExternalMemoryRDMAFeaturesNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceExternalMemoryRDMAFeaturesNV<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceExternalMemoryRDMAFeaturesNV<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceShaderRelaxedExtendedInstructionFeaturesKHR<'a> {
@@ -22762,6 +25842,12 @@ impl Default for PhysicalDeviceShaderRelaxedExtendedInstructionFeaturesKHR<'_> {
         }
     }
 }
+
+impl ExtendsPhysicalDeviceFeatures2
+    for PhysicalDeviceShaderRelaxedExtendedInstructionFeaturesKHR<'_>
+{
+}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceShaderRelaxedExtendedInstructionFeaturesKHR<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -22819,7 +25905,7 @@ impl Default for VertexInputAttributeDescription2EXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceColorWriteEnableFeaturesEXT<'a> {
@@ -22840,7 +25926,10 @@ impl Default for PhysicalDeviceColorWriteEnableFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkPipelineColorBlendStateCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceColorWriteEnableFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceColorWriteEnableFeaturesEXT<'_> {}
+
+/// Extends: `PipelineColorBlendStateCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PipelineColorWriteCreateInfoEXT<'a> {
@@ -22865,7 +25954,9 @@ impl Default for PipelineColorWriteCreateInfoEXT<'_> {
     }
 }
 
-// structextends: VkSubpassDependency2
+impl ExtendsPipelineColorBlendStateCreateInfo for PipelineColorWriteCreateInfoEXT<'_> {}
+
+/// Extends: `SubpassDependency2`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct MemoryBarrier2<'a> {
@@ -22891,6 +25982,8 @@ impl Default for MemoryBarrier2<'_> {
         }
     }
 }
+
+impl ExtendsSubpassDependency2 for MemoryBarrier2<'_> {}
 
 pub type MemoryBarrier2KHR<'a> = MemoryBarrier2<'a>;
 #[repr(C)]
@@ -22931,6 +26024,29 @@ impl Default for ImageMemoryBarrier2<'_> {
     }
 }
 
+pub trait ExtendsImageMemoryBarrier2 {}
+impl<'a> ImageMemoryBarrier2<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsImageMemoryBarrier2>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 pub type ImageMemoryBarrier2KHR<'a> = ImageMemoryBarrier2<'a>;
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -22968,8 +26084,31 @@ impl Default for BufferMemoryBarrier2<'_> {
     }
 }
 
+pub trait ExtendsBufferMemoryBarrier2 {}
+impl<'a> BufferMemoryBarrier2<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsBufferMemoryBarrier2>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 pub type BufferMemoryBarrier2KHR<'a> = BufferMemoryBarrier2<'a>;
-// structextends: VkSubpassDependency2,VkBufferMemoryBarrier2,VkImageMemoryBarrier2
+/// Extends: `SubpassDependency2`, `BufferMemoryBarrier2`, `ImageMemoryBarrier2`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct MemoryBarrierAccessFlags3KHR<'a> {
@@ -22991,6 +26130,10 @@ impl Default for MemoryBarrierAccessFlags3KHR<'_> {
         }
     }
 }
+
+impl ExtendsSubpassDependency2 for MemoryBarrierAccessFlags3KHR<'_> {}
+impl ExtendsBufferMemoryBarrier2 for MemoryBarrierAccessFlags3KHR<'_> {}
+impl ExtendsImageMemoryBarrier2 for MemoryBarrierAccessFlags3KHR<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -23024,6 +26167,29 @@ impl Default for DependencyInfo<'_> {
             image_memory_barriers: ptr::null_mut(),
             _marker: PhantomData,
         }
+    }
+}
+
+pub trait ExtendsDependencyInfo {}
+impl<'a> DependencyInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsDependencyInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -23077,6 +26243,29 @@ impl Default for CommandBufferSubmitInfo<'_> {
     }
 }
 
+pub trait ExtendsCommandBufferSubmitInfo {}
+impl<'a> CommandBufferSubmitInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsCommandBufferSubmitInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 pub type CommandBufferSubmitInfoKHR<'a> = CommandBufferSubmitInfo<'a>;
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -23113,8 +26302,31 @@ impl Default for SubmitInfo2<'_> {
     }
 }
 
+pub trait ExtendsSubmitInfo2 {}
+impl<'a> SubmitInfo2<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsSubmitInfo2>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 pub type SubmitInfo2KHR<'a> = SubmitInfo2<'a>;
-// structextends: VkQueueFamilyProperties2
+/// Extends: `QueueFamilyProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -23135,6 +26347,8 @@ impl Default for QueueFamilyCheckpointProperties2NV<'_> {
         }
     }
 }
+
+impl ExtendsQueueFamilyProperties2 for QueueFamilyCheckpointProperties2NV<'_> {}
 
 /// returned_only
 #[repr(C)]
@@ -23159,7 +26373,7 @@ impl Default for CheckpointData2NV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceSynchronization2Features<'a> {
@@ -23180,8 +26394,11 @@ impl Default for PhysicalDeviceSynchronization2Features<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceSynchronization2Features<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceSynchronization2Features<'_> {}
+
 pub type PhysicalDeviceSynchronization2FeaturesKHR<'a> = PhysicalDeviceSynchronization2Features<'a>;
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceUnifiedImageLayoutsFeaturesKHR<'a> {
@@ -23204,7 +26421,10 @@ impl Default for PhysicalDeviceUnifiedImageLayoutsFeaturesKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceUnifiedImageLayoutsFeaturesKHR<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceUnifiedImageLayoutsFeaturesKHR<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceHostImageCopyFeatures<'a> {
@@ -23225,8 +26445,11 @@ impl Default for PhysicalDeviceHostImageCopyFeatures<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceHostImageCopyFeatures<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceHostImageCopyFeatures<'_> {}
+
 pub type PhysicalDeviceHostImageCopyFeaturesEXT<'a> = PhysicalDeviceHostImageCopyFeatures<'a>;
-// structextends: VkPhysicalDeviceProperties2
+/// Extends: `PhysicalDeviceProperties2`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceHostImageCopyProperties<'a> {
@@ -23260,6 +26483,8 @@ impl Default for PhysicalDeviceHostImageCopyProperties<'_> {
         }
     }
 }
+
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceHostImageCopyProperties<'_> {}
 
 pub type PhysicalDeviceHostImageCopyPropertiesEXT<'a> = PhysicalDeviceHostImageCopyProperties<'a>;
 #[repr(C)]
@@ -23447,7 +26672,7 @@ impl Default for HostImageLayoutTransitionInfo<'_> {
 }
 
 pub type HostImageLayoutTransitionInfoEXT<'a> = HostImageLayoutTransitionInfo<'a>;
-// structextends: VkSubresourceLayout2
+/// Extends: `SubresourceLayout2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -23470,8 +26695,10 @@ impl Default for SubresourceHostMemcpySize<'_> {
     }
 }
 
+impl ExtendsSubresourceLayout2 for SubresourceHostMemcpySize<'_> {}
+
 pub type SubresourceHostMemcpySizeEXT<'a> = SubresourceHostMemcpySize<'a>;
-// structextends: VkImageFormatProperties2
+/// Extends: `ImageFormatProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -23497,8 +26724,10 @@ impl Default for HostImageCopyDevicePerformanceQuery<'_> {
     }
 }
 
+impl ExtendsImageFormatProperties2 for HostImageCopyDevicePerformanceQuery<'_> {}
+
 pub type HostImageCopyDevicePerformanceQueryEXT<'a> = HostImageCopyDevicePerformanceQuery<'a>;
-// structextends: VkPhysicalDeviceProperties2
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -23554,6 +26783,8 @@ impl Default for PhysicalDeviceVulkanSC10Properties<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceVulkanSC10Properties<'_> {}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PipelinePoolSize<'a> {
@@ -23576,7 +26807,7 @@ impl Default for PipelinePoolSize<'_> {
     }
 }
 
-// structextends: VkDeviceCreateInfo
+/// Extends: `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct DeviceObjectReservationCreateInfo<'a> {
@@ -23679,7 +26910,9 @@ impl Default for DeviceObjectReservationCreateInfo<'_> {
     }
 }
 
-// structextends: VkCommandPoolCreateInfo
+impl ExtendsDeviceCreateInfo for DeviceObjectReservationCreateInfo<'_> {}
+
+/// Extends: `CommandPoolCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct CommandPoolMemoryReservationCreateInfo<'a> {
@@ -23701,6 +26934,8 @@ impl Default for CommandPoolMemoryReservationCreateInfo<'_> {
         }
     }
 }
+
+impl ExtendsCommandPoolCreateInfo for CommandPoolMemoryReservationCreateInfo<'_> {}
 
 /// returned_only
 #[repr(C)]
@@ -23727,7 +26962,7 @@ impl Default for CommandPoolMemoryConsumption<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceVulkanSC10Features<'a> {
@@ -23748,7 +26983,10 @@ impl Default for PhysicalDeviceVulkanSC10Features<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceVulkanSC10Features<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceVulkanSC10Features<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDevicePrimitivesGeneratedQueryFeaturesEXT<'a> {
@@ -23773,7 +27011,10 @@ impl Default for PhysicalDevicePrimitivesGeneratedQueryFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDevicePrimitivesGeneratedQueryFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDevicePrimitivesGeneratedQueryFeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceLegacyDitheringFeaturesEXT<'a> {
@@ -23794,7 +27035,10 @@ impl Default for PhysicalDeviceLegacyDitheringFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceLegacyDitheringFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceLegacyDitheringFeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT<'a> {
@@ -23815,7 +27059,13 @@ impl Default for PhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT<'_> 
     }
 }
 
-// structextends: VkSurfaceCapabilities2KHR
+impl ExtendsPhysicalDeviceFeatures2
+    for PhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT<'_>
+{
+}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT<'_> {}
+
+/// Extends: `SurfaceCapabilities2KHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct SurfaceCapabilitiesPresentId2KHR<'a> {
@@ -23836,7 +27086,9 @@ impl Default for SurfaceCapabilitiesPresentId2KHR<'_> {
     }
 }
 
-// structextends: VkSurfaceCapabilities2KHR
+impl ExtendsSurfaceCapabilities2KHR for SurfaceCapabilitiesPresentId2KHR<'_> {}
+
+/// Extends: `SurfaceCapabilities2KHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct SurfaceCapabilitiesPresentWait2KHR<'a> {
@@ -23857,7 +27109,9 @@ impl Default for SurfaceCapabilitiesPresentWait2KHR<'_> {
     }
 }
 
-// structextends: VkFormatProperties2
+impl ExtendsSurfaceCapabilities2KHR for SurfaceCapabilitiesPresentWait2KHR<'_> {}
+
+/// Extends: `FormatProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -23879,7 +27133,9 @@ impl Default for SubpassResolvePerformanceQueryEXT<'_> {
     }
 }
 
-// structextends: VkSubpassDescription2,VkRenderingInfo
+impl ExtendsFormatProperties2 for SubpassResolvePerformanceQueryEXT<'_> {}
+
+/// Extends: `SubpassDescription2`, `RenderingInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct MultisampledRenderToSingleSampledInfoEXT<'a> {
@@ -23902,7 +27158,10 @@ impl Default for MultisampledRenderToSingleSampledInfoEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsSubpassDescription2 for MultisampledRenderToSingleSampledInfoEXT<'_> {}
+impl ExtendsRenderingInfo for MultisampledRenderToSingleSampledInfoEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDevicePipelineProtectedAccessFeatures<'a> {
@@ -23923,9 +27182,12 @@ impl Default for PhysicalDevicePipelineProtectedAccessFeatures<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDevicePipelineProtectedAccessFeatures<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDevicePipelineProtectedAccessFeatures<'_> {}
+
 pub type PhysicalDevicePipelineProtectedAccessFeaturesEXT<'a> =
     PhysicalDevicePipelineProtectedAccessFeatures<'a>;
-// structextends: VkQueueFamilyProperties2
+/// Extends: `QueueFamilyProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -23947,7 +27209,9 @@ impl Default for QueueFamilyVideoPropertiesKHR<'_> {
     }
 }
 
-// structextends: VkQueueFamilyProperties2
+impl ExtendsQueueFamilyProperties2 for QueueFamilyVideoPropertiesKHR<'_> {}
+
+/// Extends: `QueueFamilyProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -23969,7 +27233,9 @@ impl Default for QueueFamilyQueryResultStatusPropertiesKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceImageFormatInfo2,VkPhysicalDeviceVideoFormatInfoKHR,VkImageCreateInfo,VkBufferCreateInfo
+impl ExtendsQueueFamilyProperties2 for QueueFamilyQueryResultStatusPropertiesKHR<'_> {}
+
+/// Extends: `PhysicalDeviceImageFormatInfo2`, `PhysicalDeviceVideoFormatInfoKHR`, `ImageCreateInfo`, `BufferCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoProfileListInfoKHR<'a> {
@@ -23993,6 +27259,11 @@ impl Default for VideoProfileListInfoKHR<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceImageFormatInfo2 for VideoProfileListInfoKHR<'_> {}
+impl ExtendsPhysicalDeviceVideoFormatInfoKHR for VideoProfileListInfoKHR<'_> {}
+impl ExtendsImageCreateInfo for VideoProfileListInfoKHR<'_> {}
+impl ExtendsBufferCreateInfo for VideoProfileListInfoKHR<'_> {}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceVideoFormatInfoKHR<'a> {
@@ -24010,6 +27281,29 @@ impl Default for PhysicalDeviceVideoFormatInfoKHR<'_> {
             image_usage: Default::default(),
             _marker: PhantomData,
         }
+    }
+}
+
+pub trait ExtendsPhysicalDeviceVideoFormatInfoKHR {}
+impl<'a> PhysicalDeviceVideoFormatInfoKHR<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsPhysicalDeviceVideoFormatInfoKHR>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -24044,7 +27338,30 @@ impl Default for VideoFormatPropertiesKHR<'_> {
     }
 }
 
-// structextends: VkVideoCapabilitiesKHR
+pub trait ExtendsVideoFormatPropertiesKHR {}
+impl<'a> VideoFormatPropertiesKHR<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsVideoFormatPropertiesKHR>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
+/// Extends: `VideoCapabilitiesKHR`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -24066,7 +27383,9 @@ impl Default for VideoEncodeQuantizationMapCapabilitiesKHR<'_> {
     }
 }
 
-// structextends: VkVideoCapabilitiesKHR
+impl ExtendsVideoCapabilitiesKHR for VideoEncodeQuantizationMapCapabilitiesKHR<'_> {}
+
+/// Extends: `VideoCapabilitiesKHR`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -24090,7 +27409,9 @@ impl Default for VideoEncodeH264QuantizationMapCapabilitiesKHR<'_> {
     }
 }
 
-// structextends: VkVideoCapabilitiesKHR
+impl ExtendsVideoCapabilitiesKHR for VideoEncodeH264QuantizationMapCapabilitiesKHR<'_> {}
+
+/// Extends: `VideoCapabilitiesKHR`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -24114,7 +27435,9 @@ impl Default for VideoEncodeH265QuantizationMapCapabilitiesKHR<'_> {
     }
 }
 
-// structextends: VkVideoCapabilitiesKHR
+impl ExtendsVideoCapabilitiesKHR for VideoEncodeH265QuantizationMapCapabilitiesKHR<'_> {}
+
+/// Extends: `VideoCapabilitiesKHR`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -24138,7 +27461,9 @@ impl Default for VideoEncodeAV1QuantizationMapCapabilitiesKHR<'_> {
     }
 }
 
-// structextends: VkVideoFormatPropertiesKHR
+impl ExtendsVideoCapabilitiesKHR for VideoEncodeAV1QuantizationMapCapabilitiesKHR<'_> {}
+
+/// Extends: `VideoFormatPropertiesKHR`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -24160,7 +27485,9 @@ impl Default for VideoFormatQuantizationMapPropertiesKHR<'_> {
     }
 }
 
-// structextends: VkVideoFormatPropertiesKHR
+impl ExtendsVideoFormatPropertiesKHR for VideoFormatQuantizationMapPropertiesKHR<'_> {}
+
+/// Extends: `VideoFormatPropertiesKHR`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -24182,7 +27509,9 @@ impl Default for VideoFormatH265QuantizationMapPropertiesKHR<'_> {
     }
 }
 
-// structextends: VkVideoFormatPropertiesKHR
+impl ExtendsVideoFormatPropertiesKHR for VideoFormatH265QuantizationMapPropertiesKHR<'_> {}
+
+/// Extends: `VideoFormatPropertiesKHR`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -24204,7 +27533,9 @@ impl Default for VideoFormatAV1QuantizationMapPropertiesKHR<'_> {
     }
 }
 
-// structextends: VkQueryPoolCreateInfo
+impl ExtendsVideoFormatPropertiesKHR for VideoFormatAV1QuantizationMapPropertiesKHR<'_> {}
+
+/// Extends: `QueryPoolCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoProfileInfoKHR<'a> {
@@ -24228,6 +27559,30 @@ impl Default for VideoProfileInfoKHR<'_> {
             chroma_bit_depth: Default::default(),
             _marker: PhantomData,
         }
+    }
+}
+
+impl ExtendsQueryPoolCreateInfo for VideoProfileInfoKHR<'_> {}
+pub trait ExtendsVideoProfileInfoKHR {}
+impl<'a> VideoProfileInfoKHR<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsVideoProfileInfoKHR>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -24265,6 +27620,29 @@ impl Default for VideoCapabilitiesKHR<'_> {
             header_version: Default::default(),
             _marker: PhantomData,
         }
+    }
+}
+
+pub trait ExtendsVideoCapabilitiesKHR {}
+impl<'a> VideoCapabilitiesKHR<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsVideoCapabilitiesKHR>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -24372,7 +27750,30 @@ impl Default for VideoReferenceSlotInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoCapabilitiesKHR
+pub trait ExtendsVideoReferenceSlotInfoKHR {}
+impl<'a> VideoReferenceSlotInfoKHR<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsVideoReferenceSlotInfoKHR>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
+/// Extends: `VideoCapabilitiesKHR`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -24394,7 +27795,9 @@ impl Default for VideoDecodeCapabilitiesKHR<'_> {
     }
 }
 
-// structextends: VkVideoProfileInfoKHR,VkQueryPoolCreateInfo
+impl ExtendsVideoCapabilitiesKHR for VideoDecodeCapabilitiesKHR<'_> {}
+
+/// Extends: `VideoProfileInfoKHR`, `QueryPoolCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoDecodeUsageInfoKHR<'a> {
@@ -24414,6 +27817,9 @@ impl Default for VideoDecodeUsageInfoKHR<'_> {
         }
     }
 }
+
+impl ExtendsVideoProfileInfoKHR for VideoDecodeUsageInfoKHR<'_> {}
+impl ExtendsQueryPoolCreateInfo for VideoDecodeUsageInfoKHR<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -24451,7 +27857,30 @@ impl Default for VideoDecodeInfoKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+pub trait ExtendsVideoDecodeInfoKHR {}
+impl<'a> VideoDecodeInfoKHR<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsVideoDecodeInfoKHR>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceVideoMaintenance1FeaturesKHR<'a> {
@@ -24472,7 +27901,10 @@ impl Default for PhysicalDeviceVideoMaintenance1FeaturesKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceVideoMaintenance1FeaturesKHR<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceVideoMaintenance1FeaturesKHR<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceVideoMaintenance2FeaturesKHR<'a> {
@@ -24493,7 +27925,10 @@ impl Default for PhysicalDeviceVideoMaintenance2FeaturesKHR<'_> {
     }
 }
 
-// structextends: VkVideoDecodeInfoKHR,VkVideoEncodeInfoKHR
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceVideoMaintenance2FeaturesKHR<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceVideoMaintenance2FeaturesKHR<'_> {}
+
+/// Extends: `VideoDecodeInfoKHR`, `VideoEncodeInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoInlineQueryInfoKHR<'a> {
@@ -24518,7 +27953,10 @@ impl Default for VideoInlineQueryInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoProfileInfoKHR,VkQueryPoolCreateInfo
+impl ExtendsVideoDecodeInfoKHR for VideoInlineQueryInfoKHR<'_> {}
+impl ExtendsVideoEncodeInfoKHR for VideoInlineQueryInfoKHR<'_> {}
+
+/// Extends: `VideoProfileInfoKHR`, `QueryPoolCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoDecodeH264ProfileInfoKHR<'a> {
@@ -24541,7 +27979,10 @@ impl Default for VideoDecodeH264ProfileInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoCapabilitiesKHR
+impl ExtendsVideoProfileInfoKHR for VideoDecodeH264ProfileInfoKHR<'_> {}
+impl ExtendsQueryPoolCreateInfo for VideoDecodeH264ProfileInfoKHR<'_> {}
+
+/// Extends: `VideoCapabilitiesKHR`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -24565,7 +28006,9 @@ impl Default for VideoDecodeH264CapabilitiesKHR<'_> {
     }
 }
 
-// structextends: VkVideoSessionParametersUpdateInfoKHR
+impl ExtendsVideoCapabilitiesKHR for VideoDecodeH264CapabilitiesKHR<'_> {}
+
+/// Extends: `VideoSessionParametersUpdateInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoDecodeH264SessionParametersAddInfoKHR<'a> {
@@ -24595,7 +28038,9 @@ impl Default for VideoDecodeH264SessionParametersAddInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoSessionParametersCreateInfoKHR
+impl ExtendsVideoSessionParametersUpdateInfoKHR for VideoDecodeH264SessionParametersAddInfoKHR<'_> {}
+
+/// Extends: `VideoSessionParametersCreateInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoDecodeH264SessionParametersCreateInfoKHR<'a> {
@@ -24621,7 +28066,12 @@ impl Default for VideoDecodeH264SessionParametersCreateInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoDecodeInfoKHR
+impl ExtendsVideoSessionParametersCreateInfoKHR
+    for VideoDecodeH264SessionParametersCreateInfoKHR<'_>
+{
+}
+
+/// Extends: `VideoDecodeInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoDecodeH264InlineSessionParametersInfoKHR<'a> {
@@ -24646,7 +28096,9 @@ impl Default for VideoDecodeH264InlineSessionParametersInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoDecodeInfoKHR
+impl ExtendsVideoDecodeInfoKHR for VideoDecodeH264InlineSessionParametersInfoKHR<'_> {}
+
+/// Extends: `VideoDecodeInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoDecodeH264PictureInfoKHR<'a> {
@@ -24672,7 +28124,9 @@ impl Default for VideoDecodeH264PictureInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoReferenceSlotInfoKHR
+impl ExtendsVideoDecodeInfoKHR for VideoDecodeH264PictureInfoKHR<'_> {}
+
+/// Extends: `VideoReferenceSlotInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoDecodeH264DpbSlotInfoKHR<'a> {
@@ -24693,7 +28147,9 @@ impl Default for VideoDecodeH264DpbSlotInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoProfileInfoKHR,VkQueryPoolCreateInfo
+impl ExtendsVideoReferenceSlotInfoKHR for VideoDecodeH264DpbSlotInfoKHR<'_> {}
+
+/// Extends: `VideoProfileInfoKHR`, `QueryPoolCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoDecodeH265ProfileInfoKHR<'a> {
@@ -24714,7 +28170,10 @@ impl Default for VideoDecodeH265ProfileInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoCapabilitiesKHR
+impl ExtendsVideoProfileInfoKHR for VideoDecodeH265ProfileInfoKHR<'_> {}
+impl ExtendsQueryPoolCreateInfo for VideoDecodeH265ProfileInfoKHR<'_> {}
+
+/// Extends: `VideoCapabilitiesKHR`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -24736,7 +28195,9 @@ impl Default for VideoDecodeH265CapabilitiesKHR<'_> {
     }
 }
 
-// structextends: VkVideoSessionParametersUpdateInfoKHR
+impl ExtendsVideoCapabilitiesKHR for VideoDecodeH265CapabilitiesKHR<'_> {}
+
+/// Extends: `VideoSessionParametersUpdateInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoDecodeH265SessionParametersAddInfoKHR<'a> {
@@ -24771,7 +28232,9 @@ impl Default for VideoDecodeH265SessionParametersAddInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoSessionParametersCreateInfoKHR
+impl ExtendsVideoSessionParametersUpdateInfoKHR for VideoDecodeH265SessionParametersAddInfoKHR<'_> {}
+
+/// Extends: `VideoSessionParametersCreateInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoDecodeH265SessionParametersCreateInfoKHR<'a> {
@@ -24799,7 +28262,12 @@ impl Default for VideoDecodeH265SessionParametersCreateInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoDecodeInfoKHR
+impl ExtendsVideoSessionParametersCreateInfoKHR
+    for VideoDecodeH265SessionParametersCreateInfoKHR<'_>
+{
+}
+
+/// Extends: `VideoDecodeInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoDecodeH265InlineSessionParametersInfoKHR<'a> {
@@ -24827,7 +28295,9 @@ impl Default for VideoDecodeH265InlineSessionParametersInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoDecodeInfoKHR
+impl ExtendsVideoDecodeInfoKHR for VideoDecodeH265InlineSessionParametersInfoKHR<'_> {}
+
+/// Extends: `VideoDecodeInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoDecodeH265PictureInfoKHR<'a> {
@@ -24853,7 +28323,9 @@ impl Default for VideoDecodeH265PictureInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoReferenceSlotInfoKHR
+impl ExtendsVideoDecodeInfoKHR for VideoDecodeH265PictureInfoKHR<'_> {}
+
+/// Extends: `VideoReferenceSlotInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoDecodeH265DpbSlotInfoKHR<'a> {
@@ -24874,7 +28346,9 @@ impl Default for VideoDecodeH265DpbSlotInfoKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsVideoReferenceSlotInfoKHR for VideoDecodeH265DpbSlotInfoKHR<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceVideoDecodeVP9FeaturesKHR<'a> {
@@ -24895,7 +28369,10 @@ impl Default for PhysicalDeviceVideoDecodeVP9FeaturesKHR<'_> {
     }
 }
 
-// structextends: VkVideoProfileInfoKHR,VkQueryPoolCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceVideoDecodeVP9FeaturesKHR<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceVideoDecodeVP9FeaturesKHR<'_> {}
+
+/// Extends: `VideoProfileInfoKHR`, `QueryPoolCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoDecodeVP9ProfileInfoKHR<'a> {
@@ -24916,7 +28393,10 @@ impl Default for VideoDecodeVP9ProfileInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoCapabilitiesKHR
+impl ExtendsVideoProfileInfoKHR for VideoDecodeVP9ProfileInfoKHR<'_> {}
+impl ExtendsQueryPoolCreateInfo for VideoDecodeVP9ProfileInfoKHR<'_> {}
+
+/// Extends: `VideoCapabilitiesKHR`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -24938,7 +28418,9 @@ impl Default for VideoDecodeVP9CapabilitiesKHR<'_> {
     }
 }
 
-// structextends: VkVideoDecodeInfoKHR
+impl ExtendsVideoCapabilitiesKHR for VideoDecodeVP9CapabilitiesKHR<'_> {}
+
+/// Extends: `VideoDecodeInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoDecodeVP9PictureInfoKHR<'a> {
@@ -24967,7 +28449,9 @@ impl Default for VideoDecodeVP9PictureInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoProfileInfoKHR,VkQueryPoolCreateInfo
+impl ExtendsVideoDecodeInfoKHR for VideoDecodeVP9PictureInfoKHR<'_> {}
+
+/// Extends: `VideoProfileInfoKHR`, `QueryPoolCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoDecodeAV1ProfileInfoKHR<'a> {
@@ -24990,7 +28474,10 @@ impl Default for VideoDecodeAV1ProfileInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoCapabilitiesKHR
+impl ExtendsVideoProfileInfoKHR for VideoDecodeAV1ProfileInfoKHR<'_> {}
+impl ExtendsQueryPoolCreateInfo for VideoDecodeAV1ProfileInfoKHR<'_> {}
+
+/// Extends: `VideoCapabilitiesKHR`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -25012,7 +28499,9 @@ impl Default for VideoDecodeAV1CapabilitiesKHR<'_> {
     }
 }
 
-// structextends: VkVideoSessionParametersCreateInfoKHR
+impl ExtendsVideoCapabilitiesKHR for VideoDecodeAV1CapabilitiesKHR<'_> {}
+
+/// Extends: `VideoSessionParametersCreateInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoDecodeAV1SessionParametersCreateInfoKHR<'a> {
@@ -25033,7 +28522,12 @@ impl Default for VideoDecodeAV1SessionParametersCreateInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoDecodeInfoKHR
+impl ExtendsVideoSessionParametersCreateInfoKHR
+    for VideoDecodeAV1SessionParametersCreateInfoKHR<'_>
+{
+}
+
+/// Extends: `VideoDecodeInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoDecodeAV1InlineSessionParametersInfoKHR<'a> {
@@ -25055,7 +28549,9 @@ impl Default for VideoDecodeAV1InlineSessionParametersInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoDecodeInfoKHR
+impl ExtendsVideoDecodeInfoKHR for VideoDecodeAV1InlineSessionParametersInfoKHR<'_> {}
+
+/// Extends: `VideoDecodeInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoDecodeAV1PictureInfoKHR<'a> {
@@ -25088,7 +28584,9 @@ impl Default for VideoDecodeAV1PictureInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoReferenceSlotInfoKHR
+impl ExtendsVideoDecodeInfoKHR for VideoDecodeAV1PictureInfoKHR<'_> {}
+
+/// Extends: `VideoReferenceSlotInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoDecodeAV1DpbSlotInfoKHR<'a> {
@@ -25108,6 +28606,8 @@ impl Default for VideoDecodeAV1DpbSlotInfoKHR<'_> {
         }
     }
 }
+
+impl ExtendsVideoReferenceSlotInfoKHR for VideoDecodeAV1DpbSlotInfoKHR<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -25145,6 +28645,29 @@ impl Default for VideoSessionCreateInfoKHR<'_> {
     }
 }
 
+pub trait ExtendsVideoSessionCreateInfoKHR {}
+impl<'a> VideoSessionCreateInfoKHR<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsVideoSessionCreateInfoKHR>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoSessionParametersCreateInfoKHR<'a> {
@@ -25169,6 +28692,29 @@ impl Default for VideoSessionParametersCreateInfoKHR<'_> {
     }
 }
 
+pub trait ExtendsVideoSessionParametersCreateInfoKHR {}
+impl<'a> VideoSessionParametersCreateInfoKHR<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsVideoSessionParametersCreateInfoKHR>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoSessionParametersUpdateInfoKHR<'a> {
@@ -25186,6 +28732,29 @@ impl Default for VideoSessionParametersUpdateInfoKHR<'_> {
             update_sequence_count: 0,
             _marker: PhantomData,
         }
+    }
+}
+
+pub trait ExtendsVideoSessionParametersUpdateInfoKHR {}
+impl<'a> VideoSessionParametersUpdateInfoKHR<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsVideoSessionParametersUpdateInfoKHR>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -25209,6 +28778,32 @@ impl Default for VideoEncodeSessionParametersGetInfoKHR<'_> {
     }
 }
 
+pub trait ExtendsVideoEncodeSessionParametersGetInfoKHR {}
+impl<'a> VideoEncodeSessionParametersGetInfoKHR<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsVideoEncodeSessionParametersGetInfoKHR>(
+        mut self,
+        next: &'a mut T,
+    ) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -25227,6 +28822,32 @@ impl Default for VideoEncodeSessionParametersFeedbackInfoKHR<'_> {
             has_overrides: FALSE,
             _marker: PhantomData,
         }
+    }
+}
+
+pub trait ExtendsVideoEncodeSessionParametersFeedbackInfoKHR {}
+impl<'a> VideoEncodeSessionParametersFeedbackInfoKHR<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsVideoEncodeSessionParametersFeedbackInfoKHR>(
+        mut self,
+        next: &'a mut T,
+    ) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -25256,6 +28877,29 @@ impl Default for VideoBeginCodingInfoKHR<'_> {
             reference_slots: ptr::null_mut(),
             _marker: PhantomData,
         }
+    }
+}
+
+pub trait ExtendsVideoBeginCodingInfoKHR {}
+impl<'a> VideoBeginCodingInfoKHR<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsVideoBeginCodingInfoKHR>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -25299,7 +28943,30 @@ impl Default for VideoCodingControlInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoProfileInfoKHR,VkQueryPoolCreateInfo
+pub trait ExtendsVideoCodingControlInfoKHR {}
+impl<'a> VideoCodingControlInfoKHR<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsVideoCodingControlInfoKHR>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
+/// Extends: `VideoProfileInfoKHR`, `QueryPoolCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoEncodeUsageInfoKHR<'a> {
@@ -25323,6 +28990,9 @@ impl Default for VideoEncodeUsageInfoKHR<'_> {
         }
     }
 }
+
+impl ExtendsVideoProfileInfoKHR for VideoEncodeUsageInfoKHR<'_> {}
+impl ExtendsQueryPoolCreateInfo for VideoEncodeUsageInfoKHR<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -25362,7 +29032,30 @@ impl Default for VideoEncodeInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoEncodeInfoKHR
+pub trait ExtendsVideoEncodeInfoKHR {}
+impl<'a> VideoEncodeInfoKHR<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsVideoEncodeInfoKHR>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
+/// Extends: `VideoEncodeInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoEncodeQuantizationMapInfoKHR<'a> {
@@ -25385,7 +29078,9 @@ impl Default for VideoEncodeQuantizationMapInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoSessionParametersCreateInfoKHR
+impl ExtendsVideoEncodeInfoKHR for VideoEncodeQuantizationMapInfoKHR<'_> {}
+
+/// Extends: `VideoSessionParametersCreateInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoEncodeQuantizationMapSessionParametersCreateInfoKHR<'a> {
@@ -25406,7 +29101,12 @@ impl Default for VideoEncodeQuantizationMapSessionParametersCreateInfoKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsVideoSessionParametersCreateInfoKHR
+    for VideoEncodeQuantizationMapSessionParametersCreateInfoKHR<'_>
+{
+}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceVideoEncodeQuantizationMapFeaturesKHR<'a> {
@@ -25427,7 +29127,10 @@ impl Default for PhysicalDeviceVideoEncodeQuantizationMapFeaturesKHR<'_> {
     }
 }
 
-// structextends: VkQueryPoolCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceVideoEncodeQuantizationMapFeaturesKHR<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceVideoEncodeQuantizationMapFeaturesKHR<'_> {}
+
+/// Extends: `QueryPoolCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct QueryPoolVideoEncodeFeedbackCreateInfoKHR<'a> {
@@ -25448,7 +29151,9 @@ impl Default for QueryPoolVideoEncodeFeedbackCreateInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoCodingControlInfoKHR,VkVideoSessionParametersCreateInfoKHR
+impl ExtendsQueryPoolCreateInfo for QueryPoolVideoEncodeFeedbackCreateInfoKHR<'_> {}
+
+/// Extends: `VideoCodingControlInfoKHR`, `VideoSessionParametersCreateInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoEncodeQualityLevelInfoKHR<'a> {
@@ -25468,6 +29173,9 @@ impl Default for VideoEncodeQualityLevelInfoKHR<'_> {
         }
     }
 }
+
+impl ExtendsVideoCodingControlInfoKHR for VideoEncodeQualityLevelInfoKHR<'_> {}
+impl ExtendsVideoSessionParametersCreateInfoKHR for VideoEncodeQualityLevelInfoKHR<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -25514,7 +29222,30 @@ impl Default for VideoEncodeQualityLevelPropertiesKHR<'_> {
     }
 }
 
-// structextends: VkVideoCodingControlInfoKHR,VkVideoBeginCodingInfoKHR
+pub trait ExtendsVideoEncodeQualityLevelPropertiesKHR {}
+impl<'a> VideoEncodeQualityLevelPropertiesKHR<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsVideoEncodeQualityLevelPropertiesKHR>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
+/// Extends: `VideoCodingControlInfoKHR`, `VideoBeginCodingInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoEncodeRateControlInfoKHR<'a> {
@@ -25546,6 +29277,9 @@ impl Default for VideoEncodeRateControlInfoKHR<'_> {
     }
 }
 
+impl ExtendsVideoCodingControlInfoKHR for VideoEncodeRateControlInfoKHR<'_> {}
+impl ExtendsVideoBeginCodingInfoKHR for VideoEncodeRateControlInfoKHR<'_> {}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoEncodeRateControlLayerInfoKHR<'a> {
@@ -25572,7 +29306,30 @@ impl Default for VideoEncodeRateControlLayerInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoCapabilitiesKHR
+pub trait ExtendsVideoEncodeRateControlLayerInfoKHR {}
+impl<'a> VideoEncodeRateControlLayerInfoKHR<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsVideoEncodeRateControlLayerInfoKHR>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
+/// Extends: `VideoCapabilitiesKHR`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -25606,7 +29363,9 @@ impl Default for VideoEncodeCapabilitiesKHR<'_> {
     }
 }
 
-// structextends: VkVideoCapabilitiesKHR
+impl ExtendsVideoCapabilitiesKHR for VideoEncodeCapabilitiesKHR<'_> {}
+
+/// Extends: `VideoCapabilitiesKHR`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -25652,7 +29411,9 @@ impl Default for VideoEncodeH264CapabilitiesKHR<'_> {
     }
 }
 
-// structextends: VkVideoEncodeQualityLevelPropertiesKHR
+impl ExtendsVideoCapabilitiesKHR for VideoEncodeH264CapabilitiesKHR<'_> {}
+
+/// Extends: `VideoEncodeQualityLevelPropertiesKHR`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -25690,7 +29451,9 @@ impl Default for VideoEncodeH264QualityLevelPropertiesKHR<'_> {
     }
 }
 
-// structextends: VkVideoSessionCreateInfoKHR
+impl ExtendsVideoEncodeQualityLevelPropertiesKHR for VideoEncodeH264QualityLevelPropertiesKHR<'_> {}
+
+/// Extends: `VideoSessionCreateInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoEncodeH264SessionCreateInfoKHR<'a> {
@@ -25713,7 +29476,9 @@ impl Default for VideoEncodeH264SessionCreateInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoSessionParametersUpdateInfoKHR
+impl ExtendsVideoSessionCreateInfoKHR for VideoEncodeH264SessionCreateInfoKHR<'_> {}
+
+/// Extends: `VideoSessionParametersUpdateInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoEncodeH264SessionParametersAddInfoKHR<'a> {
@@ -25745,7 +29510,9 @@ impl Default for VideoEncodeH264SessionParametersAddInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoSessionParametersCreateInfoKHR
+impl ExtendsVideoSessionParametersUpdateInfoKHR for VideoEncodeH264SessionParametersAddInfoKHR<'_> {}
+
+/// Extends: `VideoSessionParametersCreateInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoEncodeH264SessionParametersCreateInfoKHR<'a> {
@@ -25771,7 +29538,12 @@ impl Default for VideoEncodeH264SessionParametersCreateInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoEncodeSessionParametersGetInfoKHR
+impl ExtendsVideoSessionParametersCreateInfoKHR
+    for VideoEncodeH264SessionParametersCreateInfoKHR<'_>
+{
+}
+
+/// Extends: `VideoEncodeSessionParametersGetInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoEncodeH264SessionParametersGetInfoKHR<'a> {
@@ -25798,7 +29570,12 @@ impl Default for VideoEncodeH264SessionParametersGetInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoEncodeSessionParametersFeedbackInfoKHR
+impl ExtendsVideoEncodeSessionParametersGetInfoKHR
+    for VideoEncodeH264SessionParametersGetInfoKHR<'_>
+{
+}
+
+/// Extends: `VideoEncodeSessionParametersFeedbackInfoKHR`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -25822,7 +29599,12 @@ impl Default for VideoEncodeH264SessionParametersFeedbackInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoReferenceSlotInfoKHR
+impl ExtendsVideoEncodeSessionParametersFeedbackInfoKHR
+    for VideoEncodeH264SessionParametersFeedbackInfoKHR<'_>
+{
+}
+
+/// Extends: `VideoReferenceSlotInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoEncodeH264DpbSlotInfoKHR<'a> {
@@ -25843,7 +29625,9 @@ impl Default for VideoEncodeH264DpbSlotInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoEncodeInfoKHR
+impl ExtendsVideoReferenceSlotInfoKHR for VideoEncodeH264DpbSlotInfoKHR<'_> {}
+
+/// Extends: `VideoEncodeInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoEncodeH264PictureInfoKHR<'a> {
@@ -25871,7 +29655,9 @@ impl Default for VideoEncodeH264PictureInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoProfileInfoKHR,VkQueryPoolCreateInfo
+impl ExtendsVideoEncodeInfoKHR for VideoEncodeH264PictureInfoKHR<'_> {}
+
+/// Extends: `VideoProfileInfoKHR`, `QueryPoolCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoEncodeH264ProfileInfoKHR<'a> {
@@ -25891,6 +29677,9 @@ impl Default for VideoEncodeH264ProfileInfoKHR<'_> {
         }
     }
 }
+
+impl ExtendsVideoProfileInfoKHR for VideoEncodeH264ProfileInfoKHR<'_> {}
+impl ExtendsQueryPoolCreateInfo for VideoEncodeH264ProfileInfoKHR<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -25914,7 +29703,7 @@ impl Default for VideoEncodeH264NaluSliceInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoCodingControlInfoKHR,VkVideoBeginCodingInfoKHR
+/// Extends: `VideoCodingControlInfoKHR`, `VideoBeginCodingInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoEncodeH264RateControlInfoKHR<'a> {
@@ -25942,6 +29731,9 @@ impl Default for VideoEncodeH264RateControlInfoKHR<'_> {
         }
     }
 }
+
+impl ExtendsVideoCodingControlInfoKHR for VideoEncodeH264RateControlInfoKHR<'_> {}
+impl ExtendsVideoBeginCodingInfoKHR for VideoEncodeH264RateControlInfoKHR<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -25977,7 +29769,7 @@ impl Default for VideoEncodeH264FrameSizeKHR {
     }
 }
 
-// structextends: VkVideoBeginCodingInfoKHR
+/// Extends: `VideoBeginCodingInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoEncodeH264GopRemainingFrameInfoKHR<'a> {
@@ -26004,7 +29796,9 @@ impl Default for VideoEncodeH264GopRemainingFrameInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoEncodeRateControlLayerInfoKHR
+impl ExtendsVideoBeginCodingInfoKHR for VideoEncodeH264GopRemainingFrameInfoKHR<'_> {}
+
+/// Extends: `VideoEncodeRateControlLayerInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoEncodeH264RateControlLayerInfoKHR<'a> {
@@ -26035,7 +29829,9 @@ impl Default for VideoEncodeH264RateControlLayerInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoCapabilitiesKHR
+impl ExtendsVideoEncodeRateControlLayerInfoKHR for VideoEncodeH264RateControlLayerInfoKHR<'_> {}
+
+/// Extends: `VideoCapabilitiesKHR`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -26087,7 +29883,9 @@ impl Default for VideoEncodeH265CapabilitiesKHR<'_> {
     }
 }
 
-// structextends: VkVideoEncodeQualityLevelPropertiesKHR
+impl ExtendsVideoCapabilitiesKHR for VideoEncodeH265CapabilitiesKHR<'_> {}
+
+/// Extends: `VideoEncodeQualityLevelPropertiesKHR`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -26123,7 +29921,9 @@ impl Default for VideoEncodeH265QualityLevelPropertiesKHR<'_> {
     }
 }
 
-// structextends: VkVideoSessionCreateInfoKHR
+impl ExtendsVideoEncodeQualityLevelPropertiesKHR for VideoEncodeH265QualityLevelPropertiesKHR<'_> {}
+
+/// Extends: `VideoSessionCreateInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoEncodeH265SessionCreateInfoKHR<'a> {
@@ -26146,7 +29946,9 @@ impl Default for VideoEncodeH265SessionCreateInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoSessionParametersUpdateInfoKHR
+impl ExtendsVideoSessionCreateInfoKHR for VideoEncodeH265SessionCreateInfoKHR<'_> {}
+
+/// Extends: `VideoSessionParametersUpdateInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoEncodeH265SessionParametersAddInfoKHR<'a> {
@@ -26184,7 +29986,9 @@ impl Default for VideoEncodeH265SessionParametersAddInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoSessionParametersCreateInfoKHR
+impl ExtendsVideoSessionParametersUpdateInfoKHR for VideoEncodeH265SessionParametersAddInfoKHR<'_> {}
+
+/// Extends: `VideoSessionParametersCreateInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoEncodeH265SessionParametersCreateInfoKHR<'a> {
@@ -26212,7 +30016,12 @@ impl Default for VideoEncodeH265SessionParametersCreateInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoEncodeSessionParametersGetInfoKHR
+impl ExtendsVideoSessionParametersCreateInfoKHR
+    for VideoEncodeH265SessionParametersCreateInfoKHR<'_>
+{
+}
+
+/// Extends: `VideoEncodeSessionParametersGetInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoEncodeH265SessionParametersGetInfoKHR<'a> {
@@ -26243,7 +30052,12 @@ impl Default for VideoEncodeH265SessionParametersGetInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoEncodeSessionParametersFeedbackInfoKHR
+impl ExtendsVideoEncodeSessionParametersGetInfoKHR
+    for VideoEncodeH265SessionParametersGetInfoKHR<'_>
+{
+}
+
+/// Extends: `VideoEncodeSessionParametersFeedbackInfoKHR`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -26269,7 +30083,12 @@ impl Default for VideoEncodeH265SessionParametersFeedbackInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoEncodeInfoKHR
+impl ExtendsVideoEncodeSessionParametersFeedbackInfoKHR
+    for VideoEncodeH265SessionParametersFeedbackInfoKHR<'_>
+{
+}
+
+/// Extends: `VideoEncodeInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoEncodeH265PictureInfoKHR<'a> {
@@ -26295,6 +30114,8 @@ impl Default for VideoEncodeH265PictureInfoKHR<'_> {
     }
 }
 
+impl ExtendsVideoEncodeInfoKHR for VideoEncodeH265PictureInfoKHR<'_> {}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoEncodeH265NaluSliceSegmentInfoKHR<'a> {
@@ -26317,7 +30138,7 @@ impl Default for VideoEncodeH265NaluSliceSegmentInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoCodingControlInfoKHR,VkVideoBeginCodingInfoKHR
+/// Extends: `VideoCodingControlInfoKHR`, `VideoBeginCodingInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoEncodeH265RateControlInfoKHR<'a> {
@@ -26345,6 +30166,9 @@ impl Default for VideoEncodeH265RateControlInfoKHR<'_> {
         }
     }
 }
+
+impl ExtendsVideoCodingControlInfoKHR for VideoEncodeH265RateControlInfoKHR<'_> {}
+impl ExtendsVideoBeginCodingInfoKHR for VideoEncodeH265RateControlInfoKHR<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -26380,7 +30204,7 @@ impl Default for VideoEncodeH265FrameSizeKHR {
     }
 }
 
-// structextends: VkVideoBeginCodingInfoKHR
+/// Extends: `VideoBeginCodingInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoEncodeH265GopRemainingFrameInfoKHR<'a> {
@@ -26407,7 +30231,9 @@ impl Default for VideoEncodeH265GopRemainingFrameInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoEncodeRateControlLayerInfoKHR
+impl ExtendsVideoBeginCodingInfoKHR for VideoEncodeH265GopRemainingFrameInfoKHR<'_> {}
+
+/// Extends: `VideoEncodeRateControlLayerInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoEncodeH265RateControlLayerInfoKHR<'a> {
@@ -26438,7 +30264,9 @@ impl Default for VideoEncodeH265RateControlLayerInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoProfileInfoKHR,VkQueryPoolCreateInfo
+impl ExtendsVideoEncodeRateControlLayerInfoKHR for VideoEncodeH265RateControlLayerInfoKHR<'_> {}
+
+/// Extends: `VideoProfileInfoKHR`, `QueryPoolCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoEncodeH265ProfileInfoKHR<'a> {
@@ -26459,7 +30287,10 @@ impl Default for VideoEncodeH265ProfileInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoReferenceSlotInfoKHR
+impl ExtendsVideoProfileInfoKHR for VideoEncodeH265ProfileInfoKHR<'_> {}
+impl ExtendsQueryPoolCreateInfo for VideoEncodeH265ProfileInfoKHR<'_> {}
+
+/// Extends: `VideoReferenceSlotInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoEncodeH265DpbSlotInfoKHR<'a> {
@@ -26480,7 +30311,9 @@ impl Default for VideoEncodeH265DpbSlotInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoCapabilitiesKHR
+impl ExtendsVideoReferenceSlotInfoKHR for VideoEncodeH265DpbSlotInfoKHR<'_> {}
+
+/// Extends: `VideoCapabilitiesKHR`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -26548,7 +30381,9 @@ impl Default for VideoEncodeAV1CapabilitiesKHR<'_> {
     }
 }
 
-// structextends: VkVideoEncodeQualityLevelPropertiesKHR
+impl ExtendsVideoCapabilitiesKHR for VideoEncodeAV1CapabilitiesKHR<'_> {}
+
+/// Extends: `VideoEncodeQualityLevelPropertiesKHR`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -26598,7 +30433,9 @@ impl Default for VideoEncodeAV1QualityLevelPropertiesKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsVideoEncodeQualityLevelPropertiesKHR for VideoEncodeAV1QualityLevelPropertiesKHR<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceVideoEncodeAV1FeaturesKHR<'a> {
@@ -26619,7 +30456,10 @@ impl Default for PhysicalDeviceVideoEncodeAV1FeaturesKHR<'_> {
     }
 }
 
-// structextends: VkVideoSessionCreateInfoKHR
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceVideoEncodeAV1FeaturesKHR<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceVideoEncodeAV1FeaturesKHR<'_> {}
+
+/// Extends: `VideoSessionCreateInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoEncodeAV1SessionCreateInfoKHR<'a> {
@@ -26642,7 +30482,9 @@ impl Default for VideoEncodeAV1SessionCreateInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoSessionParametersCreateInfoKHR
+impl ExtendsVideoSessionCreateInfoKHR for VideoEncodeAV1SessionCreateInfoKHR<'_> {}
+
+/// Extends: `VideoSessionParametersCreateInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoEncodeAV1SessionParametersCreateInfoKHR<'a> {
@@ -26672,7 +30514,12 @@ impl Default for VideoEncodeAV1SessionParametersCreateInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoReferenceSlotInfoKHR
+impl ExtendsVideoSessionParametersCreateInfoKHR
+    for VideoEncodeAV1SessionParametersCreateInfoKHR<'_>
+{
+}
+
+/// Extends: `VideoReferenceSlotInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoEncodeAV1DpbSlotInfoKHR<'a> {
@@ -26693,7 +30540,9 @@ impl Default for VideoEncodeAV1DpbSlotInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoEncodeInfoKHR
+impl ExtendsVideoReferenceSlotInfoKHR for VideoEncodeAV1DpbSlotInfoKHR<'_> {}
+
+/// Extends: `VideoEncodeInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoEncodeAV1PictureInfoKHR<'a> {
@@ -26726,7 +30575,9 @@ impl Default for VideoEncodeAV1PictureInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoProfileInfoKHR,VkQueryPoolCreateInfo
+impl ExtendsVideoEncodeInfoKHR for VideoEncodeAV1PictureInfoKHR<'_> {}
+
+/// Extends: `VideoProfileInfoKHR`, `QueryPoolCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoEncodeAV1ProfileInfoKHR<'a> {
@@ -26747,7 +30598,10 @@ impl Default for VideoEncodeAV1ProfileInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoCodingControlInfoKHR,VkVideoBeginCodingInfoKHR
+impl ExtendsVideoProfileInfoKHR for VideoEncodeAV1ProfileInfoKHR<'_> {}
+impl ExtendsQueryPoolCreateInfo for VideoEncodeAV1ProfileInfoKHR<'_> {}
+
+/// Extends: `VideoCodingControlInfoKHR`, `VideoBeginCodingInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoEncodeAV1RateControlInfoKHR<'a> {
@@ -26775,6 +30629,9 @@ impl Default for VideoEncodeAV1RateControlInfoKHR<'_> {
         }
     }
 }
+
+impl ExtendsVideoCodingControlInfoKHR for VideoEncodeAV1RateControlInfoKHR<'_> {}
+impl ExtendsVideoBeginCodingInfoKHR for VideoEncodeAV1RateControlInfoKHR<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -26810,7 +30667,7 @@ impl Default for VideoEncodeAV1FrameSizeKHR {
     }
 }
 
-// structextends: VkVideoBeginCodingInfoKHR
+/// Extends: `VideoBeginCodingInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoEncodeAV1GopRemainingFrameInfoKHR<'a> {
@@ -26837,7 +30694,9 @@ impl Default for VideoEncodeAV1GopRemainingFrameInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoEncodeRateControlLayerInfoKHR
+impl ExtendsVideoBeginCodingInfoKHR for VideoEncodeAV1GopRemainingFrameInfoKHR<'_> {}
+
+/// Extends: `VideoEncodeRateControlLayerInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoEncodeAV1RateControlLayerInfoKHR<'a> {
@@ -26868,7 +30727,9 @@ impl Default for VideoEncodeAV1RateControlLayerInfoKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsVideoEncodeRateControlLayerInfoKHR for VideoEncodeAV1RateControlLayerInfoKHR<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceInheritedViewportScissorFeaturesNV<'a> {
@@ -26889,7 +30750,10 @@ impl Default for PhysicalDeviceInheritedViewportScissorFeaturesNV<'_> {
     }
 }
 
-// structextends: VkCommandBufferInheritanceInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceInheritedViewportScissorFeaturesNV<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceInheritedViewportScissorFeaturesNV<'_> {}
+
+/// Extends: `CommandBufferInheritanceInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct CommandBufferInheritanceViewportScissorInfoNV<'a> {
@@ -26914,7 +30778,9 @@ impl Default for CommandBufferInheritanceViewportScissorInfoNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsCommandBufferInheritanceInfo for CommandBufferInheritanceViewportScissorInfoNV<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT<'a> {
@@ -26935,7 +30801,10 @@ impl Default for PhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceProvokingVertexFeaturesEXT<'a> {
@@ -26958,7 +30827,10 @@ impl Default for PhysicalDeviceProvokingVertexFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceProvokingVertexFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceProvokingVertexFeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -26982,7 +30854,9 @@ impl Default for PhysicalDeviceProvokingVertexPropertiesEXT<'_> {
     }
 }
 
-// structextends: VkPipelineRasterizationStateCreateInfo
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceProvokingVertexPropertiesEXT<'_> {}
+
+/// Extends: `PipelineRasterizationStateCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PipelineRasterizationProvokingVertexStateCreateInfoEXT<'a> {
@@ -27003,7 +30877,12 @@ impl Default for PipelineRasterizationProvokingVertexStateCreateInfoEXT<'_> {
     }
 }
 
-// structextends: VkVideoCapabilitiesKHR
+impl ExtendsPipelineRasterizationStateCreateInfo
+    for PipelineRasterizationProvokingVertexStateCreateInfoEXT<'_>
+{
+}
+
+/// Extends: `VideoCapabilitiesKHR`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -27033,7 +30912,9 @@ impl Default for VideoEncodeIntraRefreshCapabilitiesKHR<'_> {
     }
 }
 
-// structextends: VkVideoSessionCreateInfoKHR
+impl ExtendsVideoCapabilitiesKHR for VideoEncodeIntraRefreshCapabilitiesKHR<'_> {}
+
+/// Extends: `VideoSessionCreateInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoEncodeSessionIntraRefreshCreateInfoKHR<'a> {
@@ -27054,7 +30935,9 @@ impl Default for VideoEncodeSessionIntraRefreshCreateInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoEncodeInfoKHR
+impl ExtendsVideoSessionCreateInfoKHR for VideoEncodeSessionIntraRefreshCreateInfoKHR<'_> {}
+
+/// Extends: `VideoEncodeInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoEncodeIntraRefreshInfoKHR<'a> {
@@ -27077,7 +30960,9 @@ impl Default for VideoEncodeIntraRefreshInfoKHR<'_> {
     }
 }
 
-// structextends: VkVideoReferenceSlotInfoKHR
+impl ExtendsVideoEncodeInfoKHR for VideoEncodeIntraRefreshInfoKHR<'_> {}
+
+/// Extends: `VideoReferenceSlotInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoReferenceIntraRefreshInfoKHR<'a> {
@@ -27098,7 +30983,9 @@ impl Default for VideoReferenceIntraRefreshInfoKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsVideoReferenceSlotInfoKHR for VideoReferenceIntraRefreshInfoKHR<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR<'a> {
@@ -27118,6 +31005,9 @@ impl Default for PhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR<'_> {
         }
     }
 }
+
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -27142,7 +31032,30 @@ impl Default for CuModuleCreateInfoNVX<'_> {
     }
 }
 
-// structextends: VkCuModuleCreateInfoNVX
+pub trait ExtendsCuModuleCreateInfoNVX {}
+impl<'a> CuModuleCreateInfoNVX<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsCuModuleCreateInfoNVX>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
+/// Extends: `CuModuleCreateInfoNVX`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct CuModuleTexturingModeCreateInfoNVX<'a> {
@@ -27162,6 +31075,8 @@ impl Default for CuModuleTexturingModeCreateInfoNVX<'_> {
         }
     }
 }
+
+impl ExtendsCuModuleCreateInfoNVX for CuModuleTexturingModeCreateInfoNVX<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -27230,7 +31145,7 @@ impl Default for CuLaunchInfoNVX<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceDescriptorBufferFeaturesEXT<'a> {
@@ -27257,7 +31172,10 @@ impl Default for PhysicalDeviceDescriptorBufferFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceDescriptorBufferFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceDescriptorBufferFeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -27343,7 +31261,9 @@ impl Default for PhysicalDeviceDescriptorBufferPropertiesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceDescriptorBufferPropertiesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -27363,6 +31283,11 @@ impl Default for PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT<'_> {
             _marker: PhantomData,
         }
     }
+}
+
+impl ExtendsPhysicalDeviceProperties2
+    for PhysicalDeviceDescriptorBufferDensityMapPropertiesEXT<'_>
+{
 }
 
 #[repr(C)]
@@ -27411,7 +31336,30 @@ impl Default for DescriptorBufferBindingInfoEXT<'_> {
     }
 }
 
-// structextends: VkDescriptorBufferBindingInfoEXT
+pub trait ExtendsDescriptorBufferBindingInfoEXT {}
+impl<'a> DescriptorBufferBindingInfoEXT<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsDescriptorBufferBindingInfoEXT>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
+/// Extends: `DescriptorBufferBindingInfoEXT`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct DescriptorBufferBindingPushDescriptorBufferHandleEXT<'a> {
@@ -27430,6 +31378,11 @@ impl Default for DescriptorBufferBindingPushDescriptorBufferHandleEXT<'_> {
             _marker: PhantomData,
         }
     }
+}
+
+impl ExtendsDescriptorBufferBindingInfoEXT
+    for DescriptorBufferBindingPushDescriptorBufferHandleEXT<'_>
+{
 }
 
 #[repr(C)]
@@ -27483,6 +31436,29 @@ impl Default for DescriptorGetInfoEXT<'_> {
             data: Default::default(),
             _marker: PhantomData,
         }
+    }
+}
+
+pub trait ExtendsDescriptorGetInfoEXT {}
+impl<'a> DescriptorGetInfoEXT<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsDescriptorGetInfoEXT>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -27588,7 +31564,7 @@ impl Default for AccelerationStructureCaptureDescriptorDataInfoEXT<'_> {
     }
 }
 
-// structextends: VkBufferCreateInfo,VkImageCreateInfo,VkImageViewCreateInfo,VkSamplerCreateInfo,VkAccelerationStructureCreateInfoKHR,VkAccelerationStructureCreateInfoNV,VkTensorCreateInfoARM,VkTensorViewCreateInfoARM
+/// Extends: `BufferCreateInfo`, `ImageCreateInfo`, `ImageViewCreateInfo`, `SamplerCreateInfo`, `AccelerationStructureCreateInfoKHR`, `AccelerationStructureCreateInfoNV`, `TensorCreateInfoARM`, `TensorViewCreateInfoARM`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct OpaqueCaptureDescriptorDataCreateInfoEXT<'a> {
@@ -27609,7 +31585,16 @@ impl Default for OpaqueCaptureDescriptorDataCreateInfoEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsBufferCreateInfo for OpaqueCaptureDescriptorDataCreateInfoEXT<'_> {}
+impl ExtendsImageCreateInfo for OpaqueCaptureDescriptorDataCreateInfoEXT<'_> {}
+impl ExtendsImageViewCreateInfo for OpaqueCaptureDescriptorDataCreateInfoEXT<'_> {}
+impl ExtendsSamplerCreateInfo for OpaqueCaptureDescriptorDataCreateInfoEXT<'_> {}
+impl ExtendsAccelerationStructureCreateInfoKHR for OpaqueCaptureDescriptorDataCreateInfoEXT<'_> {}
+impl ExtendsAccelerationStructureCreateInfoNV for OpaqueCaptureDescriptorDataCreateInfoEXT<'_> {}
+impl ExtendsTensorCreateInfoARM for OpaqueCaptureDescriptorDataCreateInfoEXT<'_> {}
+impl ExtendsTensorViewCreateInfoARM for OpaqueCaptureDescriptorDataCreateInfoEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceShaderIntegerDotProductFeatures<'a> {
@@ -27630,9 +31615,12 @@ impl Default for PhysicalDeviceShaderIntegerDotProductFeatures<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceShaderIntegerDotProductFeatures<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceShaderIntegerDotProductFeatures<'_> {}
+
 pub type PhysicalDeviceShaderIntegerDotProductFeaturesKHR<'a> =
     PhysicalDeviceShaderIntegerDotProductFeatures<'a>;
-// structextends: VkPhysicalDeviceProperties2
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -27713,9 +31701,11 @@ _marker: PhantomData,
     }
 }
 
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceShaderIntegerDotProductProperties<'_> {}
+
 pub type PhysicalDeviceShaderIntegerDotProductPropertiesKHR<'a> =
     PhysicalDeviceShaderIntegerDotProductProperties<'a>;
-// structextends: VkPhysicalDeviceProperties2
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -27747,7 +31737,9 @@ impl Default for PhysicalDeviceDrmPropertiesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceDrmPropertiesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceFragmentShaderBarycentricFeaturesKHR<'a> {
@@ -27768,7 +31760,10 @@ impl Default for PhysicalDeviceFragmentShaderBarycentricFeaturesKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceFragmentShaderBarycentricFeaturesKHR<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceFragmentShaderBarycentricFeaturesKHR<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -27790,7 +31785,9 @@ impl Default for PhysicalDeviceFragmentShaderBarycentricPropertiesKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceFragmentShaderBarycentricPropertiesKHR<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceShaderFmaFeaturesKHR<'a> {
@@ -27815,7 +31812,10 @@ impl Default for PhysicalDeviceShaderFmaFeaturesKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceShaderFmaFeaturesKHR<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceShaderFmaFeaturesKHR<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceRayTracingMotionBlurFeaturesNV<'a> {
@@ -27838,7 +31838,10 @@ impl Default for PhysicalDeviceRayTracingMotionBlurFeaturesNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceRayTracingMotionBlurFeaturesNV<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceRayTracingMotionBlurFeaturesNV<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceRayTracingValidationFeaturesNV<'a> {
@@ -27859,7 +31862,10 @@ impl Default for PhysicalDeviceRayTracingValidationFeaturesNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceRayTracingValidationFeaturesNV<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceRayTracingValidationFeaturesNV<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceRayTracingLinearSweptSpheresFeaturesNV<'a> {
@@ -27882,7 +31888,10 @@ impl Default for PhysicalDeviceRayTracingLinearSweptSpheresFeaturesNV<'_> {
     }
 }
 
-// structextends: VkAccelerationStructureGeometryTrianglesDataKHR
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceRayTracingLinearSweptSpheresFeaturesNV<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceRayTracingLinearSweptSpheresFeaturesNV<'_> {}
+
+/// Extends: `AccelerationStructureGeometryTrianglesDataKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct AccelerationStructureGeometryMotionTrianglesDataNV<'a> {
@@ -27903,7 +31912,12 @@ impl Default for AccelerationStructureGeometryMotionTrianglesDataNV<'_> {
     }
 }
 
-// structextends: VkAccelerationStructureCreateInfoKHR
+impl ExtendsAccelerationStructureGeometryTrianglesDataKHR
+    for AccelerationStructureGeometryMotionTrianglesDataNV<'_>
+{
+}
+
+/// Extends: `AccelerationStructureCreateInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct AccelerationStructureMotionInfoNV<'a> {
@@ -27925,6 +31939,8 @@ impl Default for AccelerationStructureMotionInfoNV<'_> {
         }
     }
 }
+
+impl ExtendsAccelerationStructureCreateInfoKHR for AccelerationStructureMotionInfoNV<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -28079,7 +32095,7 @@ impl Default for MemoryGetRemoteAddressInfoNV<'_> {
     }
 }
 
-// structextends: VkMemoryAllocateInfo
+/// Extends: `MemoryAllocateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ImportMemoryBufferCollectionFUCHSIA<'a> {
@@ -28102,7 +32118,9 @@ impl Default for ImportMemoryBufferCollectionFUCHSIA<'_> {
     }
 }
 
-// structextends: VkImageCreateInfo
+impl ExtendsMemoryAllocateInfo for ImportMemoryBufferCollectionFUCHSIA<'_> {}
+
+/// Extends: `ImageCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct BufferCollectionImageCreateInfoFUCHSIA<'a> {
@@ -28125,7 +32143,9 @@ impl Default for BufferCollectionImageCreateInfoFUCHSIA<'_> {
     }
 }
 
-// structextends: VkBufferCreateInfo
+impl ExtendsImageCreateInfo for BufferCollectionImageCreateInfoFUCHSIA<'_> {}
+
+/// Extends: `BufferCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct BufferCollectionBufferCreateInfoFUCHSIA<'a> {
@@ -28147,6 +32167,8 @@ impl Default for BufferCollectionBufferCreateInfoFUCHSIA<'_> {
         }
     }
 }
+
+impl ExtendsBufferCreateInfo for BufferCollectionBufferCreateInfoFUCHSIA<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -28477,7 +32499,7 @@ impl Default for CudaLaunchInfoNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceRGBA10X6FormatsFeaturesEXT<'a> {
@@ -28498,7 +32520,10 @@ impl Default for PhysicalDeviceRGBA10X6FormatsFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkFormatProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceRGBA10X6FormatsFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceRGBA10X6FormatsFeaturesEXT<'_> {}
+
+/// Extends: `FormatProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -28524,8 +32549,10 @@ impl Default for FormatProperties3<'_> {
     }
 }
 
+impl ExtendsFormatProperties2 for FormatProperties3<'_> {}
+
 pub type FormatProperties3KHR<'a> = FormatProperties3<'a>;
-// structextends: VkFormatProperties2
+/// Extends: `FormatProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -28551,6 +32578,8 @@ impl Default for DrmFormatModifierPropertiesList2EXT<'_> {
     }
 }
 
+impl ExtendsFormatProperties2 for DrmFormatModifierPropertiesList2EXT<'_> {}
+
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -28569,7 +32598,7 @@ impl Default for DrmFormatModifierProperties2EXT {
     }
 }
 
-// structextends: VkAndroidHardwareBufferPropertiesANDROID
+/// Extends: `AndroidHardwareBufferPropertiesANDROID`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -28605,7 +32634,12 @@ impl Default for AndroidHardwareBufferFormatProperties2ANDROID<'_> {
     }
 }
 
-// structextends: VkGraphicsPipelineCreateInfo
+impl ExtendsAndroidHardwareBufferPropertiesANDROID
+    for AndroidHardwareBufferFormatProperties2ANDROID<'_>
+{
+}
+
+/// Extends: `GraphicsPipelineCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PipelineRenderingCreateInfo<'a> {
@@ -28634,6 +32668,8 @@ impl Default for PipelineRenderingCreateInfo<'_> {
         }
     }
 }
+
+impl ExtendsGraphicsPipelineCreateInfo for PipelineRenderingCreateInfo<'_> {}
 
 pub type PipelineRenderingCreateInfoKHR<'a> = PipelineRenderingCreateInfo<'a>;
 #[repr(C)]
@@ -28673,6 +32709,29 @@ impl Default for RenderingInfo<'_> {
     }
 }
 
+pub trait ExtendsRenderingInfo {}
+impl<'a> RenderingInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsRenderingInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 pub type RenderingInfoKHR<'a> = RenderingInfo<'a>;
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -28689,6 +32748,29 @@ impl Default for RenderingEndInfoKHR<'_> {
             next: ptr::null_mut(),
             _marker: PhantomData,
         }
+    }
+}
+
+pub trait ExtendsRenderingEndInfoKHR {}
+impl<'a> RenderingEndInfoKHR<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsRenderingEndInfoKHR>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -28727,8 +32809,31 @@ impl Default for RenderingAttachmentInfo<'_> {
     }
 }
 
+pub trait ExtendsRenderingAttachmentInfo {}
+impl<'a> RenderingAttachmentInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsRenderingAttachmentInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 pub type RenderingAttachmentInfoKHR<'a> = RenderingAttachmentInfo<'a>;
-// structextends: VkRenderingInfo
+/// Extends: `RenderingInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct RenderingFragmentShadingRateAttachmentInfoKHR<'a> {
@@ -28753,7 +32858,9 @@ impl Default for RenderingFragmentShadingRateAttachmentInfoKHR<'_> {
     }
 }
 
-// structextends: VkRenderingInfo
+impl ExtendsRenderingInfo for RenderingFragmentShadingRateAttachmentInfoKHR<'_> {}
+
+/// Extends: `RenderingInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct RenderingFragmentDensityMapAttachmentInfoEXT<'a> {
@@ -28776,7 +32883,9 @@ impl Default for RenderingFragmentDensityMapAttachmentInfoEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsRenderingInfo for RenderingFragmentDensityMapAttachmentInfoEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceDynamicRenderingFeatures<'a> {
@@ -28797,8 +32906,11 @@ impl Default for PhysicalDeviceDynamicRenderingFeatures<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceDynamicRenderingFeatures<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceDynamicRenderingFeatures<'_> {}
+
 pub type PhysicalDeviceDynamicRenderingFeaturesKHR<'a> = PhysicalDeviceDynamicRenderingFeatures<'a>;
-// structextends: VkCommandBufferInheritanceInfo
+/// Extends: `CommandBufferInheritanceInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct CommandBufferInheritanceRenderingInfo<'a> {
@@ -28832,8 +32944,10 @@ impl Default for CommandBufferInheritanceRenderingInfo<'_> {
     }
 }
 
+impl ExtendsCommandBufferInheritanceInfo for CommandBufferInheritanceRenderingInfo<'_> {}
+
 pub type CommandBufferInheritanceRenderingInfoKHR<'a> = CommandBufferInheritanceRenderingInfo<'a>;
-// structextends: VkCommandBufferInheritanceInfo,VkGraphicsPipelineCreateInfo
+/// Extends: `CommandBufferInheritanceInfo`, `GraphicsPipelineCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct AttachmentSampleCountInfoAMD<'a> {
@@ -28859,8 +32973,11 @@ impl Default for AttachmentSampleCountInfoAMD<'_> {
     }
 }
 
+impl ExtendsCommandBufferInheritanceInfo for AttachmentSampleCountInfoAMD<'_> {}
+impl ExtendsGraphicsPipelineCreateInfo for AttachmentSampleCountInfoAMD<'_> {}
+
 pub type AttachmentSampleCountInfoNV<'a> = AttachmentSampleCountInfoAMD<'a>;
-// structextends: VkCommandBufferInheritanceInfo,VkGraphicsPipelineCreateInfo,VkRenderingInfo
+/// Extends: `CommandBufferInheritanceInfo`, `GraphicsPipelineCreateInfo`, `RenderingInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct MultiviewPerViewAttributesInfoNVX<'a> {
@@ -28883,7 +33000,11 @@ impl Default for MultiviewPerViewAttributesInfoNVX<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsCommandBufferInheritanceInfo for MultiviewPerViewAttributesInfoNVX<'_> {}
+impl ExtendsGraphicsPipelineCreateInfo for MultiviewPerViewAttributesInfoNVX<'_> {}
+impl ExtendsRenderingInfo for MultiviewPerViewAttributesInfoNVX<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceImageViewMinLodFeaturesEXT<'a> {
@@ -28904,7 +33025,10 @@ impl Default for PhysicalDeviceImageViewMinLodFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkImageViewCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceImageViewMinLodFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceImageViewMinLodFeaturesEXT<'_> {}
+
+/// Extends: `ImageViewCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ImageViewMinLodCreateInfoEXT<'a> {
@@ -28925,7 +33049,9 @@ impl Default for ImageViewMinLodCreateInfoEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsImageViewCreateInfo for ImageViewMinLodCreateInfoEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT<'a> {
@@ -28950,9 +33076,15 @@ impl Default for PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT<'_>
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2
+    for PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT<'_>
+{
+}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT<'_> {}
+
 pub type PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesARM<'a> =
     PhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT<'a>;
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceLinearColorAttachmentFeaturesNV<'a> {
@@ -28973,7 +33105,10 @@ impl Default for PhysicalDeviceLinearColorAttachmentFeaturesNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceLinearColorAttachmentFeaturesNV<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceLinearColorAttachmentFeaturesNV<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceGraphicsPipelineLibraryFeaturesEXT<'a> {
@@ -28994,7 +33129,10 @@ impl Default for PhysicalDeviceGraphicsPipelineLibraryFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceGraphicsPipelineLibraryFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceGraphicsPipelineLibraryFeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDevicePipelineBinaryFeaturesKHR<'a> {
@@ -29015,7 +33153,10 @@ impl Default for PhysicalDevicePipelineBinaryFeaturesKHR<'_> {
     }
 }
 
-// structextends: VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDevicePipelineBinaryFeaturesKHR<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDevicePipelineBinaryFeaturesKHR<'_> {}
+
+/// Extends: `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct DevicePipelineBinaryInternalCacheControlKHR<'a> {
@@ -29036,7 +33177,9 @@ impl Default for DevicePipelineBinaryInternalCacheControlKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsDeviceCreateInfo for DevicePipelineBinaryInternalCacheControlKHR<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -29066,7 +33209,9 @@ impl Default for PhysicalDevicePipelineBinaryPropertiesKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDevicePipelineBinaryPropertiesKHR<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -29090,7 +33235,9 @@ impl Default for PhysicalDeviceGraphicsPipelineLibraryPropertiesEXT<'_> {
     }
 }
 
-// structextends: VkGraphicsPipelineCreateInfo
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceGraphicsPipelineLibraryPropertiesEXT<'_> {}
+
+/// Extends: `GraphicsPipelineCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct GraphicsPipelineLibraryCreateInfoEXT<'a> {
@@ -29111,7 +33258,9 @@ impl Default for GraphicsPipelineLibraryCreateInfoEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsGraphicsPipelineCreateInfo for GraphicsPipelineLibraryCreateInfoEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceDescriptorSetHostMappingFeaturesVALVE<'a> {
@@ -29131,6 +33280,9 @@ impl Default for PhysicalDeviceDescriptorSetHostMappingFeaturesVALVE<'_> {
         }
     }
 }
+
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceDescriptorSetHostMappingFeaturesVALVE<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceDescriptorSetHostMappingFeaturesVALVE<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -29176,7 +33328,7 @@ impl Default for DescriptorSetLayoutHostMappingInfoVALVE<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceNestedCommandBufferFeaturesEXT<'a> {
@@ -29201,7 +33353,10 @@ impl Default for PhysicalDeviceNestedCommandBufferFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceNestedCommandBufferFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceNestedCommandBufferFeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -29223,7 +33378,9 @@ impl Default for PhysicalDeviceNestedCommandBufferPropertiesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceNestedCommandBufferPropertiesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceShaderModuleIdentifierFeaturesEXT<'a> {
@@ -29244,7 +33401,10 @@ impl Default for PhysicalDeviceShaderModuleIdentifierFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceShaderModuleIdentifierFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceShaderModuleIdentifierFeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -29266,7 +33426,9 @@ impl Default for PhysicalDeviceShaderModuleIdentifierPropertiesEXT<'_> {
     }
 }
 
-// structextends: VkPipelineShaderStageCreateInfo
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceShaderModuleIdentifierPropertiesEXT<'_> {}
+
+/// Extends: `PipelineShaderStageCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PipelineShaderStageModuleIdentifierCreateInfoEXT<'a> {
@@ -29289,6 +33451,8 @@ impl Default for PipelineShaderStageModuleIdentifierCreateInfoEXT<'_> {
         }
     }
 }
+
+impl ExtendsPipelineShaderStageCreateInfo for PipelineShaderStageModuleIdentifierCreateInfoEXT<'_> {}
 
 /// returned_only
 #[repr(C)]
@@ -29314,7 +33478,7 @@ impl Default for ShaderModuleIdentifierEXT<'_> {
     }
 }
 
-// structextends: VkImageCreateInfo,VkSwapchainCreateInfoKHR,VkPhysicalDeviceImageFormatInfo2
+/// Extends: `ImageCreateInfo`, `SwapchainCreateInfoKHR`, `PhysicalDeviceImageFormatInfo2`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ImageCompressionControlEXT<'a> {
@@ -29340,7 +33504,11 @@ impl Default for ImageCompressionControlEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsImageCreateInfo for ImageCompressionControlEXT<'_> {}
+impl ExtendsSwapchainCreateInfoKHR for ImageCompressionControlEXT<'_> {}
+impl ExtendsPhysicalDeviceImageFormatInfo2 for ImageCompressionControlEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceImageCompressionControlFeaturesEXT<'a> {
@@ -29361,7 +33529,10 @@ impl Default for PhysicalDeviceImageCompressionControlFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkImageFormatProperties2,VkSurfaceFormat2KHR,VkSubresourceLayout2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceImageCompressionControlFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceImageCompressionControlFeaturesEXT<'_> {}
+
+/// Extends: `ImageFormatProperties2`, `SurfaceFormat2KHR`, `SubresourceLayout2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -29385,7 +33556,11 @@ impl Default for ImageCompressionPropertiesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsImageFormatProperties2 for ImageCompressionPropertiesEXT<'_> {}
+impl ExtendsSurfaceFormat2KHR for ImageCompressionPropertiesEXT<'_> {}
+impl ExtendsSubresourceLayout2 for ImageCompressionPropertiesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceImageCompressionControlSwapchainFeaturesEXT<'a> {
@@ -29405,6 +33580,12 @@ impl Default for PhysicalDeviceImageCompressionControlSwapchainFeaturesEXT<'_> {
         }
     }
 }
+
+impl ExtendsPhysicalDeviceFeatures2
+    for PhysicalDeviceImageCompressionControlSwapchainFeaturesEXT<'_>
+{
+}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceImageCompressionControlSwapchainFeaturesEXT<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -29449,9 +33630,32 @@ impl Default for SubresourceLayout2<'_> {
     }
 }
 
+pub trait ExtendsSubresourceLayout2 {}
+impl<'a> SubresourceLayout2<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsSubresourceLayout2>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 pub type SubresourceLayout2KHR<'a> = SubresourceLayout2<'a>;
 pub type SubresourceLayout2EXT<'a> = SubresourceLayout2<'a>;
-// structextends: VkRenderPassCreateInfo2,VkSubpassDescription2
+/// Extends: `RenderPassCreateInfo2`, `SubpassDescription2`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct RenderPassCreationControlEXT<'a> {
@@ -29472,6 +33676,9 @@ impl Default for RenderPassCreationControlEXT<'_> {
     }
 }
 
+impl ExtendsRenderPassCreateInfo2 for RenderPassCreationControlEXT<'_> {}
+impl ExtendsSubpassDescription2 for RenderPassCreationControlEXT<'_> {}
+
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -29486,7 +33693,7 @@ impl Default for RenderPassCreationFeedbackInfoEXT {
     }
 }
 
-// structextends: VkRenderPassCreateInfo2
+/// Extends: `RenderPassCreateInfo2`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct RenderPassCreationFeedbackCreateInfoEXT<'a> {
@@ -29507,6 +33714,8 @@ impl Default for RenderPassCreationFeedbackCreateInfoEXT<'_> {
     }
 }
 
+impl ExtendsRenderPassCreateInfo2 for RenderPassCreationFeedbackCreateInfoEXT<'_> {}
+
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -29526,7 +33735,7 @@ impl Default for RenderPassSubpassFeedbackInfoEXT {
     }
 }
 
-// structextends: VkSubpassDescription2
+/// Extends: `SubpassDescription2`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct RenderPassSubpassFeedbackCreateInfoEXT<'a> {
@@ -29547,7 +33756,9 @@ impl Default for RenderPassSubpassFeedbackCreateInfoEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsSubpassDescription2 for RenderPassSubpassFeedbackCreateInfoEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceSubpassMergeFeedbackFeaturesEXT<'a> {
@@ -29567,6 +33778,9 @@ impl Default for PhysicalDeviceSubpassMergeFeedbackFeaturesEXT<'_> {
         }
     }
 }
+
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceSubpassMergeFeedbackFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceSubpassMergeFeedbackFeaturesEXT<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -29796,7 +34010,7 @@ impl Default for MicromapTriangleEXT {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceOpacityMicromapFeaturesEXT<'a> {
@@ -29821,7 +34035,10 @@ impl Default for PhysicalDeviceOpacityMicromapFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceOpacityMicromapFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceOpacityMicromapFeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -29845,7 +34062,9 @@ impl Default for PhysicalDeviceOpacityMicromapPropertiesEXT<'_> {
     }
 }
 
-// structextends: VkAccelerationStructureGeometryTrianglesDataKHR,VkAccelerationStructureDenseGeometryFormatTrianglesDataAMDX
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceOpacityMicromapPropertiesEXT<'_> {}
+
+/// Extends: `AccelerationStructureGeometryTrianglesDataKHR`, `AccelerationStructureDenseGeometryFormatTrianglesDataAMDX`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct AccelerationStructureTrianglesOpacityMicromapEXT<'a> {
@@ -29884,7 +34103,16 @@ impl Default for AccelerationStructureTrianglesOpacityMicromapEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsAccelerationStructureGeometryTrianglesDataKHR
+    for AccelerationStructureTrianglesOpacityMicromapEXT<'_>
+{
+}
+impl ExtendsAccelerationStructureDenseGeometryFormatTrianglesDataAMDX
+    for AccelerationStructureTrianglesOpacityMicromapEXT<'_>
+{
+}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceDisplacementMicromapFeaturesNV<'a> {
@@ -29905,7 +34133,10 @@ impl Default for PhysicalDeviceDisplacementMicromapFeaturesNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceDisplacementMicromapFeaturesNV<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceDisplacementMicromapFeaturesNV<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -29927,7 +34158,9 @@ impl Default for PhysicalDeviceDisplacementMicromapPropertiesNV<'_> {
     }
 }
 
-// structextends: VkAccelerationStructureGeometryTrianglesDataKHR
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceDisplacementMicromapPropertiesNV<'_> {}
+
+/// Extends: `AccelerationStructureGeometryTrianglesDataKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct AccelerationStructureTrianglesDisplacementMicromapNV<'a> {
@@ -29982,6 +34215,11 @@ impl Default for AccelerationStructureTrianglesDisplacementMicromapNV<'_> {
     }
 }
 
+impl ExtendsAccelerationStructureGeometryTrianglesDataKHR
+    for AccelerationStructureTrianglesDisplacementMicromapNV<'_>
+{
+}
+
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -30003,7 +34241,7 @@ impl Default for PipelinePropertiesIdentifierEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDevicePipelinePropertiesFeaturesEXT<'a> {
@@ -30024,7 +34262,10 @@ impl Default for PhysicalDevicePipelinePropertiesFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDevicePipelinePropertiesFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDevicePipelinePropertiesFeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD<'a> {
@@ -30045,7 +34286,13 @@ impl Default for PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD<'_> {
     }
 }
 
-// structextends: VkBufferMemoryBarrier,VkBufferMemoryBarrier2,VkImageMemoryBarrier,VkImageMemoryBarrier2
+impl ExtendsPhysicalDeviceFeatures2
+    for PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD<'_>
+{
+}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD<'_> {}
+
+/// Extends: `BufferMemoryBarrier`, `BufferMemoryBarrier2`, `ImageMemoryBarrier`, `ImageMemoryBarrier2`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ExternalMemoryAcquireUnmodifiedEXT<'a> {
@@ -30066,7 +34313,12 @@ impl Default for ExternalMemoryAcquireUnmodifiedEXT<'_> {
     }
 }
 
-// structextends: VkInstanceCreateInfo,VkMemoryAllocateInfo,VkImageCreateInfo,VkImageViewCreateInfo,VkBufferViewCreateInfo,VkSemaphoreCreateInfo,VkEventCreateInfo
+impl ExtendsBufferMemoryBarrier for ExternalMemoryAcquireUnmodifiedEXT<'_> {}
+impl ExtendsBufferMemoryBarrier2 for ExternalMemoryAcquireUnmodifiedEXT<'_> {}
+impl ExtendsImageMemoryBarrier for ExternalMemoryAcquireUnmodifiedEXT<'_> {}
+impl ExtendsImageMemoryBarrier2 for ExternalMemoryAcquireUnmodifiedEXT<'_> {}
+
+/// Extends: `InstanceCreateInfo`, `MemoryAllocateInfo`, `ImageCreateInfo`, `ImageViewCreateInfo`, `BufferViewCreateInfo`, `SemaphoreCreateInfo`, `EventCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ExportMetalObjectCreateInfoEXT<'a> {
@@ -30087,6 +34339,14 @@ impl Default for ExportMetalObjectCreateInfoEXT<'_> {
     }
 }
 
+impl ExtendsInstanceCreateInfo for ExportMetalObjectCreateInfoEXT<'_> {}
+impl ExtendsMemoryAllocateInfo for ExportMetalObjectCreateInfoEXT<'_> {}
+impl ExtendsImageCreateInfo for ExportMetalObjectCreateInfoEXT<'_> {}
+impl ExtendsImageViewCreateInfo for ExportMetalObjectCreateInfoEXT<'_> {}
+impl ExtendsBufferViewCreateInfo for ExportMetalObjectCreateInfoEXT<'_> {}
+impl ExtendsSemaphoreCreateInfo for ExportMetalObjectCreateInfoEXT<'_> {}
+impl ExtendsEventCreateInfo for ExportMetalObjectCreateInfoEXT<'_> {}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ExportMetalObjectsInfoEXT<'a> {
@@ -30105,7 +34365,30 @@ impl Default for ExportMetalObjectsInfoEXT<'_> {
     }
 }
 
-// structextends: VkExportMetalObjectsInfoEXT
+pub trait ExtendsExportMetalObjectsInfoEXT {}
+impl<'a> ExportMetalObjectsInfoEXT<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsExportMetalObjectsInfoEXT>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
+/// Extends: `ExportMetalObjectsInfoEXT`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ExportMetalDeviceInfoEXT<'a> {
@@ -30126,7 +34409,9 @@ impl Default for ExportMetalDeviceInfoEXT<'_> {
     }
 }
 
-// structextends: VkExportMetalObjectsInfoEXT
+impl ExtendsExportMetalObjectsInfoEXT for ExportMetalDeviceInfoEXT<'_> {}
+
+/// Extends: `ExportMetalObjectsInfoEXT`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ExportMetalCommandQueueInfoEXT<'a> {
@@ -30149,7 +34434,9 @@ impl Default for ExportMetalCommandQueueInfoEXT<'_> {
     }
 }
 
-// structextends: VkExportMetalObjectsInfoEXT
+impl ExtendsExportMetalObjectsInfoEXT for ExportMetalCommandQueueInfoEXT<'_> {}
+
+/// Extends: `ExportMetalObjectsInfoEXT`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ExportMetalBufferInfoEXT<'a> {
@@ -30172,7 +34459,9 @@ impl Default for ExportMetalBufferInfoEXT<'_> {
     }
 }
 
-// structextends: VkMemoryAllocateInfo
+impl ExtendsExportMetalObjectsInfoEXT for ExportMetalBufferInfoEXT<'_> {}
+
+/// Extends: `MemoryAllocateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ImportMetalBufferInfoEXT<'a> {
@@ -30193,7 +34482,9 @@ impl Default for ImportMetalBufferInfoEXT<'_> {
     }
 }
 
-// structextends: VkExportMetalObjectsInfoEXT
+impl ExtendsMemoryAllocateInfo for ImportMetalBufferInfoEXT<'_> {}
+
+/// Extends: `ExportMetalObjectsInfoEXT`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ExportMetalTextureInfoEXT<'a> {
@@ -30222,7 +34513,9 @@ impl Default for ExportMetalTextureInfoEXT<'_> {
     }
 }
 
-// structextends: VkImageCreateInfo
+impl ExtendsExportMetalObjectsInfoEXT for ExportMetalTextureInfoEXT<'_> {}
+
+/// Extends: `ImageCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ImportMetalTextureInfoEXT<'a> {
@@ -30245,7 +34538,9 @@ impl Default for ImportMetalTextureInfoEXT<'_> {
     }
 }
 
-// structextends: VkExportMetalObjectsInfoEXT
+impl ExtendsImageCreateInfo for ImportMetalTextureInfoEXT<'_> {}
+
+/// Extends: `ExportMetalObjectsInfoEXT`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ExportMetalIOSurfaceInfoEXT<'a> {
@@ -30268,7 +34563,9 @@ impl Default for ExportMetalIOSurfaceInfoEXT<'_> {
     }
 }
 
-// structextends: VkImageCreateInfo
+impl ExtendsExportMetalObjectsInfoEXT for ExportMetalIOSurfaceInfoEXT<'_> {}
+
+/// Extends: `ImageCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ImportMetalIOSurfaceInfoEXT<'a> {
@@ -30289,7 +34586,9 @@ impl Default for ImportMetalIOSurfaceInfoEXT<'_> {
     }
 }
 
-// structextends: VkExportMetalObjectsInfoEXT
+impl ExtendsImageCreateInfo for ImportMetalIOSurfaceInfoEXT<'_> {}
+
+/// Extends: `ExportMetalObjectsInfoEXT`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ExportMetalSharedEventInfoEXT<'a> {
@@ -30314,7 +34613,9 @@ impl Default for ExportMetalSharedEventInfoEXT<'_> {
     }
 }
 
-// structextends: VkSemaphoreCreateInfo,VkEventCreateInfo
+impl ExtendsExportMetalObjectsInfoEXT for ExportMetalSharedEventInfoEXT<'_> {}
+
+/// Extends: `SemaphoreCreateInfo`, `EventCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ImportMetalSharedEventInfoEXT<'a> {
@@ -30335,7 +34636,10 @@ impl Default for ImportMetalSharedEventInfoEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsSemaphoreCreateInfo for ImportMetalSharedEventInfoEXT<'_> {}
+impl ExtendsEventCreateInfo for ImportMetalSharedEventInfoEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceNonSeamlessCubeMapFeaturesEXT<'a> {
@@ -30356,7 +34660,10 @@ impl Default for PhysicalDeviceNonSeamlessCubeMapFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceNonSeamlessCubeMapFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceNonSeamlessCubeMapFeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDevicePipelineRobustnessFeatures<'a> {
@@ -30377,9 +34684,12 @@ impl Default for PhysicalDevicePipelineRobustnessFeatures<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDevicePipelineRobustnessFeatures<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDevicePipelineRobustnessFeatures<'_> {}
+
 pub type PhysicalDevicePipelineRobustnessFeaturesEXT<'a> =
     PhysicalDevicePipelineRobustnessFeatures<'a>;
-// structextends: VkGraphicsPipelineCreateInfo,VkComputePipelineCreateInfo,VkPipelineShaderStageCreateInfo,VkRayTracingPipelineCreateInfoKHR
+/// Extends: `GraphicsPipelineCreateInfo`, `ComputePipelineCreateInfo`, `PipelineShaderStageCreateInfo`, `RayTracingPipelineCreateInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PipelineRobustnessCreateInfo<'a> {
@@ -30406,8 +34716,13 @@ impl Default for PipelineRobustnessCreateInfo<'_> {
     }
 }
 
+impl ExtendsGraphicsPipelineCreateInfo for PipelineRobustnessCreateInfo<'_> {}
+impl ExtendsComputePipelineCreateInfo for PipelineRobustnessCreateInfo<'_> {}
+impl ExtendsPipelineShaderStageCreateInfo for PipelineRobustnessCreateInfo<'_> {}
+impl ExtendsRayTracingPipelineCreateInfoKHR for PipelineRobustnessCreateInfo<'_> {}
+
 pub type PipelineRobustnessCreateInfoEXT<'a> = PipelineRobustnessCreateInfo<'a>;
-// structextends: VkPhysicalDeviceProperties2
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -30435,9 +34750,11 @@ impl Default for PhysicalDevicePipelineRobustnessProperties<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDevicePipelineRobustnessProperties<'_> {}
+
 pub type PhysicalDevicePipelineRobustnessPropertiesEXT<'a> =
     PhysicalDevicePipelineRobustnessProperties<'a>;
-// structextends: VkImageViewCreateInfo
+/// Extends: `ImageViewCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ImageViewSampleWeightCreateInfoQCOM<'a> {
@@ -30462,7 +34779,9 @@ impl Default for ImageViewSampleWeightCreateInfoQCOM<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsImageViewCreateInfo for ImageViewSampleWeightCreateInfoQCOM<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceImageProcessingFeaturesQCOM<'a> {
@@ -30487,7 +34806,10 @@ impl Default for PhysicalDeviceImageProcessingFeaturesQCOM<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceImageProcessingFeaturesQCOM<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceImageProcessingFeaturesQCOM<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -30515,7 +34837,9 @@ impl Default for PhysicalDeviceImageProcessingPropertiesQCOM<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceImageProcessingPropertiesQCOM<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceTilePropertiesFeaturesQCOM<'a> {
@@ -30535,6 +34859,9 @@ impl Default for PhysicalDeviceTilePropertiesFeaturesQCOM<'_> {
         }
     }
 }
+
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceTilePropertiesFeaturesQCOM<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceTilePropertiesFeaturesQCOM<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -30560,7 +34887,7 @@ impl Default for TilePropertiesQCOM<'_> {
     }
 }
 
-// structextends: VkCommandBufferInheritanceInfo
+/// Extends: `CommandBufferInheritanceInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct TileMemoryBindInfoQCOM<'a> {
@@ -30581,7 +34908,9 @@ impl Default for TileMemoryBindInfoQCOM<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsCommandBufferInheritanceInfo for TileMemoryBindInfoQCOM<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceAmigoProfilingFeaturesSEC<'a> {
@@ -30602,7 +34931,10 @@ impl Default for PhysicalDeviceAmigoProfilingFeaturesSEC<'_> {
     }
 }
 
-// structextends: VkSubmitInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceAmigoProfilingFeaturesSEC<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceAmigoProfilingFeaturesSEC<'_> {}
+
+/// Extends: `SubmitInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct AmigoProfilingSubmitInfoSEC<'a> {
@@ -30625,7 +34957,9 @@ impl Default for AmigoProfilingSubmitInfoSEC<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsSubmitInfo for AmigoProfilingSubmitInfoSEC<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceAttachmentFeedbackLoopLayoutFeaturesEXT<'a> {
@@ -30646,9 +34980,12 @@ impl Default for PhysicalDeviceAttachmentFeedbackLoopLayoutFeaturesEXT<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceAttachmentFeedbackLoopLayoutFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceAttachmentFeedbackLoopLayoutFeaturesEXT<'_> {}
+
 pub type PhysicalDeviceDepthClampZeroOneFeaturesEXT<'a> =
     PhysicalDeviceDepthClampZeroOneFeaturesKHR<'a>;
-// structextends: VkRenderingAttachmentInfo
+/// Extends: `RenderingAttachmentInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct AttachmentFeedbackLoopInfoEXT<'a> {
@@ -30669,7 +35006,9 @@ impl Default for AttachmentFeedbackLoopInfoEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsRenderingAttachmentInfo for AttachmentFeedbackLoopInfoEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceAddressBindingReportFeaturesEXT<'a> {
@@ -30690,7 +35029,10 @@ impl Default for PhysicalDeviceAddressBindingReportFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkRenderingAttachmentInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceAddressBindingReportFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceAddressBindingReportFeaturesEXT<'_> {}
+
+/// Extends: `RenderingAttachmentInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct RenderingAttachmentFlagsInfoKHR<'a> {
@@ -30711,7 +35053,9 @@ impl Default for RenderingAttachmentFlagsInfoKHR<'_> {
     }
 }
 
-// structextends: VkResolveImageInfo2
+impl ExtendsRenderingAttachmentInfo for RenderingAttachmentFlagsInfoKHR<'_> {}
+
+/// Extends: `ResolveImageInfo2`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ResolveImageModeInfoKHR<'a> {
@@ -30736,7 +35080,9 @@ impl Default for ResolveImageModeInfoKHR<'_> {
     }
 }
 
-// structextends: VkDebugUtilsMessengerCallbackDataEXT
+impl ExtendsResolveImageInfo2 for ResolveImageModeInfoKHR<'_> {}
+
+/// Extends: `DebugUtilsMessengerCallbackDataEXT`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct DeviceAddressBindingCallbackDataEXT<'a> {
@@ -30763,7 +35109,9 @@ impl Default for DeviceAddressBindingCallbackDataEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsDebugUtilsMessengerCallbackDataEXT for DeviceAddressBindingCallbackDataEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceOpticalFlowFeaturesNV<'a> {
@@ -30784,7 +35132,10 @@ impl Default for PhysicalDeviceOpticalFlowFeaturesNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceOpticalFlowFeaturesNV<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceOpticalFlowFeaturesNV<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -30826,7 +35177,9 @@ impl Default for PhysicalDeviceOpticalFlowPropertiesNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceImageFormatInfo2,VkImageCreateInfo
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceOpticalFlowPropertiesNV<'_> {}
+
+/// Extends: `PhysicalDeviceImageFormatInfo2`, `ImageCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct OpticalFlowImageFormatInfoNV<'a> {
@@ -30846,6 +35199,9 @@ impl Default for OpticalFlowImageFormatInfoNV<'_> {
         }
     }
 }
+
+impl ExtendsPhysicalDeviceImageFormatInfo2 for OpticalFlowImageFormatInfoNV<'_> {}
+impl ExtendsImageCreateInfo for OpticalFlowImageFormatInfoNV<'_> {}
 
 /// returned_only
 #[repr(C)]
@@ -30904,7 +35260,30 @@ impl Default for OpticalFlowSessionCreateInfoNV<'_> {
     }
 }
 
-// structextends: VkOpticalFlowSessionCreateInfoNV
+pub trait ExtendsOpticalFlowSessionCreateInfoNV {}
+impl<'a> OpticalFlowSessionCreateInfoNV<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsOpticalFlowSessionCreateInfoNV>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
+/// Extends: `OpticalFlowSessionCreateInfoNV`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct OpticalFlowSessionCreatePrivateDataInfoNV<'a> {
@@ -30928,6 +35307,8 @@ impl Default for OpticalFlowSessionCreatePrivateDataInfoNV<'_> {
         }
     }
 }
+
+impl ExtendsOpticalFlowSessionCreateInfoNV for OpticalFlowSessionCreatePrivateDataInfoNV<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -30954,7 +35335,7 @@ impl Default for OpticalFlowExecuteInfoNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceFaultFeaturesEXT<'a> {
@@ -30976,6 +35357,9 @@ impl Default for PhysicalDeviceFaultFeaturesEXT<'_> {
         }
     }
 }
+
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceFaultFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceFaultFeaturesEXT<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -31103,7 +35487,7 @@ impl Default for DeviceFaultVendorBinaryHeaderVersionOneEXT {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT<'a> {
@@ -31123,6 +35507,9 @@ impl Default for PhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT<'_> {
         }
     }
 }
+
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -31148,7 +35535,30 @@ impl Default for DepthBiasInfoEXT<'_> {
     }
 }
 
-// structextends: VkDepthBiasInfoEXT,VkPipelineRasterizationStateCreateInfo
+pub trait ExtendsDepthBiasInfoEXT {}
+impl<'a> DepthBiasInfoEXT<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsDepthBiasInfoEXT>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
+/// Extends: `DepthBiasInfoEXT`, `PipelineRasterizationStateCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct DepthBiasRepresentationInfoEXT<'a> {
@@ -31170,6 +35580,9 @@ impl Default for DepthBiasRepresentationInfoEXT<'_> {
         }
     }
 }
+
+impl ExtendsDepthBiasInfoEXT for DepthBiasRepresentationInfoEXT<'_> {}
+impl ExtendsPipelineRasterizationStateCreateInfo for DepthBiasRepresentationInfoEXT<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -31240,7 +35653,7 @@ impl Default for DecompressMemoryInfoEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -31266,7 +35679,9 @@ impl Default for PhysicalDeviceShaderCoreBuiltinsPropertiesARM<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceShaderCoreBuiltinsPropertiesARM<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceShaderCoreBuiltinsFeaturesARM<'a> {
@@ -31287,7 +35702,10 @@ impl Default for PhysicalDeviceShaderCoreBuiltinsFeaturesARM<'_> {
     }
 }
 
-// structextends: VkSubmitInfo,VkSubmitInfo2,VkPresentInfoKHR,VkBindSparseInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceShaderCoreBuiltinsFeaturesARM<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceShaderCoreBuiltinsFeaturesARM<'_> {}
+
+/// Extends: `SubmitInfo`, `SubmitInfo2`, `PresentInfoKHR`, `BindSparseInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct FrameBoundaryEXT<'a> {
@@ -31330,7 +35748,12 @@ impl Default for FrameBoundaryEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsSubmitInfo for FrameBoundaryEXT<'_> {}
+impl ExtendsSubmitInfo2 for FrameBoundaryEXT<'_> {}
+impl ExtendsPresentInfoKHR for FrameBoundaryEXT<'_> {}
+impl ExtendsBindSparseInfo for FrameBoundaryEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceFrameBoundaryFeaturesEXT<'a> {
@@ -31351,7 +35774,10 @@ impl Default for PhysicalDeviceFrameBoundaryFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceFrameBoundaryFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceFrameBoundaryFeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT<'a> {
@@ -31372,7 +35798,13 @@ impl Default for PhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT<'_> 
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2
+    for PhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT<'_>
+{
+}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceInternallySynchronizedQueuesFeaturesKHR<'a> {
@@ -31393,7 +35825,10 @@ impl Default for PhysicalDeviceInternallySynchronizedQueuesFeaturesKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceSurfaceInfo2KHR
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceInternallySynchronizedQueuesFeaturesKHR<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceInternallySynchronizedQueuesFeaturesKHR<'_> {}
+
+/// Extends: `PhysicalDeviceSurfaceInfo2KHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct SurfacePresentModeKHR<'a> {
@@ -31414,8 +35849,10 @@ impl Default for SurfacePresentModeKHR<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceSurfaceInfo2KHR for SurfacePresentModeKHR<'_> {}
+
 pub type SurfacePresentModeEXT<'a> = SurfacePresentModeKHR<'a>;
-// structextends: VkSurfaceCapabilities2KHR
+/// Extends: `SurfaceCapabilities2KHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct SurfacePresentScalingCapabilitiesKHR<'a> {
@@ -31446,8 +35883,10 @@ impl Default for SurfacePresentScalingCapabilitiesKHR<'_> {
     }
 }
 
+impl ExtendsSurfaceCapabilities2KHR for SurfacePresentScalingCapabilitiesKHR<'_> {}
+
 pub type SurfacePresentScalingCapabilitiesEXT<'a> = SurfacePresentScalingCapabilitiesKHR<'a>;
-// structextends: VkSurfaceCapabilities2KHR
+/// Extends: `SurfaceCapabilities2KHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct SurfacePresentModeCompatibilityKHR<'a> {
@@ -31473,8 +35912,10 @@ impl Default for SurfacePresentModeCompatibilityKHR<'_> {
     }
 }
 
+impl ExtendsSurfaceCapabilities2KHR for SurfacePresentModeCompatibilityKHR<'_> {}
+
 pub type SurfacePresentModeCompatibilityEXT<'a> = SurfacePresentModeCompatibilityKHR<'a>;
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceSwapchainMaintenance1FeaturesKHR<'a> {
@@ -31495,9 +35936,12 @@ impl Default for PhysicalDeviceSwapchainMaintenance1FeaturesKHR<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceSwapchainMaintenance1FeaturesKHR<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceSwapchainMaintenance1FeaturesKHR<'_> {}
+
 pub type PhysicalDeviceSwapchainMaintenance1FeaturesEXT<'a> =
     PhysicalDeviceSwapchainMaintenance1FeaturesKHR<'a>;
-// structextends: VkPresentInfoKHR
+/// Extends: `PresentInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct SwapchainPresentFenceInfoKHR<'a> {
@@ -31524,8 +35968,10 @@ impl Default for SwapchainPresentFenceInfoKHR<'_> {
     }
 }
 
+impl ExtendsPresentInfoKHR for SwapchainPresentFenceInfoKHR<'_> {}
+
 pub type SwapchainPresentFenceInfoEXT<'a> = SwapchainPresentFenceInfoKHR<'a>;
-// structextends: VkSwapchainCreateInfoKHR
+/// Extends: `SwapchainCreateInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct SwapchainPresentModesCreateInfoKHR<'a> {
@@ -31549,8 +35995,10 @@ impl Default for SwapchainPresentModesCreateInfoKHR<'_> {
     }
 }
 
+impl ExtendsSwapchainCreateInfoKHR for SwapchainPresentModesCreateInfoKHR<'_> {}
+
 pub type SwapchainPresentModesCreateInfoEXT<'a> = SwapchainPresentModesCreateInfoKHR<'a>;
-// structextends: VkPresentInfoKHR
+/// Extends: `PresentInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct SwapchainPresentModeInfoKHR<'a> {
@@ -31576,8 +36024,10 @@ impl Default for SwapchainPresentModeInfoKHR<'_> {
     }
 }
 
+impl ExtendsPresentInfoKHR for SwapchainPresentModeInfoKHR<'_> {}
+
 pub type SwapchainPresentModeInfoEXT<'a> = SwapchainPresentModeInfoKHR<'a>;
-// structextends: VkSwapchainCreateInfoKHR
+/// Extends: `SwapchainCreateInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct SwapchainPresentScalingCreateInfoKHR<'a> {
@@ -31601,6 +36051,8 @@ impl Default for SwapchainPresentScalingCreateInfoKHR<'_> {
         }
     }
 }
+
+impl ExtendsSwapchainCreateInfoKHR for SwapchainPresentScalingCreateInfoKHR<'_> {}
 
 pub type SwapchainPresentScalingCreateInfoEXT<'a> = SwapchainPresentScalingCreateInfoKHR<'a>;
 #[repr(C)]
@@ -31632,7 +36084,7 @@ impl Default for ReleaseSwapchainImagesInfoKHR<'_> {
 }
 
 pub type ReleaseSwapchainImagesInfoEXT<'a> = ReleaseSwapchainImagesInfoKHR<'a>;
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceDepthBiasControlFeaturesEXT<'a> {
@@ -31659,7 +36111,10 @@ impl Default for PhysicalDeviceDepthBiasControlFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceDepthBiasControlFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceDepthBiasControlFeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceRayTracingInvocationReorderFeaturesEXT<'a> {
@@ -31680,7 +36135,10 @@ impl Default for PhysicalDeviceRayTracingInvocationReorderFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceRayTracingInvocationReorderFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceRayTracingInvocationReorderFeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceRayTracingInvocationReorderFeaturesNV<'a> {
@@ -31701,7 +36159,10 @@ impl Default for PhysicalDeviceRayTracingInvocationReorderFeaturesNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceRayTracingInvocationReorderFeaturesNV<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceRayTracingInvocationReorderFeaturesNV<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -31725,7 +36186,12 @@ impl Default for PhysicalDeviceRayTracingInvocationReorderPropertiesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceProperties2
+    for PhysicalDeviceRayTracingInvocationReorderPropertiesEXT<'_>
+{
+}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -31747,7 +36213,12 @@ impl Default for PhysicalDeviceRayTracingInvocationReorderPropertiesNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceProperties2
+    for PhysicalDeviceRayTracingInvocationReorderPropertiesNV<'_>
+{
+}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceExtendedSparseAddressSpaceFeaturesNV<'a> {
@@ -31768,7 +36239,10 @@ impl Default for PhysicalDeviceExtendedSparseAddressSpaceFeaturesNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceExtendedSparseAddressSpaceFeaturesNV<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceExtendedSparseAddressSpaceFeaturesNV<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -31797,6 +36271,8 @@ impl Default for PhysicalDeviceExtendedSparseAddressSpacePropertiesNV<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceExtendedSparseAddressSpacePropertiesNV<'_> {}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct DirectDriverLoadingInfoLUNARG<'a> {
@@ -31819,7 +36295,7 @@ impl Default for DirectDriverLoadingInfoLUNARG<'_> {
     }
 }
 
-// structextends: VkInstanceCreateInfo
+/// Extends: `InstanceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct DirectDriverLoadingListLUNARG<'a> {
@@ -31845,7 +36321,9 @@ impl Default for DirectDriverLoadingListLUNARG<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsInstanceCreateInfo for DirectDriverLoadingListLUNARG<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceMultiviewPerViewViewportsFeaturesQCOM<'a> {
@@ -31866,7 +36344,10 @@ impl Default for PhysicalDeviceMultiviewPerViewViewportsFeaturesQCOM<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceMultiviewPerViewViewportsFeaturesQCOM<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceMultiviewPerViewViewportsFeaturesQCOM<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceRayTracingPositionFetchFeaturesKHR<'a> {
@@ -31886,6 +36367,9 @@ impl Default for PhysicalDeviceRayTracingPositionFetchFeaturesKHR<'_> {
         }
     }
 }
+
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceRayTracingPositionFetchFeaturesKHR<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceRayTracingPositionFetchFeaturesKHR<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -31910,7 +36394,7 @@ impl Default for DeviceImageSubresourceInfo<'_> {
 }
 
 pub type DeviceImageSubresourceInfoKHR<'a> = DeviceImageSubresourceInfo<'a>;
-// structextends: VkPhysicalDeviceProperties2
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -31936,7 +36420,9 @@ impl Default for PhysicalDeviceShaderCorePropertiesARM<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceShaderCorePropertiesARM<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceMultiviewPerViewRenderAreasFeaturesQCOM<'a> {
@@ -31957,7 +36443,10 @@ impl Default for PhysicalDeviceMultiviewPerViewRenderAreasFeaturesQCOM<'_> {
     }
 }
 
-// structextends: VkRenderPassBeginInfo,VkRenderingInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceMultiviewPerViewRenderAreasFeaturesQCOM<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceMultiviewPerViewRenderAreasFeaturesQCOM<'_> {}
+
+/// Extends: `RenderPassBeginInfo`, `RenderingInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct MultiviewPerViewRenderAreasRenderPassBeginInfoQCOM<'a> {
@@ -31981,7 +36470,10 @@ impl Default for MultiviewPerViewRenderAreasRenderPassBeginInfoQCOM<'_> {
     }
 }
 
-// structextends: VkSemaphoreCreateInfo
+impl ExtendsRenderPassBeginInfo for MultiviewPerViewRenderAreasRenderPassBeginInfoQCOM<'_> {}
+impl ExtendsRenderingInfo for MultiviewPerViewRenderAreasRenderPassBeginInfoQCOM<'_> {}
+
+/// Extends: `SemaphoreCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct QueryLowLatencySupportNV<'a> {
@@ -32001,6 +36493,8 @@ impl Default for QueryLowLatencySupportNV<'_> {
         }
     }
 }
+
+impl ExtendsSemaphoreCreateInfo for QueryLowLatencySupportNV<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -32028,6 +36522,29 @@ impl Default for MemoryMapInfo<'_> {
     }
 }
 
+pub trait ExtendsMemoryMapInfo {}
+impl<'a> MemoryMapInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsMemoryMapInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 pub type MemoryMapInfoKHR<'a> = MemoryMapInfo<'a>;
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -32052,7 +36569,7 @@ impl Default for MemoryUnmapInfo<'_> {
 }
 
 pub type MemoryUnmapInfoKHR<'a> = MemoryUnmapInfo<'a>;
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceShaderObjectFeaturesEXT<'a> {
@@ -32073,7 +36590,10 @@ impl Default for PhysicalDeviceShaderObjectFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceShaderObjectFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceShaderObjectFeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -32096,6 +36616,8 @@ impl Default for PhysicalDeviceShaderObjectPropertiesEXT<'_> {
         }
     }
 }
+
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceShaderObjectPropertiesEXT<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -32147,7 +36669,30 @@ impl Default for ShaderCreateInfoEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+pub trait ExtendsShaderCreateInfoEXT {}
+impl<'a> ShaderCreateInfoEXT<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsShaderCreateInfoEXT>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceShaderTileImageFeaturesEXT<'a> {
@@ -32172,7 +36717,10 @@ impl Default for PhysicalDeviceShaderTileImageFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceShaderTileImageFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceShaderTileImageFeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -32198,7 +36746,9 @@ impl Default for PhysicalDeviceShaderTileImagePropertiesEXT<'_> {
     }
 }
 
-// structextends: VkMemoryAllocateInfo
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceShaderTileImagePropertiesEXT<'_> {}
+
+/// Extends: `MemoryAllocateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ImportScreenBufferInfoQNX<'a> {
@@ -32218,6 +36768,8 @@ impl Default for ImportScreenBufferInfoQNX<'_> {
         }
     }
 }
+
+impl ExtendsMemoryAllocateInfo for ImportScreenBufferInfoQNX<'_> {}
 
 /// returned_only
 #[repr(C)]
@@ -32242,7 +36794,30 @@ impl Default for ScreenBufferPropertiesQNX<'_> {
     }
 }
 
-// structextends: VkScreenBufferPropertiesQNX
+pub trait ExtendsScreenBufferPropertiesQNX {}
+impl<'a> ScreenBufferPropertiesQNX<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsScreenBufferPropertiesQNX>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
+/// Extends: `ScreenBufferPropertiesQNX`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -32280,7 +36855,9 @@ impl Default for ScreenBufferFormatPropertiesQNX<'_> {
     }
 }
 
-// structextends: VkImageCreateInfo,VkSamplerYcbcrConversionCreateInfo
+impl ExtendsScreenBufferPropertiesQNX for ScreenBufferFormatPropertiesQNX<'_> {}
+
+/// Extends: `ImageCreateInfo`, `SamplerYcbcrConversionCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ExternalFormatQNX<'a> {
@@ -32301,7 +36878,10 @@ impl Default for ExternalFormatQNX<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsImageCreateInfo for ExternalFormatQNX<'_> {}
+impl ExtendsSamplerYcbcrConversionCreateInfo for ExternalFormatQNX<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceExternalMemoryScreenBufferFeaturesQNX<'a> {
@@ -32322,7 +36902,10 @@ impl Default for PhysicalDeviceExternalMemoryScreenBufferFeaturesQNX<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceExternalMemoryScreenBufferFeaturesQNX<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceExternalMemoryScreenBufferFeaturesQNX<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceCooperativeMatrixFeaturesKHR<'a> {
@@ -32344,6 +36927,9 @@ impl Default for PhysicalDeviceCooperativeMatrixFeaturesKHR<'_> {
         }
     }
 }
+
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceCooperativeMatrixFeaturesKHR<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceCooperativeMatrixFeaturesKHR<'_> {}
 
 /// returned_only
 #[repr(C)]
@@ -32382,7 +36968,7 @@ impl Default for CooperativeMatrixPropertiesKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -32404,7 +36990,9 @@ impl Default for PhysicalDeviceCooperativeMatrixPropertiesKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceCooperativeMatrixPropertiesKHR<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -32438,7 +37026,9 @@ impl Default for PhysicalDeviceShaderEnqueuePropertiesAMDX<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceShaderEnqueuePropertiesAMDX<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceShaderEnqueueFeaturesAMDX<'a> {
@@ -32460,6 +37050,9 @@ impl Default for PhysicalDeviceShaderEnqueueFeaturesAMDX<'_> {
         }
     }
 }
+
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceShaderEnqueueFeaturesAMDX<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceShaderEnqueueFeaturesAMDX<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -32497,7 +37090,30 @@ impl Default for ExecutionGraphPipelineCreateInfoAMDX<'_> {
     }
 }
 
-// structextends: VkPipelineShaderStageCreateInfo
+pub trait ExtendsExecutionGraphPipelineCreateInfoAMDX {}
+impl<'a> ExecutionGraphPipelineCreateInfoAMDX<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsExecutionGraphPipelineCreateInfoAMDX>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
+/// Extends: `PipelineShaderStageCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PipelineShaderStageNodeCreateInfoAMDX<'a> {
@@ -32521,6 +37137,8 @@ impl Default for PipelineShaderStageNodeCreateInfoAMDX<'_> {
         }
     }
 }
+
+impl ExtendsPipelineShaderStageCreateInfo for PipelineShaderStageNodeCreateInfoAMDX<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -32582,7 +37200,7 @@ impl Default for DispatchGraphCountInfoAMDX {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceAntiLagFeaturesAMD<'a> {
@@ -32602,6 +37220,9 @@ impl Default for PhysicalDeviceAntiLagFeaturesAMD<'_> {
         }
     }
 }
+
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceAntiLagFeaturesAMD<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceAntiLagFeaturesAMD<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -32650,7 +37271,7 @@ impl Default for AntiLagPresentationInfoAMD<'_> {
     }
 }
 
-// structextends: VkBindBufferMemoryInfo,VkBindImageMemoryInfo
+/// Extends: `BindBufferMemoryInfo`, `BindImageMemoryInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct BindMemoryStatus<'a> {
@@ -32671,7 +37292,10 @@ impl Default for BindMemoryStatus<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsBindBufferMemoryInfo for BindMemoryStatus<'_> {}
+impl ExtendsBindImageMemoryInfo for BindMemoryStatus<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceTileMemoryHeapFeaturesQCOM<'a> {
@@ -32692,7 +37316,10 @@ impl Default for PhysicalDeviceTileMemoryHeapFeaturesQCOM<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceTileMemoryHeapFeaturesQCOM<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceTileMemoryHeapFeaturesQCOM<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceTileMemoryHeapPropertiesQCOM<'a> {
@@ -32715,7 +37342,9 @@ impl Default for PhysicalDeviceTileMemoryHeapPropertiesQCOM<'_> {
     }
 }
 
-// structextends: VkRenderPassCreateInfo,VkRenderPassCreateInfo2,VkRenderingInfo
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceTileMemoryHeapPropertiesQCOM<'_> {}
+
+/// Extends: `RenderPassCreateInfo`, `RenderPassCreateInfo2`, `RenderingInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct TileMemorySizeInfoQCOM<'a> {
@@ -32736,7 +37365,11 @@ impl Default for TileMemorySizeInfoQCOM<'_> {
     }
 }
 
-// structextends: VkMemoryRequirements2
+impl ExtendsRenderPassCreateInfo for TileMemorySizeInfoQCOM<'_> {}
+impl ExtendsRenderPassCreateInfo2 for TileMemorySizeInfoQCOM<'_> {}
+impl ExtendsRenderingInfo for TileMemorySizeInfoQCOM<'_> {}
+
+/// Extends: `MemoryRequirements2`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct TileMemoryRequirementsQCOM<'a> {
@@ -32758,6 +37391,8 @@ impl Default for TileMemoryRequirementsQCOM<'_> {
         }
     }
 }
+
+impl ExtendsMemoryRequirements2 for TileMemoryRequirementsQCOM<'_> {}
 
 pub type BindMemoryStatusKHR<'a> = BindMemoryStatus<'a>;
 #[repr(C)]
@@ -32795,6 +37430,29 @@ impl Default for BindDescriptorSetsInfo<'_> {
     }
 }
 
+pub trait ExtendsBindDescriptorSetsInfo {}
+impl<'a> BindDescriptorSetsInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsBindDescriptorSetsInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 pub type BindDescriptorSetsInfoKHR<'a> = BindDescriptorSetsInfo<'a>;
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -32822,6 +37480,29 @@ impl Default for PushConstantsInfo<'_> {
             values: ptr::null_mut(),
             _marker: PhantomData,
         }
+    }
+}
+
+pub trait ExtendsPushConstantsInfo {}
+impl<'a> PushConstantsInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsPushConstantsInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -32855,6 +37536,29 @@ impl Default for PushDescriptorSetInfo<'_> {
     }
 }
 
+pub trait ExtendsPushDescriptorSetInfo {}
+impl<'a> PushDescriptorSetInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsPushDescriptorSetInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 pub type PushDescriptorSetInfoKHR<'a> = PushDescriptorSetInfo<'a>;
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -32879,6 +37583,29 @@ impl Default for PushDescriptorSetWithTemplateInfo<'_> {
             data: ptr::null_mut(),
             _marker: PhantomData,
         }
+    }
+}
+
+pub trait ExtendsPushDescriptorSetWithTemplateInfo {}
+impl<'a> PushDescriptorSetWithTemplateInfo<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsPushDescriptorSetWithTemplateInfo>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -32915,6 +37642,29 @@ impl Default for SetDescriptorBufferOffsetsInfoEXT<'_> {
     }
 }
 
+pub trait ExtendsSetDescriptorBufferOffsetsInfoEXT {}
+impl<'a> SetDescriptorBufferOffsetsInfoEXT<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsSetDescriptorBufferOffsetsInfoEXT>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct BindDescriptorBufferEmbeddedSamplersInfoEXT<'a> {
@@ -32939,7 +37689,33 @@ impl Default for BindDescriptorBufferEmbeddedSamplersInfoEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+pub trait ExtendsBindDescriptorBufferEmbeddedSamplersInfoEXT {}
+impl<'a> BindDescriptorBufferEmbeddedSamplersInfoEXT<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsBindDescriptorBufferEmbeddedSamplersInfoEXT>(
+        mut self,
+        next: &'a mut T,
+    ) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceCubicClampFeaturesQCOM<'a> {
@@ -32960,7 +37736,10 @@ impl Default for PhysicalDeviceCubicClampFeaturesQCOM<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceCubicClampFeaturesQCOM<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceCubicClampFeaturesQCOM<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceYcbcrDegammaFeaturesQCOM<'a> {
@@ -32981,7 +37760,10 @@ impl Default for PhysicalDeviceYcbcrDegammaFeaturesQCOM<'_> {
     }
 }
 
-// structextends: VkSamplerYcbcrConversionCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceYcbcrDegammaFeaturesQCOM<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceYcbcrDegammaFeaturesQCOM<'_> {}
+
+/// Extends: `SamplerYcbcrConversionCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct SamplerYcbcrConversionYcbcrDegammaCreateInfoQCOM<'a> {
@@ -33004,7 +37786,12 @@ impl Default for SamplerYcbcrConversionYcbcrDegammaCreateInfoQCOM<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsSamplerYcbcrConversionCreateInfo
+    for SamplerYcbcrConversionYcbcrDegammaCreateInfoQCOM<'_>
+{
+}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceCubicWeightsFeaturesQCOM<'a> {
@@ -33025,7 +37812,10 @@ impl Default for PhysicalDeviceCubicWeightsFeaturesQCOM<'_> {
     }
 }
 
-// structextends: VkSamplerCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceCubicWeightsFeaturesQCOM<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceCubicWeightsFeaturesQCOM<'_> {}
+
+/// Extends: `SamplerCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct SamplerCubicWeightsCreateInfoQCOM<'a> {
@@ -33046,7 +37836,9 @@ impl Default for SamplerCubicWeightsCreateInfoQCOM<'_> {
     }
 }
 
-// structextends: VkBlitImageInfo2
+impl ExtendsSamplerCreateInfo for SamplerCubicWeightsCreateInfoQCOM<'_> {}
+
+/// Extends: `BlitImageInfo2`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct BlitImageCubicWeightsInfoQCOM<'a> {
@@ -33067,7 +37859,9 @@ impl Default for BlitImageCubicWeightsInfoQCOM<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsBlitImageInfo2 for BlitImageCubicWeightsInfoQCOM<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceImageProcessing2FeaturesQCOM<'a> {
@@ -33088,7 +37882,10 @@ impl Default for PhysicalDeviceImageProcessing2FeaturesQCOM<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceImageProcessing2FeaturesQCOM<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceImageProcessing2FeaturesQCOM<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -33110,7 +37907,9 @@ impl Default for PhysicalDeviceImageProcessing2PropertiesQCOM<'_> {
     }
 }
 
-// structextends: VkSamplerCreateInfo
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceImageProcessing2PropertiesQCOM<'_> {}
+
+/// Extends: `SamplerCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct SamplerBlockMatchWindowCreateInfoQCOM<'a> {
@@ -33133,7 +37932,9 @@ impl Default for SamplerBlockMatchWindowCreateInfoQCOM<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsSamplerCreateInfo for SamplerBlockMatchWindowCreateInfoQCOM<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceDescriptorPoolOverallocationFeaturesNV<'a> {
@@ -33154,7 +37955,10 @@ impl Default for PhysicalDeviceDescriptorPoolOverallocationFeaturesNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceDescriptorPoolOverallocationFeaturesNV<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceDescriptorPoolOverallocationFeaturesNV<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -33176,7 +37980,9 @@ impl Default for PhysicalDeviceLayeredDriverPropertiesMSFT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceLayeredDriverPropertiesMSFT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDevicePerStageDescriptorSetFeaturesNV<'a> {
@@ -33199,7 +38005,10 @@ impl Default for PhysicalDevicePerStageDescriptorSetFeaturesNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDevicePerStageDescriptorSetFeaturesNV<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDevicePerStageDescriptorSetFeaturesNV<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceExternalFormatResolveFeaturesANDROID<'a> {
@@ -33220,7 +38029,10 @@ impl Default for PhysicalDeviceExternalFormatResolveFeaturesANDROID<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceExternalFormatResolveFeaturesANDROID<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceExternalFormatResolveFeaturesANDROID<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -33246,7 +38058,9 @@ impl Default for PhysicalDeviceExternalFormatResolvePropertiesANDROID<'_> {
     }
 }
 
-// structextends: VkAndroidHardwareBufferPropertiesANDROID
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceExternalFormatResolvePropertiesANDROID<'_> {}
+
+/// Extends: `AndroidHardwareBufferPropertiesANDROID`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -33266,6 +38080,11 @@ impl Default for AndroidHardwareBufferFormatResolvePropertiesANDROID<'_> {
             _marker: PhantomData,
         }
     }
+}
+
+impl ExtendsAndroidHardwareBufferPropertiesANDROID
+    for AndroidHardwareBufferFormatResolvePropertiesANDROID<'_>
+{
 }
 
 #[repr(C)]
@@ -33427,7 +38246,7 @@ impl Default for OutOfBandQueueTypeInfoNV<'_> {
     }
 }
 
-// structextends: VkSubmitInfo,VkSubmitInfo2
+/// Extends: `SubmitInfo`, `SubmitInfo2`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct LatencySubmissionPresentIdNV<'a> {
@@ -33448,7 +38267,10 @@ impl Default for LatencySubmissionPresentIdNV<'_> {
     }
 }
 
-// structextends: VkSwapchainCreateInfoKHR
+impl ExtendsSubmitInfo for LatencySubmissionPresentIdNV<'_> {}
+impl ExtendsSubmitInfo2 for LatencySubmissionPresentIdNV<'_> {}
+
+/// Extends: `SwapchainCreateInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct SwapchainLatencyCreateInfoNV<'a> {
@@ -33469,7 +38291,9 @@ impl Default for SwapchainLatencyCreateInfoNV<'_> {
     }
 }
 
-// structextends: VkSurfaceCapabilities2KHR
+impl ExtendsSwapchainCreateInfoKHR for SwapchainLatencyCreateInfoNV<'_> {}
+
+/// Extends: `SurfaceCapabilities2KHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct LatencySurfaceCapabilitiesNV<'a> {
@@ -33494,7 +38318,9 @@ impl Default for LatencySurfaceCapabilitiesNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsSurfaceCapabilities2KHR for LatencySurfaceCapabilitiesNV<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceCudaKernelLaunchFeaturesNV<'a> {
@@ -33515,7 +38341,10 @@ impl Default for PhysicalDeviceCudaKernelLaunchFeaturesNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceCudaKernelLaunchFeaturesNV<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceCudaKernelLaunchFeaturesNV<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -33539,7 +38368,9 @@ impl Default for PhysicalDeviceCudaKernelLaunchPropertiesNV<'_> {
     }
 }
 
-// structextends: VkDeviceQueueCreateInfo,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceCudaKernelLaunchPropertiesNV<'_> {}
+
+/// Extends: `DeviceQueueCreateInfo`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct DeviceQueueShaderCoreControlCreateInfoARM<'a> {
@@ -33560,7 +38391,10 @@ impl Default for DeviceQueueShaderCoreControlCreateInfoARM<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsDeviceQueueCreateInfo for DeviceQueueShaderCoreControlCreateInfoARM<'_> {}
+impl ExtendsDeviceCreateInfo for DeviceQueueShaderCoreControlCreateInfoARM<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceSchedulingControlsFeaturesARM<'a> {
@@ -33581,7 +38415,10 @@ impl Default for PhysicalDeviceSchedulingControlsFeaturesARM<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceSchedulingControlsFeaturesARM<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceSchedulingControlsFeaturesARM<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -33603,7 +38440,9 @@ impl Default for PhysicalDeviceSchedulingControlsPropertiesARM<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceSchedulingControlsPropertiesARM<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceRelaxedLineRasterizationFeaturesIMG<'a> {
@@ -33624,7 +38463,10 @@ impl Default for PhysicalDeviceRelaxedLineRasterizationFeaturesIMG<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceRelaxedLineRasterizationFeaturesIMG<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceRelaxedLineRasterizationFeaturesIMG<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceRenderPassStripedFeaturesARM<'a> {
@@ -33645,7 +38487,10 @@ impl Default for PhysicalDeviceRenderPassStripedFeaturesARM<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceRenderPassStripedFeaturesARM<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceRenderPassStripedFeaturesARM<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -33669,6 +38514,8 @@ impl Default for PhysicalDeviceRenderPassStripedPropertiesARM<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceRenderPassStripedPropertiesARM<'_> {}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct RenderPassStripeInfoARM<'a> {
@@ -33689,7 +38536,7 @@ impl Default for RenderPassStripeInfoARM<'_> {
     }
 }
 
-// structextends: VkRenderingInfo,VkRenderPassBeginInfo
+/// Extends: `RenderingInfo`, `RenderPassBeginInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct RenderPassStripeBeginInfoARM<'a> {
@@ -33713,7 +38560,10 @@ impl Default for RenderPassStripeBeginInfoARM<'_> {
     }
 }
 
-// structextends: VkCommandBufferSubmitInfo
+impl ExtendsRenderingInfo for RenderPassStripeBeginInfoARM<'_> {}
+impl ExtendsRenderPassBeginInfo for RenderPassStripeBeginInfoARM<'_> {}
+
+/// Extends: `CommandBufferSubmitInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct RenderPassStripeSubmitInfoARM<'a> {
@@ -33737,7 +38587,9 @@ impl Default for RenderPassStripeSubmitInfoARM<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsCommandBufferSubmitInfo for RenderPassStripeSubmitInfoARM<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDevicePipelineOpacityMicromapFeaturesARM<'a> {
@@ -33758,7 +38610,10 @@ impl Default for PhysicalDevicePipelineOpacityMicromapFeaturesARM<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDevicePipelineOpacityMicromapFeaturesARM<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDevicePipelineOpacityMicromapFeaturesARM<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceShaderMaximalReconvergenceFeaturesKHR<'a> {
@@ -33779,7 +38634,10 @@ impl Default for PhysicalDeviceShaderMaximalReconvergenceFeaturesKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceShaderMaximalReconvergenceFeaturesKHR<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceShaderMaximalReconvergenceFeaturesKHR<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceShaderSubgroupRotateFeatures<'a> {
@@ -33802,9 +38660,12 @@ impl Default for PhysicalDeviceShaderSubgroupRotateFeatures<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceShaderSubgroupRotateFeatures<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceShaderSubgroupRotateFeatures<'_> {}
+
 pub type PhysicalDeviceShaderSubgroupRotateFeaturesKHR<'a> =
     PhysicalDeviceShaderSubgroupRotateFeatures<'a>;
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceShaderExpectAssumeFeatures<'a> {
@@ -33825,9 +38686,12 @@ impl Default for PhysicalDeviceShaderExpectAssumeFeatures<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceShaderExpectAssumeFeatures<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceShaderExpectAssumeFeatures<'_> {}
+
 pub type PhysicalDeviceShaderExpectAssumeFeaturesKHR<'a> =
     PhysicalDeviceShaderExpectAssumeFeatures<'a>;
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceShaderFloatControls2Features<'a> {
@@ -33848,9 +38712,12 @@ impl Default for PhysicalDeviceShaderFloatControls2Features<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceShaderFloatControls2Features<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceShaderFloatControls2Features<'_> {}
+
 pub type PhysicalDeviceShaderFloatControls2FeaturesKHR<'a> =
     PhysicalDeviceShaderFloatControls2Features<'a>;
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceDynamicRenderingLocalReadFeatures<'a> {
@@ -33871,9 +38738,12 @@ impl Default for PhysicalDeviceDynamicRenderingLocalReadFeatures<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceDynamicRenderingLocalReadFeatures<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceDynamicRenderingLocalReadFeatures<'_> {}
+
 pub type PhysicalDeviceDynamicRenderingLocalReadFeaturesKHR<'a> =
     PhysicalDeviceDynamicRenderingLocalReadFeatures<'a>;
-// structextends: VkGraphicsPipelineCreateInfo,VkCommandBufferInheritanceInfo
+/// Extends: `GraphicsPipelineCreateInfo`, `CommandBufferInheritanceInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct RenderingAttachmentLocationInfo<'a> {
@@ -33897,8 +38767,11 @@ impl Default for RenderingAttachmentLocationInfo<'_> {
     }
 }
 
+impl ExtendsGraphicsPipelineCreateInfo for RenderingAttachmentLocationInfo<'_> {}
+impl ExtendsCommandBufferInheritanceInfo for RenderingAttachmentLocationInfo<'_> {}
+
 pub type RenderingAttachmentLocationInfoKHR<'a> = RenderingAttachmentLocationInfo<'a>;
-// structextends: VkGraphicsPipelineCreateInfo,VkCommandBufferInheritanceInfo
+/// Extends: `GraphicsPipelineCreateInfo`, `CommandBufferInheritanceInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct RenderingInputAttachmentIndexInfo<'a> {
@@ -33929,8 +38802,11 @@ impl Default for RenderingInputAttachmentIndexInfo<'_> {
     }
 }
 
+impl ExtendsGraphicsPipelineCreateInfo for RenderingInputAttachmentIndexInfo<'_> {}
+impl ExtendsCommandBufferInheritanceInfo for RenderingInputAttachmentIndexInfo<'_> {}
+
 pub type RenderingInputAttachmentIndexInfoKHR<'a> = RenderingInputAttachmentIndexInfo<'a>;
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceShaderQuadControlFeaturesKHR<'a> {
@@ -33951,7 +38827,10 @@ impl Default for PhysicalDeviceShaderQuadControlFeaturesKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceShaderQuadControlFeaturesKHR<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceShaderQuadControlFeaturesKHR<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceShaderAtomicFloat16VectorFeaturesNV<'a> {
@@ -33972,7 +38851,10 @@ impl Default for PhysicalDeviceShaderAtomicFloat16VectorFeaturesNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceShaderAtomicFloat16VectorFeaturesNV<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceShaderAtomicFloat16VectorFeaturesNV<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceMapMemoryPlacedFeaturesEXT<'a> {
@@ -33997,7 +38879,10 @@ impl Default for PhysicalDeviceMapMemoryPlacedFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceMapMemoryPlacedFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceMapMemoryPlacedFeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -34019,7 +38904,9 @@ impl Default for PhysicalDeviceMapMemoryPlacedPropertiesEXT<'_> {
     }
 }
 
-// structextends: VkMemoryMapInfo
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceMapMemoryPlacedPropertiesEXT<'_> {}
+
+/// Extends: `MemoryMapInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct MemoryMapPlacedInfoEXT<'a> {
@@ -34040,7 +38927,9 @@ impl Default for MemoryMapPlacedInfoEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsMemoryMapInfo for MemoryMapPlacedInfoEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceShaderBfloat16FeaturesKHR<'a> {
@@ -34065,7 +38954,10 @@ impl Default for PhysicalDeviceShaderBfloat16FeaturesKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceShaderBfloat16FeaturesKHR<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceShaderBfloat16FeaturesKHR<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceRawAccessChainsFeaturesNV<'a> {
@@ -34086,7 +38978,10 @@ impl Default for PhysicalDeviceRawAccessChainsFeaturesNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceRawAccessChainsFeaturesNV<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceRawAccessChainsFeaturesNV<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceCommandBufferInheritanceFeaturesNV<'a> {
@@ -34107,7 +39002,10 @@ impl Default for PhysicalDeviceCommandBufferInheritanceFeaturesNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceCommandBufferInheritanceFeaturesNV<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceCommandBufferInheritanceFeaturesNV<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceImageAlignmentControlFeaturesMESA<'a> {
@@ -34128,7 +39026,10 @@ impl Default for PhysicalDeviceImageAlignmentControlFeaturesMESA<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceImageAlignmentControlFeaturesMESA<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceImageAlignmentControlFeaturesMESA<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -34150,7 +39051,9 @@ impl Default for PhysicalDeviceImageAlignmentControlPropertiesMESA<'_> {
     }
 }
 
-// structextends: VkImageCreateInfo
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceImageAlignmentControlPropertiesMESA<'_> {}
+
+/// Extends: `ImageCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ImageAlignmentControlCreateInfoMESA<'a> {
@@ -34171,7 +39074,9 @@ impl Default for ImageAlignmentControlCreateInfoMESA<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsImageCreateInfo for ImageAlignmentControlCreateInfoMESA<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceShaderReplicatedCompositesFeaturesEXT<'a> {
@@ -34192,9 +39097,12 @@ impl Default for PhysicalDeviceShaderReplicatedCompositesFeaturesEXT<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceShaderReplicatedCompositesFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceShaderReplicatedCompositesFeaturesEXT<'_> {}
+
 pub type PhysicalDevicePresentModeFifoLatestReadyFeaturesEXT<'a> =
     PhysicalDevicePresentModeFifoLatestReadyFeaturesKHR<'a>;
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDevicePresentModeFifoLatestReadyFeaturesKHR<'a> {
@@ -34215,6 +39123,9 @@ impl Default for PhysicalDevicePresentModeFifoLatestReadyFeaturesKHR<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDevicePresentModeFifoLatestReadyFeaturesKHR<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDevicePresentModeFifoLatestReadyFeaturesKHR<'_> {}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct DepthClampRangeEXT {
@@ -34230,7 +39141,7 @@ impl Default for DepthClampRangeEXT {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceCooperativeMatrix2FeaturesNV<'a> {
@@ -34263,7 +39174,10 @@ impl Default for PhysicalDeviceCooperativeMatrix2FeaturesNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceCooperativeMatrix2FeaturesNV<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceCooperativeMatrix2FeaturesNV<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -34288,6 +39202,8 @@ impl Default for PhysicalDeviceCooperativeMatrix2PropertiesNV<'_> {
         }
     }
 }
+
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceCooperativeMatrix2PropertiesNV<'_> {}
 
 /// returned_only
 #[repr(C)]
@@ -34328,7 +39244,7 @@ impl Default for CooperativeMatrixFlexibleDimensionsPropertiesNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceHdrVividFeaturesHUAWEI<'a> {
@@ -34349,7 +39265,10 @@ impl Default for PhysicalDeviceHdrVividFeaturesHUAWEI<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceHdrVividFeaturesHUAWEI<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceHdrVividFeaturesHUAWEI<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceVertexAttributeRobustnessFeaturesEXT<'a> {
@@ -34370,7 +39289,10 @@ impl Default for PhysicalDeviceVertexAttributeRobustnessFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceVertexAttributeRobustnessFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceVertexAttributeRobustnessFeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceDenseGeometryFormatFeaturesAMDX<'a> {
@@ -34391,7 +39313,10 @@ impl Default for PhysicalDeviceDenseGeometryFormatFeaturesAMDX<'_> {
     }
 }
 
-// structextends: VkAccelerationStructureGeometryKHR
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceDenseGeometryFormatFeaturesAMDX<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceDenseGeometryFormatFeaturesAMDX<'_> {}
+
+/// Extends: `AccelerationStructureGeometryKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct AccelerationStructureDenseGeometryFormatTrianglesDataAMDX<'a> {
@@ -34424,7 +39349,37 @@ impl Default for AccelerationStructureDenseGeometryFormatTrianglesDataAMDX<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsAccelerationStructureGeometryKHR
+    for AccelerationStructureDenseGeometryFormatTrianglesDataAMDX<'_>
+{
+}
+pub trait ExtendsAccelerationStructureDenseGeometryFormatTrianglesDataAMDX {}
+impl<'a> AccelerationStructureDenseGeometryFormatTrianglesDataAMDX<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsAccelerationStructureDenseGeometryFormatTrianglesDataAMDX>(
+        mut self,
+        next: &'a mut T,
+    ) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceDepthClampZeroOneFeaturesKHR<'a> {
@@ -34445,7 +39400,10 @@ impl Default for PhysicalDeviceDepthClampZeroOneFeaturesKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceDepthClampZeroOneFeaturesKHR<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceDepthClampZeroOneFeaturesKHR<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceCooperativeVectorFeaturesNV<'a> {
@@ -34467,6 +39425,9 @@ impl Default for PhysicalDeviceCooperativeVectorFeaturesNV<'_> {
         }
     }
 }
+
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceCooperativeVectorFeaturesNV<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceCooperativeVectorFeaturesNV<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -34498,7 +39459,7 @@ impl Default for CooperativeVectorPropertiesNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -34525,6 +39486,8 @@ impl Default for PhysicalDeviceCooperativeVectorPropertiesNV<'_> {
         }
     }
 }
+
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceCooperativeVectorPropertiesNV<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -34569,7 +39532,7 @@ impl Default for ConvertCooperativeVectorMatrixInfoNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceTileShadingFeaturesQCOM<'a> {
@@ -34616,7 +39579,10 @@ impl Default for PhysicalDeviceTileShadingFeaturesQCOM<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceTileShadingFeaturesQCOM<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceTileShadingFeaturesQCOM<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -34644,7 +39610,9 @@ impl Default for PhysicalDeviceTileShadingPropertiesQCOM<'_> {
     }
 }
 
-// structextends: VkRenderPassCreateInfo,VkRenderPassCreateInfo2,VkRenderingInfo,VkCommandBufferInheritanceInfo
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceTileShadingPropertiesQCOM<'_> {}
+
+/// Extends: `RenderPassCreateInfo`, `RenderPassCreateInfo2`, `RenderingInfo`, `CommandBufferInheritanceInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct RenderPassTileShadingCreateInfoQCOM<'a> {
@@ -34666,6 +39634,11 @@ impl Default for RenderPassTileShadingCreateInfoQCOM<'_> {
         }
     }
 }
+
+impl ExtendsRenderPassCreateInfo for RenderPassTileShadingCreateInfoQCOM<'_> {}
+impl ExtendsRenderPassCreateInfo2 for RenderPassTileShadingCreateInfoQCOM<'_> {}
+impl ExtendsRenderingInfo for RenderPassTileShadingCreateInfoQCOM<'_> {}
+impl ExtendsCommandBufferInheritanceInfo for RenderPassTileShadingCreateInfoQCOM<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -34721,7 +39694,7 @@ impl Default for DispatchTileInfoQCOM<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -34743,7 +39716,12 @@ impl Default for PhysicalDeviceFragmentDensityMapLayeredPropertiesVALVE<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceProperties2
+    for PhysicalDeviceFragmentDensityMapLayeredPropertiesVALVE<'_>
+{
+}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE<'a> {
@@ -34764,7 +39742,10 @@ impl Default for PhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE<'_> {
     }
 }
 
-// structextends: VkGraphicsPipelineCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE<'_> {}
+
+/// Extends: `GraphicsPipelineCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PipelineFragmentDensityMapLayeredCreateInfoVALVE<'a> {
@@ -34785,7 +39766,9 @@ impl Default for PipelineFragmentDensityMapLayeredCreateInfoVALVE<'_> {
     }
 }
 
-// structextends: VkPresentInfoKHR
+impl ExtendsGraphicsPipelineCreateInfo for PipelineFragmentDensityMapLayeredCreateInfoVALVE<'_> {}
+
+/// Extends: `PresentInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct SetPresentConfigNV<'a> {
@@ -34808,7 +39791,9 @@ impl Default for SetPresentConfigNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPresentInfoKHR for SetPresentConfigNV<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDevicePresentMeteringFeaturesNV<'a> {
@@ -34829,7 +39814,10 @@ impl Default for PhysicalDevicePresentMeteringFeaturesNV<'_> {
     }
 }
 
-// structextends: VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDevicePresentMeteringFeaturesNV<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDevicePresentMeteringFeaturesNV<'_> {}
+
+/// Extends: `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ExternalComputeQueueDeviceCreateInfoNV<'a> {
@@ -34849,6 +39837,8 @@ impl Default for ExternalComputeQueueDeviceCreateInfoNV<'_> {
         }
     }
 }
+
+impl ExtendsDeviceCreateInfo for ExternalComputeQueueDeviceCreateInfoNV<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -34890,7 +39880,7 @@ impl Default for ExternalComputeQueueDataParamsNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -34914,6 +39904,8 @@ impl Default for PhysicalDeviceExternalComputeQueuePropertiesNV<'_> {
     }
 }
 
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceExternalComputeQueuePropertiesNV<'_> {}
+
 #[repr(transparent)]
 #[derive(Debug, Default)]
 pub struct ExternalComputeQueueNV(*mut u8);
@@ -34936,7 +39928,7 @@ impl Clone for ExternalComputeQueueNV {
 unsafe impl Send for ExternalComputeQueueNV {}
 unsafe impl Sync for ExternalComputeQueueNV {}
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT<'a> {
@@ -34957,7 +39949,13 @@ impl Default for PhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2
+    for PhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT<'_>
+{
+}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceFormatPackFeaturesARM<'a> {
@@ -34978,7 +39976,10 @@ impl Default for PhysicalDeviceFormatPackFeaturesARM<'_> {
     }
 }
 
-// structextends: VkDataGraphPipelineResourceInfoARM,VkDataGraphPipelineConstantARM
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceFormatPackFeaturesARM<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceFormatPackFeaturesARM<'_> {}
+
+/// Extends: `DataGraphPipelineResourceInfoARM`, `DataGraphPipelineConstantARM`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct TensorDescriptionARM<'a> {
@@ -35012,6 +40013,9 @@ impl Default for TensorDescriptionARM<'_> {
     }
 }
 
+impl ExtendsDataGraphPipelineResourceInfoARM for TensorDescriptionARM<'_> {}
+impl ExtendsDataGraphPipelineConstantARM for TensorDescriptionARM<'_> {}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct TensorCreateInfoARM<'a> {
@@ -35041,6 +40045,29 @@ impl Default for TensorCreateInfoARM<'_> {
     }
 }
 
+pub trait ExtendsTensorCreateInfoARM {}
+impl<'a> TensorCreateInfoARM<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsTensorCreateInfoARM>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct TensorViewCreateInfoARM<'a> {
@@ -35062,6 +40089,29 @@ impl Default for TensorViewCreateInfoARM<'_> {
             format: Default::default(),
             _marker: PhantomData,
         }
+    }
+}
+
+pub trait ExtendsTensorViewCreateInfoARM {}
+impl<'a> TensorViewCreateInfoARM<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsTensorViewCreateInfoARM>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -35109,7 +40159,7 @@ impl Default for BindTensorMemoryInfoARM<'_> {
     }
 }
 
-// structextends: VkWriteDescriptorSet
+/// Extends: `WriteDescriptorSet`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct WriteDescriptorSetTensorARM<'a> {
@@ -35134,7 +40184,9 @@ impl Default for WriteDescriptorSetTensorARM<'_> {
     }
 }
 
-// structextends: VkFormatProperties2
+impl ExtendsWriteDescriptorSet for WriteDescriptorSetTensorARM<'_> {}
+
+/// Extends: `FormatProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -35158,7 +40210,9 @@ impl Default for TensorFormatPropertiesARM<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsFormatProperties2 for TensorFormatPropertiesARM<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -35204,7 +40258,9 @@ impl Default for PhysicalDeviceTensorPropertiesARM<'_> {
     }
 }
 
-// structextends: VkDependencyInfo
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceTensorPropertiesARM<'_> {}
+
+/// Extends: `DependencyInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct TensorMemoryBarrierARM<'a> {
@@ -35237,7 +40293,9 @@ impl Default for TensorMemoryBarrierARM<'_> {
     }
 }
 
-// structextends: VkDependencyInfo
+impl ExtendsDependencyInfo for TensorMemoryBarrierARM<'_> {}
+
+/// Extends: `DependencyInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct TensorDependencyInfoARM<'a> {
@@ -35260,7 +40318,9 @@ impl Default for TensorDependencyInfoARM<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsDependencyInfo for TensorDependencyInfoARM<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceTensorFeaturesARM<'a> {
@@ -35290,6 +40350,9 @@ impl Default for PhysicalDeviceTensorFeaturesARM<'_> {
         }
     }
 }
+
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceTensorFeaturesARM<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceTensorFeaturesARM<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -35370,7 +40433,7 @@ impl Default for TensorCopyARM<'_> {
     }
 }
 
-// structextends: VkMemoryAllocateInfo
+/// Extends: `MemoryAllocateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct MemoryDedicatedAllocateInfoTensorARM<'a> {
@@ -35392,7 +40455,9 @@ impl Default for MemoryDedicatedAllocateInfoTensorARM<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsMemoryAllocateInfo for MemoryDedicatedAllocateInfoTensorARM<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceDescriptorBufferTensorPropertiesARM<'a> {
@@ -35417,7 +40482,9 @@ impl Default for PhysicalDeviceDescriptorBufferTensorPropertiesARM<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceDescriptorBufferTensorPropertiesARM<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceDescriptorBufferTensorFeaturesARM<'a> {
@@ -35437,6 +40504,9 @@ impl Default for PhysicalDeviceDescriptorBufferTensorFeaturesARM<'_> {
         }
     }
 }
+
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceDescriptorBufferTensorFeaturesARM<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceDescriptorBufferTensorFeaturesARM<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -35478,7 +40548,7 @@ impl Default for TensorViewCaptureDescriptorDataInfoARM<'_> {
     }
 }
 
-// structextends: VkDescriptorGetInfoEXT
+/// Extends: `DescriptorGetInfoEXT`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct DescriptorGetTensorInfoARM<'a> {
@@ -35499,7 +40569,9 @@ impl Default for DescriptorGetTensorInfoARM<'_> {
     }
 }
 
-// structextends: VkSubmitInfo,VkSubmitInfo2,VkPresentInfoKHR,VkBindSparseInfo
+impl ExtendsDescriptorGetInfoEXT for DescriptorGetTensorInfoARM<'_> {}
+
+/// Extends: `SubmitInfo`, `SubmitInfo2`, `PresentInfoKHR`, `BindSparseInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct FrameBoundaryTensorsARM<'a> {
@@ -35522,6 +40594,11 @@ impl Default for FrameBoundaryTensorsARM<'_> {
         }
     }
 }
+
+impl ExtendsSubmitInfo for FrameBoundaryTensorsARM<'_> {}
+impl ExtendsSubmitInfo2 for FrameBoundaryTensorsARM<'_> {}
+impl ExtendsPresentInfoKHR for FrameBoundaryTensorsARM<'_> {}
+impl ExtendsBindSparseInfo for FrameBoundaryTensorsARM<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -35567,7 +40644,7 @@ impl Default for ExternalTensorPropertiesARM<'_> {
     }
 }
 
-// structextends: VkTensorCreateInfoARM
+/// Extends: `TensorCreateInfoARM`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ExternalMemoryTensorCreateInfoARM<'a> {
@@ -35588,7 +40665,9 @@ impl Default for ExternalMemoryTensorCreateInfoARM<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsTensorCreateInfoARM for ExternalMemoryTensorCreateInfoARM<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceShaderFloat8FeaturesEXT<'a> {
@@ -35610,6 +40689,9 @@ impl Default for PhysicalDeviceShaderFloat8FeaturesEXT<'_> {
         }
     }
 }
+
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceShaderFloat8FeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceShaderFloat8FeaturesEXT<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -35633,7 +40715,7 @@ impl Default for SurfaceCreateInfoOHOS<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceDataGraphFeaturesARM<'a> {
@@ -35662,7 +40744,10 @@ impl Default for PhysicalDeviceDataGraphFeaturesARM<'_> {
     }
 }
 
-// structextends: VkDataGraphPipelineConstantARM
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceDataGraphFeaturesARM<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceDataGraphFeaturesARM<'_> {}
+
+/// Extends: `DataGraphPipelineConstantARM`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct DataGraphPipelineConstantTensorSemiStructuredSparsityInfoARM<'a> {
@@ -35687,6 +40772,11 @@ impl Default for DataGraphPipelineConstantTensorSemiStructuredSparsityInfoARM<'_
     }
 }
 
+impl ExtendsDataGraphPipelineConstantARM
+    for DataGraphPipelineConstantTensorSemiStructuredSparsityInfoARM<'_>
+{
+}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct DataGraphPipelineConstantARM<'a> {
@@ -35706,6 +40796,29 @@ impl Default for DataGraphPipelineConstantARM<'_> {
             constant_data: ptr::null_mut(),
             _marker: PhantomData,
         }
+    }
+}
+
+pub trait ExtendsDataGraphPipelineConstantARM {}
+impl<'a> DataGraphPipelineConstantARM<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsDataGraphPipelineConstantARM>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -35733,7 +40846,30 @@ impl Default for DataGraphPipelineResourceInfoARM<'_> {
     }
 }
 
-// structextends: VkDataGraphPipelineCreateInfoARM
+pub trait ExtendsDataGraphPipelineResourceInfoARM {}
+impl<'a> DataGraphPipelineResourceInfoARM<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsDataGraphPipelineResourceInfoARM>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
+/// Extends: `DataGraphPipelineCreateInfoARM`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct DataGraphPipelineCompilerControlCreateInfoARM<'a> {
@@ -35754,6 +40890,8 @@ impl Default for DataGraphPipelineCompilerControlCreateInfoARM<'_> {
         }
     }
 }
+
+impl ExtendsDataGraphPipelineCreateInfoARM for DataGraphPipelineCompilerControlCreateInfoARM<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -35782,7 +40920,30 @@ impl Default for DataGraphPipelineCreateInfoARM<'_> {
     }
 }
 
-// structextends: VkDataGraphPipelineCreateInfoARM
+pub trait ExtendsDataGraphPipelineCreateInfoARM {}
+impl<'a> DataGraphPipelineCreateInfoARM<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsDataGraphPipelineCreateInfoARM>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
+/// Extends: `DataGraphPipelineCreateInfoARM`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct DataGraphPipelineShaderModuleCreateInfoARM<'a> {
@@ -35814,6 +40975,8 @@ impl Default for DataGraphPipelineShaderModuleCreateInfoARM<'_> {
         }
     }
 }
+
+impl ExtendsDataGraphPipelineCreateInfoARM for DataGraphPipelineShaderModuleCreateInfoARM<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -35982,7 +41145,7 @@ impl Default for DataGraphPipelinePropertyQueryResultARM<'_> {
     }
 }
 
-// structextends: VkDataGraphPipelineCreateInfoARM
+/// Extends: `DataGraphPipelineCreateInfoARM`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct DataGraphPipelineIdentifierCreateInfoARM<'a> {
@@ -36005,6 +41168,8 @@ impl Default for DataGraphPipelineIdentifierCreateInfoARM<'_> {
         }
     }
 }
+
+impl ExtendsDataGraphPipelineCreateInfoARM for DataGraphPipelineIdentifierCreateInfoARM<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -36127,7 +41292,7 @@ impl Default for QueueFamilyDataGraphProcessingEnginePropertiesARM<'_> {
     }
 }
 
-// structextends: VkDataGraphPipelineCreateInfoARM,VkDescriptorPoolCreateInfo,VkCommandPoolCreateInfo
+/// Extends: `DataGraphPipelineCreateInfoARM`, `DescriptorPoolCreateInfo`, `CommandPoolCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct DataGraphProcessingEngineCreateInfoARM<'a> {
@@ -36151,7 +41316,11 @@ impl Default for DataGraphProcessingEngineCreateInfoARM<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsDataGraphPipelineCreateInfoARM for DataGraphProcessingEngineCreateInfoARM<'_> {}
+impl ExtendsDescriptorPoolCreateInfo for DataGraphProcessingEngineCreateInfoARM<'_> {}
+impl ExtendsCommandPoolCreateInfo for DataGraphProcessingEngineCreateInfoARM<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDevicePipelineCacheIncrementalModeFeaturesSEC<'a> {
@@ -36172,7 +41341,10 @@ impl Default for PhysicalDevicePipelineCacheIncrementalModeFeaturesSEC<'_> {
     }
 }
 
-// structextends: VkDataGraphPipelineCreateInfoARM
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDevicePipelineCacheIncrementalModeFeaturesSEC<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDevicePipelineCacheIncrementalModeFeaturesSEC<'_> {}
+
+/// Extends: `DataGraphPipelineCreateInfoARM`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct DataGraphPipelineBuiltinModelCreateInfoQCOM<'a> {
@@ -36193,7 +41365,9 @@ impl Default for DataGraphPipelineBuiltinModelCreateInfoQCOM<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsDataGraphPipelineCreateInfoARM for DataGraphPipelineBuiltinModelCreateInfoQCOM<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceDataGraphModelFeaturesQCOM<'a> {
@@ -36214,7 +41388,10 @@ impl Default for PhysicalDeviceDataGraphModelFeaturesQCOM<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceDataGraphModelFeaturesQCOM<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceDataGraphModelFeaturesQCOM<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceShaderUntypedPointersFeaturesKHR<'a> {
@@ -36235,7 +41412,10 @@ impl Default for PhysicalDeviceShaderUntypedPointersFeaturesKHR<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceShaderUntypedPointersFeaturesKHR<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceShaderUntypedPointersFeaturesKHR<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceVideoEncodeRgbConversionFeaturesVALVE<'a> {
@@ -36256,7 +41436,10 @@ impl Default for PhysicalDeviceVideoEncodeRgbConversionFeaturesVALVE<'_> {
     }
 }
 
-// structextends: VkVideoCapabilitiesKHR
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceVideoEncodeRgbConversionFeaturesVALVE<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceVideoEncodeRgbConversionFeaturesVALVE<'_> {}
+
+/// Extends: `VideoCapabilitiesKHR`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -36284,7 +41467,9 @@ impl Default for VideoEncodeRgbConversionCapabilitiesVALVE<'_> {
     }
 }
 
-// structextends: VkVideoProfileInfoKHR
+impl ExtendsVideoCapabilitiesKHR for VideoEncodeRgbConversionCapabilitiesVALVE<'_> {}
+
+/// Extends: `VideoProfileInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoEncodeProfileRgbConversionInfoVALVE<'a> {
@@ -36305,7 +41490,9 @@ impl Default for VideoEncodeProfileRgbConversionInfoVALVE<'_> {
     }
 }
 
-// structextends: VkVideoSessionCreateInfoKHR
+impl ExtendsVideoProfileInfoKHR for VideoEncodeProfileRgbConversionInfoVALVE<'_> {}
+
+/// Extends: `VideoSessionCreateInfoKHR`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoEncodeSessionRgbConversionCreateInfoVALVE<'a> {
@@ -36332,7 +41519,9 @@ impl Default for VideoEncodeSessionRgbConversionCreateInfoVALVE<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsVideoSessionCreateInfoKHR for VideoEncodeSessionRgbConversionCreateInfoVALVE<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceShader64BitIndexingFeaturesEXT<'a> {
@@ -36353,7 +41542,10 @@ impl Default for PhysicalDeviceShader64BitIndexingFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkImageFormatProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceShader64BitIndexingFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceShader64BitIndexingFeaturesEXT<'_> {}
+
+/// Extends: `ImageFormatProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -36374,6 +41566,8 @@ impl Default for NativeBufferUsageOHOS<'_> {
         }
     }
 }
+
+impl ExtendsImageFormatProperties2 for NativeBufferUsageOHOS<'_> {}
 
 /// returned_only
 #[repr(C)]
@@ -36398,7 +41592,30 @@ impl Default for NativeBufferPropertiesOHOS<'_> {
     }
 }
 
-// structextends: VkNativeBufferPropertiesOHOS
+pub trait ExtendsNativeBufferPropertiesOHOS {}
+impl<'a> NativeBufferPropertiesOHOS<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsNativeBufferPropertiesOHOS>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
+/// Extends: `NativeBufferPropertiesOHOS`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -36434,7 +41651,9 @@ impl Default for NativeBufferFormatPropertiesOHOS<'_> {
     }
 }
 
-// structextends: VkMemoryAllocateInfo
+impl ExtendsNativeBufferPropertiesOHOS for NativeBufferFormatPropertiesOHOS<'_> {}
+
+/// Extends: `MemoryAllocateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ImportNativeBufferInfoOHOS<'a> {
@@ -36454,6 +41673,8 @@ impl Default for ImportNativeBufferInfoOHOS<'_> {
         }
     }
 }
+
+impl ExtendsMemoryAllocateInfo for ImportNativeBufferInfoOHOS<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -36475,7 +41696,7 @@ impl Default for MemoryGetNativeBufferInfoOHOS<'_> {
     }
 }
 
-// structextends: VkImageCreateInfo,VkSamplerYcbcrConversionCreateInfo,VkAttachmentDescription2,VkGraphicsPipelineCreateInfo,VkCommandBufferInheritanceInfo
+/// Extends: `ImageCreateInfo`, `SamplerYcbcrConversionCreateInfo`, `AttachmentDescription2`, `GraphicsPipelineCreateInfo`, `CommandBufferInheritanceInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ExternalFormatOHOS<'a> {
@@ -36496,7 +41717,13 @@ impl Default for ExternalFormatOHOS<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsImageCreateInfo for ExternalFormatOHOS<'_> {}
+impl ExtendsSamplerYcbcrConversionCreateInfo for ExternalFormatOHOS<'_> {}
+impl ExtendsAttachmentDescription2 for ExternalFormatOHOS<'_> {}
+impl ExtendsGraphicsPipelineCreateInfo for ExternalFormatOHOS<'_> {}
+impl ExtendsCommandBufferInheritanceInfo for ExternalFormatOHOS<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDevicePerformanceCountersByRegionFeaturesARM<'a> {
@@ -36517,7 +41744,10 @@ impl Default for PhysicalDevicePerformanceCountersByRegionFeaturesARM<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDevicePerformanceCountersByRegionFeaturesARM<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDevicePerformanceCountersByRegionFeaturesARM<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -36545,6 +41775,11 @@ impl Default for PhysicalDevicePerformanceCountersByRegionPropertiesARM<'_> {
             _marker: PhantomData,
         }
     }
+}
+
+impl ExtendsPhysicalDeviceProperties2
+    for PhysicalDevicePerformanceCountersByRegionPropertiesARM<'_>
+{
 }
 
 /// returned_only
@@ -36592,7 +41827,7 @@ impl Default for PerformanceCounterDescriptionARM<'_> {
     }
 }
 
-// structextends: VkRenderPassBeginInfo,VkRenderingInfo
+/// Extends: `RenderPassBeginInfo`, `RenderingInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct RenderPassPerformanceCountersByRegionBeginInfoARM<'a> {
@@ -36622,6 +41857,9 @@ impl Default for RenderPassPerformanceCountersByRegionBeginInfoARM<'_> {
     }
 }
 
+impl ExtendsRenderPassBeginInfo for RenderPassPerformanceCountersByRegionBeginInfoARM<'_> {}
+impl ExtendsRenderingInfo for RenderPassPerformanceCountersByRegionBeginInfoARM<'_> {}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ComputeOccupancyPriorityParametersNV<'a> {
@@ -36644,7 +41882,7 @@ impl Default for ComputeOccupancyPriorityParametersNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceComputeOccupancyPriorityFeaturesNV<'a> {
@@ -36665,7 +41903,10 @@ impl Default for PhysicalDeviceComputeOccupancyPriorityFeaturesNV<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceComputeOccupancyPriorityFeaturesNV<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceComputeOccupancyPriorityFeaturesNV<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceShaderLongVectorFeaturesEXT<'a> {
@@ -36686,7 +41927,10 @@ impl Default for PhysicalDeviceShaderLongVectorFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceShaderLongVectorFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceShaderLongVectorFeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -36708,7 +41952,9 @@ impl Default for PhysicalDeviceShaderLongVectorPropertiesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceShaderLongVectorPropertiesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceTextureCompressionASTC3DFeaturesEXT<'a> {
@@ -36729,7 +41975,10 @@ impl Default for PhysicalDeviceTextureCompressionASTC3DFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceTextureCompressionASTC3DFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceTextureCompressionASTC3DFeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceShaderSubgroupPartitionedFeaturesEXT<'a> {
@@ -36749,6 +41998,9 @@ impl Default for PhysicalDeviceShaderSubgroupPartitionedFeaturesEXT<'_> {
         }
     }
 }
+
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceShaderSubgroupPartitionedFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceShaderSubgroupPartitionedFeaturesEXT<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -36891,6 +42143,29 @@ impl Default for ResourceDescriptorInfoEXT<'_> {
     }
 }
 
+pub trait ExtendsResourceDescriptorInfoEXT {}
+impl<'a> ResourceDescriptorInfoEXT<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsResourceDescriptorInfoEXT>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct BindHeapInfoEXT<'a> {
@@ -36934,6 +42209,29 @@ impl Default for PushDataInfoEXT<'_> {
             data: Default::default(),
             _marker: PhantomData,
         }
+    }
+}
+
+pub trait ExtendsPushDataInfoEXT {}
+impl<'a> PushDataInfoEXT<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsPushDataInfoEXT>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
     }
 }
 
@@ -37188,7 +42486,30 @@ impl Default for DescriptorSetAndBindingMappingEXT<'_> {
     }
 }
 
-// structextends: VkPipelineShaderStageCreateInfo,VkShaderCreateInfoEXT
+pub trait ExtendsDescriptorSetAndBindingMappingEXT {}
+impl<'a> DescriptorSetAndBindingMappingEXT<'a> {
+    /// Prepends the given extension struct between the root and the first pointer.
+    /// If the chain looks like `A -> B -> C`, and you call `x.next(&mut D)`,
+    /// then the chain will look like `A -> D -> B -> C`.
+    #[inline]
+    pub fn next<T: ExtendsDescriptorSetAndBindingMappingEXT>(mut self, next: &'a mut T) -> Self {
+        unsafe {
+            let next_base: *mut BaseOutStructure = ptr::from_mut(next).cast();
+
+            debug_assert!(
+                (*next_base).next.is_null(),
+                "next of inserted struct must be null (already in a chain?)"
+            );
+
+            (*next_base).next = self.next as _;
+            self.next = ptr::from_mut(next).cast();
+        }
+
+        self
+    }
+}
+
+/// Extends: `PipelineShaderStageCreateInfo`, `ShaderCreateInfoEXT`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct ShaderDescriptorSetAndBindingMappingInfoEXT<'a> {
@@ -37212,7 +42533,10 @@ impl Default for ShaderDescriptorSetAndBindingMappingInfoEXT<'_> {
     }
 }
 
-// structextends: VkSamplerCreateInfo
+impl ExtendsPipelineShaderStageCreateInfo for ShaderDescriptorSetAndBindingMappingInfoEXT<'_> {}
+impl ExtendsShaderCreateInfoEXT for ShaderDescriptorSetAndBindingMappingInfoEXT<'_> {}
+
+/// Extends: `SamplerCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct SamplerCustomBorderColorIndexCreateInfoEXT<'a> {
@@ -37233,7 +42557,9 @@ impl Default for SamplerCustomBorderColorIndexCreateInfoEXT<'_> {
     }
 }
 
-// structextends: VkImageCreateInfo,VkTensorCreateInfoARM
+impl ExtendsSamplerCreateInfo for SamplerCustomBorderColorIndexCreateInfoEXT<'_> {}
+
+/// Extends: `ImageCreateInfo`, `TensorCreateInfoARM`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct OpaqueCaptureDataCreateInfoEXT<'a> {
@@ -37255,7 +42581,10 @@ impl Default for OpaqueCaptureDataCreateInfoEXT<'_> {
     }
 }
 
-// structextends: VkIndirectCommandsLayoutTokenNV
+impl ExtendsImageCreateInfo for OpaqueCaptureDataCreateInfoEXT<'_> {}
+impl ExtendsTensorCreateInfoARM for OpaqueCaptureDataCreateInfoEXT<'_> {}
+
+/// Extends: `IndirectCommandsLayoutTokenNV`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct IndirectCommandsLayoutPushDataTokenNV<'a> {
@@ -37278,7 +42607,9 @@ impl Default for IndirectCommandsLayoutPushDataTokenNV<'_> {
     }
 }
 
-// structextends: VkImageFormatProperties2
+impl ExtendsIndirectCommandsLayoutTokenNV for IndirectCommandsLayoutPushDataTokenNV<'_> {}
+
+/// Extends: `ImageFormatProperties2`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct SubsampledImageFormatPropertiesEXT<'a> {
@@ -37299,7 +42630,9 @@ impl Default for SubsampledImageFormatPropertiesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+impl ExtendsImageFormatProperties2 for SubsampledImageFormatPropertiesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceDescriptorHeapFeaturesEXT<'a> {
@@ -37322,7 +42655,10 @@ impl Default for PhysicalDeviceDescriptorHeapFeaturesEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceDescriptorHeapFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceDescriptorHeapFeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -37380,7 +42716,9 @@ impl Default for PhysicalDeviceDescriptorHeapPropertiesEXT<'_> {
     }
 }
 
-// structextends: VkCommandBufferInheritanceInfo
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceDescriptorHeapPropertiesEXT<'_> {}
+
+/// Extends: `CommandBufferInheritanceInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct CommandBufferInheritanceDescriptorHeapInfoEXT<'a> {
@@ -37405,7 +42743,9 @@ impl Default for CommandBufferInheritanceDescriptorHeapInfoEXT<'_> {
     }
 }
 
-// structextends: VkPhysicalDeviceProperties2
+impl ExtendsCommandBufferInheritanceInfo for CommandBufferInheritanceDescriptorHeapInfoEXT<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -37430,3 +42770,5 @@ impl Default for PhysicalDeviceDescriptorHeapTensorPropertiesARM<'_> {
         }
     }
 }
+
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceDescriptorHeapTensorPropertiesARM<'_> {}

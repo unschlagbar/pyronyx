@@ -5,8 +5,6 @@ Lightweight fully generated next gen Vulkan bindings for Rust — focused on zer
 [![Vulkan 1.4](https://img.shields.io/badge/Vulkan-1.4-red.svg)](https://registry.khronos.org/vulkan/)
 [![LICENSE](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE-MIT)
 
----
-
 ## Overview
 
 - [x] Generated from `vk.xml` & `video.xml` — complete Vulkan 1.0 through 1.4 coverage
@@ -48,7 +46,6 @@ command_buffer.bind_vertex_buffers(0, &[vertex_buffer], &[0]);
 command_buffer.draw_indexed(index_count, 1, 0, 0, 0);
 ```
 
----
 
 ## Extensions — no loaders required
 
@@ -79,13 +76,10 @@ let swapchain = device.create_swapchain(&swapchain_info, None)?;
 device.destroy_swapchain(swapchain, None);
 ```
 
----
-
 ## Zero-cost handles
 
 Every handle is a raw Vulkan handle plus a single pointer to its vtable — nothing else. No `Arc`, no reference counting, no allocation. Calling a method is one pointer dereference, identical to calling the function pointer directly.
 
----
 
 ## Slices and Vec returns
 
@@ -103,7 +97,6 @@ command_buffer.bind_descriptor_sets(
 );
 ```
 
----
 
 ## Vulkan Video
 
@@ -118,11 +111,25 @@ let profile = VideoProfileInfoKHR {
 };
 ```
 
----
 
 ## Pointer chains
 
-Comming Soon!
+Use `base.next(ext)` to insert ext into the start of the pointer chain attached to base.
+
+```rust
+let mut features11 = vk::PhysicalDeviceVulkan11Features {
+    shader_draw_parameters: vk::TRUE,
+    ..Default::default()
+};
+
+let create_info = vk::DeviceCreateInfo {
+    enabled_extension_names: extensions.as_ptr().cast(),
+    enabled_extension_count: extensions.len() as u32,
+    // ...
+    ..Default::default()
+}.next(&mut features11);
+
+```
 
 ---
 
