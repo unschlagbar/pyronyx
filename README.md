@@ -148,7 +148,7 @@ Pyronyx does not have that distinction. Enable an extension, call its functions 
 
 Hello Triangle: [pyronyx Triangle]((https://github.com/unschlagbar/pyronyx-triangle))
 
-![Hello Triangle](https://github.com/unschlagbar/pyronyx-triangle/image.png)
+![Hello Triangle](https://raw.githubusercontent.com/unschlagbar/pyronyx-triangle/main/image.png)
 
 ## License
 
