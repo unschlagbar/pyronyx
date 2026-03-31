@@ -6,6 +6,7 @@
 use crate::vk::*;
 use core::ffi::CStr;
 
+/// Type: `Device`
 pub const NAME: &CStr = c"VK_NV_scissor_exclusive";
 pub const SPEC_VERSION: u32 = 2;
 

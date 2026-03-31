@@ -6,6 +6,7 @@
 use crate::vk::*;
 use core::ffi::CStr;
 
+/// Type: `Device`
 pub const NAME: &CStr = c"VK_KHR_video_decode_queue";
 pub const SPEC_VERSION: u32 = 8;
 

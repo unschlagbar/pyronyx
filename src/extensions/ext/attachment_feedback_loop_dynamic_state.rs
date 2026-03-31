@@ -6,6 +6,7 @@
 use crate::vk::*;
 use core::ffi::CStr;
 
+/// Type: `Device`
 pub const NAME: &CStr = c"VK_EXT_attachment_feedback_loop_dynamic_state";
 pub const SPEC_VERSION: u32 = 1;
 

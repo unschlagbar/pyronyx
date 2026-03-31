@@ -7,6 +7,7 @@ use crate::vk::*;
 use core::ffi::CStr;
 use core::mem::MaybeUninit;
 
+/// Type: `Device`
 pub const NAME: &CStr = c"VK_NV_external_memory_rdma";
 pub const SPEC_VERSION: u32 = 1;
 

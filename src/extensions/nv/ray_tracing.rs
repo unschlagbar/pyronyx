@@ -3,13 +3,14 @@
 // Do not Edit! Execute `cargo run pyronyx-gen`
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+#![deprecated = "This extension is deprecated. Use `VK_KHR_ray_tracing_pipeline` instead."]
 use crate::vk::*;
 use core::ffi::CStr;
 use core::ffi::c_void;
 use core::mem::MaybeUninit;
 use core::ptr::{from_ref, null};
 
-#[deprecated = "This extension is deprecated. Use `VK_KHR_ray_tracing_pipeline` instead."]
+/// Type: `Device`
 pub const NAME: &CStr = c"VK_NV_ray_tracing";
 pub const SPEC_VERSION: u32 = 3;
 

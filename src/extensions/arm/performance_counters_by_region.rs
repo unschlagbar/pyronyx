@@ -6,6 +6,7 @@
 use crate::vk::*;
 use core::ffi::CStr;
 
+/// Type: `Device`
 pub const NAME: &CStr = c"VK_ARM_performance_counters_by_region";
 pub const SPEC_VERSION: u32 = 1;
 

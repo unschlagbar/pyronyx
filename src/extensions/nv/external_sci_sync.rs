@@ -3,12 +3,13 @@
 // Do not Edit! Execute `cargo run pyronyx-gen`
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+#![deprecated = "This extension is deprecated. Use `VK_NV_external_sci_sync2` instead."]
 use crate::vk::*;
 use core::ffi::CStr;
 use core::ffi::c_void;
 use core::mem::MaybeUninit;
 
-#[deprecated = "This extension is deprecated. Use `VK_NV_external_sci_sync2` instead."]
+/// Type: `Device`
 pub const NAME: &CStr = c"VK_NV_external_sci_sync";
 pub const SPEC_VERSION: u32 = 2;
 

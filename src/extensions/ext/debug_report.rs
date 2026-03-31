@@ -3,13 +3,14 @@
 // Do not Edit! Execute `cargo run pyronyx-gen`
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+#![deprecated = "This extension is deprecated. Use `VK_EXT_debug_utils` instead."]
 use crate::vk::*;
 use core::ffi::CStr;
 use core::ffi::c_char;
 use core::mem::MaybeUninit;
 use core::ptr::{from_ref, null};
 
-#[deprecated = "This extension is deprecated. Use `VK_EXT_debug_utils` instead."]
+/// Type: `Instance`
 pub const NAME: &CStr = c"VK_EXT_debug_report";
 pub const SPEC_VERSION: u32 = 10;
 

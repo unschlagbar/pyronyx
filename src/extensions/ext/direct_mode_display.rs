@@ -6,6 +6,7 @@
 use crate::vk::*;
 use core::ffi::CStr;
 
+/// Type: `Instance`
 pub const NAME: &CStr = c"VK_EXT_direct_mode_display";
 pub const SPEC_VERSION: u32 = 1;
 

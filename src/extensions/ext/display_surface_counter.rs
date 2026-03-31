@@ -7,6 +7,7 @@ use crate::vk::*;
 use core::ffi::CStr;
 use core::mem::MaybeUninit;
 
+/// Type: `Instance`
 pub const NAME: &CStr = c"VK_EXT_display_surface_counter";
 pub const SPEC_VERSION: u32 = 1;
 

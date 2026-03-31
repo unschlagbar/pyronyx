@@ -7,6 +7,7 @@ use crate::vk::*;
 use core::ffi::CStr;
 use core::ptr::{from_ref, null};
 
+/// Type: `Device`
 pub const NAME: &CStr = c"VK_KHR_display_swapchain";
 pub const SPEC_VERSION: u32 = 10;
 

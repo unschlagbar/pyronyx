@@ -7,6 +7,7 @@ use crate::vk::*;
 use core::ffi::CStr;
 use core::ptr::{from_ref, null};
 
+/// Type: `Device`
 pub const NAME: &CStr = c"VK_EXT_custom_resolve";
 pub const SPEC_VERSION: u32 = 1;
 

@@ -7,6 +7,7 @@ use crate::vk::*;
 use core::ffi::CStr;
 use core::mem::MaybeUninit;
 
+/// Type: `Instance`
 pub const NAME: &CStr = c"VK_KHR_get_surface_capabilities2";
 pub const SPEC_VERSION: u32 = 1;
 

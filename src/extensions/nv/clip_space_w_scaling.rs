@@ -6,6 +6,7 @@
 use crate::vk::*;
 use core::ffi::CStr;
 
+/// Type: `Device`
 pub const NAME: &CStr = c"VK_NV_clip_space_w_scaling";
 pub const SPEC_VERSION: u32 = 1;
 

@@ -6,6 +6,7 @@
 use crate::vk::*;
 use core::ffi::CStr;
 
+/// Type: `Device`
 pub const NAME: &CStr = c"VK_HUAWEI_invocation_mask";
 pub const SPEC_VERSION: u32 = 1;
 

@@ -7,6 +7,7 @@ use crate::vk::*;
 use core::ffi::CStr;
 use core::ffi::c_void;
 
+/// Type: `Device`
 pub const NAME: &CStr = c"VK_NV_device_diagnostic_checkpoints";
 pub const SPEC_VERSION: u32 = 2;
 

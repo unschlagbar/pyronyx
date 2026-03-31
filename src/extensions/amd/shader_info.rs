@@ -7,6 +7,7 @@ use crate::vk::*;
 use core::ffi::CStr;
 use core::ffi::c_void;
 
+/// Type: `Device`
 pub const NAME: &CStr = c"VK_AMD_shader_info";
 pub const SPEC_VERSION: u32 = 1;
 

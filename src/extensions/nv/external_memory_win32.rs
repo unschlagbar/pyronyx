@@ -3,11 +3,12 @@
 // Do not Edit! Execute `cargo run pyronyx-gen`
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+#![deprecated = "This extension is deprecated. Use `VK_KHR_external_memory_win32` instead."]
 use crate::vk::*;
 use core::ffi::CStr;
 use core::mem::MaybeUninit;
 
-#[deprecated = "This extension is deprecated. Use `VK_KHR_external_memory_win32` instead."]
+/// Type: `Device`
 pub const NAME: &CStr = c"VK_NV_external_memory_win32";
 pub const SPEC_VERSION: u32 = 1;
 

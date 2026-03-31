@@ -8,6 +8,7 @@ use crate::vk::*;
 use core::ffi::CStr;
 use core::mem::MaybeUninit;
 
+/// Type: `Device`
 pub const NAME: &CStr = c"VK_EXT_full_screen_exclusive";
 pub const SPEC_VERSION: u32 = 4;
 

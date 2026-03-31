@@ -8,6 +8,7 @@ use core::ffi::CStr;
 use core::ffi::c_void;
 use core::mem::MaybeUninit;
 
+/// Type: `Device`
 pub const NAME: &CStr = c"VK_EXT_external_memory_metal";
 pub const SPEC_VERSION: u32 = 1;
 

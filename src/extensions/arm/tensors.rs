@@ -9,6 +9,7 @@ use core::ffi::c_void;
 use core::mem::MaybeUninit;
 use core::ptr::{from_ref, null};
 
+/// Type: `Device`
 pub const NAME: &CStr = c"VK_ARM_tensors";
 pub const SPEC_VERSION: u32 = 1;
 

@@ -3,12 +3,13 @@
 // Do not Edit! Execute `cargo run pyronyx-gen`
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+#![deprecated = "This extension is deprecated. Use `VK_EXT_metal_surface` instead."]
 use crate::vk::*;
 use core::ffi::CStr;
 use core::mem::MaybeUninit;
 use core::ptr::{from_ref, null};
 
-#[deprecated = "This extension is deprecated. Use `VK_EXT_metal_surface` instead."]
+/// Type: `Instance`
 pub const NAME: &CStr = c"VK_MVK_macos_surface";
 pub const SPEC_VERSION: u32 = 3;
 

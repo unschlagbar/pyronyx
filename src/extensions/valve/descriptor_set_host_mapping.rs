@@ -8,6 +8,7 @@ use core::ffi::CStr;
 use core::ffi::c_void;
 use core::mem::MaybeUninit;
 
+/// Type: `Device`
 pub const NAME: &CStr = c"VK_VALVE_descriptor_set_host_mapping";
 pub const SPEC_VERSION: u32 = 1;
 

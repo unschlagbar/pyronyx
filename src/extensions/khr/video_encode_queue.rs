@@ -8,6 +8,7 @@ use core::ffi::CStr;
 use core::ffi::c_void;
 use core::mem::MaybeUninit;
 
+/// Type: `Device`
 pub const NAME: &CStr = c"VK_KHR_video_encode_queue";
 pub const SPEC_VERSION: u32 = 12;
 

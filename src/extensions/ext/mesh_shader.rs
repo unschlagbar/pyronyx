@@ -6,6 +6,7 @@
 use crate::vk::*;
 use core::ffi::CStr;
 
+/// Type: `Device`
 pub const NAME: &CStr = c"VK_EXT_mesh_shader";
 pub const SPEC_VERSION: u32 = 1;
 

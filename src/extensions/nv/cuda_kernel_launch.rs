@@ -10,6 +10,7 @@ use core::ffi::c_void;
 use core::mem::MaybeUninit;
 use core::ptr::{from_ref, null};
 
+/// Type: `Device`
 pub const NAME: &CStr = c"VK_NV_cuda_kernel_launch";
 pub const SPEC_VERSION: u32 = 2;
 

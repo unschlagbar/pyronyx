@@ -8,6 +8,7 @@ use core::ffi::CStr;
 use core::ffi::c_int;
 use core::mem::MaybeUninit;
 
+/// Type: `Device`
 pub const NAME: &CStr = c"VK_KHR_external_semaphore_fd";
 pub const SPEC_VERSION: u32 = 1;
 

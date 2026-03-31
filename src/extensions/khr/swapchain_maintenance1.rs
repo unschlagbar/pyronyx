@@ -6,6 +6,7 @@
 use crate::vk::*;
 use core::ffi::CStr;
 
+/// Type: `Device`
 pub const NAME: &CStr = c"VK_KHR_swapchain_maintenance1";
 pub const SPEC_VERSION: u32 = 1;
 

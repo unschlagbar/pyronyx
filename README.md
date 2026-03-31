@@ -135,7 +135,7 @@ let create_info = vk::DeviceCreateInfo {
 
 ## Why not Ash?
 
-Ash has been effectively unmaintained good time now. Beyond that, its model requires a separate loader struct per extension — `khr::Swapchain::new(&instance, &device)`, `ext::DebugUtils::new(&entry, &instance)` — which you then carry alongside your device for the lifetime of your program. Command buffer commands live on `Device` rather than `CommandBuffer` because that is where the loader is.
+Ash has been effectively unmaintained a good time now. Beyond that, its model requires a separate loader struct per extension — `khr::Swapchain::new(&instance, &device)`, `ext::DebugUtils::new(&entry, &instance)` — which you then carry alongside your device for the lifetime of your program. Command buffer commands live on `Device` rather than `CommandBuffer` because that is where the loader is.
 `Device` is just the huge struct that you need everywhere
 
 Pyronyx does not have that distinction. Enable an extension, call its functions on the handle, done.

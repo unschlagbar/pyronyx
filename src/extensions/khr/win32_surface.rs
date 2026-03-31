@@ -8,6 +8,7 @@ use core::ffi::CStr;
 use core::mem::MaybeUninit;
 use core::ptr::{from_ref, null};
 
+/// Type: `Instance`
 pub const NAME: &CStr = c"VK_KHR_win32_surface";
 pub const SPEC_VERSION: u32 = 6;
 

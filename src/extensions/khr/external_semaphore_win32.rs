@@ -7,6 +7,7 @@ use crate::vk::*;
 use core::ffi::CStr;
 use core::mem::MaybeUninit;
 
+/// Type: `Device`
 pub const NAME: &CStr = c"VK_KHR_external_semaphore_win32";
 pub const SPEC_VERSION: u32 = 1;
 

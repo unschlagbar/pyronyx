@@ -1,29 +1,228 @@
-pub mod acquire_winrt_display;
-pub mod clip_space_w_scaling;
-pub mod cluster_acceleration_structure;
-pub mod compute_occupancy_priority;
-pub mod cooperative_matrix;
-pub mod cooperative_matrix2;
-pub mod cooperative_vector;
-pub mod copy_memory_indirect;
-pub mod coverage_reduction_mode;
-pub mod cuda_kernel_launch;
-pub mod device_diagnostic_checkpoints;
-pub mod device_generated_commands;
-pub mod device_generated_commands_compute;
-pub mod external_compute_queue;
+#[deprecated = "This extension is deprecated. Use `` instead."]
+pub mod glsl_shader {
+    /// Type: `Device`
+    pub const NAME: &CStr = c"VK_NV_glsl_shader";
+    pub const SPEC_VERSION: u32 = 1;
+}
+#[deprecated = "This extension is deprecated. Use `VK_KHR_dedicated_allocation` instead."]
+pub mod dedicated_allocation {
+    /// Type: `Device`
+    pub const NAME: &CStr = c"VK_NV_dedicated_allocation";
+    pub const SPEC_VERSION: u32 = 1;
+}
+pub mod corner_sampled_image {
+    /// Type: `Device`
+    pub const NAME: &CStr = c"VK_NV_corner_sampled_image";
+    pub const SPEC_VERSION: u32 = 2;
+}
+pub mod private_vendor_info {
+    /// Type: `Device`
+    pub const NAME: &CStr = c"VK_NV_private_vendor_info";
+    pub const SPEC_VERSION: u32 = 2;
+}
 pub mod external_memory_capabilities;
+#[deprecated = "This extension is deprecated. Use `VK_KHR_external_memory` instead."]
+pub mod external_memory {
+    /// Type: `Device`
+    pub const NAME: &CStr = c"VK_NV_external_memory";
+    pub const SPEC_VERSION: u32 = 1;
+}
+pub mod external_memory_win32;
+pub mod win32_keyed_mutex {
+    /// Type: `Device`
+    pub const NAME: &CStr = c"VK_NV_win32_keyed_mutex";
+    pub const SPEC_VERSION: u32 = 2;
+}
+pub mod clip_space_w_scaling;
+pub mod sample_mask_override_coverage {
+    /// Type: `Device`
+    pub const NAME: &CStr = c"VK_NV_sample_mask_override_coverage";
+    pub const SPEC_VERSION: u32 = 1;
+}
+pub mod geometry_shader_passthrough {
+    /// Type: `Device`
+    pub const NAME: &CStr = c"VK_NV_geometry_shader_passthrough";
+    pub const SPEC_VERSION: u32 = 1;
+}
+pub mod viewport_array2 {
+    /// Type: `Device`
+    pub const NAME: &CStr = c"VK_NV_viewport_array2";
+    pub const SPEC_VERSION: u32 = 1;
+}
+pub mod viewport_swizzle {
+    /// Type: `Device`
+    pub const NAME: &CStr = c"VK_NV_viewport_swizzle";
+    pub const SPEC_VERSION: u32 = 1;
+}
+pub mod fragment_coverage_to_color {
+    /// Type: `Device`
+    pub const NAME: &CStr = c"VK_NV_fragment_coverage_to_color";
+    pub const SPEC_VERSION: u32 = 1;
+}
+pub mod framebuffer_mixed_samples {
+    /// Type: `Device`
+    pub const NAME: &CStr = c"VK_NV_framebuffer_mixed_samples";
+    pub const SPEC_VERSION: u32 = 1;
+}
+pub mod fill_rectangle {
+    /// Type: `Device`
+    pub const NAME: &CStr = c"VK_NV_fill_rectangle";
+    pub const SPEC_VERSION: u32 = 1;
+}
+pub mod shader_sm_builtins {
+    /// Type: `Device`
+    pub const NAME: &CStr = c"VK_NV_shader_sm_builtins";
+    pub const SPEC_VERSION: u32 = 1;
+}
+pub mod ray_tracing;
+pub mod shading_rate_image;
+pub mod representative_fragment_test {
+    /// Type: `Device`
+    pub const NAME: &CStr = c"VK_NV_representative_fragment_test";
+    pub const SPEC_VERSION: u32 = 2;
+}
+pub mod shader_subgroup_partitioned {
+    /// Type: `Device`
+    pub const NAME: &CStr = c"VK_NV_shader_subgroup_partitioned";
+    pub const SPEC_VERSION: u32 = 1;
+}
+pub mod compute_shader_derivatives {
+    /// Type: `Device`
+    pub const NAME: &CStr = c"VK_NV_compute_shader_derivatives";
+    pub const SPEC_VERSION: u32 = 1;
+}
+pub mod mesh_shader;
+pub mod fragment_shader_barycentric {
+    /// Type: `Device`
+    pub const NAME: &CStr = c"VK_NV_fragment_shader_barycentric";
+    pub const SPEC_VERSION: u32 = 1;
+}
+pub mod shader_image_footprint {
+    /// Type: `Device`
+    pub const NAME: &CStr = c"VK_NV_shader_image_footprint";
+    pub const SPEC_VERSION: u32 = 2;
+}
+pub mod device_diagnostic_checkpoints;
+pub mod scissor_exclusive;
+pub mod dedicated_allocation_image_aliasing {
+    /// Type: `Device`
+    pub const NAME: &CStr = c"VK_NV_dedicated_allocation_image_aliasing";
+    pub const SPEC_VERSION: u32 = 1;
+}
+pub mod cooperative_matrix;
+pub mod coverage_reduction_mode;
+pub mod device_generated_commands;
+pub mod inherited_viewport_scissor {
+    /// Type: `Device`
+    pub const NAME: &CStr = c"VK_NV_inherited_viewport_scissor";
+    pub const SPEC_VERSION: u32 = 1;
+}
+pub mod present_barrier {
+    /// Type: `Device`
+    pub const NAME: &CStr = c"VK_NV_present_barrier";
+    pub const SPEC_VERSION: u32 = 1;
+}
+pub mod device_diagnostics_config {
+    /// Type: `Device`
+    pub const NAME: &CStr = c"VK_NV_device_diagnostics_config";
+    pub const SPEC_VERSION: u32 = 2;
+}
+pub mod cuda_kernel_launch;
+pub mod low_latency {
+    /// Type: `Device`
+    pub const NAME: &CStr = c"VK_NV_low_latency";
+    pub const SPEC_VERSION: u32 = 1;
+}
+pub mod fragment_shading_rate_enums;
+pub mod ray_tracing_motion_blur {
+    /// Type: `Device`
+    pub const NAME: &CStr = c"VK_NV_ray_tracing_motion_blur";
+    pub const SPEC_VERSION: u32 = 1;
+}
+pub mod acquire_winrt_display;
 pub mod external_memory_rdma;
 pub mod external_memory_sci_buf;
-pub mod external_memory_win32;
 pub mod external_sci_sync;
-pub mod external_sci_sync2;
-pub mod fragment_shading_rate_enums;
-pub mod low_latency2;
+#[deprecated = "This extension is deprecated. Use `VK_NV_cluster_acceleration_structure` instead."]
+pub mod displacement_micromap {
+    /// Type: `Device`
+    pub const NAME: &CStr = c"VK_NV_displacement_micromap";
+    pub const SPEC_VERSION: u32 = 2;
+}
+pub mod copy_memory_indirect;
+pub mod device_generated_commands_compute;
 pub mod memory_decompression;
-pub mod mesh_shader;
+pub mod ray_tracing_linear_swept_spheres {
+    /// Type: `Device`
+    pub const NAME: &CStr = c"VK_NV_ray_tracing_linear_swept_spheres";
+    pub const SPEC_VERSION: u32 = 1;
+}
+pub mod linear_color_attachment {
+    /// Type: `Device`
+    pub const NAME: &CStr = c"VK_NV_linear_color_attachment";
+    pub const SPEC_VERSION: u32 = 1;
+}
+pub mod external_sci_sync2;
 pub mod optical_flow;
+pub mod ray_tracing_invocation_reorder {
+    /// Type: `Device`
+    pub const NAME: &CStr = c"VK_NV_ray_tracing_invocation_reorder";
+    pub const SPEC_VERSION: u32 = 1;
+}
+pub mod cooperative_vector;
+pub mod extended_sparse_address_space {
+    /// Type: `Device`
+    pub const NAME: &CStr = c"VK_NV_extended_sparse_address_space";
+    pub const SPEC_VERSION: u32 = 1;
+}
+pub mod low_latency2;
+pub mod per_stage_descriptor_set {
+    /// Type: `Device`
+    pub const NAME: &CStr = c"VK_NV_per_stage_descriptor_set";
+    pub const SPEC_VERSION: u32 = 1;
+}
+pub mod descriptor_pool_overallocation {
+    /// Type: `Device`
+    pub const NAME: &CStr = c"VK_NV_descriptor_pool_overallocation";
+    pub const SPEC_VERSION: u32 = 1;
+}
+pub mod display_stereo {
+    /// Type: `Instance`
+    pub const NAME: &CStr = c"VK_NV_display_stereo";
+    pub const SPEC_VERSION: u32 = 1;
+}
+pub mod raw_access_chains {
+    /// Type: `Device`
+    pub const NAME: &CStr = c"VK_NV_raw_access_chains";
+    pub const SPEC_VERSION: u32 = 1;
+}
+pub mod external_compute_queue;
+pub mod command_buffer_inheritance {
+    /// Type: `Device`
+    pub const NAME: &CStr = c"VK_NV_command_buffer_inheritance";
+    pub const SPEC_VERSION: u32 = 1;
+}
+pub mod shader_atomic_float16_vector {
+    /// Type: `Device`
+    pub const NAME: &CStr = c"VK_NV_shader_atomic_float16_vector";
+    pub const SPEC_VERSION: u32 = 1;
+}
+pub mod ray_tracing_validation {
+    /// Type: `Device`
+    pub const NAME: &CStr = c"VK_NV_ray_tracing_validation";
+    pub const SPEC_VERSION: u32 = 1;
+}
+pub mod cluster_acceleration_structure;
 pub mod partitioned_acceleration_structure;
-pub mod ray_tracing;
-pub mod scissor_exclusive;
-pub mod shading_rate_image;
+pub mod push_constant_bank {
+    /// Type: `Device`
+    pub const NAME: &CStr = c"VK_NV_push_constant_bank";
+    pub const SPEC_VERSION: u32 = 1;
+}
+pub mod cooperative_matrix2;
+pub mod present_metering {
+    /// Type: `Device`
+    pub const NAME: &CStr = c"VK_NV_present_metering";
+    pub const SPEC_VERSION: u32 = 1;
+}
+pub mod compute_occupancy_priority;

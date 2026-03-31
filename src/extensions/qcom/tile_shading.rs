@@ -6,6 +6,7 @@
 use crate::vk::*;
 use core::ffi::CStr;
 
+/// Type: `Device`
 pub const NAME: &CStr = c"VK_QCOM_tile_shading";
 pub const SPEC_VERSION: u32 = 2;
 

@@ -6,6 +6,7 @@
 use crate::vk::*;
 use core::ffi::CStr;
 
+/// Type: `Device`
 pub const NAME: &CStr = c"VK_NV_cooperative_matrix";
 pub const SPEC_VERSION: u32 = 1;
 
