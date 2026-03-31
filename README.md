@@ -144,9 +144,9 @@ Pyronyx does not have that distinction. Enable an extension, call its functions 
 
 ## Example 
 
-### Triangle
+### Triangle(https://github.com/unschlagbar/pyronyx-triangle)
 
-Hello Triangle: [pyronyx Triangle]((https://github.com/unschlagbar/pyronyx-triangle))
+Hello Triangle: [pyronyx Triangle](https://github.com/unschlagbar/pyronyx-triangle)
 
 ![Hello Triangle](https://raw.githubusercontent.com/unschlagbar/pyronyx-triangle/main/image.png)
 
