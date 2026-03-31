@@ -144,7 +144,7 @@ Pyronyx does not have that distinction. Enable an extension, call its functions 
 
 ## Example 
 
-### Triangle(https://github.com/unschlagbar/pyronyx-triangle)
+### [Triangle](https://github.com/unschlagbar/pyronyx-triangle)
 
 Hello Triangle: [pyronyx Triangle](https://github.com/unschlagbar/pyronyx-triangle)
 
