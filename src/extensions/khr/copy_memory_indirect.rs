@@ -23,7 +23,7 @@ impl CopyMemoryIndirectCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyMemoryIndirectKHR.html>
     ///
     /// Queues types: `Transfer`, `Graphics`, `Compute`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use outside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
@@ -41,7 +41,7 @@ impl CopyMemoryIndirectCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyMemoryToImageIndirectKHR.html>
     ///
     /// Queues types: `Transfer`, `Graphics`, `Compute`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use outside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]

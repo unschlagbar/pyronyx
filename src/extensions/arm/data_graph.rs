@@ -265,7 +265,7 @@ impl DataGraphCommandBuffer for CommandBuffer {
     ///
     /// Affected by Conditional Rendering.
     /// Queues types: `DataGraphARM`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use outside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]

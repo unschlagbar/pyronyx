@@ -18,7 +18,7 @@ impl VideoDecodeQueueCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdDecodeVideoKHR.html>
     ///
     /// Queues types: `VideoDecodeKHR`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use outside `RenderPass`.
     /// Command buffer level: `primary`.
     #[inline]

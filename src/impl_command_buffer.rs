@@ -250,7 +250,7 @@ impl CommandBuffer {
     ///
     /// Affected by Conditional Rendering.
     /// Queues types: `Graphics`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use inside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
@@ -276,7 +276,7 @@ impl CommandBuffer {
     ///
     /// Affected by Conditional Rendering.
     /// Queues types: `Graphics`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use inside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
@@ -304,7 +304,7 @@ impl CommandBuffer {
     ///
     /// Affected by Conditional Rendering.
     /// Queues types: `Graphics`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use inside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
@@ -324,7 +324,7 @@ impl CommandBuffer {
     ///
     /// Affected by Conditional Rendering.
     /// Queues types: `Graphics`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use inside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
@@ -350,7 +350,7 @@ impl CommandBuffer {
     ///
     /// Affected by Conditional Rendering.
     /// Queues types: `Compute`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use inside and outside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
@@ -369,7 +369,7 @@ impl CommandBuffer {
     ///
     /// Affected by Conditional Rendering.
     /// Queues types: `Compute`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use inside and outside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
@@ -380,7 +380,7 @@ impl CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyBuffer.html>
     ///
     /// Queues types: `Transfer`, `Graphics`, `Compute`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use outside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
@@ -399,7 +399,7 @@ impl CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyImage.html>
     ///
     /// Queues types: `Transfer`, `Graphics`, `Compute`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use outside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
@@ -427,7 +427,7 @@ impl CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBlitImage.html>
     ///
     /// Queues types: `Graphics`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use outside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
@@ -457,7 +457,7 @@ impl CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyBufferToImage.html>
     ///
     /// Queues types: `Transfer`, `Graphics`, `Compute`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use outside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
@@ -483,7 +483,7 @@ impl CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyImageToBuffer.html>
     ///
     /// Queues types: `Transfer`, `Graphics`, `Compute`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use outside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
@@ -509,7 +509,7 @@ impl CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdUpdateBuffer.html>
     ///
     /// Queues types: `Transfer`, `Graphics`, `Compute`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use outside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
@@ -528,7 +528,7 @@ impl CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdFillBuffer.html>
     ///
     /// Queues types: `Transfer`, `Graphics`, `Compute`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use outside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
@@ -547,7 +547,7 @@ impl CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdClearColorImage.html>
     ///
     /// Queues types: `Graphics`, `Compute`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use outside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
@@ -573,7 +573,7 @@ impl CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdClearDepthStencilImage.html>
     ///
     /// Queues types: `Graphics`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use outside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
@@ -600,7 +600,7 @@ impl CommandBuffer {
     ///
     /// Affected by Conditional Rendering.
     /// Queues types: `Graphics`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use inside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
@@ -619,7 +619,7 @@ impl CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdResolveImage.html>
     ///
     /// Queues types: `Graphics`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use outside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
@@ -734,7 +734,7 @@ impl CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBeginQuery.html>
     ///
     /// Queues types: `Graphics`, `Compute`, `VideoDecodeKHR`, `VideoEncodeKHR`.
-    /// Task: `Action`, `Vulkan state access`.
+    /// Task: `Executes GPU work`, `Vulkan state access`.
     /// Use inside and outside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
@@ -745,7 +745,7 @@ impl CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdEndQuery.html>
     ///
     /// Queues types: `Graphics`, `Compute`, `VideoDecodeKHR`, `VideoEncodeKHR`.
-    /// Task: `Action`, `Vulkan state access`.
+    /// Task: `Executes GPU work`, `Vulkan state access`.
     /// Use inside and outside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
@@ -756,7 +756,7 @@ impl CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdResetQueryPool.html>
     ///
     /// Queues types: `Graphics`, `Compute`, `VideoDecodeKHR`, `VideoEncodeKHR`, `OpticalFlowNV`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use outside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
@@ -774,7 +774,7 @@ impl CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdWriteTimestamp.html>
     ///
     /// Queues types: `Transfer`, `Graphics`, `Compute`, `VideoDecodeKHR`, `VideoEncodeKHR`, `OpticalFlowNV`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use inside and outside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
@@ -797,7 +797,7 @@ impl CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyQueryPoolResults.html>
     ///
     /// Queues types: `Graphics`, `Compute`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use outside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
@@ -854,7 +854,7 @@ impl CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBeginRenderPass.html>
     ///
     /// Queues types: `Graphics`.
-    /// Task: `Action`, `Vulkan state access`, `Synchronization`.
+    /// Task: `Executes GPU work`, `Vulkan state access`, `Synchronization`.
     /// Use outside `RenderPass`.
     /// Command buffer level: `primary`.
     #[inline]
@@ -871,7 +871,7 @@ impl CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdNextSubpass.html>
     ///
     /// Queues types: `Graphics`.
-    /// Task: `Action`, `Vulkan state access`, `Synchronization`.
+    /// Task: `Executes GPU work`, `Vulkan state access`, `Synchronization`.
     /// Use inside `RenderPass`.
     /// Command buffer level: `primary`.
     #[inline]
@@ -882,7 +882,7 @@ impl CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdEndRenderPass.html>
     ///
     /// Queues types: `Graphics`.
-    /// Task: `Action`, `Vulkan state access`, `Synchronization`.
+    /// Task: `Executes GPU work`, `Vulkan state access`, `Synchronization`.
     /// Use inside `RenderPass`.
     /// Command buffer level: `primary`.
     #[inline]
@@ -893,7 +893,7 @@ impl CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdExecuteCommands.html>
     ///
     /// Queues types: `Transfer`, `Graphics`, `Compute`.
-    /// Task: `Indirect action`.
+    /// Task: `Executes indirect GPU work`.
     /// Use inside and outside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
@@ -948,7 +948,7 @@ impl CommandBuffer {
     ///
     /// Affected by Conditional Rendering.
     /// Queues types: `Compute`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use inside and outside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
@@ -1002,7 +1002,7 @@ impl CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBeginRenderPass2.html>
     ///
     /// Queues types: `Graphics`.
-    /// Task: `Action`, `Vulkan state access`, `Synchronization`.
+    /// Task: `Executes GPU work`, `Vulkan state access`, `Synchronization`.
     /// Use outside `RenderPass`.
     /// Command buffer level: `primary`.
     #[inline]
@@ -1023,7 +1023,7 @@ impl CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdNextSubpass2.html>
     ///
     /// Queues types: `Graphics`.
-    /// Task: `Action`, `Vulkan state access`, `Synchronization`.
+    /// Task: `Executes GPU work`, `Vulkan state access`, `Synchronization`.
     /// Use inside `RenderPass`.
     /// Command buffer level: `primary`.
     #[inline]
@@ -1044,7 +1044,7 @@ impl CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdEndRenderPass2.html>
     ///
     /// Queues types: `Graphics`.
-    /// Task: `Action`, `Vulkan state access`, `Synchronization`.
+    /// Task: `Executes GPU work`, `Vulkan state access`, `Synchronization`.
     /// Use inside `RenderPass`.
     /// Command buffer level: `primary`.
     #[inline]
@@ -1056,7 +1056,7 @@ impl CommandBuffer {
     ///
     /// Affected by Conditional Rendering.
     /// Queues types: `Graphics`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use inside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
@@ -1086,7 +1086,7 @@ impl CommandBuffer {
     ///
     /// Affected by Conditional Rendering.
     /// Queues types: `Graphics`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use inside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
@@ -1398,7 +1398,7 @@ impl CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyBuffer2.html>
     ///
     /// Queues types: `Transfer`, `Graphics`, `Compute`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use outside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
@@ -1409,7 +1409,7 @@ impl CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyImage2.html>
     ///
     /// Queues types: `Transfer`, `Graphics`, `Compute`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use outside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
@@ -1420,7 +1420,7 @@ impl CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBlitImage2.html>
     ///
     /// Queues types: `Graphics`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use outside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
@@ -1431,7 +1431,7 @@ impl CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyBufferToImage2.html>
     ///
     /// Queues types: `Transfer`, `Graphics`, `Compute`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use outside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
@@ -1444,7 +1444,7 @@ impl CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyImageToBuffer2.html>
     ///
     /// Queues types: `Transfer`, `Graphics`, `Compute`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use outside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
@@ -1457,7 +1457,7 @@ impl CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdResolveImage2.html>
     ///
     /// Queues types: `Graphics`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use outside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
@@ -1520,7 +1520,7 @@ impl CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdWriteTimestamp2.html>
     ///
     /// Queues types: `Transfer`, `Graphics`, `Compute`, `VideoDecodeKHR`, `VideoEncodeKHR`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use inside and outside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
@@ -1533,7 +1533,7 @@ impl CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBeginRendering.html>
     ///
     /// Queues types: `Graphics`.
-    /// Task: `Action`, `Vulkan state access`.
+    /// Task: `Executes GPU work`, `Vulkan state access`.
     /// Use outside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
@@ -1544,7 +1544,7 @@ impl CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdEndRendering.html>
     ///
     /// Queues types: `Graphics`.
-    /// Task: `Action`, `Vulkan state access`.
+    /// Task: `Executes GPU work`, `Vulkan state access`.
     /// Use inside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]

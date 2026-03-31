@@ -23,7 +23,7 @@ impl ConditionalRenderingCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBeginConditionalRenderingEXT.html>
     ///
     /// Queues types: `Graphics`, `Compute`.
-    /// Task: `Action`, `Vulkan state access`.
+    /// Task: `Executes GPU work`, `Vulkan state access`.
     /// Use inside and outside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
@@ -46,7 +46,7 @@ impl ConditionalRenderingCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdEndConditionalRenderingEXT.html>
     ///
     /// Queues types: `Graphics`, `Compute`.
-    /// Task: `Action`, `Vulkan state access`.
+    /// Task: `Executes GPU work`, `Vulkan state access`.
     /// Use inside and outside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]

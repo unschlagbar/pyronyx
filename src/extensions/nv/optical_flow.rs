@@ -152,7 +152,7 @@ impl OpticalFlowCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdOpticalFlowExecuteNV.html>
     ///
     /// Queues types: `OpticalFlowNV`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use outside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]

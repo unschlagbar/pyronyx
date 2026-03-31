@@ -23,7 +23,7 @@ impl TileShadingCommandBuffer for CommandBuffer {
     ///
     /// Affected by Conditional Rendering.
     /// Queues types: `Compute`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use inside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]

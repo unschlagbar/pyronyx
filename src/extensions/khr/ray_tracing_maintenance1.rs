@@ -18,7 +18,7 @@ impl RayTracingMaintenance1CommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdTraceRaysIndirect2KHR.html>
     ///
     /// Queues types: `Compute`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use outside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]

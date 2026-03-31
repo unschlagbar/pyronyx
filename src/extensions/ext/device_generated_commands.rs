@@ -31,7 +31,7 @@ impl DeviceGeneratedCommandsCommandBuffer for CommandBuffer {
     ///
     /// Affected by Conditional Rendering.
     /// Queues types: `Graphics`, `Compute`.
-    /// Task: `Action`, `Indirect action`.
+    /// Task: `Executes GPU work`, `Executes indirect GPU work`.
     /// Use inside and outside `RenderPass`.
     /// Command buffer level: `primary`.
     #[inline]
@@ -57,7 +57,7 @@ impl DeviceGeneratedCommandsCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdPreprocessGeneratedCommandsEXT.html>
     ///
     /// Queues types: `Graphics`, `Compute`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use outside `RenderPass`.
     /// Command buffer level: `primary`.
     #[inline]

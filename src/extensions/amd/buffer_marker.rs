@@ -32,7 +32,7 @@ impl BufferMarkerCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdWriteBufferMarkerAMD.html>
     ///
     /// Queues types: `Transfer`, `Graphics`, `Compute`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use inside and outside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
@@ -62,7 +62,7 @@ impl BufferMarkerCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdWriteBufferMarker2AMD.html>
     ///
     /// Queues types: `Transfer`, `Graphics`, `Compute`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use inside and outside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]

@@ -19,7 +19,7 @@ impl Maintenance10CommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdEndRendering2KHR.html>
     ///
     /// Queues types: `Graphics`.
-    /// Task: `Action`, `Vulkan state access`.
+    /// Task: `Executes GPU work`, `Vulkan state access`.
     /// Use inside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]

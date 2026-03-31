@@ -122,7 +122,7 @@ impl BinaryImportCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCuLaunchKernelNVX.html>
     ///
     /// Queues types: `Graphics`, `Compute`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use inside and outside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]

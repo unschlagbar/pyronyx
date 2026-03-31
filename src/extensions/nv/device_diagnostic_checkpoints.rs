@@ -19,7 +19,7 @@ impl DeviceDiagnosticCheckpointsCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetCheckpointNV.html>
     ///
     /// Queues types: `Graphics`, `Compute`, `Transfer`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use inside and outside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]

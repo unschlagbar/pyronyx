@@ -288,7 +288,7 @@ impl VideoQueueCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBeginVideoCodingKHR.html>
     ///
     /// Queues types: `VideoDecodeKHR`, `VideoEncodeKHR`.
-    /// Task: `Action`, `Vulkan state access`.
+    /// Task: `Executes GPU work`, `Vulkan state access`.
     /// Use outside `RenderPass`.
     /// Command buffer level: `primary`.
     #[inline]
@@ -306,7 +306,7 @@ impl VideoQueueCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdControlVideoCodingKHR.html>
     ///
     /// Queues types: `VideoDecodeKHR`, `VideoEncodeKHR`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use outside `RenderPass`.
     /// Command buffer level: `primary`.
     #[inline]
@@ -324,7 +324,7 @@ impl VideoQueueCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdEndVideoCodingKHR.html>
     ///
     /// Queues types: `VideoDecodeKHR`, `VideoEncodeKHR`.
-    /// Task: `Action`, `Vulkan state access`.
+    /// Task: `Executes GPU work`, `Vulkan state access`.
     /// Use outside `RenderPass`.
     /// Command buffer level: `primary`.
     #[inline]

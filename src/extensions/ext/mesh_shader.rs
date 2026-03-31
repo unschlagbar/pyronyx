@@ -37,7 +37,7 @@ impl MeshShaderCommandBuffer for CommandBuffer {
     ///
     /// Affected by Conditional Rendering.
     /// Queues types: `Graphics`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use inside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
@@ -58,7 +58,7 @@ impl MeshShaderCommandBuffer for CommandBuffer {
     ///
     /// Affected by Conditional Rendering.
     /// Queues types: `Graphics`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use inside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
@@ -85,7 +85,7 @@ impl MeshShaderCommandBuffer for CommandBuffer {
     ///
     /// Affected by Conditional Rendering.
     /// Queues types: `Graphics`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use inside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]

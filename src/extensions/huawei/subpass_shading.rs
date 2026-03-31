@@ -50,7 +50,7 @@ impl SubpassShadingCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSubpassShadingHUAWEI.html>
     ///
     /// Queues types: `Graphics`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use inside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]

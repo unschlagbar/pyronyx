@@ -151,7 +151,7 @@ impl TransformFeedbackCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBeginQueryIndexedEXT.html>
     ///
     /// Queues types: `Graphics`, `Compute`, `VideoDecodeKHR`, `VideoEncodeKHR`.
-    /// Task: `Action`, `Vulkan state access`.
+    /// Task: `Executes GPU work`, `Vulkan state access`.
     /// Use inside and outside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
@@ -175,7 +175,7 @@ impl TransformFeedbackCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdEndQueryIndexedEXT.html>
     ///
     /// Queues types: `Graphics`, `Compute`, `VideoDecodeKHR`, `VideoEncodeKHR`.
-    /// Task: `Action`, `Vulkan state access`.
+    /// Task: `Executes GPU work`, `Vulkan state access`.
     /// Use inside and outside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
@@ -194,7 +194,7 @@ impl TransformFeedbackCommandBuffer for CommandBuffer {
     ///
     /// Affected by Conditional Rendering.
     /// Queues types: `Graphics`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use inside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]

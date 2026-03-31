@@ -143,7 +143,7 @@ impl ShaderEnqueueCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdInitializeGraphScratchMemoryAMDX.html>
     ///
     /// Queues types: `Graphics`, `Compute`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use inside and outside `RenderPass`.
     /// Command buffer level: `primary`.
     #[inline]
@@ -172,7 +172,7 @@ impl ShaderEnqueueCommandBuffer for CommandBuffer {
     ///
     /// Affected by Conditional Rendering.
     /// Queues types: `Graphics`, `Compute`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use inside and outside `RenderPass`.
     /// Command buffer level: `primary`.
     #[inline]
@@ -196,7 +196,7 @@ impl ShaderEnqueueCommandBuffer for CommandBuffer {
     ///
     /// Affected by Conditional Rendering.
     /// Queues types: `Graphics`, `Compute`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use inside and outside `RenderPass`.
     /// Command buffer level: `primary`.
     #[inline]
@@ -222,7 +222,7 @@ impl ShaderEnqueueCommandBuffer for CommandBuffer {
     ///
     /// Affected by Conditional Rendering.
     /// Queues types: `Graphics`, `Compute`.
-    /// Task: `Action`.
+    /// Task: `Executes GPU work`.
     /// Use inside and outside `RenderPass`.
     /// Command buffer level: `primary`.
     #[inline]
