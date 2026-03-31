@@ -28,6 +28,12 @@ pub trait DeviceGeneratedCommandsCommandBuffer {
 
 impl DeviceGeneratedCommandsCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdExecuteGeneratedCommandsEXT.html>
+    ///
+    /// Affected by Conditional Rendering.
+    /// Queues types: `Graphics`, `Compute`.
+    /// Task: `Action`, `Indirect action`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`.
     #[inline]
     fn execute_generated_commands(
         &self,
@@ -49,6 +55,11 @@ impl DeviceGeneratedCommandsCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdPreprocessGeneratedCommandsEXT.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`.
+    /// Task: `Action`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`.
     #[inline]
     fn preprocess_generated_commands(
         &self,

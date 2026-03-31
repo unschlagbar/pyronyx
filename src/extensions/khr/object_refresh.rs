@@ -16,6 +16,11 @@ pub trait ObjectRefreshCommandBuffer {
 
 impl ObjectRefreshCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdRefreshObjectsKHR.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`, `Transfer`.
+    /// Task: `Action`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn refresh_objects(&self, refresh_objects: &RefreshObjectListKHR) {
         unsafe {

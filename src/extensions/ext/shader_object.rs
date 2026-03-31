@@ -106,6 +106,11 @@ pub trait ShaderObjectCommandBuffer {
 
 impl ShaderObjectCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetPatchControlPointsEXT.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_patch_control_points(&self, patch_control_points: u32) {
         unsafe {
@@ -119,6 +124,11 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetLogicOpEXT.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_logic_op(&self, logic_op: LogicOp) {
         unsafe {
@@ -132,6 +142,11 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetTessellationDomainOriginEXT.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_tessellation_domain_origin(&self, domain_origin: TessellationDomainOrigin) {
         unsafe {
@@ -145,6 +160,11 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetDepthClampEnableEXT.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_depth_clamp_enable(&self, depth_clamp_enable: bool) {
         unsafe {
@@ -158,6 +178,11 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetPolygonModeEXT.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_polygon_mode(&self, polygon_mode: PolygonMode) {
         unsafe {
@@ -171,6 +196,11 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetRasterizationSamplesEXT.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_rasterization_samples(&self, rasterization_samples: SampleCountFlags) {
         unsafe {
@@ -184,6 +214,11 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetSampleMaskEXT.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_sample_mask(&self, samples: SampleCountFlags, sample_mask: Option<&SampleMask>) {
         unsafe {
@@ -199,6 +234,11 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetAlphaToCoverageEnableEXT.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_alpha_to_coverage_enable(&self, alpha_to_coverage_enable: bool) {
         unsafe {
@@ -214,6 +254,11 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetAlphaToOneEnableEXT.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_alpha_to_one_enable(&self, alpha_to_one_enable: bool) {
         unsafe {
@@ -227,6 +272,11 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetLogicOpEnableEXT.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_logic_op_enable(&self, logic_op_enable: bool) {
         unsafe {
@@ -240,6 +290,11 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetColorBlendEnableEXT.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_color_blend_enable(&self, first_attachment: u32, color_blend_enables: &[Bool32]) {
         unsafe {
@@ -258,6 +313,11 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetColorBlendEquationEXT.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_color_blend_equation(
         &self,
@@ -280,6 +340,11 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetColorWriteMaskEXT.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_color_write_mask(
         &self,
@@ -302,6 +367,11 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetRasterizationStreamEXT.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_rasterization_stream(&self, rasterization_stream: u32) {
         unsafe {
@@ -315,6 +385,11 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetConservativeRasterizationModeEXT.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_conservative_rasterization_mode(
         &self,
@@ -334,6 +409,11 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetExtraPrimitiveOverestimationSizeEXT.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_extra_primitive_overestimation_size(&self, extra_primitive_overestimation_size: f32) {
         unsafe {
@@ -350,6 +430,11 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetDepthClipEnableEXT.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_depth_clip_enable(&self, depth_clip_enable: bool) {
         unsafe {
@@ -363,6 +448,11 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetSampleLocationsEnableEXT.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_sample_locations_enable(&self, sample_locations_enable: bool) {
         unsafe {
@@ -378,6 +468,11 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetColorBlendAdvancedEXT.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_color_blend_advanced(
         &self,
@@ -400,6 +495,11 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetProvokingVertexModeEXT.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_provoking_vertex_mode(&self, provoking_vertex_mode: ProvokingVertexModeEXT) {
         unsafe {
@@ -413,6 +513,11 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetLineRasterizationModeEXT.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_line_rasterization_mode(&self, line_rasterization_mode: LineRasterizationModeEXT) {
         unsafe {
@@ -426,6 +531,11 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetLineStippleEnableEXT.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_line_stipple_enable(&self, stippled_line_enable: bool) {
         unsafe {
@@ -439,6 +549,11 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetDepthClipNegativeOneToOneEXT.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_depth_clip_negative_one_to_one(&self, negative_one_to_one: bool) {
         unsafe {
@@ -454,6 +569,11 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetViewportWScalingEnableNV.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_viewport_w_scaling_enable(&self, viewport_w_scaling_enable: bool) {
         unsafe {
@@ -469,6 +589,11 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetViewportSwizzleNV.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_viewport_swizzle(&self, first_viewport: u32, viewport_swizzles: &[ViewportSwizzleNV]) {
         unsafe {
@@ -487,6 +612,11 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetCoverageToColorEnableNV.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_coverage_to_color_enable(&self, coverage_to_color_enable: bool) {
         unsafe {
@@ -502,6 +632,11 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetCoverageToColorLocationNV.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_coverage_to_color_location(&self, coverage_to_color_location: u32) {
         unsafe {
@@ -517,6 +652,11 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetCoverageModulationModeNV.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_coverage_modulation_mode(&self, coverage_modulation_mode: CoverageModulationModeNV) {
         unsafe {
@@ -530,6 +670,11 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetCoverageModulationTableEnableNV.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_coverage_modulation_table_enable(&self, coverage_modulation_table_enable: bool) {
         unsafe {
@@ -546,6 +691,11 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetCoverageModulationTableNV.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_coverage_modulation_table(&self, coverage_modulation_table: &[f32]) {
         unsafe {
@@ -563,6 +713,11 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetShadingRateImageEnableNV.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_shading_rate_image_enable(&self, shading_rate_image_enable: bool) {
         unsafe {
@@ -578,6 +733,11 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetCoverageReductionModeNV.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_coverage_reduction_mode(&self, coverage_reduction_mode: CoverageReductionModeNV) {
         unsafe {
@@ -591,6 +751,11 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetRepresentativeFragmentTestEnableNV.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_representative_fragment_test_enable(&self, representative_fragment_test_enable: bool) {
         unsafe {
@@ -607,6 +772,11 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetVertexInputEXT.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_vertex_input(
         &self,
@@ -630,6 +800,11 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBindShadersEXT.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn bind_shaders(&self, stages: &[ShaderStageFlags], shaders: &[ShaderEXT]) {
         assert_eq!(stages.len(), shaders.len());

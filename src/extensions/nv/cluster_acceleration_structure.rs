@@ -51,6 +51,11 @@ pub trait ClusterAccelerationStructureCommandBuffer {
 
 impl ClusterAccelerationStructureCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBuildClusterAccelerationStructureIndirectNV.html>
+    ///
+    /// Queues types: `Compute`.
+    /// Task: `Action`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn build_cluster_acceleration_structure_indirect(
         &self,

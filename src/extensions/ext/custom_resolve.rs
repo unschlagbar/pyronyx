@@ -17,6 +17,12 @@ pub trait CustomResolveCommandBuffer {
 
 impl CustomResolveCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBeginCustomResolveEXT.html>
+    ///
+    /// Affected by Conditional Rendering.
+    /// Queues types: `Graphics`.
+    /// Task: `Action`.
+    /// Use inside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn begin_custom_resolve(&self, begin_custom_resolve_info: Option<&BeginCustomResolveInfoEXT>) {
         unsafe {

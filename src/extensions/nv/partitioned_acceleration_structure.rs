@@ -51,6 +51,11 @@ pub trait PartitionedAccelerationStructureCommandBuffer {
 
 impl PartitionedAccelerationStructureCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBuildPartitionedAccelerationStructuresNV.html>
+    ///
+    /// Queues types: `Compute`.
+    /// Task: `Action`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn build_partitioned_acceleration_structures(
         &self,

@@ -17,6 +17,11 @@ pub trait TileMemoryHeapCommandBuffer {
 
 impl TileMemoryHeapCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBindTileMemoryQCOM.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`.
+    /// Task: `Vulkan state access`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn bind_tile_memory(&self, tile_memory_bind_info: Option<&TileMemoryBindInfoQCOM>) {
         unsafe {

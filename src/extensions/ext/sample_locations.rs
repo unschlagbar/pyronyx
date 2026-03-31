@@ -17,6 +17,11 @@ pub trait SampleLocationsCommandBuffer {
 
 impl SampleLocationsCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetSampleLocationsEXT.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_sample_locations(&self, sample_locations_info: &SampleLocationsInfoEXT) {
         unsafe {

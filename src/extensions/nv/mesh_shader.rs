@@ -34,6 +34,12 @@ pub trait MeshShaderCommandBuffer {
 
 impl MeshShaderCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdDrawMeshTasksNV.html>
+    ///
+    /// Affected by Conditional Rendering.
+    /// Queues types: `Graphics`.
+    /// Task: `Action`.
+    /// Use inside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn draw_mesh_tasks(&self, task_count: u32, first_task: u32) {
         unsafe {
@@ -47,6 +53,12 @@ impl MeshShaderCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdDrawMeshTasksIndirectNV.html>
+    ///
+    /// Affected by Conditional Rendering.
+    /// Queues types: `Graphics`.
+    /// Task: `Action`.
+    /// Use inside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn draw_mesh_tasks_indirect(
         &self,
@@ -68,6 +80,12 @@ impl MeshShaderCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdDrawMeshTasksIndirectCountNV.html>
+    ///
+    /// Affected by Conditional Rendering.
+    /// Queues types: `Graphics`.
+    /// Task: `Action`.
+    /// Use inside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn draw_mesh_tasks_indirect_count(
         &self,

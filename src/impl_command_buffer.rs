@@ -26,6 +26,11 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBindPipeline.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`, `DataGraphARM`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn bind_pipeline(&self, pipeline_bind_point: PipelineBindPoint, pipeline: Pipeline) {
         unsafe {
@@ -34,6 +39,11 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetViewport.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_viewport(&self, first_viewport: u32, viewports: &[Viewport]) {
         unsafe {
@@ -47,6 +57,11 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetScissor.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_scissor(&self, first_scissor: u32, scissors: &[Rect2D]) {
         unsafe {
@@ -60,12 +75,22 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetLineWidth.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_line_width(&self, line_width: f32) {
         unsafe { (self.fns().v1_0.set_line_width.unwrap())(self.handle, line_width) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetDepthBias.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_depth_bias(
         &self,
@@ -84,12 +109,22 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetBlendConstants.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_blend_constants(&self, blend_constants: f32) {
         unsafe { (self.fns().v1_0.set_blend_constants.unwrap())(self.handle, blend_constants) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetDepthBounds.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_depth_bounds(&self, min_depth_bounds: f32, max_depth_bounds: f32) {
         unsafe {
@@ -102,6 +137,11 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetStencilCompareMask.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_stencil_compare_mask(&self, face_mask: StencilFaceFlags, compare_mask: u32) {
         unsafe {
@@ -114,6 +154,11 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetStencilWriteMask.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_stencil_write_mask(&self, face_mask: StencilFaceFlags, write_mask: u32) {
         unsafe {
@@ -122,6 +167,11 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetStencilReference.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_stencil_reference(&self, face_mask: StencilFaceFlags, reference: u32) {
         unsafe {
@@ -130,6 +180,11 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBindDescriptorSets.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`, `DataGraphARM`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn bind_descriptor_sets(
         &self,
@@ -154,6 +209,11 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBindIndexBuffer.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn bind_index_buffer(&self, buffer: Buffer, offset: DeviceSize, index_type: IndexType) {
         unsafe {
@@ -162,6 +222,11 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBindVertexBuffers.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn bind_vertex_buffers(
         &self,
@@ -182,6 +247,12 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdDraw.html>
+    ///
+    /// Affected by Conditional Rendering.
+    /// Queues types: `Graphics`.
+    /// Task: `Action`.
+    /// Use inside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn draw(
         &self,
@@ -202,6 +273,12 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdDrawIndexed.html>
+    ///
+    /// Affected by Conditional Rendering.
+    /// Queues types: `Graphics`.
+    /// Task: `Action`.
+    /// Use inside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn draw_indexed(
         &self,
@@ -224,6 +301,12 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdDrawIndirect.html>
+    ///
+    /// Affected by Conditional Rendering.
+    /// Queues types: `Graphics`.
+    /// Task: `Action`.
+    /// Use inside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn draw_indirect(&self, buffer: Buffer, offset: DeviceSize, draw_count: u32, stride: u32) {
         unsafe {
@@ -238,6 +321,12 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdDrawIndexedIndirect.html>
+    ///
+    /// Affected by Conditional Rendering.
+    /// Queues types: `Graphics`.
+    /// Task: `Action`.
+    /// Use inside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn draw_indexed_indirect(
         &self,
@@ -258,6 +347,12 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdDispatch.html>
+    ///
+    /// Affected by Conditional Rendering.
+    /// Queues types: `Compute`.
+    /// Task: `Action`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn dispatch(&self, group_count_x: u32, group_count_y: u32, group_count_z: u32) {
         unsafe {
@@ -271,12 +366,23 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdDispatchIndirect.html>
+    ///
+    /// Affected by Conditional Rendering.
+    /// Queues types: `Compute`.
+    /// Task: `Action`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn dispatch_indirect(&self, buffer: Buffer, offset: DeviceSize) {
         unsafe { (self.fns().v1_0.dispatch_indirect.unwrap())(self.handle, buffer, offset) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyBuffer.html>
+    ///
+    /// Queues types: `Transfer`, `Graphics`, `Compute`.
+    /// Task: `Action`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn copy_buffer(&self, src_buffer: Buffer, dst_buffer: Buffer, regions: &[BufferCopy]) {
         unsafe {
@@ -291,6 +397,11 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyImage.html>
+    ///
+    /// Queues types: `Transfer`, `Graphics`, `Compute`.
+    /// Task: `Action`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn copy_image(
         &self,
@@ -314,6 +425,11 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBlitImage.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Action`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn blit_image(
         &self,
@@ -339,6 +455,11 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyBufferToImage.html>
+    ///
+    /// Queues types: `Transfer`, `Graphics`, `Compute`.
+    /// Task: `Action`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn copy_buffer_to_image(
         &self,
@@ -360,6 +481,11 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyImageToBuffer.html>
+    ///
+    /// Queues types: `Transfer`, `Graphics`, `Compute`.
+    /// Task: `Action`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn copy_image_to_buffer(
         &self,
@@ -381,6 +507,11 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdUpdateBuffer.html>
+    ///
+    /// Queues types: `Transfer`, `Graphics`, `Compute`.
+    /// Task: `Action`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn update_buffer(&self, dst_buffer: Buffer, dst_offset: DeviceSize, data: &[c_void]) {
         unsafe {
@@ -395,6 +526,11 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdFillBuffer.html>
+    ///
+    /// Queues types: `Transfer`, `Graphics`, `Compute`.
+    /// Task: `Action`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn fill_buffer(
         &self,
@@ -409,6 +545,11 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdClearColorImage.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`.
+    /// Task: `Action`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn clear_color_image(
         &self,
@@ -430,6 +571,11 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdClearDepthStencilImage.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Action`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn clear_depth_stencil_image(
         &self,
@@ -451,6 +597,12 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdClearAttachments.html>
+    ///
+    /// Affected by Conditional Rendering.
+    /// Queues types: `Graphics`.
+    /// Task: `Action`.
+    /// Use inside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn clear_attachments(&self, attachments: &[ClearAttachment], rects: &[ClearRect]) {
         unsafe {
@@ -465,6 +617,11 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdResolveImage.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Action`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn resolve_image(
         &self,
@@ -488,18 +645,33 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetEvent.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`, `VideoDecodeKHR`, `VideoEncodeKHR`.
+    /// Task: `Synchronization`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_event(&self, event: Event, stage_mask: PipelineStageFlags) {
         unsafe { (self.fns().v1_0.set_event.unwrap())(self.handle, event, stage_mask) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdResetEvent.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`, `VideoDecodeKHR`, `VideoEncodeKHR`.
+    /// Task: `Synchronization`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn reset_event(&self, event: Event, stage_mask: PipelineStageFlags) {
         unsafe { (self.fns().v1_0.reset_event.unwrap())(self.handle, event, stage_mask) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdWaitEvents.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`, `VideoDecodeKHR`, `VideoEncodeKHR`.
+    /// Task: `Synchronization`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn wait_events(
         &self,
@@ -528,6 +700,11 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdPipelineBarrier.html>
+    ///
+    /// Queues types: `Transfer`, `Graphics`, `Compute`, `VideoDecodeKHR`, `VideoEncodeKHR`.
+    /// Task: `Synchronization`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn pipeline_barrier(
         &self,
@@ -555,18 +732,33 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBeginQuery.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`, `VideoDecodeKHR`, `VideoEncodeKHR`.
+    /// Task: `Action`, `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn begin_query(&self, query_pool: QueryPool, query: u32, flags: QueryControlFlags) {
         unsafe { (self.fns().v1_0.begin_query.unwrap())(self.handle, query_pool, query, flags) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdEndQuery.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`, `VideoDecodeKHR`, `VideoEncodeKHR`.
+    /// Task: `Action`, `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn end_query(&self, query_pool: QueryPool, query: u32) {
         unsafe { (self.fns().v1_0.end_query.unwrap())(self.handle, query_pool, query) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdResetQueryPool.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`, `VideoDecodeKHR`, `VideoEncodeKHR`, `OpticalFlowNV`.
+    /// Task: `Action`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn reset_query_pool(&self, query_pool: QueryPool, first_query: u32, query_count: u32) {
         unsafe {
@@ -580,6 +772,11 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdWriteTimestamp.html>
+    ///
+    /// Queues types: `Transfer`, `Graphics`, `Compute`, `VideoDecodeKHR`, `VideoEncodeKHR`, `OpticalFlowNV`.
+    /// Task: `Action`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn write_timestamp(
         &self,
@@ -598,6 +795,11 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyQueryPoolResults.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`.
+    /// Task: `Action`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn copy_query_pool_results(
         &self,
@@ -624,6 +826,11 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdPushConstants.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn push_constants(
         &self,
@@ -645,6 +852,11 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBeginRenderPass.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Action`, `Vulkan state access`, `Synchronization`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`.
     #[inline]
     pub fn begin_render_pass(
         &self,
@@ -657,18 +869,33 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdNextSubpass.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Action`, `Vulkan state access`, `Synchronization`.
+    /// Use inside `RenderPass`.
+    /// Command buffer level: `primary`.
     #[inline]
     pub fn next_subpass(&self, contents: SubpassContents) {
         unsafe { (self.fns().v1_0.next_subpass.unwrap())(self.handle, contents) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdEndRenderPass.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Action`, `Vulkan state access`, `Synchronization`.
+    /// Use inside `RenderPass`.
+    /// Command buffer level: `primary`.
     #[inline]
     pub fn end_render_pass(&self) {
         unsafe { (self.fns().v1_0.end_render_pass.unwrap())(self.handle) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdExecuteCommands.html>
+    ///
+    /// Queues types: `Transfer`, `Graphics`, `Compute`.
+    /// Task: `Indirect action`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn execute_commands(&self, command_buffers: &[vkCommandBuffer]) {
         unsafe {
@@ -681,6 +908,11 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdPushDescriptorSet.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn push_descriptor_set(
         &self,
@@ -702,12 +934,23 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetDeviceMask.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`, `Transfer`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_device_mask(&self, device_mask: u32) {
         unsafe { (self.fns().v1_1.set_device_mask.unwrap())(self.handle, device_mask) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdDispatchBase.html>
+    ///
+    /// Affected by Conditional Rendering.
+    /// Queues types: `Compute`.
+    /// Task: `Action`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn dispatch_base(
         &self,
@@ -732,6 +975,11 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdPushDescriptorSetWithTemplate.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn push_descriptor_set_with_template(
         &self,
@@ -752,6 +1000,11 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBeginRenderPass2.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Action`, `Vulkan state access`, `Synchronization`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`.
     #[inline]
     pub fn begin_render_pass2(
         &self,
@@ -768,6 +1021,11 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdNextSubpass2.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Action`, `Vulkan state access`, `Synchronization`.
+    /// Use inside `RenderPass`.
+    /// Command buffer level: `primary`.
     #[inline]
     pub fn next_subpass2(
         &self,
@@ -784,12 +1042,23 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdEndRenderPass2.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Action`, `Vulkan state access`, `Synchronization`.
+    /// Use inside `RenderPass`.
+    /// Command buffer level: `primary`.
     #[inline]
     pub fn end_render_pass2(&self, subpass_end_info: &SubpassEndInfo) {
         unsafe { (self.fns().v1_2.end_render_pass2.unwrap())(self.handle, subpass_end_info) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdDrawIndirectCount.html>
+    ///
+    /// Affected by Conditional Rendering.
+    /// Queues types: `Graphics`.
+    /// Task: `Action`.
+    /// Use inside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn draw_indirect_count(
         &self,
@@ -814,6 +1083,12 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdDrawIndexedIndirectCount.html>
+    ///
+    /// Affected by Conditional Rendering.
+    /// Queues types: `Graphics`.
+    /// Task: `Action`.
+    /// Use inside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn draw_indexed_indirect_count(
         &self,
@@ -838,6 +1113,11 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetLineStipple.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_line_stipple(&self, line_stipple_factor: u32, line_stipple_pattern: u16) {
         unsafe {
@@ -850,18 +1130,33 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetCullMode.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_cull_mode(&self, cull_mode: CullModeFlags) {
         unsafe { (self.fns().v1_3.set_cull_mode.unwrap())(self.handle, cull_mode) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetFrontFace.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_front_face(&self, front_face: FrontFace) {
         unsafe { (self.fns().v1_3.set_front_face.unwrap())(self.handle, front_face) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetPrimitiveTopology.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_primitive_topology(&self, primitive_topology: PrimitiveTopology) {
         unsafe {
@@ -870,6 +1165,11 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetViewportWithCount.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_viewport_with_count(&self, viewports: &[Viewport]) {
         unsafe {
@@ -882,6 +1182,11 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetScissorWithCount.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_scissor_with_count(&self, scissors: &[Rect2D]) {
         unsafe {
@@ -894,6 +1199,11 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBindIndexBuffer2.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn bind_index_buffer2(
         &self,
@@ -914,6 +1224,11 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBindVertexBuffers2.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn bind_vertex_buffers2(
         &self,
@@ -940,6 +1255,11 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetDepthTestEnable.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_depth_test_enable(&self, depth_test_enable: bool) {
         unsafe {
@@ -948,6 +1268,11 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetDepthWriteEnable.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_depth_write_enable(&self, depth_write_enable: bool) {
         unsafe {
@@ -956,12 +1281,22 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetDepthCompareOp.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_depth_compare_op(&self, depth_compare_op: CompareOp) {
         unsafe { (self.fns().v1_3.set_depth_compare_op.unwrap())(self.handle, depth_compare_op) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetDepthBoundsTestEnable.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_depth_bounds_test_enable(&self, depth_bounds_test_enable: bool) {
         unsafe {
@@ -973,6 +1308,11 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetStencilTestEnable.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_stencil_test_enable(&self, stencil_test_enable: bool) {
         unsafe {
@@ -984,6 +1324,11 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetStencilOp.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_stencil_op(
         &self,
@@ -1006,6 +1351,11 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetRasterizerDiscardEnable.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_rasterizer_discard_enable(&self, rasterizer_discard_enable: bool) {
         unsafe {
@@ -1017,6 +1367,11 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetDepthBiasEnable.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_depth_bias_enable(&self, depth_bias_enable: bool) {
         unsafe {
@@ -1025,6 +1380,11 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetPrimitiveRestartEnable.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_primitive_restart_enable(&self, primitive_restart_enable: bool) {
         unsafe {
@@ -1036,24 +1396,44 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyBuffer2.html>
+    ///
+    /// Queues types: `Transfer`, `Graphics`, `Compute`.
+    /// Task: `Action`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn copy_buffer2(&self, copy_buffer_info: &CopyBufferInfo2) {
         unsafe { (self.fns().v1_3.copy_buffer2.unwrap())(self.handle, copy_buffer_info) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyImage2.html>
+    ///
+    /// Queues types: `Transfer`, `Graphics`, `Compute`.
+    /// Task: `Action`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn copy_image2(&self, copy_image_info: &CopyImageInfo2) {
         unsafe { (self.fns().v1_3.copy_image2.unwrap())(self.handle, copy_image_info) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBlitImage2.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Action`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn blit_image2(&self, blit_image_info: &BlitImageInfo2) {
         unsafe { (self.fns().v1_3.blit_image2.unwrap())(self.handle, blit_image_info) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyBufferToImage2.html>
+    ///
+    /// Queues types: `Transfer`, `Graphics`, `Compute`.
+    /// Task: `Action`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn copy_buffer_to_image2(&self, copy_buffer_to_image_info: &CopyBufferToImageInfo2) {
         unsafe {
@@ -1062,6 +1442,11 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyImageToBuffer2.html>
+    ///
+    /// Queues types: `Transfer`, `Graphics`, `Compute`.
+    /// Task: `Action`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn copy_image_to_buffer2(&self, copy_image_to_buffer_info: &CopyImageToBufferInfo2) {
         unsafe {
@@ -1070,24 +1455,44 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdResolveImage2.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Action`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn resolve_image2(&self, resolve_image_info: &ResolveImageInfo2) {
         unsafe { (self.fns().v1_3.resolve_image2.unwrap())(self.handle, resolve_image_info) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetEvent2.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`, `VideoDecodeKHR`, `VideoEncodeKHR`.
+    /// Task: `Synchronization`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_event2(&self, event: Event, dependency_info: &DependencyInfo) {
         unsafe { (self.fns().v1_3.set_event2.unwrap())(self.handle, event, dependency_info) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdResetEvent2.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`, `VideoDecodeKHR`, `VideoEncodeKHR`.
+    /// Task: `Synchronization`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn reset_event2(&self, event: Event, stage_mask: PipelineStageFlags2) {
         unsafe { (self.fns().v1_3.reset_event2.unwrap())(self.handle, event, stage_mask) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdWaitEvents2.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`, `VideoDecodeKHR`, `VideoEncodeKHR`.
+    /// Task: `Synchronization`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn wait_events2(&self, events: &[Event], dependency_infos: &[DependencyInfo]) {
         assert_eq!(events.len(), dependency_infos.len());
@@ -1102,12 +1507,22 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdPipelineBarrier2.html>
+    ///
+    /// Queues types: `Transfer`, `Graphics`, `Compute`, `VideoDecodeKHR`, `VideoEncodeKHR`.
+    /// Task: `Synchronization`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn pipeline_barrier2(&self, dependency_info: &DependencyInfo) {
         unsafe { (self.fns().v1_3.pipeline_barrier2.unwrap())(self.handle, dependency_info) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdWriteTimestamp2.html>
+    ///
+    /// Queues types: `Transfer`, `Graphics`, `Compute`, `VideoDecodeKHR`, `VideoEncodeKHR`.
+    /// Task: `Action`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn write_timestamp2(&self, stage: PipelineStageFlags2, query_pool: QueryPool, query: u32) {
         unsafe {
@@ -1116,18 +1531,33 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBeginRendering.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Action`, `Vulkan state access`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn begin_rendering(&self, rendering_info: &RenderingInfo) {
         unsafe { (self.fns().v1_3.begin_rendering.unwrap())(self.handle, rendering_info) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdEndRendering.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Action`, `Vulkan state access`.
+    /// Use inside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn end_rendering(&self) {
         unsafe { (self.fns().v1_3.end_rendering.unwrap())(self.handle) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBindDescriptorSets2.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn bind_descriptor_sets2(&self, bind_descriptor_sets_info: &BindDescriptorSetsInfo) {
         unsafe {
@@ -1136,12 +1566,22 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdPushConstants2.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn push_constants2(&self, push_constants_info: &PushConstantsInfo) {
         unsafe { (self.fns().v1_4.push_constants2.unwrap())(self.handle, push_constants_info) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdPushDescriptorSet2.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn push_descriptor_set2(&self, push_descriptor_set_info: &PushDescriptorSetInfo) {
         unsafe {
@@ -1150,6 +1590,11 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdPushDescriptorSetWithTemplate2.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn push_descriptor_set_with_template2(
         &self,
@@ -1164,6 +1609,11 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetRenderingAttachmentLocations.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_rendering_attachment_locations(
         &self,
@@ -1178,6 +1628,11 @@ impl CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetRenderingInputAttachmentIndices.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_rendering_input_attachment_indices(
         &self,

@@ -119,6 +119,11 @@ pub trait DebugUtilsCommandBuffer {
 
 impl DebugUtilsCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBeginDebugUtilsLabelEXT.html>
+    ///
+    /// Queues types: `Transfer`, `Graphics`, `Compute`, `VideoDecodeKHR`, `VideoEncodeKHR`, `OpticalFlowNV`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn begin_debug_utils_label(&self, label_info: &DebugUtilsLabelEXT) {
         unsafe {
@@ -132,6 +137,11 @@ impl DebugUtilsCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdEndDebugUtilsLabelEXT.html>
+    ///
+    /// Queues types: `Transfer`, `Graphics`, `Compute`, `VideoDecodeKHR`, `VideoEncodeKHR`, `OpticalFlowNV`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn end_debug_utils_label(&self) {
         unsafe {
@@ -145,6 +155,11 @@ impl DebugUtilsCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdInsertDebugUtilsLabelEXT.html>
+    ///
+    /// Queues types: `Transfer`, `Graphics`, `Compute`, `VideoDecodeKHR`, `VideoEncodeKHR`, `OpticalFlowNV`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn insert_debug_utils_label(&self, label_info: &DebugUtilsLabelEXT) {
         unsafe {

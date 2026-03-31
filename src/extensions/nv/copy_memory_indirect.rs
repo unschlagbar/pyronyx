@@ -30,6 +30,11 @@ pub trait CopyMemoryIndirectCommandBuffer {
 
 impl CopyMemoryIndirectCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyMemoryIndirectNV.html>
+    ///
+    /// Queues types: `Transfer`, `Graphics`, `Compute`.
+    /// Task: `Action`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn copy_memory_indirect(
         &self,
@@ -50,6 +55,11 @@ impl CopyMemoryIndirectCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyMemoryToImageIndirectNV.html>
+    ///
+    /// Queues types: `Transfer`, `Graphics`, `Compute`.
+    /// Task: `Action`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn copy_memory_to_image_indirect(
         &self,

@@ -20,6 +20,11 @@ pub trait FragmentShadingRateEnumsCommandBuffer {
 
 impl FragmentShadingRateEnumsCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetFragmentShadingRateEnumNV.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_fragment_shading_rate_enum(
         &self,

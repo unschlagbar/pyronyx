@@ -262,6 +262,12 @@ pub trait DataGraphCommandBuffer {
 
 impl DataGraphCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdDispatchDataGraphARM.html>
+    ///
+    /// Affected by Conditional Rendering.
+    /// Queues types: `DataGraphARM`.
+    /// Task: `Action`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn dispatch_data_graph(
         &self,

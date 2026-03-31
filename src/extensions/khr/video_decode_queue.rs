@@ -16,6 +16,11 @@ pub trait VideoDecodeQueueCommandBuffer {
 
 impl VideoDecodeQueueCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdDecodeVideoKHR.html>
+    ///
+    /// Queues types: `VideoDecodeKHR`.
+    /// Task: `Action`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`.
     #[inline]
     fn decode_video(&self, decode_info: &VideoDecodeInfoKHR) {
         unsafe {

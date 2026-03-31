@@ -38,6 +38,11 @@ pub trait RayTracingPipelineCommandBuffer {
 
 impl RayTracingPipelineCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdTraceRaysKHR.html>
+    ///
+    /// Queues types: `Compute`.
+    /// Task: `Action`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn trace_rays(
         &self,
@@ -69,6 +74,11 @@ impl RayTracingPipelineCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdTraceRaysIndirectKHR.html>
+    ///
+    /// Queues types: `Compute`.
+    /// Task: `Action`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn trace_rays_indirect(
         &self,
@@ -96,6 +106,11 @@ impl RayTracingPipelineCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetRayTracingPipelineStackSizeKHR.html>
+    ///
+    /// Queues types: `Compute`.
+    /// Task: `Vulkan state access`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_ray_tracing_pipeline_stack_size(&self, pipeline_stack_size: u32) {
         unsafe {

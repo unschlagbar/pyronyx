@@ -18,6 +18,12 @@ pub trait ClusterCullingShaderCommandBuffer {
 
 impl ClusterCullingShaderCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdDrawClusterHUAWEI.html>
+    ///
+    /// Affected by Conditional Rendering.
+    /// Queues types: `Graphics`.
+    /// Task: `Action`.
+    /// Use inside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn draw_cluster(&self, group_count_x: u32, group_count_y: u32, group_count_z: u32) {
         unsafe {
@@ -33,6 +39,12 @@ impl ClusterCullingShaderCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdDrawClusterIndirectHUAWEI.html>
+    ///
+    /// Affected by Conditional Rendering.
+    /// Queues types: `Graphics`.
+    /// Task: `Action`.
+    /// Use inside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn draw_cluster_indirect(&self, buffer: Buffer, offset: DeviceSize) {
         unsafe {

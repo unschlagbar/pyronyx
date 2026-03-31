@@ -338,6 +338,11 @@ pub trait AccelerationStructureCommandBuffer {
 
 impl AccelerationStructureCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyAccelerationStructureKHR.html>
+    ///
+    /// Queues types: `Compute`.
+    /// Task: `Action`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn copy_acceleration_structure(&self, info: &CopyAccelerationStructureInfoKHR) {
         unsafe {
@@ -351,6 +356,11 @@ impl AccelerationStructureCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyAccelerationStructureToMemoryKHR.html>
+    ///
+    /// Queues types: `Compute`.
+    /// Task: `Action`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn copy_acceleration_structure_to_memory(
         &self,
@@ -367,6 +377,11 @@ impl AccelerationStructureCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyMemoryToAccelerationStructureKHR.html>
+    ///
+    /// Queues types: `Compute`.
+    /// Task: `Action`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn copy_memory_to_acceleration_structure(
         &self,
@@ -383,6 +398,11 @@ impl AccelerationStructureCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdWriteAccelerationStructuresPropertiesKHR.html>
+    ///
+    /// Queues types: `Compute`.
+    /// Task: `Action`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn write_acceleration_structures_properties(
         &self,
@@ -409,6 +429,11 @@ impl AccelerationStructureCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBuildAccelerationStructuresKHR.html>
+    ///
+    /// Queues types: `Compute`.
+    /// Task: `Action`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn build_acceleration_structures(
         &self,
@@ -432,6 +457,11 @@ impl AccelerationStructureCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBuildAccelerationStructuresIndirectKHR.html>
+    ///
+    /// Queues types: `Compute`.
+    /// Task: `Action`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn build_acceleration_structures_indirect(
         &self,

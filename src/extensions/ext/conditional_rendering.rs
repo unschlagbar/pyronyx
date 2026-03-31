@@ -21,6 +21,11 @@ pub trait ConditionalRenderingCommandBuffer {
 
 impl ConditionalRenderingCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBeginConditionalRenderingEXT.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`.
+    /// Task: `Action`, `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn begin_conditional_rendering(
         &self,
@@ -39,6 +44,11 @@ impl ConditionalRenderingCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdEndConditionalRenderingEXT.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`.
+    /// Task: `Action`, `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn end_conditional_rendering(&self) {
         unsafe {

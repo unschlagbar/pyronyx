@@ -20,6 +20,11 @@ pub trait FragmentShadingRateCommandBuffer {
 
 impl FragmentShadingRateCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetFragmentShadingRateKHR.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_fragment_shading_rate(
         &self,

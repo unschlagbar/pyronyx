@@ -25,6 +25,11 @@ pub trait MemoryDecompressionCommandBuffer {
 
 impl MemoryDecompressionCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdDecompressMemoryEXT.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`.
+    /// Task: `Action`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn decompress_memory(&self, decompress_memory_info_ext: &DecompressMemoryInfoEXT) {
         unsafe {
@@ -38,6 +43,11 @@ impl MemoryDecompressionCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdDecompressMemoryIndirectCountEXT.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`.
+    /// Task: `Action`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn decompress_memory_indirect_count(
         &self,

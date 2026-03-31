@@ -16,6 +16,11 @@ pub trait InvocationMaskCommandBuffer {
 
 impl InvocationMaskCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBindInvocationMaskHUAWEI.html>
+    ///
+    /// Queues types: `Compute`.
+    /// Task: `Vulkan state access`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn bind_invocation_mask(&self, image_view: ImageView, image_layout: ImageLayout) {
         unsafe {

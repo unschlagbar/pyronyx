@@ -237,6 +237,11 @@ pub trait TensorsCommandBuffer {
 
 impl TensorsCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyTensorARM.html>
+    ///
+    /// Queues types: `Transfer`, `Graphics`, `Compute`.
+    /// Task: `Action`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn copy_tensor(&self, copy_tensor_info: &CopyTensorInfoARM) {
         unsafe {

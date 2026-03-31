@@ -32,6 +32,12 @@ pub trait MultiDrawCommandBuffer {
 
 impl MultiDrawCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdDrawMultiEXT.html>
+    ///
+    /// Affected by Conditional Rendering.
+    /// Queues types: `Graphics`.
+    /// Task: `Action`.
+    /// Use inside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn draw_multi(
         &self,
@@ -53,6 +59,12 @@ impl MultiDrawCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdDrawMultiIndexedEXT.html>
+    ///
+    /// Affected by Conditional Rendering.
+    /// Queues types: `Graphics`.
+    /// Task: `Action`.
+    /// Use inside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn draw_multi_indexed(
         &self,

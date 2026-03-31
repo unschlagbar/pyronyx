@@ -143,6 +143,11 @@ pub trait CudaKernelLaunchCommandBuffer {
 
 impl CudaKernelLaunchCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCudaLaunchKernelNV.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`.
+    /// Task: `Action`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn cuda_launch_kernel(&self, launch_info: &CudaLaunchInfoNV) {
         unsafe {

@@ -16,6 +16,11 @@ pub trait AttachmentFeedbackLoopDynamicStateCommandBuffer {
 
 impl AttachmentFeedbackLoopDynamicStateCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetAttachmentFeedbackLoopEnableEXT.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_attachment_feedback_loop_enable(&self, aspect_mask: ImageAspectFlags) {
         unsafe {

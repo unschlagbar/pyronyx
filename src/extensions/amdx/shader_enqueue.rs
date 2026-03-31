@@ -141,6 +141,11 @@ pub trait ShaderEnqueueCommandBuffer {
 
 impl ShaderEnqueueCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdInitializeGraphScratchMemoryAMDX.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`.
+    /// Task: `Action`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`.
     #[inline]
     fn initialize_graph_scratch_memory(
         &self,
@@ -164,6 +169,12 @@ impl ShaderEnqueueCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdDispatchGraphAMDX.html>
+    ///
+    /// Affected by Conditional Rendering.
+    /// Queues types: `Graphics`, `Compute`.
+    /// Task: `Action`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`.
     #[inline]
     fn dispatch_graph(
         &self,
@@ -182,6 +193,12 @@ impl ShaderEnqueueCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdDispatchGraphIndirectAMDX.html>
+    ///
+    /// Affected by Conditional Rendering.
+    /// Queues types: `Graphics`, `Compute`.
+    /// Task: `Action`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`.
     #[inline]
     fn dispatch_graph_indirect(
         &self,
@@ -202,6 +219,12 @@ impl ShaderEnqueueCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdDispatchGraphIndirectCountAMDX.html>
+    ///
+    /// Affected by Conditional Rendering.
+    /// Queues types: `Graphics`, `Compute`.
+    /// Task: `Action`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`.
     #[inline]
     fn dispatch_graph_indirect_count(
         &self,

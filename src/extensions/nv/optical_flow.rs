@@ -150,6 +150,11 @@ pub trait OpticalFlowCommandBuffer {
 
 impl OpticalFlowCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdOpticalFlowExecuteNV.html>
+    ///
+    /// Queues types: `OpticalFlowNV`.
+    /// Task: `Action`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn optical_flow_execute(
         &self,

@@ -30,6 +30,11 @@ pub trait BufferMarkerCommandBuffer {
 
 impl BufferMarkerCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdWriteBufferMarkerAMD.html>
+    ///
+    /// Queues types: `Transfer`, `Graphics`, `Compute`.
+    /// Task: `Action`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn write_buffer_marker(
         &self,
@@ -55,6 +60,11 @@ impl BufferMarkerCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdWriteBufferMarker2AMD.html>
+    ///
+    /// Queues types: `Transfer`, `Graphics`, `Compute`.
+    /// Task: `Action`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn write_buffer_marker2(
         &self,

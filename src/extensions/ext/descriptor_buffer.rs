@@ -238,6 +238,11 @@ pub trait DescriptorBufferCommandBuffer {
 
 impl DescriptorBufferCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBindDescriptorBuffersEXT.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`, `DataGraphARM`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn bind_descriptor_buffers(&self, binding_infos: &[DescriptorBufferBindingInfoEXT]) {
         unsafe {
@@ -255,6 +260,11 @@ impl DescriptorBufferCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetDescriptorBufferOffsetsEXT.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`, `DataGraphARM`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_descriptor_buffer_offsets(
         &self,
@@ -284,6 +294,11 @@ impl DescriptorBufferCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBindDescriptorBufferEmbeddedSamplersEXT.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn bind_descriptor_buffer_embedded_samplers(
         &self,

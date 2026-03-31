@@ -16,6 +16,11 @@ pub trait ColorWriteEnableCommandBuffer {
 
 impl ColorWriteEnableCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetColorWriteEnableEXT.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_color_write_enable(&self, color_write_enables: &[Bool32]) {
         unsafe {

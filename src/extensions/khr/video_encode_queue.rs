@@ -85,6 +85,11 @@ pub trait VideoEncodeQueueCommandBuffer {
 
 impl VideoEncodeQueueCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdEncodeVideoKHR.html>
+    ///
+    /// Queues types: `VideoEncodeKHR`.
+    /// Task: `Action`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`.
     #[inline]
     fn encode_video(&self, encode_info: &VideoEncodeInfoKHR) {
         unsafe {

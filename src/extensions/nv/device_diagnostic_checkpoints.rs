@@ -17,6 +17,11 @@ pub trait DeviceDiagnosticCheckpointsCommandBuffer {
 
 impl DeviceDiagnosticCheckpointsCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetCheckpointNV.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`, `Transfer`.
+    /// Task: `Action`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_checkpoint(&self, checkpoint_marker: &c_void) {
         unsafe {

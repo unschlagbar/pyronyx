@@ -21,6 +21,11 @@ pub trait DeviceGeneratedCommandsComputeCommandBuffer {
 
 impl DeviceGeneratedCommandsComputeCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdUpdatePipelineIndirectBufferNV.html>
+    ///
+    /// Queues types: `Transfer`, `Graphics`, `Compute`.
+    /// Task: `Action`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn update_pipeline_indirect_buffer(
         &self,

@@ -286,6 +286,11 @@ pub trait VideoQueueCommandBuffer {
 
 impl VideoQueueCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBeginVideoCodingKHR.html>
+    ///
+    /// Queues types: `VideoDecodeKHR`, `VideoEncodeKHR`.
+    /// Task: `Action`, `Vulkan state access`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`.
     #[inline]
     fn begin_video_coding(&self, begin_info: &VideoBeginCodingInfoKHR) {
         unsafe {
@@ -299,6 +304,11 @@ impl VideoQueueCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdControlVideoCodingKHR.html>
+    ///
+    /// Queues types: `VideoDecodeKHR`, `VideoEncodeKHR`.
+    /// Task: `Action`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`.
     #[inline]
     fn control_video_coding(&self, coding_control_info: &VideoCodingControlInfoKHR) {
         unsafe {
@@ -312,6 +322,11 @@ impl VideoQueueCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdEndVideoCodingKHR.html>
+    ///
+    /// Queues types: `VideoDecodeKHR`, `VideoEncodeKHR`.
+    /// Task: `Action`, `Vulkan state access`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`.
     #[inline]
     fn end_video_coding(&self, end_coding_info: &VideoEndCodingInfoKHR) {
         unsafe {

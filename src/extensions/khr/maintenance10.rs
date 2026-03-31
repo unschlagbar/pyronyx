@@ -17,6 +17,11 @@ pub trait Maintenance10CommandBuffer {
 
 impl Maintenance10CommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdEndRendering2KHR.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Action`, `Vulkan state access`.
+    /// Use inside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn end_rendering2(&self, rendering_end_info: Option<&RenderingEndInfoKHR>) {
         unsafe {

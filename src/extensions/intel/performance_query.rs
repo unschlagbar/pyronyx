@@ -143,6 +143,11 @@ pub trait PerformanceQueryCommandBuffer {
 
 impl PerformanceQueryCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetPerformanceMarkerINTEL.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`, `Transfer`.
+    /// Task: `Action`, `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_performance_marker(
         &self,
@@ -160,6 +165,11 @@ impl PerformanceQueryCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetPerformanceStreamMarkerINTEL.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`, `Transfer`.
+    /// Task: `Action`, `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_performance_stream_marker(
         &self,
@@ -177,6 +187,11 @@ impl PerformanceQueryCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetPerformanceOverrideINTEL.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`, `Transfer`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_performance_override(
         &self,

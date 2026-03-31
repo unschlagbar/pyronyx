@@ -20,6 +20,11 @@ pub trait ClipSpaceWScalingCommandBuffer {
 
 impl ClipSpaceWScalingCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetViewportWScalingNV.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_viewport_w_scaling(
         &self,

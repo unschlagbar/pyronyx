@@ -24,6 +24,11 @@ pub trait Maintenance6CommandBuffer {
 
 impl Maintenance6CommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetDescriptorBufferOffsets2EXT.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`, `DataGraphARM`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_descriptor_buffer_offsets2(
         &self,
@@ -43,6 +48,11 @@ impl Maintenance6CommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBindDescriptorBufferEmbeddedSamplers2EXT.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn bind_descriptor_buffer_embedded_samplers2(
         &self,

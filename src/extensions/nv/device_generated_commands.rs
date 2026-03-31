@@ -31,6 +31,12 @@ pub trait DeviceGeneratedCommandsCommandBuffer {
 
 impl DeviceGeneratedCommandsCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdExecuteGeneratedCommandsNV.html>
+    ///
+    /// Affected by Conditional Rendering.
+    /// Queues types: `Graphics`, `Compute`.
+    /// Task: `Action`, `Indirect action`.
+    /// Use inside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn execute_generated_commands(
         &self,
@@ -52,6 +58,11 @@ impl DeviceGeneratedCommandsCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdPreprocessGeneratedCommandsNV.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`.
+    /// Task: `Action`.
+    /// Use outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn preprocess_generated_commands(&self, generated_commands_info: &GeneratedCommandsInfoNV) {
         unsafe {
@@ -65,6 +76,11 @@ impl DeviceGeneratedCommandsCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBindPipelineShaderGroupNV.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn bind_pipeline_shader_group(
         &self,

@@ -56,6 +56,11 @@ pub trait TransformFeedbackCommandBuffer {
 
 impl TransformFeedbackCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBindTransformFeedbackBuffersEXT.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn bind_transform_feedback_buffers(
         &self,
@@ -84,6 +89,11 @@ impl TransformFeedbackCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBeginTransformFeedbackEXT.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn begin_transform_feedback(
         &self,
@@ -109,6 +119,11 @@ impl TransformFeedbackCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdEndTransformFeedbackEXT.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn end_transform_feedback(
         &self,
@@ -134,6 +149,11 @@ impl TransformFeedbackCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBeginQueryIndexedEXT.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`, `VideoDecodeKHR`, `VideoEncodeKHR`.
+    /// Task: `Action`, `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn begin_query_indexed(
         &self,
@@ -153,6 +173,11 @@ impl TransformFeedbackCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdEndQueryIndexedEXT.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`, `VideoDecodeKHR`, `VideoEncodeKHR`.
+    /// Task: `Action`, `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn end_query_indexed(&self, query_pool: QueryPool, query: u32, index: u32) {
         unsafe {
@@ -166,6 +191,12 @@ impl TransformFeedbackCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdDrawIndirectByteCountEXT.html>
+    ///
+    /// Affected by Conditional Rendering.
+    /// Queues types: `Graphics`.
+    /// Task: `Action`.
+    /// Use inside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn draw_indirect_byte_count(
         &self,

@@ -120,6 +120,11 @@ pub trait BinaryImportCommandBuffer {
 
 impl BinaryImportCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCuLaunchKernelNVX.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`.
+    /// Task: `Action`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn cu_launch_kernel(&self, launch_info: &CuLaunchInfoNVX) {
         unsafe {

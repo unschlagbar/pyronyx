@@ -20,6 +20,12 @@ pub trait TileShadingCommandBuffer {
 
 impl TileShadingCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdDispatchTileQCOM.html>
+    ///
+    /// Affected by Conditional Rendering.
+    /// Queues types: `Compute`.
+    /// Task: `Action`.
+    /// Use inside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn dispatch_tile(&self, dispatch_tile_info: &DispatchTileInfoQCOM) {
         unsafe {
@@ -33,6 +39,11 @@ impl TileShadingCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBeginPerTileExecutionQCOM.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`.
+    /// Task: `Vulkan state access`.
+    /// Use inside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn begin_per_tile_execution(&self, per_tile_begin_info: &PerTileBeginInfoQCOM) {
         unsafe {
@@ -46,6 +57,11 @@ impl TileShadingCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdEndPerTileExecutionQCOM.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`.
+    /// Task: `Vulkan state access`.
+    /// Use inside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn end_per_tile_execution(&self, per_tile_end_info: &PerTileEndInfoQCOM) {
         unsafe {

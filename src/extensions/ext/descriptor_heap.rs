@@ -190,6 +190,11 @@ pub trait DescriptorHeapCommandBuffer {
 
 impl DescriptorHeapCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBindSamplerHeapEXT.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn bind_sampler_heap(&self, bind_info: &BindHeapInfoEXT) {
         unsafe {
@@ -203,6 +208,11 @@ impl DescriptorHeapCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBindResourceHeapEXT.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn bind_resource_heap(&self, bind_info: &BindHeapInfoEXT) {
         unsafe {
@@ -216,6 +226,11 @@ impl DescriptorHeapCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdPushDataEXT.html>
+    ///
+    /// Queues types: `Graphics`, `Compute`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn push_data(&self, push_data_info: &PushDataInfoEXT) {
         unsafe {

@@ -20,6 +20,11 @@ pub trait DiscardRectanglesCommandBuffer {
 
 impl DiscardRectanglesCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetDiscardRectangleEXT.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_discard_rectangle(&self, first_discard_rectangle: u32, discard_rectangles: &[Rect2D]) {
         unsafe {
@@ -38,6 +43,11 @@ impl DiscardRectanglesCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetDiscardRectangleEnableEXT.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_discard_rectangle_enable(&self, discard_rectangle_enable: bool) {
         unsafe {
@@ -53,6 +63,11 @@ impl DiscardRectanglesCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetDiscardRectangleModeEXT.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_discard_rectangle_mode(&self, discard_rectangle_mode: DiscardRectangleModeEXT) {
         unsafe {

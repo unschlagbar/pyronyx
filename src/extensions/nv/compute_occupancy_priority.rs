@@ -16,6 +16,11 @@ pub trait ComputeOccupancyPriorityCommandBuffer {
 
 impl ComputeOccupancyPriorityCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetComputeOccupancyPriorityNV.html>
+    ///
+    /// Queues types: `Compute`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_compute_occupancy_priority(&self, parameters: &ComputeOccupancyPriorityParametersNV) {
         unsafe {

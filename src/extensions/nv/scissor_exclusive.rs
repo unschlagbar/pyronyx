@@ -22,6 +22,11 @@ pub trait ScissorExclusiveCommandBuffer {
 
 impl ScissorExclusiveCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetExclusiveScissorNV.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_exclusive_scissor(&self, first_exclusive_scissor: u32, exclusive_scissors: &[Rect2D]) {
         unsafe {
@@ -40,6 +45,11 @@ impl ScissorExclusiveCommandBuffer for CommandBuffer {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetExclusiveScissorEnableNV.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Vulkan state access`.
+    /// Use inside and outside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_exclusive_scissor_enable(
         &self,

@@ -48,6 +48,11 @@ pub trait SubpassShadingCommandBuffer {
 
 impl SubpassShadingCommandBuffer for CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSubpassShadingHUAWEI.html>
+    ///
+    /// Queues types: `Graphics`.
+    /// Task: `Action`.
+    /// Use inside `RenderPass`.
+    /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn subpass_shading(&self) {
         unsafe {
