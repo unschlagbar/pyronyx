@@ -147,7 +147,7 @@ impl vkCommandBuffer {
 
         CommandBuffer {
             handle: self,
-            v_table,
+            v_table: Some(v_table),
         }
     }
 }

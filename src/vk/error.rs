@@ -16,64 +16,64 @@ pub enum Error {
     /// A return array was too small for the result
     Incomplete = 5,
     /// A host memory allocation has failed
-    ErrorOutOfHostMemory = -1,
+    OutOfHostMemory = -1,
     /// A device memory allocation has failed
-    ErrorOutOfDeviceMemory = -2,
+    OutOfDeviceMemory = -2,
     /// Initialization of an object has failed
-    ErrorInitializationFailed = -3,
+    InitializationFailed = -3,
     /// The logical device has been lost. See <<devsandqueues-lost-device>>
-    ErrorDeviceLost = -4,
+    DeviceLost = -4,
     /// Mapping of a memory object has failed
-    ErrorMemoryMapFailed = -5,
+    MemoryMapFailed = -5,
     /// Layer specified does not exist
-    ErrorLayerNotPresent = -6,
+    LayerNotPresent = -6,
     /// Extension specified does not exist
-    ErrorExtensionNotPresent = -7,
+    ExtensionNotPresent = -7,
     /// Requested feature is not available on this device
-    ErrorFeatureNotPresent = -8,
+    FeatureNotPresent = -8,
     /// Unable to find a Vulkan driver
-    ErrorIncompatibleDriver = -9,
+    IncompatibleDriver = -9,
     /// Too many objects of the type have already been created
-    ErrorTooManyObjects = -10,
+    TooManyObjects = -10,
     /// Requested format is not supported on this device
-    ErrorFormatNotSupported = -11,
+    FormatNotSupported = -11,
     /// A requested pool allocation has failed due to fragmentation of the pool's memory
-    ErrorFragmentedPool = -12,
+    FragmentedPool = -12,
     /// An unknown error has occurred, due to an implementation or application bug
-    ErrorUnknown = -13,
-    ErrorValidationFailed = -1000011001,
-    ErrorOutOfPoolMemory = -1000069000,
-    ErrorInvalidExternalHandle = -1000072003,
-    ErrorInvalidOpaqueCaptureAddress = -1000257000,
-    ErrorFragmentation = -1000161000,
+    Unknown = -13,
+    ValidationFailed = -1000011001,
+    OutOfPoolMemory = -1000069000,
+    InvalidExternalHandle = -1000072003,
+    InvalidOpaqueCaptureAddress = -1000257000,
+    Fragmentation = -1000161000,
     PipelineCompileRequired = 1000297000,
-    ErrorNotPermitted = -1000174001,
-    ErrorInvalidPipelineCacheData = -1000298000,
-    ErrorNoPipelineMatch = -1000298001,
-    ErrorSurfaceLostKHR = -1000000000,
-    ErrorNativeWindowInUseKHR = -1000000001,
+    NotPermitted = -1000174001,
+    InvalidPipelineCacheData = -1000298000,
+    NoPipelineMatch = -1000298001,
+    SurfaceLostKHR = -1000000000,
+    NativeWindowInUseKHR = -1000000001,
     SuboptimalKHR = 1000001003,
-    ErrorOutOfDateKHR = -1000001004,
-    ErrorIncompatibleDisplayKHR = -1000003001,
-    ErrorInvalidShaderNV = -1000012000,
-    ErrorImageUsageNotSupportedKHR = -1000023000,
-    ErrorVideoPictureLayoutNotSupportedKHR = -1000023001,
-    ErrorVideoProfileOperationNotSupportedKHR = -1000023002,
-    ErrorVideoProfileFormatNotSupportedKHR = -1000023003,
-    ErrorVideoProfileCodecNotSupportedKHR = -1000023004,
-    ErrorVideoStdVersionNotSupportedKHR = -1000023005,
-    ErrorInvalidDrmFormatModifierPlaneLayoutEXT = -1000158000,
-    ErrorPresentTimingQueueFullEXT = -1000208000,
-    ErrorFullScreenExclusiveModeLostEXT = -1000255000,
+    OutOfDateKHR = -1000001004,
+    IncompatibleDisplayKHR = -1000003001,
+    InvalidShaderNV = -1000012000,
+    ImageUsageNotSupportedKHR = -1000023000,
+    VideoPictureLayoutNotSupportedKHR = -1000023001,
+    VideoProfileOperationNotSupportedKHR = -1000023002,
+    VideoProfileFormatNotSupportedKHR = -1000023003,
+    VideoProfileCodecNotSupportedKHR = -1000023004,
+    VideoStdVersionNotSupportedKHR = -1000023005,
+    InvalidDrmFormatModifierPlaneLayoutEXT = -1000158000,
+    PresentTimingQueueFullEXT = -1000208000,
+    FullScreenExclusiveModeLostEXT = -1000255000,
     ThreadIdleKHR = 1000268000,
     ThreadDoneKHR = 1000268001,
     OperationDeferredKHR = 1000268002,
     OperationNotDeferredKHR = 1000268003,
-    ErrorInvalidVideoStdParametersKHR = -1000299000,
-    ErrorCompressionExhaustedEXT = -1000338000,
+    InvalidVideoStdParametersKHR = -1000299000,
+    CompressionExhaustedEXT = -1000338000,
     IncompatibleShaderBinaryEXT = 1000482000,
     PipelineBinaryMissingKHR = 1000483000,
-    ErrorNotEnoughSpaceKHR = -1000483000,
+    NotEnoughSpaceKHR = -1000483000,
 }
 
 impl fmt::Display for Error {
@@ -84,60 +84,56 @@ impl fmt::Display for Error {
             Self::EventSet => "EventSet",
             Self::EventReset => "EventReset",
             Self::Incomplete => "Incomplete",
-            Self::ErrorOutOfHostMemory => "ErrorOutOfHostMemory",
-            Self::ErrorOutOfDeviceMemory => "ErrorOutOfDeviceMemory",
-            Self::ErrorInitializationFailed => "ErrorInitializationFailed",
-            Self::ErrorDeviceLost => "ErrorDeviceLost",
-            Self::ErrorMemoryMapFailed => "ErrorMemoryMapFailed",
-            Self::ErrorLayerNotPresent => "ErrorLayerNotPresent",
-            Self::ErrorExtensionNotPresent => "ErrorExtensionNotPresent",
-            Self::ErrorFeatureNotPresent => "ErrorFeatureNotPresent",
-            Self::ErrorIncompatibleDriver => "ErrorIncompatibleDriver",
-            Self::ErrorTooManyObjects => "ErrorTooManyObjects",
-            Self::ErrorFormatNotSupported => "ErrorFormatNotSupported",
-            Self::ErrorFragmentedPool => "ErrorFragmentedPool",
-            Self::ErrorUnknown => "ErrorUnknown",
-            Self::ErrorValidationFailed => "ErrorValidationFailed",
-            Self::ErrorOutOfPoolMemory => "ErrorOutOfPoolMemory",
-            Self::ErrorInvalidExternalHandle => "ErrorInvalidExternalHandle",
-            Self::ErrorInvalidOpaqueCaptureAddress => "ErrorInvalidOpaqueCaptureAddress",
-            Self::ErrorFragmentation => "ErrorFragmentation",
+            Self::OutOfHostMemory => "ErrorOutOfHostMemory",
+            Self::OutOfDeviceMemory => "ErrorOutOfDeviceMemory",
+            Self::InitializationFailed => "ErrorInitializationFailed",
+            Self::DeviceLost => "ErrorDeviceLost",
+            Self::MemoryMapFailed => "ErrorMemoryMapFailed",
+            Self::LayerNotPresent => "ErrorLayerNotPresent",
+            Self::ExtensionNotPresent => "ErrorExtensionNotPresent",
+            Self::FeatureNotPresent => "ErrorFeatureNotPresent",
+            Self::IncompatibleDriver => "ErrorIncompatibleDriver",
+            Self::TooManyObjects => "ErrorTooManyObjects",
+            Self::FormatNotSupported => "ErrorFormatNotSupported",
+            Self::FragmentedPool => "ErrorFragmentedPool",
+            Self::Unknown => "ErrorUnknown",
+            Self::ValidationFailed => "ErrorValidationFailed",
+            Self::OutOfPoolMemory => "ErrorOutOfPoolMemory",
+            Self::InvalidExternalHandle => "ErrorInvalidExternalHandle",
+            Self::InvalidOpaqueCaptureAddress => "ErrorInvalidOpaqueCaptureAddress",
+            Self::Fragmentation => "ErrorFragmentation",
             Self::PipelineCompileRequired => "PipelineCompileRequired",
-            Self::ErrorNotPermitted => "ErrorNotPermitted",
-            Self::ErrorInvalidPipelineCacheData => "ErrorInvalidPipelineCacheData",
-            Self::ErrorNoPipelineMatch => "ErrorNoPipelineMatch",
-            Self::ErrorSurfaceLostKHR => "ErrorSurfaceLostKHR",
-            Self::ErrorNativeWindowInUseKHR => "ErrorNativeWindowInUseKHR",
+            Self::NotPermitted => "ErrorNotPermitted",
+            Self::InvalidPipelineCacheData => "ErrorInvalidPipelineCacheData",
+            Self::NoPipelineMatch => "ErrorNoPipelineMatch",
+            Self::SurfaceLostKHR => "ErrorSurfaceLostKHR",
+            Self::NativeWindowInUseKHR => "ErrorNativeWindowInUseKHR",
             Self::SuboptimalKHR => "SuboptimalKHR",
-            Self::ErrorOutOfDateKHR => "ErrorOutOfDateKHR",
-            Self::ErrorIncompatibleDisplayKHR => "ErrorIncompatibleDisplayKHR",
-            Self::ErrorInvalidShaderNV => "ErrorInvalidShaderNV",
-            Self::ErrorImageUsageNotSupportedKHR => "ErrorImageUsageNotSupportedKHR",
-            Self::ErrorVideoPictureLayoutNotSupportedKHR => {
-                "ErrorVideoPictureLayoutNotSupportedKHR"
-            }
-            Self::ErrorVideoProfileOperationNotSupportedKHR => {
+            Self::OutOfDateKHR => "ErrorOutOfDateKHR",
+            Self::IncompatibleDisplayKHR => "ErrorIncompatibleDisplayKHR",
+            Self::InvalidShaderNV => "ErrorInvalidShaderNV",
+            Self::ImageUsageNotSupportedKHR => "ErrorImageUsageNotSupportedKHR",
+            Self::VideoPictureLayoutNotSupportedKHR => "ErrorVideoPictureLayoutNotSupportedKHR",
+            Self::VideoProfileOperationNotSupportedKHR => {
                 "ErrorVideoProfileOperationNotSupportedKHR"
             }
-            Self::ErrorVideoProfileFormatNotSupportedKHR => {
-                "ErrorVideoProfileFormatNotSupportedKHR"
-            }
-            Self::ErrorVideoProfileCodecNotSupportedKHR => "ErrorVideoProfileCodecNotSupportedKHR",
-            Self::ErrorVideoStdVersionNotSupportedKHR => "ErrorVideoStdVersionNotSupportedKHR",
-            Self::ErrorInvalidDrmFormatModifierPlaneLayoutEXT => {
+            Self::VideoProfileFormatNotSupportedKHR => "ErrorVideoProfileFormatNotSupportedKHR",
+            Self::VideoProfileCodecNotSupportedKHR => "ErrorVideoProfileCodecNotSupportedKHR",
+            Self::VideoStdVersionNotSupportedKHR => "ErrorVideoStdVersionNotSupportedKHR",
+            Self::InvalidDrmFormatModifierPlaneLayoutEXT => {
                 "ErrorInvalidDrmFormatModifierPlaneLayoutEXT"
             }
-            Self::ErrorPresentTimingQueueFullEXT => "ErrorPresentTimingQueueFullEXT",
-            Self::ErrorFullScreenExclusiveModeLostEXT => "ErrorFullScreenExclusiveModeLostEXT",
+            Self::PresentTimingQueueFullEXT => "ErrorPresentTimingQueueFullEXT",
+            Self::FullScreenExclusiveModeLostEXT => "ErrorFullScreenExclusiveModeLostEXT",
             Self::ThreadIdleKHR => "ThreadIdleKHR",
             Self::ThreadDoneKHR => "ThreadDoneKHR",
             Self::OperationDeferredKHR => "OperationDeferredKHR",
             Self::OperationNotDeferredKHR => "OperationNotDeferredKHR",
-            Self::ErrorInvalidVideoStdParametersKHR => "ErrorInvalidVideoStdParametersKHR",
-            Self::ErrorCompressionExhaustedEXT => "ErrorCompressionExhaustedEXT",
+            Self::InvalidVideoStdParametersKHR => "ErrorInvalidVideoStdParametersKHR",
+            Self::CompressionExhaustedEXT => "ErrorCompressionExhaustedEXT",
             Self::IncompatibleShaderBinaryEXT => "IncompatibleShaderBinaryEXT",
             Self::PipelineBinaryMissingKHR => "PipelineBinaryMissingKHR",
-            Self::ErrorNotEnoughSpaceKHR => "ErrorNotEnoughSpaceKHR",
+            Self::NotEnoughSpaceKHR => "ErrorNotEnoughSpaceKHR",
         };
 
         write!(f, "{s}")
@@ -150,71 +146,67 @@ impl From<vkResult> for Error {
         match value {
             vkResult::Success => unreachable!(),
 
-            vkResult::NotReady => Error::NotReady,
-            vkResult::Timeout => Error::Timeout,
-            vkResult::EventSet => Error::EventSet,
-            vkResult::EventReset => Error::EventReset,
-            vkResult::Incomplete => Error::Incomplete,
-            vkResult::ErrorOutOfHostMemory => Error::ErrorOutOfHostMemory,
-            vkResult::ErrorOutOfDeviceMemory => Error::ErrorOutOfDeviceMemory,
-            vkResult::ErrorInitializationFailed => Error::ErrorInitializationFailed,
-            vkResult::ErrorDeviceLost => Error::ErrorDeviceLost,
-            vkResult::ErrorMemoryMapFailed => Error::ErrorMemoryMapFailed,
-            vkResult::ErrorLayerNotPresent => Error::ErrorLayerNotPresent,
-            vkResult::ErrorExtensionNotPresent => Error::ErrorExtensionNotPresent,
-            vkResult::ErrorFeatureNotPresent => Error::ErrorFeatureNotPresent,
-            vkResult::ErrorIncompatibleDriver => Error::ErrorIncompatibleDriver,
-            vkResult::ErrorTooManyObjects => Error::ErrorTooManyObjects,
-            vkResult::ErrorFormatNotSupported => Error::ErrorFormatNotSupported,
-            vkResult::ErrorFragmentedPool => Error::ErrorFragmentedPool,
-            vkResult::ErrorUnknown => Error::ErrorUnknown,
-            vkResult::ErrorValidationFailed => Error::ErrorValidationFailed,
-            vkResult::ErrorOutOfPoolMemory => Error::ErrorOutOfPoolMemory,
-            vkResult::ErrorInvalidExternalHandle => Error::ErrorInvalidExternalHandle,
-            vkResult::ErrorInvalidOpaqueCaptureAddress => Error::ErrorInvalidOpaqueCaptureAddress,
-            vkResult::ErrorFragmentation => Error::ErrorFragmentation,
-            vkResult::PipelineCompileRequired => Error::PipelineCompileRequired,
-            vkResult::ErrorNotPermitted => Error::ErrorNotPermitted,
-            vkResult::ErrorInvalidPipelineCacheData => Error::ErrorInvalidPipelineCacheData,
-            vkResult::ErrorNoPipelineMatch => Error::ErrorNoPipelineMatch,
-            vkResult::ErrorSurfaceLostKHR => Error::ErrorSurfaceLostKHR,
-            vkResult::ErrorNativeWindowInUseKHR => Error::ErrorNativeWindowInUseKHR,
-            vkResult::SuboptimalKHR => Error::SuboptimalKHR,
-            vkResult::ErrorOutOfDateKHR => Error::ErrorOutOfDateKHR,
-            vkResult::ErrorIncompatibleDisplayKHR => Error::ErrorIncompatibleDisplayKHR,
-            vkResult::ErrorInvalidShaderNV => Error::ErrorInvalidShaderNV,
-            vkResult::ErrorImageUsageNotSupportedKHR => Error::ErrorImageUsageNotSupportedKHR,
+            vkResult::NotReady => Self::NotReady,
+            vkResult::Timeout => Self::Timeout,
+            vkResult::EventSet => Self::EventSet,
+            vkResult::EventReset => Self::EventReset,
+            vkResult::Incomplete => Self::Incomplete,
+            vkResult::ErrorOutOfHostMemory => Self::OutOfHostMemory,
+            vkResult::ErrorOutOfDeviceMemory => Self::OutOfDeviceMemory,
+            vkResult::ErrorInitializationFailed => Self::InitializationFailed,
+            vkResult::ErrorDeviceLost => Self::DeviceLost,
+            vkResult::ErrorMemoryMapFailed => Self::MemoryMapFailed,
+            vkResult::ErrorLayerNotPresent => Self::LayerNotPresent,
+            vkResult::ErrorExtensionNotPresent => Self::ExtensionNotPresent,
+            vkResult::ErrorFeatureNotPresent => Self::FeatureNotPresent,
+            vkResult::ErrorIncompatibleDriver => Self::IncompatibleDriver,
+            vkResult::ErrorTooManyObjects => Self::TooManyObjects,
+            vkResult::ErrorFormatNotSupported => Self::FormatNotSupported,
+            vkResult::ErrorFragmentedPool => Self::FragmentedPool,
+            vkResult::ErrorUnknown => Self::Unknown,
+            vkResult::ErrorValidationFailed => Self::ValidationFailed,
+            vkResult::ErrorOutOfPoolMemory => Self::OutOfPoolMemory,
+            vkResult::ErrorInvalidExternalHandle => Self::InvalidExternalHandle,
+            vkResult::ErrorInvalidOpaqueCaptureAddress => Self::InvalidOpaqueCaptureAddress,
+            vkResult::ErrorFragmentation => Self::Fragmentation,
+            vkResult::PipelineCompileRequired => Self::PipelineCompileRequired,
+            vkResult::ErrorNotPermitted => Self::NotPermitted,
+            vkResult::ErrorInvalidPipelineCacheData => Self::InvalidPipelineCacheData,
+            vkResult::ErrorNoPipelineMatch => Self::NoPipelineMatch,
+            vkResult::ErrorSurfaceLostKHR => Self::SurfaceLostKHR,
+            vkResult::ErrorNativeWindowInUseKHR => Self::NativeWindowInUseKHR,
+            vkResult::SuboptimalKHR => Self::SuboptimalKHR,
+            vkResult::ErrorOutOfDateKHR => Self::OutOfDateKHR,
+            vkResult::ErrorIncompatibleDisplayKHR => Self::IncompatibleDisplayKHR,
+            vkResult::ErrorInvalidShaderNV => Self::InvalidShaderNV,
+            vkResult::ErrorImageUsageNotSupportedKHR => Self::ImageUsageNotSupportedKHR,
             vkResult::ErrorVideoPictureLayoutNotSupportedKHR => {
-                Error::ErrorVideoPictureLayoutNotSupportedKHR
+                Self::VideoPictureLayoutNotSupportedKHR
             }
             vkResult::ErrorVideoProfileOperationNotSupportedKHR => {
-                Error::ErrorVideoProfileOperationNotSupportedKHR
+                Self::VideoProfileOperationNotSupportedKHR
             }
             vkResult::ErrorVideoProfileFormatNotSupportedKHR => {
-                Error::ErrorVideoProfileFormatNotSupportedKHR
+                Self::VideoProfileFormatNotSupportedKHR
             }
             vkResult::ErrorVideoProfileCodecNotSupportedKHR => {
-                Error::ErrorVideoProfileCodecNotSupportedKHR
+                Self::VideoProfileCodecNotSupportedKHR
             }
-            vkResult::ErrorVideoStdVersionNotSupportedKHR => {
-                Error::ErrorVideoStdVersionNotSupportedKHR
-            }
+            vkResult::ErrorVideoStdVersionNotSupportedKHR => Self::VideoStdVersionNotSupportedKHR,
             vkResult::ErrorInvalidDrmFormatModifierPlaneLayoutEXT => {
-                Error::ErrorInvalidDrmFormatModifierPlaneLayoutEXT
+                Self::InvalidDrmFormatModifierPlaneLayoutEXT
             }
-            vkResult::ErrorPresentTimingQueueFullEXT => Error::ErrorPresentTimingQueueFullEXT,
-            vkResult::ErrorFullScreenExclusiveModeLostEXT => {
-                Error::ErrorFullScreenExclusiveModeLostEXT
-            }
-            vkResult::ThreadIdleKHR => Error::ThreadIdleKHR,
-            vkResult::ThreadDoneKHR => Error::ThreadDoneKHR,
-            vkResult::OperationDeferredKHR => Error::OperationDeferredKHR,
-            vkResult::OperationNotDeferredKHR => Error::OperationNotDeferredKHR,
-            vkResult::ErrorInvalidVideoStdParametersKHR => Error::ErrorInvalidVideoStdParametersKHR,
-            vkResult::ErrorCompressionExhaustedEXT => Error::ErrorCompressionExhaustedEXT,
-            vkResult::IncompatibleShaderBinaryEXT => Error::IncompatibleShaderBinaryEXT,
-            vkResult::PipelineBinaryMissingKHR => Error::PipelineBinaryMissingKHR,
-            vkResult::ErrorNotEnoughSpaceKHR => Error::ErrorNotEnoughSpaceKHR,
+            vkResult::ErrorPresentTimingQueueFullEXT => Self::PresentTimingQueueFullEXT,
+            vkResult::ErrorFullScreenExclusiveModeLostEXT => Self::FullScreenExclusiveModeLostEXT,
+            vkResult::ThreadIdleKHR => Self::ThreadIdleKHR,
+            vkResult::ThreadDoneKHR => Self::ThreadDoneKHR,
+            vkResult::OperationDeferredKHR => Self::OperationDeferredKHR,
+            vkResult::OperationNotDeferredKHR => Self::OperationNotDeferredKHR,
+            vkResult::ErrorInvalidVideoStdParametersKHR => Self::InvalidVideoStdParametersKHR,
+            vkResult::ErrorCompressionExhaustedEXT => Self::CompressionExhaustedEXT,
+            vkResult::IncompatibleShaderBinaryEXT => Self::IncompatibleShaderBinaryEXT,
+            vkResult::PipelineBinaryMissingKHR => Self::PipelineBinaryMissingKHR,
+            vkResult::ErrorNotEnoughSpaceKHR => Self::NotEnoughSpaceKHR,
         }
     }
 }

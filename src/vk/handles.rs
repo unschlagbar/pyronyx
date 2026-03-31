@@ -374,11 +374,17 @@ impl Device {
     pub unsafe fn allocate_command_buffers(
         &self,
         allocate_info: &CommandBufferAllocateInfo,
-    ) -> Result<Vec<CommandBuffer>, Error> {
+        command_buffers: &mut [CommandBuffer],
+    ) -> Result<(), Error> {
+        assert_eq!(
+            allocate_info.command_buffer_count as usize,
+            command_buffers.len()
+        );
+
         self.allocate_command_buffers_raw(allocate_info).map(|c| {
             c.into_iter()
-                .map(|c| unsafe { c.to_command_buffer(self) })
-                .collect()
+                .zip(command_buffers.iter_mut())
+                .for_each(|(raw, c)| *c = unsafe { raw.to_command_buffer(self) })
         })
     }
 
@@ -428,10 +434,10 @@ impl Queue {
 ///
 /// Obtained via [`Device::allocate_command_buffers`]. Holds a static reference
 /// to the function table that lives inside the parent `Device`.
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Default)]
 pub struct CommandBuffer {
     pub(crate) handle: vkCommandBuffer,
-    pub(crate) v_table: &'static CommandBufferFn,
+    pub(crate) v_table: Option<&'static CommandBufferFn>,
 }
 
 impl CommandBuffer {
@@ -443,6 +449,7 @@ impl CommandBuffer {
     /// Returns the function table for this command buffer.
     pub const fn fns(&self) -> &CommandBufferFn {
         self.v_table
+            .expect("No v-table use `self.handle().to_command_buffer(device)!`")
     }
 }
 

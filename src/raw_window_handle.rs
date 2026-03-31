@@ -77,10 +77,7 @@ pub fn create_surface(
         #[cfg(target_os = "linux")]
         (RawDisplayHandle::Xlib(display), RawWindowHandle::Xlib(window)) => {
             let create_info = vk::XlibSurfaceCreateInfoKHR {
-                dpy: display
-                    .display
-                    .ok_or(Error::ErrorInitializationFailed)?
-                    .as_ptr(),
+                dpy: display.display.ok_or(Error::InitializationFailed)?.as_ptr(),
                 window: window.window,
                 ..Default::default()
             };
@@ -93,7 +90,7 @@ pub fn create_surface(
             let create_info = vk::XcbSurfaceCreateInfoKHR {
                 connection: display
                     .connection
-                    .ok_or(Error::ErrorInitializationFailed)?
+                    .ok_or(Error::InitializationFailed)?
                     .as_ptr(),
                 window: window.window.get(),
                 ..Default::default()
@@ -139,7 +136,7 @@ pub fn create_surface(
             instance.create_surface(&create_info, None)
         }
 
-        _ => Err(Error::ErrorExtensionNotPresent),
+        _ => Err(Error::ExtensionNotPresent),
     }
 }
 
@@ -177,7 +174,7 @@ pub fn get_required_extensions(
         #[cfg(target_env = "ohos")]
         RawDisplayHandle::Ohos(_) => [surface::NAME.as_ptr(), crate::ohos::surface::NAME.as_ptr()],
 
-        _ => return Err(Error::ErrorExtensionNotPresent),
+        _ => return Err(Error::ExtensionNotPresent),
     };
 
     Ok(extensions)

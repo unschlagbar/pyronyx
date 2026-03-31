@@ -2,7 +2,7 @@
 
 Lightweight fully generated next gen Vulkan bindings for Rust — focused on zero overhead and natural Rust ergonomics.
 
-[![Vulkan 1.4](https://img.shields.io/badge/Vulkan-1.4-red.svg)](https://registry.khronos.org/vulkan/)
+[![Vulkan 1.4](https://img.shields.io/badge/Vulkan-1.4-darkred.svg)](https://registry.khronos.org/vulkan/)
 [![LICENSE](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE-MIT)
 
 ## Overview
@@ -141,6 +141,14 @@ Ash has been effectively unmaintained a good time now. Beyond that, its model re
 Pyronyx does not have that distinction. Enable an extension, call its functions on the handle, done.
 
 ---
+
+## Example 
+
+### Triangle
+
+Hello Triangle: [pyronyx Triangle]((https://github.com/unschlagbar/pyronyx-triangle))
+
+![Hello Triangle](https://github.com/unschlagbar/pyronyx-triangle/image.png)
 
 ## License
 
