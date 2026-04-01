@@ -89,7 +89,114 @@ impl Instance {
     ///
     /// # Vulkan documentation
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCreateInstance.html>
-    pub fn create(
+    ///
+    /// # Safety
+    /// Calling **any** fn on [`Instance`] with invalid non [`null()`](core::ptr::null()) pointer in the function parameter
+    /// or in a parameter struct will result in undefined behavior!
+    ///
+    /// To catch these bugs use `VK_LAYER_KHRONOS_validation` layer in [`InstanceCreateInfo`]
+    /// together with the Vulkan SDK!
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// use pyronyx::vk;
+    ///
+    /// let app_info = vk::ApplicationInfo {
+    ///     application_name: c"My App".as_ptr(),
+    ///     application_version: vk::make_api_version(0, 1, 0, 0),
+    ///     engine_name: c"No Engine".as_ptr(),
+    ///     engine_version: vk::make_api_version(0, 1, 0, 0),
+    ///     api_version: vk::API_VERSION_1_0,
+    ///     ..Default::default()
+    /// };
+    ///
+    /// let create_info = vk::InstanceCreateInfo {
+    ///     application_info: &app_info,
+    ///     ..Default::default()
+    /// };
+    ///
+    /// let instance = unsafe {
+    ///     vk::Instance::create(&create_info, None).expect("failed to create instance")
+    /// };
+    /// ```
+    ///
+    /// # Extended Example (with validation layers)
+    ///
+    /// ```no_run
+    /// use pyronyx::vk;
+    /// use pyronyx::ext;
+    /// use core::ffi::{CStr, c_void};
+    ///
+    /// const VALIDATION_LAYERS: &[&CStr] = &[c"VK_LAYER_KHRONOS_validation"];
+    ///
+    /// // The debug callback is only compiled in debug builds.
+    /// // It prints the severity, type and message of each validation message.
+    /// #[cfg(debug_assertions)]
+    /// unsafe extern "system" fn debug_callback(
+    ///     message_severity: vk::DebugUtilsMessageSeverityFlagsEXT,
+    ///     message_type: vk::DebugUtilsMessageTypeFlagsEXT,
+    ///     callback_data: *const vk::DebugUtilsMessengerCallbackDataEXT,
+    ///     _user_data: *mut c_void,
+    /// ) -> u32 {
+    ///     let message = unsafe { CStr::from_ptr((*callback_data).message) };
+    ///     println!("[Debug][{}][{}] {:?}", message_severity, message_type, message);
+    ///     0
+    /// }
+    ///
+    /// let app_info = vk::ApplicationInfo {
+    ///     application_name: c"My App".as_ptr(),
+    ///     application_version: vk::make_api_version(0, 1, 0, 0),
+    ///     engine_name: c"No Engine".as_ptr(),
+    ///     engine_version: vk::make_api_version(0, 1, 0, 0),
+    ///     api_version: vk::API_VERSION_1_0,
+    ///     ..Default::default()
+    /// };
+    ///
+    /// // In debug builds we add the debug utils extension so that
+    /// // the validation layer can report errors through the debug messenger.
+    /// #[cfg(debug_assertions)]
+    /// let extensions = [ext::debug_utils::NAME.as_ptr()];
+    /// #[cfg(not(debug_assertions))]
+    /// let extensions: [*const i8; 0] = [];
+    ///
+    /// // Validation layers are only enabled in debug builds.
+    /// // In release builds no layers are loaded for maximum performance.
+    /// #[cfg(debug_assertions)]
+    /// let layers: &[&CStr] = VALIDATION_LAYERS;
+    /// #[cfg(not(debug_assertions))]
+    /// let layers: &[&CStr] = &[];
+    ///
+    /// let create_info = vk::InstanceCreateInfo {
+    ///     application_info: &app_info,
+    ///     enabled_extension_count: extensions.len() as u32,
+    ///     enabled_extension_names: extensions.as_ptr(),
+    ///     enabled_layer_count: layers.len() as u32,
+    ///     // Safety: *const &CStr and *const *const i8 have the same layout
+    ///     enabled_layer_names: layers.as_ptr().cast(),
+    ///     ..Default::default()
+    /// };
+    ///
+    /// // Chain a DebugUtilsMessengerCreateInfo into the instance create info so that
+    /// // errors during instance creation and destruction are also captured,
+    /// // since the debug messenger itself doesn't exist yet at that point.
+    /// #[cfg(debug_assertions)]
+    /// let mut debug_create_info = vk::DebugUtilsMessengerCreateInfoEXT {
+    ///     message_severity: vk::DebugUtilsMessageSeverityFlagsEXT::WARNING
+    ///         | vk::DebugUtilsMessageSeverityFlagsEXT::ERROR,
+    ///     message_type: vk::DebugUtilsMessageTypeFlagsEXT::VALIDATION
+    ///         | vk::DebugUtilsMessageTypeFlagsEXT::PERFORMANCE,
+    ///     pfn_user_callback: Some(debug_callback),
+    ///     ..Default::default()
+    /// };
+    /// #[cfg(debug_assertions)]
+    /// let create_info = create_info.next(&mut debug_create_info);
+    ///
+    /// let instance = unsafe {
+    ///     vk::Instance::create(&create_info, None).expect("failed to create instance")
+    /// };
+    /// ```
+    pub unsafe fn create(
         create_info: &InstanceCreateInfo,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<Instance, Error> {
@@ -99,7 +206,7 @@ impl Instance {
                 c"vkCreateInstance".as_ptr(),
             ))
         })
-        .unwrap();
+        .ok_or(vk::Error::IncompatibleDriver)?;
 
         let mut instance = vk::vkInstance::null();
         let result = unsafe { (pfn)(create_info, raw_option(allocator), &mut instance) };
@@ -146,10 +253,11 @@ impl Instance {
     /// [`Instance`]. Dropping the `Device` while any [`PhysicalDevice`] is still
     /// in use is undefined behaviour.
     ///
-    /// All methods called on this may result in undefined behaviour
-    /// if there are invalid pointers in the parameter structs,
-    /// use the `VK_LAYER_KHRONOS_validation` layer in [`InstanceCreateInfo`]
-    /// together with the Vulkan SDK to catch these bugs!
+    /// Calling **any** fn on [`PhysicalDevice`] with invalid non [null()](core::ptr::null()) pointer in the function parameter
+    /// or in a parameter struct will result in undefined behavior!
+    ///
+    /// To catch these bugs use `VK_LAYER_KHRONOS_validation` layer in [`InstanceCreateInfo`]
+    /// together with the Vulkan SDK!
     #[inline]
     pub unsafe fn enumerate_physical_devices(&self) -> Result<Vec<PhysicalDevice>, Error> {
         self.enumerate_physical_devices_raw().map(|p| {
@@ -198,7 +306,14 @@ impl PhysicalDevice {
     ///
     /// # Vulkan documentation
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCreateDevice.html>
-    pub fn create_device(
+    ///
+    /// # Safety
+    /// Calling **any** fn on [`Device`] with invalid non [null()](core::ptr::null()) pointer in the function parameter
+    /// or in a parameter struct will result in undefined behavior!
+    ///
+    /// To catch these bugs use `VK_LAYER_KHRONOS_validation` layer in [`InstanceCreateInfo`]
+    /// together with the Vulkan SDK!
+    pub unsafe fn create_device(
         &self,
         create_info: &DeviceCreateInfo,
         allocator: Option<&AllocationCallbacks>,
@@ -221,7 +336,8 @@ impl PhysicalDevice {
         };
 
         let device_loader = unsafe {
-            get_instance_proc_addr(instance.handle(), c"vkGetDeviceProcAddr".as_ptr()).unwrap()
+            get_instance_proc_addr(instance.handle(), c"vkGetDeviceProcAddr".as_ptr())
+                .ok_or(vk::Error::IncompatibleDriver)?
         };
         let device_loader: vkGetDeviceProcAddr = unsafe { transmute(device_loader) };
 
@@ -289,10 +405,11 @@ impl Device {
     /// [`Device`]. Dropping the `Device` while any [`Queue`] is still
     /// in use is undefined behaviour.
     ///
-    /// All methods called on this may result in undefined behaviour
-    /// if there are invalid pointers in the parameter structs,
-    /// use the `VK_LAYER_KHRONOS_validation` layer in [`InstanceCreateInfo`]
-    /// together with the Vulkan SDK to catch these bugs!
+    /// Calling **any** fn on [`Queue`] with invalid non [null()](core::ptr::null()) pointer in the function parameter
+    /// or in a parameter struct will result in undefined behavior!
+    ///
+    /// To catch these bugs use `VK_LAYER_KHRONOS_validation` layer in [`InstanceCreateInfo`]
+    /// together with the Vulkan SDK!
     pub unsafe fn get_device_queue(&self, queue_family_index: u32, queue_index: u32) -> Queue {
         let handle = self.get_device_queue_raw(queue_family_index, queue_index);
         let v_table = &self.v_table().queue;
@@ -328,6 +445,12 @@ impl Device {
     /// The returned [`Queue`] borrows its function table from this
     /// [`Device`]. Dropping the `Device` while any [`Queue`] is still
     /// in use is undefined behaviour.
+    ///
+    /// Calling **any** fn on [`Queue`] with invalid non [null()](core::ptr::null()) pointer in the function parameter
+    /// or in a parameter struct will result in undefined behavior!
+    ///
+    /// To catch these bugs use `VK_LAYER_KHRONOS_validation` layer in [`InstanceCreateInfo`]
+    /// together with the Vulkan SDK!
     ///
     /// Requires Vulkan 1.1 or `VK_KHR_get_physical_device_properties2`.
     pub unsafe fn get_device_queue2(&self, queue_info: &vk::DeviceQueueInfo2) -> Queue {
@@ -367,10 +490,11 @@ impl Device {
     /// `Device`. Dropping the `Device` while any [`CommandBuffer`] is still
     /// in use is undefined behaviour.
     ///
-    /// All methods called on this may result in undefined behaviour
-    /// if there are invalid pointers in the parameter structs,
-    /// use the `VK_LAYER_KHRONOS_validation` layer in [`InstanceCreateInfo`]
-    /// together with the Vulkan SDK to catch these bugs!
+    /// Calling **any** fn on [`CommandBuffer`] with invalid non [null()](core::ptr::null()) pointer in the function parameter
+    /// or in a parameter struct will result in undefined behavior!
+    ///
+    /// To catch these bugs use `VK_LAYER_KHRONOS_validation` layer in [`InstanceCreateInfo`]
+    /// together with the Vulkan SDK!
     pub unsafe fn allocate_command_buffers(
         &self,
         allocate_info: &CommandBufferAllocateInfo,
@@ -449,7 +573,7 @@ impl CommandBuffer {
     /// Returns the function table for this command buffer.
     pub const fn fns(&self) -> &CommandBufferFn {
         self.v_table
-            .expect("No v-table use `self.handle().to_command_buffer(device)!`")
+            .expect("No v-table use `self.handle().to_command_buffer(device)`")
     }
 }
 

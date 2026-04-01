@@ -114,10 +114,11 @@ impl vkPhysicalDevice {
     /// `Instance`. Dropping the `Instance` while any [`PhysicalDevice`] is still
     /// in use is undefined behaviour.
     ///
-    /// All methods that are called on this can be undefined behaviour
-    /// if there are invalid ptr in the parameter structs,
-    /// use the `VK_LAYER_KHRONOS_validation` layer in [`InstanceCreateInfo`]
-    /// together with the Vulkan SDK to catch these bugs!
+    /// Calling **any** fn on [`PhysicalDevice`] with invalid non [null()](core::ptr::null()) pointer in the function parameter
+    /// or in a parameter struct will result in undefined behavior!
+    ///
+    /// To catch these bugs use `VK_LAYER_KHRONOS_validation` layer in [`InstanceCreateInfo`]
+    /// together with the Vulkan SDK!
     #[inline]
     pub unsafe fn to_physical_device(self, instance: &Instance) -> PhysicalDevice {
         let v_table = &instance.v_table().physical_device;
@@ -136,10 +137,11 @@ impl vkCommandBuffer {
     /// `Device`. Dropping the `Device` while any [`CommandBuffer`] is still
     /// in use is undefined behaviour.
     ///
-    /// All methods that are called on this can be undefined behaviour
-    /// if there are invalid ptr in the parameter structs,
-    /// use the `VK_LAYER_KHRONOS_validation` layer in [`InstanceCreateInfo`]
-    /// together with the Vulkan SDK to catch these bugs!
+    /// Calling **any** fn on [`Queue`] with invalid non [null()](core::ptr::null()) pointer in the function parameter
+    /// or in a parameter struct will result in undefined behavior!
+    ///
+    /// To catch these bugs use `VK_LAYER_KHRONOS_validation` layer in [`InstanceCreateInfo`]
+    /// together with the Vulkan SDK!
     #[inline]
     pub unsafe fn to_command_buffer(self, device: &Device) -> CommandBuffer {
         let v_table = &device.v_table().command_buffer;
@@ -158,10 +160,11 @@ impl vkQueue {
     /// `Device`. Dropping the `Device` while any [`Queue`] is still
     /// in use is undefined behaviour.
     ///
-    /// All methods that are called on this can be undefined behaviour
-    /// if there are invalid ptr in the parameter structs,
-    /// use the `VK_LAYER_KHRONOS_validation` layer in [`InstanceCreateInfo`]
-    /// together with the Vulkan SDK to catch these bugs!
+    /// Calling **any** fn on [`Queue`] with invalid non [null()](core::ptr::null()) pointer in the function parameter
+    /// or in a parameter struct will result in undefined behavior!
+    ///
+    /// To catch these bugs use `VK_LAYER_KHRONOS_validation` layer in [`InstanceCreateInfo`]
+    /// together with the Vulkan SDK!
     #[inline]
     pub unsafe fn to_queue(self, device: &Device) -> Queue {
         let v_table = &device.v_table().queue;
