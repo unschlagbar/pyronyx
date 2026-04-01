@@ -3,6 +3,7 @@ name = "pyronyx"
 version = "0.1.0+1.4.341"
 edition = "2024"
 rust-version = "1.85.0"
+repository = "https://github.com/unschlagbar/pyronyx"
 readme = "README.md"
 keywords = ["gamedev", "graphics", "vulkan", "bindings"]
 description = "Better Vulkan bindings for Rust"
