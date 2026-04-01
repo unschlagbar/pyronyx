@@ -2,6 +2,7 @@
 
 Lightweight fully generated next gen Vulkan bindings for Rust — focused on zero overhead and natural Rust ergonomics.
 
+[![Crates.io Version](https://img.shields.io/crates/v/pyronyx.svg)](https://crates.io/crates/pyronyx)
 [![Vulkan 1.4](https://img.shields.io/badge/Vulkan-1.4-darkred.svg)](https://registry.khronos.org/vulkan/)
 [![LICENSE](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE-MIT)
 
