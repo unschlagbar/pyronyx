@@ -20,15 +20,6 @@ use crate::khr::wayland_surface::WaylandSurfaceInstance;
 #[cfg(target_os = "android")]
 use crate::khr::android_surface;
 
-#[cfg(any(target_os = "ios", target_os = "macos"))]
-use crate::ext::metal_surface;
-
-#[cfg(target_os = "macos")]
-use raw_window_metal::{Layer, appkit};
-
-#[cfg(target_os = "ios")]
-use raw_window_metal::{Layer, uikit};
-
 #[cfg(target_env = "ohos")]
 use crate::ohos::surface::SurfaceInstance;
 
@@ -107,26 +98,6 @@ pub fn create_surface(
             instance.create_android_surface(&create_info, None)
         }
 
-        #[cfg(target_os = "macos")]
-        (RawDisplayHandle::AppKit(_), RawWindowHandle::AppKit(window)) => {
-            let layer = match appkit::metal_layer_from_handle(window) {
-                Layer::Existing(layer) | Layer::Allocated(layer) => layer.cast(),
-            };
-
-            let create_info = vk::MetalSurfaceCreateInfoEXT::default().layer(&*layer);
-            instance.create_metal_surface(&create_info, None)
-        }
-
-        #[cfg(target_os = "ios")]
-        (RawDisplayHandle::UiKit(_), RawWindowHandle::UiKit(window)) => {
-            let layer = match uikit::metal_layer_from_handle(window) {
-                Layer::Existing(layer) | Layer::Allocated(layer) => layer.cast(),
-            };
-
-            let create_info = vk::MetalSurfaceCreateInfoEXT::default().layer(&*layer);
-            instance.create_metal_surface(&create_info, None)
-        }
-
         #[cfg(target_env = "ohos")]
         (RawDisplayHandle::Ohos(_), RawWindowHandle::OhosNdk(window)) => {
             let create_info = vk::SurfaceCreateInfoOHOS {
@@ -165,11 +136,6 @@ pub fn get_required_extensions(
 
         #[cfg(target_os = "android")]
         RawDisplayHandle::Android(_) => [surface::NAME.as_ptr(), android_surface::NAME.as_ptr()],
-
-        #[cfg(any(target_os = "ios", target_os = "macos"))]
-        RawDisplayHandle::AppKit(_) | RawDisplayHandle::UiKit(_) => {
-            [surface::NAME.as_ptr(), metal_surface::NAME.as_ptr()]
-        }
 
         #[cfg(target_env = "ohos")]
         RawDisplayHandle::Ohos(_) => [surface::NAME.as_ptr(), crate::ohos::surface::NAME.as_ptr()],
