@@ -97,9 +97,9 @@ impl LowLatency2Device for Device {
                 .nv_low_latency2
                 .as_ref()
                 .unwrap()
-                .get_latency_timings_nv)(self.handle, swapchain, out.as_mut_ptr())
-        };
-        unsafe { out.assume_init() }
+                .get_latency_timings_nv)(self.handle, swapchain, out.as_mut_ptr());
+            out.assume_init()
+        }
     }
 }
 

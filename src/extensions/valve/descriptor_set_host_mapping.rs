@@ -39,9 +39,9 @@ impl DescriptorSetHostMappingDevice for Device {
                 self.handle,
                 binding_reference,
                 out.as_mut_ptr(),
-            )
-        };
-        unsafe { out.assume_init() }
+            );
+            out.assume_init()
+        }
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetDescriptorSetHostMappingVALVE.html>
@@ -58,8 +58,8 @@ impl DescriptorSetHostMappingDevice for Device {
                 self.handle,
                 descriptor_set,
                 out.as_mut_ptr(),
-            )
-        };
-        unsafe { out.assume_init() }
+            );
+            out.assume_init()
+        }
     }
 }

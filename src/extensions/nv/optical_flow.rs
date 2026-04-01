@@ -6,6 +6,7 @@
 use crate::vk::*;
 use core::ffi::CStr;
 use core::mem::MaybeUninit;
+use core::ptr;
 use core::ptr::{from_ref, null};
 
 /// Type: `Device`
@@ -18,10 +19,16 @@ pub trait OpticalFlowPhysicalDevice {
         optical_flow_image_format_info: &OpticalFlowImageFormatInfoNV,
         image_format_properties: &mut [OpticalFlowImageFormatPropertiesNV],
     ) -> Result<(), Error>;
+    fn get_optical_flow_image_formats_len(
+        &self,
+        optical_flow_image_format_info: &OpticalFlowImageFormatInfoNV,
+    ) -> Result<usize, Error>;
 }
 
 impl OpticalFlowPhysicalDevice for PhysicalDevice {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceOpticalFlowImageFormatsNV.html>
+    ///
+    /// Call [`get_optical_flow_image_formats_len()`][`Self::get_optical_flow_image_formats_len()`] to query the number of elements to pass to `out`.
     #[inline]
     fn get_optical_flow_image_formats(
         &self,
@@ -42,6 +49,30 @@ impl OpticalFlowPhysicalDevice for PhysicalDevice {
             )
         }
         .result()
+    }
+
+    /// Returns the required slice length for Call [`get_optical_flow_image_formats`][`Self::get_optical_flow_image_formats`].
+    #[inline]
+    fn get_optical_flow_image_formats_len(
+        &self,
+        optical_flow_image_format_info: &OpticalFlowImageFormatInfoNV,
+    ) -> Result<usize, Error> {
+        let mut out: MaybeUninit<u32> = MaybeUninit::uninit();
+        unsafe {
+            (self
+                .fns()
+                .nv_optical_flow
+                .as_ref()
+                .unwrap()
+                .get_physical_device_optical_flow_image_formats_nv)(
+                self.handle,
+                optical_flow_image_format_info,
+                out.as_mut_ptr(),
+                ptr::null_mut(),
+            )
+        }
+        .init_on_success(out)
+        .map(|o| o as usize)
     }
 }
 

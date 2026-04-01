@@ -75,9 +75,9 @@ impl DeviceGeneratedCommandsComputeDevice for Device {
                 self.handle,
                 create_info,
                 out.as_mut_ptr(),
-            )
-        };
-        unsafe { out.assume_init() }
+            );
+            out.assume_init()
+        }
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPipelineIndirectDeviceAddressNV.html>

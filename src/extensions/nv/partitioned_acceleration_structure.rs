@@ -36,9 +36,9 @@ impl PartitionedAccelerationStructureDevice for Device {
                 self.handle,
                 info,
                 out.as_mut_ptr(),
-            )
-        };
-        unsafe { out.assume_init() }
+            );
+            out.assume_init()
+        }
     }
 }
 

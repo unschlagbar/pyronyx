@@ -225,10 +225,12 @@ impl OpacityMicromapDevice for Device {
                 .as_ref()
                 .unwrap()
                 .get_device_micromap_compatibility_ext)(
-                self.handle, version_info, out.as_mut_ptr()
-            )
-        };
-        unsafe { out.assume_init() }
+                self.handle,
+                version_info,
+                out.as_mut_ptr(),
+            );
+            out.assume_init()
+        }
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetMicromapBuildSizesEXT.html>
@@ -250,9 +252,9 @@ impl OpacityMicromapDevice for Device {
                 build_type,
                 build_info,
                 out.as_mut_ptr(),
-            )
-        };
-        unsafe { out.assume_init() }
+            );
+            out.assume_init()
+        }
     }
 }
 

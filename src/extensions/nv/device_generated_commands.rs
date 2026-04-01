@@ -138,10 +138,12 @@ impl DeviceGeneratedCommandsDevice for Device {
                 .as_ref()
                 .unwrap()
                 .get_generated_commands_memory_requirements_nv)(
-                self.handle, info, out.as_mut_ptr()
-            )
-        };
-        unsafe { out.assume_init() }
+                self.handle,
+                info,
+                out.as_mut_ptr(),
+            );
+            out.assume_init()
+        }
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCreateIndirectCommandsLayoutNV.html>

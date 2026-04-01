@@ -62,9 +62,9 @@ impl DescriptorBufferDevice for Device {
                 .unwrap()
                 .get_descriptor_set_layout_size_ext)(
                 self.handle, layout, out.as_mut_ptr()
-            )
-        };
-        unsafe { out.assume_init() }
+            );
+            out.assume_init()
+        }
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetDescriptorSetLayoutBindingOffsetEXT.html>
@@ -86,9 +86,9 @@ impl DescriptorBufferDevice for Device {
                 layout,
                 binding,
                 out.as_mut_ptr(),
-            )
-        };
-        unsafe { out.assume_init() }
+            );
+            out.assume_init()
+        }
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetDescriptorEXT.html>

@@ -58,8 +58,8 @@ impl SampleLocationsPhysicalDevice for PhysicalDevice {
                 self.handle,
                 samples,
                 out.as_mut_ptr(),
-            )
-        };
-        unsafe { out.assume_init() }
+            );
+            out.assume_init()
+        }
     }
 }

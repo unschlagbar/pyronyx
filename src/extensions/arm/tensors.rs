@@ -147,9 +147,11 @@ impl TensorsDevice for Device {
                 .arm_tensors
                 .as_ref()
                 .unwrap()
-                .get_tensor_memory_requirements_arm)(self.handle, info, out.as_mut_ptr())
-        };
-        unsafe { out.assume_init() }
+                .get_tensor_memory_requirements_arm)(
+                self.handle, info, out.as_mut_ptr()
+            );
+            out.assume_init()
+        }
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkBindTensorMemoryARM.html>
@@ -183,9 +185,9 @@ impl TensorsDevice for Device {
                 .unwrap()
                 .get_device_tensor_memory_requirements_arm)(
                 self.handle, info, out.as_mut_ptr()
-            )
-        };
-        unsafe { out.assume_init() }
+            );
+            out.assume_init()
+        }
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetTensorOpaqueCaptureDescriptorDataARM.html>
@@ -278,8 +280,8 @@ impl TensorsPhysicalDevice for PhysicalDevice {
                 self.handle,
                 external_tensor_info,
                 out.as_mut_ptr(),
-            )
-        };
-        unsafe { out.assume_init() }
+            );
+            out.assume_init()
+        }
     }
 }

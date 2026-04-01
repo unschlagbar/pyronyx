@@ -26,8 +26,8 @@ impl MetalObjectsDevice for Device {
                 .ext_metal_objects
                 .as_ref()
                 .unwrap()
-                .export_metal_objects_ext)(self.handle, out.as_mut_ptr())
-        };
-        unsafe { out.assume_init() }
+                .export_metal_objects_ext)(self.handle, out.as_mut_ptr());
+            out.assume_init()
+        }
     }
 }

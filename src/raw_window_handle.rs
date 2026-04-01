@@ -4,7 +4,7 @@ use core::ffi::c_char;
 use raw_window_handle::{RawDisplayHandle, RawWindowHandle};
 
 #[cfg(target_os = "windows")]
-use crate::khr::win32_surface;
+use crate::khr::win32_surface::{self, Win32SurfaceInstance};
 
 #[cfg(target_os = "linux")]
 use crate::khr::{
@@ -18,7 +18,7 @@ use crate::khr::wayland_surface;
 use crate::khr::wayland_surface::WaylandSurfaceInstance;
 
 #[cfg(target_os = "android")]
-use crate::khr::android_surface;
+use crate::khr::android_surface::{self, AndroidSurfaceInstance};
 
 #[cfg(target_env = "ohos")]
 use crate::ohos::surface::SurfaceInstance;
@@ -46,10 +46,7 @@ pub fn create_surface(
         (RawDisplayHandle::Windows(_), RawWindowHandle::Win32(window)) => {
             let create_info = vk::Win32SurfaceCreateInfoKHR {
                 hwnd: window.hwnd.get(),
-                hinstance: window
-                    .hinstance
-                    .ok_or(Error::ErrorInitializationFailed)?
-                    .get(),
+                hinstance: window.hinstance.ok_or(Error::InitializationFailed)?.get(),
                 ..Default::default()
             };
             instance.create_win32_surface(&create_info, None)

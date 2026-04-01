@@ -129,9 +129,9 @@ impl Device {
                 self.handle,
                 memory,
                 out.as_mut_ptr(),
-            )
-        };
-        unsafe { out.assume_init() }
+            );
+            out.assume_init()
+        }
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetBufferMemoryRequirements.html>
@@ -143,9 +143,9 @@ impl Device {
                 self.handle,
                 buffer,
                 out.as_mut_ptr(),
-            )
-        };
-        unsafe { out.assume_init() }
+            );
+            out.assume_init()
+        }
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkBindBufferMemory.html>
@@ -176,9 +176,9 @@ impl Device {
                 self.handle,
                 image,
                 out.as_mut_ptr(),
-            )
-        };
-        unsafe { out.assume_init() }
+            );
+            out.assume_init()
+        }
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkBindImageMemory.html>
@@ -545,9 +545,9 @@ impl Device {
                 image,
                 subresource,
                 out.as_mut_ptr(),
-            )
-        };
-        unsafe { out.assume_init() }
+            );
+            out.assume_init()
+        }
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCreateImageView.html>
@@ -904,8 +904,8 @@ impl Device {
         descriptor_sets: &mut [DescriptorSet],
     ) -> Result<(), Error> {
         assert_eq!(
-            allocate_info.descriptor_set_count as usize,
-            descriptor_sets.len()
+            descriptor_sets.len(),
+            allocate_info.descriptor_set_count as usize
         );
         unsafe {
             (self.fns().v1_0.allocate_descriptor_sets.unwrap())(
@@ -1032,9 +1032,9 @@ impl Device {
                 self.handle,
                 render_pass,
                 out.as_mut_ptr(),
-            )
-        };
-        unsafe { out.assume_init() }
+            );
+            out.assume_init()
+        }
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetRenderingAreaGranularity.html>
@@ -1049,9 +1049,9 @@ impl Device {
                 self.handle,
                 rendering_area_info,
                 out.as_mut_ptr(),
-            )
-        };
-        unsafe { out.assume_init() }
+            );
+            out.assume_init()
+        }
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCreateCommandPool.html>
@@ -1143,9 +1143,9 @@ impl Device {
                 local_device_index,
                 remote_device_index,
                 out.as_mut_ptr(),
-            )
-        };
-        unsafe { out.assume_init() }
+            );
+            out.assume_init()
+        }
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkBindBufferMemory2.html>
@@ -1239,9 +1239,9 @@ impl Device {
                 self.handle,
                 info,
                 out.as_mut_ptr(),
-            )
-        };
-        unsafe { out.assume_init() }
+            );
+            out.assume_init()
+        }
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetImageMemoryRequirements2.html>
@@ -1256,9 +1256,9 @@ impl Device {
                 self.handle,
                 info,
                 out.as_mut_ptr(),
-            )
-        };
-        unsafe { out.assume_init() }
+            );
+            out.assume_init()
+        }
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetImageSparseMemoryRequirements2.html>
@@ -1294,9 +1294,9 @@ impl Device {
                 .fns()
                 .v1_3
                 .get_device_buffer_memory_requirements
-                .unwrap())(self.handle, info, out.as_mut_ptr())
-        };
-        unsafe { out.assume_init() }
+                .unwrap())(self.handle, info, out.as_mut_ptr());
+            out.assume_init()
+        }
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetDeviceImageMemoryRequirements.html>
@@ -1311,9 +1311,9 @@ impl Device {
                 .fns()
                 .v1_3
                 .get_device_image_memory_requirements
-                .unwrap())(self.handle, info, out.as_mut_ptr())
-        };
-        unsafe { out.assume_init() }
+                .unwrap())(self.handle, info, out.as_mut_ptr());
+            out.assume_init()
+        }
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetDeviceImageSparseMemoryRequirements.html>
@@ -1384,9 +1384,9 @@ impl Device {
                 self.handle,
                 create_info,
                 out.as_mut_ptr(),
-            )
-        };
-        unsafe { out.assume_init() }
+            );
+            out.assume_init()
+        }
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCreateRenderPass2.html>
@@ -1558,9 +1558,9 @@ impl Device {
                 object_handle,
                 private_data_slot,
                 out.as_mut_ptr(),
-            )
-        };
-        unsafe { out.assume_init() }
+            );
+            out.assume_init()
+        }
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCopyMemoryToImage.html>
@@ -1629,9 +1629,9 @@ impl Device {
                 command_pool,
                 command_buffer,
                 out.as_mut_ptr(),
-            )
-        };
-        unsafe { out.assume_init() }
+            );
+            out.assume_init()
+        }
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetImageSubresourceLayout2.html>
@@ -1648,9 +1648,9 @@ impl Device {
                 image,
                 subresource,
                 out.as_mut_ptr(),
-            )
-        };
-        unsafe { out.assume_init() }
+            );
+            out.assume_init()
+        }
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetDeviceImageSubresourceLayout.html>
@@ -1665,9 +1665,9 @@ impl Device {
                 self.handle,
                 info,
                 out.as_mut_ptr(),
-            )
-        };
-        unsafe { out.assume_init() }
+            );
+            out.assume_init()
+        }
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkMapMemory2.html>

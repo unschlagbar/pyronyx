@@ -4,6 +4,8 @@
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 use crate::vk::*;
+use core::mem::MaybeUninit;
+use core::ptr;
 use core::ptr::{from_ref, null};
 
 impl Instance {
@@ -19,6 +21,8 @@ impl Instance {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkEnumeratePhysicalDeviceGroups.html>
+    ///
+    /// Call [`enumerate_physical_device_groups_len()`][`Self::enumerate_physical_device_groups_len()`] to query the number of elements to pass to `out`.
     #[inline]
     pub fn enumerate_physical_device_groups(
         &self,
@@ -32,5 +36,20 @@ impl Instance {
             )
         }
         .result()
+    }
+
+    /// Returns the required slice length for Call [`enumerate_physical_device_groups`][`Self::enumerate_physical_device_groups`].
+    #[inline]
+    pub fn enumerate_physical_device_groups_len(&self) -> Result<usize, Error> {
+        let mut out: MaybeUninit<u32> = MaybeUninit::uninit();
+        unsafe {
+            (self.fns().v1_1.enumerate_physical_device_groups.unwrap())(
+                self.handle,
+                out.as_mut_ptr(),
+                ptr::null_mut(),
+            )
+        }
+        .init_on_success(out)
+        .map(|o| o as usize)
     }
 }

@@ -202,9 +202,9 @@ impl AccelerationStructureDevice for Device {
                 self.handle,
                 version_info,
                 out.as_mut_ptr(),
-            )
-        };
-        unsafe { out.assume_init() }
+            );
+            out.assume_init()
+        }
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCreateAccelerationStructureKHR.html>
@@ -294,9 +294,9 @@ impl AccelerationStructureDevice for Device {
                 build_info,
                 max_primitive_counts.map_or(null(), from_ref),
                 out.as_mut_ptr(),
-            )
-        };
-        unsafe { out.assume_init() }
+            );
+            out.assume_init()
+        }
     }
 }
 

@@ -8,6 +8,7 @@ use crate::utils::read_into_vec_result;
 use crate::vk::*;
 use core::ffi::c_char;
 use core::mem::MaybeUninit;
+use core::ptr;
 use core::ptr::{from_ref, null};
 
 impl PhysicalDevice {
@@ -16,9 +17,12 @@ impl PhysicalDevice {
     pub fn get_properties(&self) -> PhysicalDeviceProperties {
         let mut out = MaybeUninit::uninit();
         unsafe {
-            (self.fns().v1_0.get_physical_device_properties.unwrap())(self.handle, out.as_mut_ptr())
-        };
-        unsafe { out.assume_init() }
+            (self.fns().v1_0.get_physical_device_properties.unwrap())(
+                self.handle,
+                out.as_mut_ptr(),
+            );
+            out.assume_init()
+        }
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceQueueFamilyProperties.html>
@@ -42,9 +46,9 @@ impl PhysicalDevice {
                 .fns()
                 .v1_0
                 .get_physical_device_memory_properties
-                .unwrap())(self.handle, out.as_mut_ptr())
-        };
-        unsafe { out.assume_init() }
+                .unwrap())(self.handle, out.as_mut_ptr());
+            out.assume_init()
+        }
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceFeatures.html>
@@ -52,9 +56,9 @@ impl PhysicalDevice {
     pub fn get_features(&self) -> PhysicalDeviceFeatures {
         let mut out = MaybeUninit::uninit();
         unsafe {
-            (self.fns().v1_0.get_physical_device_features.unwrap())(self.handle, out.as_mut_ptr())
-        };
-        unsafe { out.assume_init() }
+            (self.fns().v1_0.get_physical_device_features.unwrap())(self.handle, out.as_mut_ptr());
+            out.assume_init()
+        }
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceFormatProperties.html>
@@ -66,9 +70,9 @@ impl PhysicalDevice {
                 .fns()
                 .v1_0
                 .get_physical_device_format_properties
-                .unwrap())(self.handle, format, out.as_mut_ptr())
-        };
-        unsafe { out.assume_init() }
+                .unwrap())(self.handle, format, out.as_mut_ptr());
+            out.assume_init()
+        }
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceImageFormatProperties.html>
@@ -152,9 +156,9 @@ impl PhysicalDevice {
     pub fn get_features2(&self) -> PhysicalDeviceFeatures2<'_> {
         let mut out = MaybeUninit::uninit();
         unsafe {
-            (self.fns().v1_1.get_physical_device_features2.unwrap())(self.handle, out.as_mut_ptr())
-        };
-        unsafe { out.assume_init() }
+            (self.fns().v1_1.get_physical_device_features2.unwrap())(self.handle, out.as_mut_ptr());
+            out.assume_init()
+        }
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceProperties2.html>
@@ -165,9 +169,9 @@ impl PhysicalDevice {
             (self.fns().v1_1.get_physical_device_properties2.unwrap())(
                 self.handle,
                 out.as_mut_ptr(),
-            )
-        };
-        unsafe { out.assume_init() }
+            );
+            out.assume_init()
+        }
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceFormatProperties2.html>
@@ -179,9 +183,9 @@ impl PhysicalDevice {
                 .fns()
                 .v1_1
                 .get_physical_device_format_properties2
-                .unwrap())(self.handle, format, out.as_mut_ptr())
-        };
-        unsafe { out.assume_init() }
+                .unwrap())(self.handle, format, out.as_mut_ptr());
+            out.assume_init()
+        }
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceImageFormatProperties2.html>
@@ -202,6 +206,8 @@ impl PhysicalDevice {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceQueueFamilyProperties2.html>
+    ///
+    /// Call [`get_queue_family_properties2_len()`][`Self::get_queue_family_properties2_len()`] to query the number of elements to pass to `out`.
     #[inline]
     pub fn get_queue_family_properties2(
         &self,
@@ -220,6 +226,20 @@ impl PhysicalDevice {
         };
     }
 
+    /// Returns the required slice length for Call [`get_queue_family_properties2`][`Self::get_queue_family_properties2`].
+    #[inline]
+    pub fn get_queue_family_properties2_len(&self) -> usize {
+        let mut out: MaybeUninit<u32> = MaybeUninit::uninit();
+        unsafe {
+            (self
+                .fns()
+                .v1_1
+                .get_physical_device_queue_family_properties2
+                .unwrap())(self.handle, out.as_mut_ptr(), ptr::null_mut());
+            out.assume_init() as usize
+        }
+    }
+
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceMemoryProperties2.html>
     #[inline]
     pub fn get_memory_properties2(&self) -> PhysicalDeviceMemoryProperties2<'_> {
@@ -229,12 +249,14 @@ impl PhysicalDevice {
                 .fns()
                 .v1_1
                 .get_physical_device_memory_properties2
-                .unwrap())(self.handle, out.as_mut_ptr())
-        };
-        unsafe { out.assume_init() }
+                .unwrap())(self.handle, out.as_mut_ptr());
+            out.assume_init()
+        }
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceSparseImageFormatProperties2.html>
+    ///
+    /// Call [`get_sparse_image_format_properties2_len()`][`Self::get_sparse_image_format_properties2_len()`] to query the number of elements to pass to `out`.
     #[inline]
     pub fn get_sparse_image_format_properties2(
         &self,
@@ -255,6 +277,23 @@ impl PhysicalDevice {
         };
     }
 
+    /// Returns the required slice length for Call [`get_sparse_image_format_properties2`][`Self::get_sparse_image_format_properties2`].
+    #[inline]
+    pub fn get_sparse_image_format_properties2_len(
+        &self,
+        format_info: &PhysicalDeviceSparseImageFormatInfo2,
+    ) -> usize {
+        let mut out: MaybeUninit<u32> = MaybeUninit::uninit();
+        unsafe {
+            (self
+                .fns()
+                .v1_1
+                .get_physical_device_sparse_image_format_properties2
+                .unwrap())(self.handle, format_info, out.as_mut_ptr(), ptr::null_mut());
+            out.assume_init() as usize
+        }
+    }
+
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceExternalBufferProperties.html>
     #[inline]
     pub fn get_external_buffer_properties(
@@ -267,9 +306,9 @@ impl PhysicalDevice {
                 .fns()
                 .v1_1
                 .get_physical_device_external_buffer_properties
-                .unwrap())(self.handle, external_buffer_info, out.as_mut_ptr())
-        };
-        unsafe { out.assume_init() }
+                .unwrap())(self.handle, external_buffer_info, out.as_mut_ptr());
+            out.assume_init()
+        }
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceExternalSemaphoreProperties.html>
@@ -284,9 +323,9 @@ impl PhysicalDevice {
                 .fns()
                 .v1_1
                 .get_physical_device_external_semaphore_properties
-                .unwrap())(self.handle, external_semaphore_info, out.as_mut_ptr())
-        };
-        unsafe { out.assume_init() }
+                .unwrap())(self.handle, external_semaphore_info, out.as_mut_ptr());
+            out.assume_init()
+        }
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceExternalFenceProperties.html>
@@ -301,12 +340,14 @@ impl PhysicalDevice {
                 .fns()
                 .v1_1
                 .get_physical_device_external_fence_properties
-                .unwrap())(self.handle, external_fence_info, out.as_mut_ptr())
-        };
-        unsafe { out.assume_init() }
+                .unwrap())(self.handle, external_fence_info, out.as_mut_ptr());
+            out.assume_init()
+        }
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceToolProperties.html>
+    ///
+    /// Call [`get_tool_properties_len()`][`Self::get_tool_properties_len()`] to query the number of elements to pass to `out`.
     #[inline]
     pub fn get_tool_properties(
         &self,
@@ -320,5 +361,20 @@ impl PhysicalDevice {
             )
         }
         .result()
+    }
+
+    /// Returns the required slice length for Call [`get_tool_properties`][`Self::get_tool_properties`].
+    #[inline]
+    pub fn get_tool_properties_len(&self) -> Result<usize, Error> {
+        let mut out: MaybeUninit<u32> = MaybeUninit::uninit();
+        unsafe {
+            (self.fns().v1_3.get_physical_device_tool_properties.unwrap())(
+                self.handle,
+                out.as_mut_ptr(),
+                ptr::null_mut(),
+            )
+        }
+        .init_on_success(out)
+        .map(|o| o as usize)
     }
 }

@@ -69,9 +69,9 @@ impl PerformanceQueryPhysicalDevice for PhysicalDevice {
                 self.handle,
                 performance_query_create_info,
                 out.as_mut_ptr(),
-            )
-        };
-        unsafe { out.assume_init() }
+            );
+            out.assume_init()
+        }
     }
 }
 
