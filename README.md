@@ -18,9 +18,9 @@ Lightweight fully generated next gen Vulkan bindings for Rust — focused on zer
 
 <p align="center">
   <img src="https://www.nvidia.com/content/dam/en-zz/Solutions/geforce/news/vulkan-graphics-api-launches-nvidia-gpus-game-ready/vulkan-logo-featuredmain.png"
-       style="max-height: 200px; height: auto;" />
+       height="200" style="width: auto; max-width: 45%;" />
   <img src="https://d29g4g2dyqv443.cloudfront.net/sites/default/files/akamai/VulkanVideo_Logo-512.png"
-       style="max-height: 200px; height: auto;" />
+       height="200" style="width: auto; max-width: 45%;" />
 </p>
 
 ---
