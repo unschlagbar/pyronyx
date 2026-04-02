@@ -570,6 +570,13 @@ impl CommandBuffer {
         self.handle
     }
 
+    pub const fn null() -> Self {
+        Self {
+            handle: vk::vkCommandBuffer::null(),
+            v_table: None,
+        }
+    }
+
     /// Returns the function table for this command buffer.
     pub const fn fns(&self) -> &CommandBufferFn {
         self.v_table
