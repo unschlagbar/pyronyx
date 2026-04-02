@@ -8,6 +8,7 @@ use crate::utils::read_into_vec_result;
 use crate::vk::*;
 use core::ffi::c_void;
 use core::mem::MaybeUninit;
+use core::ptr;
 use core::ptr::{from_ref, null};
 
 impl Device {
@@ -1317,6 +1318,8 @@ impl Device {
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetDeviceImageSparseMemoryRequirements.html>
+    ///
+    /// Call [`get_device_image_sparse_memory_requirements_len()`][`Self::get_device_image_sparse_memory_requirements_len()`] to query the number of elements to pass to `out`.
     #[inline]
     pub fn get_device_image_sparse_memory_requirements(
         &self,
@@ -1335,6 +1338,23 @@ impl Device {
                 sparse_memory_requirements.as_mut_ptr(),
             )
         };
+    }
+
+    /// Returns the required slice length for Call [`get_device_image_sparse_memory_requirements`][`Self::get_device_image_sparse_memory_requirements`].
+    #[inline]
+    pub fn get_device_image_sparse_memory_requirements_len(
+        &self,
+        info: &DeviceImageMemoryRequirements,
+    ) -> usize {
+        let mut out: MaybeUninit<u32> = MaybeUninit::uninit();
+        unsafe {
+            (self
+                .fns()
+                .v1_3
+                .get_device_image_sparse_memory_requirements
+                .unwrap())(self.handle, info, out.as_mut_ptr(), ptr::null_mut());
+            out.assume_init() as usize
+        }
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCreateSamplerYcbcrConversion.html>

@@ -13,15 +13,15 @@ Lightweight fully generated next gen Vulkan bindings for Rust — focused on zer
 - [x] Commands dispatch from the handle they belong to
 - [x] Extensions are just methods — enable them in `CreateInfo`, call them directly
 - [x] Zero-cost handles — a vtable pointer and nothing else
-- [x] Slices instead of count + pointer pairs
 - [x] `Result`-returning commands
 - [x] No hidden runtime cost
 
 <p align="center">
-  <img src="https://www.nvidia.com/content/dam/en-zz/Solutions/geforce/news/vulkan-graphics-api-launches-nvidia-gpus-game-ready/vulkan-logo-featuredmain.png" height="200" />
-  <img src="https://d29g4g2dyqv443.cloudfront.net/sites/default/files/akamai/VulkanVideo_Logo-512.png" height="200" />
+  <img src="https://www.nvidia.com/content/dam/en-zz/Solutions/geforce/news/vulkan-graphics-api-launches-nvidia-gpus-game-ready/vulkan-logo-featuredmain.png"
+       style="max-height: 200px; max-width: 45%; height: auto; width: auto;" />
+  <img src="https://d29g4g2dyqv443.cloudfront.net/sites/default/files/akamai/VulkanVideo_Logo-512.png"
+       style="max-height: 200px; max-width: 45%; height: auto; width: auto;" />
 </p>
-
 ---
 
 ## Everything is on the right handle

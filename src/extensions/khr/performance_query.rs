@@ -6,6 +6,7 @@
 use crate::vk::*;
 use core::ffi::CStr;
 use core::mem::MaybeUninit;
+use core::ptr;
 
 /// Type: `Device`
 pub const NAME: &CStr = c"VK_KHR_performance_query";
@@ -18,6 +19,10 @@ pub trait PerformanceQueryPhysicalDevice {
         counters: &mut [PerformanceCounterKHR],
         counter_descriptions: &mut [PerformanceCounterDescriptionKHR],
     ) -> Result<(), Error>;
+    fn enumerate_queue_family_performance_query_counters_len(
+        &self,
+        queue_family_index: u32,
+    ) -> Result<usize, Error>;
 
     fn get_queue_family_performance_query_passes(
         &self,
@@ -27,6 +32,8 @@ pub trait PerformanceQueryPhysicalDevice {
 
 impl PerformanceQueryPhysicalDevice for PhysicalDevice {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR.html>
+    ///
+    /// Call [`enumerate_queue_family_performance_query_counters_len()`][`Self::enumerate_queue_family_performance_query_counters_len()`] to query the number of elements to pass to `out`.
     #[inline]
     fn enumerate_queue_family_performance_query_counters(
         &self,
@@ -50,6 +57,31 @@ impl PerformanceQueryPhysicalDevice for PhysicalDevice {
             )
         }
         .result()
+    }
+
+    /// Returns the required slice length for Call [`enumerate_queue_family_performance_query_counters`][`Self::enumerate_queue_family_performance_query_counters`].
+    #[inline]
+    fn enumerate_queue_family_performance_query_counters_len(
+        &self,
+        queue_family_index: u32,
+    ) -> Result<usize, Error> {
+        let mut out: MaybeUninit<u32> = MaybeUninit::uninit();
+        unsafe {
+            (self
+                .fns()
+                .khr_performance_query
+                .as_ref()
+                .unwrap()
+                .enumerate_physical_device_queue_family_performance_query_counters_khr)(
+                self.handle,
+                queue_family_index,
+                out.as_mut_ptr(),
+                ptr::null_mut(),
+                ptr::null_mut(),
+            )
+        }
+        .init_on_success(out)
+        .map(|o| o as usize)
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR.html>
