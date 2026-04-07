@@ -471,7 +471,7 @@ pub enum AV1InterpolationFilter {
 #[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum AV1TxMode {
     #[default]
-    Only4x4 = 0,
+    Only4X4 = 0,
     Largest = 1,
     Select = 2,
     Invalid = 2147483647,

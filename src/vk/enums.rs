@@ -79,9 +79,9 @@ pub enum AttachmentStoreOp {
 #[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum ImageType {
     #[default]
-    Type1d = 0,
-    Type2d = 1,
-    Type3d = 2,
+    Type1D = 0,
+    Type2D = 1,
+    Type3D = 2,
 }
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkImageTiling.html>
@@ -99,12 +99,12 @@ pub enum ImageTiling {
 #[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
 pub enum ImageViewType {
     #[default]
-    Type1d = 0,
-    Type2d = 1,
-    Type3d = 2,
+    Type1D = 0,
+    Type2D = 1,
+    Type3D = 2,
     Cube = 3,
-    Type1dArray = 4,
-    Type2dArray = 5,
+    Type1DArray = 4,
+    Type2DArray = 5,
     CubeArray = 6,
 }
 
@@ -626,28 +626,28 @@ pub enum Format {
     D16UnormS8Uint = 128,
     D24UnormS8Uint = 129,
     D32SfloatS8Uint = 130,
-    BC1RgbUnormBlock = 131,
-    BC1RgbSrgbBlock = 132,
-    BC1RgbaUnormBlock = 133,
-    BC1RgbaSrgbBlock = 134,
-    BC2UnormBlock = 135,
-    BC2SrgbBlock = 136,
-    BC3UnormBlock = 137,
-    BC3SrgbBlock = 138,
-    BC4UnormBlock = 139,
-    BC4SnormBlock = 140,
-    BC5UnormBlock = 141,
-    BC5SnormBlock = 142,
-    BC6HUfloatBlock = 143,
-    BC6HSfloatBlock = 144,
-    BC7UnormBlock = 145,
-    BC7SrgbBlock = 146,
-    ETC2R8G8B8UnormBlock = 147,
-    ETC2R8G8B8SrgbBlock = 148,
-    ETC2R8G8B8A1UnormBlock = 149,
-    ETC2R8G8B8A1SrgbBlock = 150,
-    ETC2R8G8B8A8UnormBlock = 151,
-    ETC2R8G8B8A8SrgbBlock = 152,
+    Bc1RgbUnormBlock = 131,
+    Bc1RgbSrgbBlock = 132,
+    Bc1RgbaUnormBlock = 133,
+    Bc1RgbaSrgbBlock = 134,
+    Bc2UnormBlock = 135,
+    Bc2SrgbBlock = 136,
+    Bc3UnormBlock = 137,
+    Bc3SrgbBlock = 138,
+    Bc4UnormBlock = 139,
+    Bc4SnormBlock = 140,
+    Bc5UnormBlock = 141,
+    Bc5SnormBlock = 142,
+    Bc6HUfloatBlock = 143,
+    Bc6HSfloatBlock = 144,
+    Bc7UnormBlock = 145,
+    Bc7SrgbBlock = 146,
+    Etc2R8G8B8UnormBlock = 147,
+    Etc2R8G8B8SrgbBlock = 148,
+    Etc2R8G8B8A1UnormBlock = 149,
+    Etc2R8G8B8A1SrgbBlock = 150,
+    Etc2R8G8B8A8UnormBlock = 151,
+    Etc2R8G8B8A8SrgbBlock = 152,
     EacR11UnormBlock = 153,
     EacR11SnormBlock = 154,
     EacR11G11UnormBlock = 155,
@@ -736,14 +736,14 @@ pub enum Format {
     Astc12x12SfloatBlock = 1000066013,
     A1B5G5R5UnormPack16 = 1000470000,
     A8Unorm = 1000470001,
-    PVRTC12BPPUnormBlockIMG = 1000054000,
-    PVRTC14BPPUnormBlockIMG = 1000054001,
-    PVRTC22BPPUnormBlockIMG = 1000054002,
-    PVRTC24BPPUnormBlockIMG = 1000054003,
-    PVRTC12BPPSrgbBlockIMG = 1000054004,
-    PVRTC14BPPSrgbBlockIMG = 1000054005,
-    PVRTC22BPPSrgbBlockIMG = 1000054006,
-    PVRTC24BPPSrgbBlockIMG = 1000054007,
+    Pvrtc12BppUnormBlockIMG = 1000054000,
+    Pvrtc14BppUnormBlockIMG = 1000054001,
+    Pvrtc22BppUnormBlockIMG = 1000054002,
+    Pvrtc24BppUnormBlockIMG = 1000054003,
+    Pvrtc12BppSrgbBlockIMG = 1000054004,
+    Pvrtc14BppSrgbBlockIMG = 1000054005,
+    Pvrtc22BppSrgbBlockIMG = 1000054006,
+    Pvrtc24BppSrgbBlockIMG = 1000054007,
     Astc3x3x3UnormBlockEXT = 1000288000,
     Astc3x3x3SrgbBlockEXT = 1000288001,
     Astc3x3x3SfloatBlockEXT = 1000288002,
@@ -775,7 +775,7 @@ pub enum Format {
     Astc6x6x6SrgbBlockEXT = 1000288028,
     Astc6x6x6SfloatBlockEXT = 1000288029,
     R8BoolARM = 1000460000,
-    R16G16SFixed5NV = 1000464000,
+    R16G16Sfixed5NV = 1000464000,
     R10X6UintPack16ARM = 1000609000,
     R10X6G10X6Uint2Pack16ARM = 1000609001,
     R10X6G10X6B10X6A10X6Uint4Pack16ARM = 1000609002,
@@ -2369,7 +2369,7 @@ pub enum DisplaySurfaceStereoTypeNV {
     #[default]
     None = 0,
     OnboardDin = 1,
-    Hdmi3d = 2,
+    Hdmi3D = 2,
     InbandDisplayport = 3,
 }
 
@@ -2417,21 +2417,21 @@ pub enum DebugReportObjectTypeEXT {
     DescriptorSet = 23,
     Framebuffer = 24,
     CommandPool = 25,
-    SurfaceKhr = 26,
-    SwapchainKhr = 27,
-    DebugReportCallbackExt = 28,
-    DisplayKhr = 29,
-    DisplayModeKhr = 30,
-    ValidationCacheExt = 33,
+    SurfaceKHR = 26,
+    SwapchainKHR = 27,
+    DebugReportCallbackEXT = 28,
+    DisplayKHR = 29,
+    DisplayModeKHR = 30,
+    ValidationCacheEXT = 33,
     SamplerYcbcrConversion = 1000156000,
     DescriptorUpdateTemplate = 1000085000,
-    CuModuleNvx = 1000029000,
-    CuFunctionNvx = 1000029001,
-    AccelerationStructureKhr = 1000150000,
-    AccelerationStructureNv = 1000165000,
-    CudaModuleNv = 1000307000,
-    CudaFunctionNv = 1000307001,
-    BufferCollectionFuchsia = 1000366000,
+    CuModuleNVX = 1000029000,
+    CuFunctionNVX = 1000029001,
+    AccelerationStructureKHR = 1000150000,
+    AccelerationStructureNV = 1000165000,
+    CudaModuleNV = 1000307000,
+    CudaFunctionNV = 1000307001,
+    BufferCollectionFUCHSIA = 1000366000,
 }
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkDeviceMemoryReportEventTypeEXT.html>
@@ -2771,61 +2771,61 @@ pub enum VendorId {
 pub enum DriverId {
     /// Advanced Micro Devices, Inc.
     #[default]
-    AmdProprietary = 1,
+    AMDProprietary = 1,
     /// Advanced Micro Devices, Inc.
-    AmdOpenSource = 2,
+    AMDOpenSource = 2,
     /// Mesa open source project
-    MesaRadv = 3,
+    MESARadv = 3,
     /// NVIDIA Corporation
     NvidiaProprietary = 4,
     /// Intel Corporation
-    IntelProprietaryWindows = 5,
+    INTELProprietaryWindows = 5,
     /// Intel Corporation
-    IntelOpenSourceMESA = 6,
+    INTELOpenSourceMESA = 6,
     /// Imagination Technologies
     ImaginationProprietary = 7,
     /// Qualcomm Technologies, Inc.
     QualcommProprietary = 8,
     /// Arm Limited
-    ArmProprietary = 9,
+    ARMProprietary = 9,
     /// Google LLC
-    GoogleSwiftshader = 10,
+    GOOGLESwiftshader = 10,
     /// Google LLC
-    GgpProprietary = 11,
+    GGPProprietary = 11,
     /// Broadcom Inc.
     BroadcomProprietary = 12,
     /// Mesa
-    MesaLlvmpipe = 13,
+    MESALlvmpipe = 13,
     /// MoltenVK
     Moltenvk = 14,
     /// Core Avionics & Industrial Inc.
     CoreaviProprietary = 15,
     /// Juice Technologies, Inc.
-    JuiceProprietary = 16,
+    JUICEProprietary = 16,
     /// Verisilicon, Inc.
     VerisiliconProprietary = 17,
     /// Mesa open source project
-    MesaTurnip = 18,
+    MESATurnip = 18,
     /// Mesa open source project
-    MesaV3dv = 19,
+    MESAV3Dv = 19,
     /// Mesa open source project
-    MesaPanvk = 20,
+    MESAPanvk = 20,
     /// Samsung Electronics Co., Ltd.
-    SamsungProprietary = 21,
+    SAMSUNGProprietary = 21,
     /// Mesa open source project
-    MesaVenus = 22,
+    MESAVenus = 22,
     /// Mesa open source project
-    MesaDozen = 23,
+    MESADozen = 23,
     /// Mesa open source project
-    MesaNvk = 24,
+    MESANvk = 24,
     /// Imagination Technologies
     ImaginationOpenSourceMESA = 25,
     /// Mesa open source project
-    MesaHoneykrisp = 26,
+    MESAHoneykrisp = 26,
     /// Vulkan SC Emulation on Vulkan
     VulkanScEmulationOnVulkan = 27,
     /// Mesa open source project
-    MesaKosmickrisp = 28,
+    MESAKosmickrisp = 28,
 }
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkShadingRatePaletteEntryNV.html>
@@ -2839,12 +2839,12 @@ pub enum ShadingRatePaletteEntryNV {
     Type4InvocationsPerPixel = 3,
     Type2InvocationsPerPixel = 4,
     Type1InvocationPerPixel = 5,
-    Type1InvocationPer2x1Pixels = 6,
-    Type1InvocationPer1x2Pixels = 7,
-    Type1InvocationPer2x2Pixels = 8,
-    Type1InvocationPer4x2Pixels = 9,
-    Type1InvocationPer2x4Pixels = 10,
-    Type1InvocationPer4x4Pixels = 11,
+    Type1InvocationPer2X1Pixels = 6,
+    Type1InvocationPer1X2Pixels = 7,
+    Type1InvocationPer2X2Pixels = 8,
+    Type1InvocationPer4X2Pixels = 9,
+    Type1InvocationPer2X4Pixels = 10,
+    Type1InvocationPer4X4Pixels = 11,
 }
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkCoarseSampleOrderTypeNV.html>
@@ -3150,12 +3150,12 @@ pub enum FragmentShadingRateCombinerOpKHR {
 pub enum FragmentShadingRateNV {
     #[default]
     Type1InvocationPerPixel = 0,
-    Type1InvocationPer1x2Pixels = 1,
-    Type1InvocationPer2x1Pixels = 4,
-    Type1InvocationPer2x2Pixels = 5,
-    Type1InvocationPer2x4Pixels = 6,
-    Type1InvocationPer4x2Pixels = 9,
-    Type1InvocationPer4x4Pixels = 10,
+    Type1InvocationPer1X2Pixels = 1,
+    Type1InvocationPer2X1Pixels = 4,
+    Type1InvocationPer2X2Pixels = 5,
+    Type1InvocationPer2X4Pixels = 6,
+    Type1InvocationPer4X2Pixels = 9,
+    Type1InvocationPer4X4Pixels = 10,
     Type2InvocationsPerPixel = 11,
     Type4InvocationsPerPixel = 12,
     Type8InvocationsPerPixel = 13,
@@ -3459,8 +3459,8 @@ pub enum IndirectCommandsTokenTypeEXT {
     Dispatch = 9,
     PushData = 1000135000,
     PushDataSequenceIndex = 1000135001,
-    DrawMeshTasksNv = 1000202002,
-    DrawMeshTasksCountNv = 1000202003,
+    DrawMeshTasksNV = 1000202002,
+    DrawMeshTasksCountNV = 1000202003,
     DrawMeshTasks = 1000328000,
     DrawMeshTasksCount = 1000328001,
     TraceRays2 = 1000386004,
@@ -3515,8 +3515,8 @@ pub enum ComponentTypeKHR {
     Bfloat16 = 1000141000,
     Sint8Packed = 1000491000,
     Uint8Packed = 1000491001,
-    Float8E4m3 = 1000491002,
-    Float8E5m2 = 1000491003,
+    Float8E4M3 = 1000491002,
+    Float8E5M2 = 1000491003,
 }
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkCubicFilterWeightsQCOM.html>
@@ -3545,7 +3545,7 @@ pub enum BlockMatchWindowCompareModeQCOM {
 pub enum PhysicalDeviceLayeredApiKHR {
     #[default]
     Vulkan = 0,
-    D3d12 = 1,
+    D3D12 = 1,
     Metal = 2,
     Opengl = 3,
     Opengles = 4,
@@ -3557,7 +3557,7 @@ pub enum PhysicalDeviceLayeredApiKHR {
 pub enum LayeredDriverUnderlyingApiMSFT {
     #[default]
     None = 0,
-    D3d12 = 1,
+    D3D12 = 1,
 }
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkLatencyMarkerNV.html>

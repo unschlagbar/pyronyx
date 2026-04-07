@@ -844,8 +844,8 @@ impl Display for ImageCreateFlags {
                 "SplitInstanceBindRegions",
             ),
             (
-                ImageCreateFlags::Type2dArrayCompatible,
-                "Type2dArrayCompatible",
+                ImageCreateFlags::Type2DArrayCompatible,
+                "Type2DArrayCompatible",
             ),
             (
                 ImageCreateFlags::BlockTexelViewCompatible,
@@ -869,8 +869,8 @@ impl Display for ImageCreateFlags {
                 "MultisampledRenderToSingleSampledEXT",
             ),
             (
-                ImageCreateFlags::Type2dViewCompatibleEXT,
-                "Type2dViewCompatibleEXT",
+                ImageCreateFlags::Type2DViewCompatibleEXT,
+                "Type2DViewCompatibleEXT",
             ),
             (
                 ImageCreateFlags::VideoProfileIndependentKHR,
@@ -4106,10 +4106,10 @@ impl Display for ExternalMemoryHandleTypeFlagsNV {
                 ExternalMemoryHandleTypeFlagsNV::OpaqueWin32Kmt,
                 "OpaqueWin32Kmt",
             ),
-            (ExternalMemoryHandleTypeFlagsNV::D3d11Image, "D3d11Image"),
+            (ExternalMemoryHandleTypeFlagsNV::D3D11Image, "D3D11Image"),
             (
-                ExternalMemoryHandleTypeFlagsNV::D3d11ImageKmt,
-                "D3d11ImageKmt",
+                ExternalMemoryHandleTypeFlagsNV::D3D11ImageKmt,
+                "D3D11ImageKmt",
             ),
         ];
 
@@ -4140,16 +4140,16 @@ impl Display for ClusterAccelerationStructureIndexFormatFlagsNV {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         const BITS: &[(ClusterAccelerationStructureIndexFormatFlagsNV, &str)] = &[
             (
-                ClusterAccelerationStructureIndexFormatFlagsNV::Type8bit,
-                "Type8bit",
+                ClusterAccelerationStructureIndexFormatFlagsNV::Type8Bit,
+                "Type8Bit",
             ),
             (
-                ClusterAccelerationStructureIndexFormatFlagsNV::Type16bit,
-                "Type16bit",
+                ClusterAccelerationStructureIndexFormatFlagsNV::Type16Bit,
+                "Type16Bit",
             ),
             (
-                ClusterAccelerationStructureIndexFormatFlagsNV::Type32bit,
-                "Type32bit",
+                ClusterAccelerationStructureIndexFormatFlagsNV::Type32Bit,
+                "Type32Bit",
             ),
         ];
 
@@ -4216,20 +4216,20 @@ impl Display for ExternalMemoryHandleTypeFlags {
                 ExternalMemoryHandleTypeFlags::OpaqueWin32Kmt,
                 "OpaqueWin32Kmt",
             ),
-            (ExternalMemoryHandleTypeFlags::D3d11Texture, "D3d11Texture"),
+            (ExternalMemoryHandleTypeFlags::D3D11Texture, "D3D11Texture"),
             (
-                ExternalMemoryHandleTypeFlags::D3d11TextureKmt,
-                "D3d11TextureKmt",
+                ExternalMemoryHandleTypeFlags::D3D11TextureKmt,
+                "D3D11TextureKmt",
             ),
-            (ExternalMemoryHandleTypeFlags::D3d12Heap, "D3d12Heap"),
+            (ExternalMemoryHandleTypeFlags::D3D12Heap, "D3D12Heap"),
             (
-                ExternalMemoryHandleTypeFlags::D3d12Resource,
-                "D3d12Resource",
+                ExternalMemoryHandleTypeFlags::D3D12Resource,
+                "D3D12Resource",
             ),
             (ExternalMemoryHandleTypeFlags::DmaBufEXT, "DmaBufEXT"),
             (
-                ExternalMemoryHandleTypeFlags::AndroidHardwareBufferANDROID,
-                "AndroidHardwareBufferANDROID",
+                ExternalMemoryHandleTypeFlags::ANDROIDHardwareBufferANDROID,
+                "ANDROIDHardwareBufferANDROID",
             ),
             (
                 ExternalMemoryHandleTypeFlags::HostAllocationEXT,
@@ -4327,7 +4327,7 @@ impl Display for ExternalSemaphoreHandleTypeFlags {
                 ExternalSemaphoreHandleTypeFlags::OpaqueWin32Kmt,
                 "OpaqueWin32Kmt",
             ),
-            (ExternalSemaphoreHandleTypeFlags::D3d12Fence, "D3d12Fence"),
+            (ExternalSemaphoreHandleTypeFlags::D3D12Fence, "D3D12Fence"),
             (ExternalSemaphoreHandleTypeFlags::SyncFd, "SyncFd"),
             (
                 ExternalSemaphoreHandleTypeFlags::ZirconEventFUCHSIA,
@@ -4987,30 +4987,30 @@ impl Display for ImageCompressionFixedRateFlagsEXT {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         const BITS: &[(ImageCompressionFixedRateFlagsEXT, &str)] = &[
             (ImageCompressionFixedRateFlagsEXT::None, "None"),
-            (ImageCompressionFixedRateFlagsEXT::Type1bpc, "Type1bpc"),
-            (ImageCompressionFixedRateFlagsEXT::Type2bpc, "Type2bpc"),
-            (ImageCompressionFixedRateFlagsEXT::Type3bpc, "Type3bpc"),
-            (ImageCompressionFixedRateFlagsEXT::Type4bpc, "Type4bpc"),
-            (ImageCompressionFixedRateFlagsEXT::Type5bpc, "Type5bpc"),
-            (ImageCompressionFixedRateFlagsEXT::Type6bpc, "Type6bpc"),
-            (ImageCompressionFixedRateFlagsEXT::Type7bpc, "Type7bpc"),
-            (ImageCompressionFixedRateFlagsEXT::Type8bpc, "Type8bpc"),
-            (ImageCompressionFixedRateFlagsEXT::Type9bpc, "Type9bpc"),
-            (ImageCompressionFixedRateFlagsEXT::Type10bpc, "Type10bpc"),
-            (ImageCompressionFixedRateFlagsEXT::Type11bpc, "Type11bpc"),
-            (ImageCompressionFixedRateFlagsEXT::Type12bpc, "Type12bpc"),
-            (ImageCompressionFixedRateFlagsEXT::Type13bpc, "Type13bpc"),
-            (ImageCompressionFixedRateFlagsEXT::Type14bpc, "Type14bpc"),
-            (ImageCompressionFixedRateFlagsEXT::Type15bpc, "Type15bpc"),
-            (ImageCompressionFixedRateFlagsEXT::Type16bpc, "Type16bpc"),
-            (ImageCompressionFixedRateFlagsEXT::Type17bpc, "Type17bpc"),
-            (ImageCompressionFixedRateFlagsEXT::Type18bpc, "Type18bpc"),
-            (ImageCompressionFixedRateFlagsEXT::Type19bpc, "Type19bpc"),
-            (ImageCompressionFixedRateFlagsEXT::Type20bpc, "Type20bpc"),
-            (ImageCompressionFixedRateFlagsEXT::Type21bpc, "Type21bpc"),
-            (ImageCompressionFixedRateFlagsEXT::Type22bpc, "Type22bpc"),
-            (ImageCompressionFixedRateFlagsEXT::Type23bpc, "Type23bpc"),
-            (ImageCompressionFixedRateFlagsEXT::Type24bpc, "Type24bpc"),
+            (ImageCompressionFixedRateFlagsEXT::Type1Bpc, "Type1Bpc"),
+            (ImageCompressionFixedRateFlagsEXT::Type2Bpc, "Type2Bpc"),
+            (ImageCompressionFixedRateFlagsEXT::Type3Bpc, "Type3Bpc"),
+            (ImageCompressionFixedRateFlagsEXT::Type4Bpc, "Type4Bpc"),
+            (ImageCompressionFixedRateFlagsEXT::Type5Bpc, "Type5Bpc"),
+            (ImageCompressionFixedRateFlagsEXT::Type6Bpc, "Type6Bpc"),
+            (ImageCompressionFixedRateFlagsEXT::Type7Bpc, "Type7Bpc"),
+            (ImageCompressionFixedRateFlagsEXT::Type8Bpc, "Type8Bpc"),
+            (ImageCompressionFixedRateFlagsEXT::Type9Bpc, "Type9Bpc"),
+            (ImageCompressionFixedRateFlagsEXT::Type10Bpc, "Type10Bpc"),
+            (ImageCompressionFixedRateFlagsEXT::Type11Bpc, "Type11Bpc"),
+            (ImageCompressionFixedRateFlagsEXT::Type12Bpc, "Type12Bpc"),
+            (ImageCompressionFixedRateFlagsEXT::Type13Bpc, "Type13Bpc"),
+            (ImageCompressionFixedRateFlagsEXT::Type14Bpc, "Type14Bpc"),
+            (ImageCompressionFixedRateFlagsEXT::Type15Bpc, "Type15Bpc"),
+            (ImageCompressionFixedRateFlagsEXT::Type16Bpc, "Type16Bpc"),
+            (ImageCompressionFixedRateFlagsEXT::Type17Bpc, "Type17Bpc"),
+            (ImageCompressionFixedRateFlagsEXT::Type18Bpc, "Type18Bpc"),
+            (ImageCompressionFixedRateFlagsEXT::Type19Bpc, "Type19Bpc"),
+            (ImageCompressionFixedRateFlagsEXT::Type20Bpc, "Type20Bpc"),
+            (ImageCompressionFixedRateFlagsEXT::Type21Bpc, "Type21Bpc"),
+            (ImageCompressionFixedRateFlagsEXT::Type22Bpc, "Type22Bpc"),
+            (ImageCompressionFixedRateFlagsEXT::Type23Bpc, "Type23Bpc"),
+            (ImageCompressionFixedRateFlagsEXT::Type24Bpc, "Type24Bpc"),
         ];
 
         let mut first = true;
@@ -5189,10 +5189,10 @@ impl Display for OpticalFlowGridSizeFlagsNV {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         const BITS: &[(OpticalFlowGridSizeFlagsNV, &str)] = &[
             (OpticalFlowGridSizeFlagsNV::Unknown, "Unknown"),
-            (OpticalFlowGridSizeFlagsNV::Type1x1, "Type1x1"),
-            (OpticalFlowGridSizeFlagsNV::Type2x2, "Type2x2"),
-            (OpticalFlowGridSizeFlagsNV::Type4x4, "Type4x4"),
-            (OpticalFlowGridSizeFlagsNV::Type8x8, "Type8x8"),
+            (OpticalFlowGridSizeFlagsNV::Type1X1, "Type1X1"),
+            (OpticalFlowGridSizeFlagsNV::Type2X2, "Type2X2"),
+            (OpticalFlowGridSizeFlagsNV::Type4X4, "Type4X4"),
+            (OpticalFlowGridSizeFlagsNV::Type8X8, "Type8X8"),
         ];
 
         let mut first = true;
@@ -6373,8 +6373,8 @@ impl Display for VideoEncodeH264StdFlagsKHR {
                 "WeightedBipredIdcImplicit",
             ),
             (
-                VideoEncodeH264StdFlagsKHR::Transform8x8ModeFlagSet,
-                "Transform8x8ModeFlagSet",
+                VideoEncodeH264StdFlagsKHR::Transform8X8ModeFlagSet,
+                "Transform8X8ModeFlagSet",
             ),
             (
                 VideoEncodeH264StdFlagsKHR::DirectSpatialMvPredFlagUnset,
@@ -6389,8 +6389,8 @@ impl Display for VideoEncodeH264StdFlagsKHR {
                 "EntropyCodingModeFlagSet",
             ),
             (
-                VideoEncodeH264StdFlagsKHR::Direct8x8InferenceFlagUnset,
-                "Direct8x8InferenceFlagUnset",
+                VideoEncodeH264StdFlagsKHR::Direct8X8InferenceFlagUnset,
+                "Direct8X8InferenceFlagUnset",
             ),
             (
                 VideoEncodeH264StdFlagsKHR::ConstrainedIntraPredFlagSet,

@@ -401,7 +401,7 @@ impl ImageCreateFlags {
     /// Allows using VkBindImageMemoryDeviceGroupInfo::pSplitInstanceBindRegions when binding memory to the image
     pub const SplitInstanceBindRegions: Self = Self(0b100_0000);
     /// The 3D image can be viewed as a 2D or 2D array image
-    pub const Type2dArrayCompatible: Self = Self(0b10_0000);
+    pub const Type2DArrayCompatible: Self = Self(0b10_0000);
     pub const BlockTexelViewCompatible: Self = Self(0b1000_0000);
     pub const ExtendedUsage: Self = Self(0b1_0000_0000);
     /// Image requires protected memory
@@ -413,7 +413,7 @@ impl ImageCreateFlags {
     pub const SubsampledEXT: Self = Self(0b100_0000_0000_0000);
     pub const MultisampledRenderToSingleSampledEXT: Self = Self(0b100_0000_0000_0000_0000);
     /// Image is created with a layout where individual slices are capable of being used as 2D images
-    pub const Type2dViewCompatibleEXT: Self = Self(0b10_0000_0000_0000_0000);
+    pub const Type2DViewCompatibleEXT: Self = Self(0b10_0000_0000_0000_0000);
     pub const VideoProfileIndependentKHR: Self = Self(0b1_0000_0000_0000_0000_0000);
     pub const FragmentDensityMapOffsetEXT: Self = Self(0b1000_0000_0000_0000);
 }
@@ -1747,8 +1747,8 @@ vk_bitflags_wrapped!(ExternalMemoryHandleTypeFlagsNV, Flags);
 impl ExternalMemoryHandleTypeFlagsNV {
     pub const OpaqueWin32: Self = Self(0b1);
     pub const OpaqueWin32Kmt: Self = Self(0b10);
-    pub const D3d11Image: Self = Self(0b100);
-    pub const D3d11ImageKmt: Self = Self(0b1000);
+    pub const D3D11Image: Self = Self(0b100);
+    pub const D3D11ImageKmt: Self = Self(0b1000);
 }
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkClusterAccelerationStructureIndexFormatFlagBitsNV.html>
@@ -1758,9 +1758,9 @@ pub struct ClusterAccelerationStructureIndexFormatFlagsNV(pub(crate) Flags);
 vk_bitflags_wrapped!(ClusterAccelerationStructureIndexFormatFlagsNV, Flags);
 
 impl ClusterAccelerationStructureIndexFormatFlagsNV {
-    pub const Type8bit: Self = Self(0b1);
-    pub const Type16bit: Self = Self(0b10);
-    pub const Type32bit: Self = Self(0b100);
+    pub const Type8Bit: Self = Self(0b1);
+    pub const Type16Bit: Self = Self(0b10);
+    pub const Type32Bit: Self = Self(0b100);
 }
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkExternalMemoryFeatureFlagBitsNV.html>
@@ -1785,12 +1785,12 @@ impl ExternalMemoryHandleTypeFlags {
     pub const OpaqueFd: Self = Self(0b1);
     pub const OpaqueWin32: Self = Self(0b10);
     pub const OpaqueWin32Kmt: Self = Self(0b100);
-    pub const D3d11Texture: Self = Self(0b1000);
-    pub const D3d11TextureKmt: Self = Self(0b1_0000);
-    pub const D3d12Heap: Self = Self(0b10_0000);
-    pub const D3d12Resource: Self = Self(0b100_0000);
+    pub const D3D11Texture: Self = Self(0b1000);
+    pub const D3D11TextureKmt: Self = Self(0b1_0000);
+    pub const D3D12Heap: Self = Self(0b10_0000);
+    pub const D3D12Resource: Self = Self(0b100_0000);
     pub const DmaBufEXT: Self = Self(0b10_0000_0000);
-    pub const AndroidHardwareBufferANDROID: Self = Self(0b100_0000_0000);
+    pub const ANDROIDHardwareBufferANDROID: Self = Self(0b100_0000_0000);
     pub const HostAllocationEXT: Self = Self(0b1000_0000);
     pub const HostMappedForeignMemoryEXT: Self = Self(0b1_0000_0000);
     pub const ZirconVmoFUCHSIA: Self = Self(0b1000_0000_0000);
@@ -1825,7 +1825,7 @@ impl ExternalSemaphoreHandleTypeFlags {
     pub const OpaqueFd: Self = Self(0b1);
     pub const OpaqueWin32: Self = Self(0b10);
     pub const OpaqueWin32Kmt: Self = Self(0b100);
-    pub const D3d12Fence: Self = Self(0b1000);
+    pub const D3D12Fence: Self = Self(0b1000);
     pub const SyncFd: Self = Self(0b1_0000);
     pub const ZirconEventFUCHSIA: Self = Self(0b1000_0000);
     pub const SciSyncObjNV: Self = Self(0b10_0000);
@@ -2061,30 +2061,30 @@ vk_bitflags_wrapped!(ImageCompressionFixedRateFlagsEXT, Flags);
 
 impl ImageCompressionFixedRateFlagsEXT {
     pub const None: Self = Self(0);
-    pub const Type1bpc: Self = Self(0b1);
-    pub const Type2bpc: Self = Self(0b10);
-    pub const Type3bpc: Self = Self(0b100);
-    pub const Type4bpc: Self = Self(0b1000);
-    pub const Type5bpc: Self = Self(0b1_0000);
-    pub const Type6bpc: Self = Self(0b10_0000);
-    pub const Type7bpc: Self = Self(0b100_0000);
-    pub const Type8bpc: Self = Self(0b1000_0000);
-    pub const Type9bpc: Self = Self(0b1_0000_0000);
-    pub const Type10bpc: Self = Self(0b10_0000_0000);
-    pub const Type11bpc: Self = Self(0b100_0000_0000);
-    pub const Type12bpc: Self = Self(0b1000_0000_0000);
-    pub const Type13bpc: Self = Self(0b1_0000_0000_0000);
-    pub const Type14bpc: Self = Self(0b10_0000_0000_0000);
-    pub const Type15bpc: Self = Self(0b100_0000_0000_0000);
-    pub const Type16bpc: Self = Self(0b1000_0000_0000_0000);
-    pub const Type17bpc: Self = Self(0b1_0000_0000_0000_0000);
-    pub const Type18bpc: Self = Self(0b10_0000_0000_0000_0000);
-    pub const Type19bpc: Self = Self(0b100_0000_0000_0000_0000);
-    pub const Type20bpc: Self = Self(0b1000_0000_0000_0000_0000);
-    pub const Type21bpc: Self = Self(0b1_0000_0000_0000_0000_0000);
-    pub const Type22bpc: Self = Self(0b10_0000_0000_0000_0000_0000);
-    pub const Type23bpc: Self = Self(0b100_0000_0000_0000_0000_0000);
-    pub const Type24bpc: Self = Self(0b1000_0000_0000_0000_0000_0000);
+    pub const Type1Bpc: Self = Self(0b1);
+    pub const Type2Bpc: Self = Self(0b10);
+    pub const Type3Bpc: Self = Self(0b100);
+    pub const Type4Bpc: Self = Self(0b1000);
+    pub const Type5Bpc: Self = Self(0b1_0000);
+    pub const Type6Bpc: Self = Self(0b10_0000);
+    pub const Type7Bpc: Self = Self(0b100_0000);
+    pub const Type8Bpc: Self = Self(0b1000_0000);
+    pub const Type9Bpc: Self = Self(0b1_0000_0000);
+    pub const Type10Bpc: Self = Self(0b10_0000_0000);
+    pub const Type11Bpc: Self = Self(0b100_0000_0000);
+    pub const Type12Bpc: Self = Self(0b1000_0000_0000);
+    pub const Type13Bpc: Self = Self(0b1_0000_0000_0000);
+    pub const Type14Bpc: Self = Self(0b10_0000_0000_0000);
+    pub const Type15Bpc: Self = Self(0b100_0000_0000_0000);
+    pub const Type16Bpc: Self = Self(0b1000_0000_0000_0000);
+    pub const Type17Bpc: Self = Self(0b1_0000_0000_0000_0000);
+    pub const Type18Bpc: Self = Self(0b10_0000_0000_0000_0000);
+    pub const Type19Bpc: Self = Self(0b100_0000_0000_0000_0000);
+    pub const Type20Bpc: Self = Self(0b1000_0000_0000_0000_0000);
+    pub const Type21Bpc: Self = Self(0b1_0000_0000_0000_0000_0000);
+    pub const Type22Bpc: Self = Self(0b10_0000_0000_0000_0000_0000);
+    pub const Type23Bpc: Self = Self(0b100_0000_0000_0000_0000_0000);
+    pub const Type24Bpc: Self = Self(0b1000_0000_0000_0000_0000_0000);
 }
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkExportMetalObjectTypeFlagBitsEXT.html>
@@ -2143,10 +2143,10 @@ vk_bitflags_wrapped!(OpticalFlowGridSizeFlagsNV, Flags);
 
 impl OpticalFlowGridSizeFlagsNV {
     pub const Unknown: Self = Self(0);
-    pub const Type1x1: Self = Self(0b1);
-    pub const Type2x2: Self = Self(0b10);
-    pub const Type4x4: Self = Self(0b100);
-    pub const Type8x8: Self = Self(0b1000);
+    pub const Type1X1: Self = Self(0b1);
+    pub const Type2X2: Self = Self(0b10);
+    pub const Type4X4: Self = Self(0b100);
+    pub const Type8X8: Self = Self(0b1000);
 }
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkOpticalFlowUsageFlagBitsNV.html>
@@ -2552,11 +2552,11 @@ impl VideoEncodeH264StdFlagsKHR {
     pub const WeightedPredFlagSet: Self = Self(0b100_0000);
     pub const WeightedBipredIdcExplicit: Self = Self(0b1000_0000);
     pub const WeightedBipredIdcImplicit: Self = Self(0b1_0000_0000);
-    pub const Transform8x8ModeFlagSet: Self = Self(0b10_0000_0000);
+    pub const Transform8X8ModeFlagSet: Self = Self(0b10_0000_0000);
     pub const DirectSpatialMvPredFlagUnset: Self = Self(0b100_0000_0000);
     pub const EntropyCodingModeFlagUnset: Self = Self(0b1000_0000_0000);
     pub const EntropyCodingModeFlagSet: Self = Self(0b1_0000_0000_0000);
-    pub const Direct8x8InferenceFlagUnset: Self = Self(0b10_0000_0000_0000);
+    pub const Direct8X8InferenceFlagUnset: Self = Self(0b10_0000_0000_0000);
     pub const ConstrainedIntraPredFlagSet: Self = Self(0b100_0000_0000_0000);
     pub const DeblockingFilterDisabled: Self = Self(0b1000_0000_0000_0000);
     pub const DeblockingFilterEnabled: Self = Self(0b1_0000_0000_0000_0000);
