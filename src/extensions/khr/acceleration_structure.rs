@@ -46,7 +46,7 @@ pub trait AccelerationStructureDevice {
         stride: usize,
     ) -> Result<(), Error>;
 
-    fn get_device_acceleration_structure_compatibility(
+    fn get_acceleration_structure_compatibility(
         &self,
         version_info: &AccelerationStructureVersionInfoKHR,
     ) -> AccelerationStructureCompatibilityKHR;
@@ -64,7 +64,7 @@ pub trait AccelerationStructureDevice {
         build_range_infos: &[*const AccelerationStructureBuildRangeInfoKHR],
     ) -> Result<(), Error>;
 
-    fn get_acceleration_structure_device_address(
+    fn get_acceleration_structure_address(
         &self,
         info: &AccelerationStructureDeviceAddressInfoKHR,
     ) -> DeviceAddress;
@@ -187,7 +187,7 @@ impl AccelerationStructureDevice for Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetDeviceAccelerationStructureCompatibilityKHR.html>
     #[inline]
-    fn get_device_acceleration_structure_compatibility(
+    fn get_acceleration_structure_compatibility(
         &self,
         version_info: &AccelerationStructureVersionInfoKHR,
     ) -> AccelerationStructureCompatibilityKHR {
@@ -259,7 +259,7 @@ impl AccelerationStructureDevice for Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetAccelerationStructureDeviceAddressKHR.html>
     #[inline]
-    fn get_acceleration_structure_device_address(
+    fn get_acceleration_structure_address(
         &self,
         info: &AccelerationStructureDeviceAddressInfoKHR,
     ) -> DeviceAddress {

@@ -54,7 +54,7 @@ pub trait OpacityMicromapDevice {
         stride: usize,
     ) -> Result<(), Error>;
 
-    fn get_device_micromap_compatibility(
+    fn get_micromap_compatibility(
         &self,
         version_info: &MicromapVersionInfoEXT,
     ) -> AccelerationStructureCompatibilityKHR;
@@ -213,7 +213,7 @@ impl OpacityMicromapDevice for Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetDeviceMicromapCompatibilityEXT.html>
     #[inline]
-    fn get_device_micromap_compatibility(
+    fn get_micromap_compatibility(
         &self,
         version_info: &MicromapVersionInfoEXT,
     ) -> AccelerationStructureCompatibilityKHR {

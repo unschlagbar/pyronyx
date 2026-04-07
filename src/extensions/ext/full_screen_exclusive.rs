@@ -43,7 +43,7 @@ impl FullScreenExclusivePhysicalDevice for PhysicalDevice {
 }
 
 pub trait FullScreenExclusiveDevice {
-    fn get_device_group_surface_present_modes2(
+    fn get_group_surface_present_modes2(
         &self,
         surface_info: &PhysicalDeviceSurfaceInfo2KHR,
     ) -> Result<DeviceGroupPresentModeFlagsKHR, Error>;
@@ -56,7 +56,7 @@ pub trait FullScreenExclusiveDevice {
 impl FullScreenExclusiveDevice for Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetDeviceGroupSurfacePresentModes2EXT.html>
     #[inline]
-    fn get_device_group_surface_present_modes2(
+    fn get_group_surface_present_modes2(
         &self,
         surface_info: &PhysicalDeviceSurfaceInfo2KHR,
     ) -> Result<DeviceGroupPresentModeFlagsKHR, Error> {

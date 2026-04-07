@@ -12,11 +12,11 @@ pub const NAME: &CStr = c"VK_KHR_device_group";
 pub const SPEC_VERSION: u32 = 4;
 
 pub trait DeviceGroupDevice {
-    fn get_device_group_present_capabilities(
+    fn get_group_present_capabilities(
         &self,
     ) -> Result<DeviceGroupPresentCapabilitiesKHR<'_>, Error>;
 
-    fn get_device_group_surface_present_modes(
+    fn get_group_surface_present_modes(
         &self,
         surface: SurfaceKHR,
     ) -> Result<DeviceGroupPresentModeFlagsKHR, Error>;
@@ -27,7 +27,7 @@ pub trait DeviceGroupDevice {
 impl DeviceGroupDevice for Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetDeviceGroupPresentCapabilitiesKHR.html>
     #[inline]
-    fn get_device_group_present_capabilities(
+    fn get_group_present_capabilities(
         &self,
     ) -> Result<DeviceGroupPresentCapabilitiesKHR<'_>, Error> {
         let mut out = MaybeUninit::uninit();
@@ -46,7 +46,7 @@ impl DeviceGroupDevice for Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetDeviceGroupSurfacePresentModesKHR.html>
     #[inline]
-    fn get_device_group_surface_present_modes(
+    fn get_group_surface_present_modes(
         &self,
         surface: SurfaceKHR,
     ) -> Result<DeviceGroupPresentModeFlagsKHR, Error> {

@@ -19,7 +19,7 @@ pub trait DisplayControlDevice {
         display_power_info: &DisplayPowerInfoEXT,
     ) -> Result<(), Error>;
 
-    fn register_device_event(
+    fn register_event(
         &self,
         device_event_info: &DeviceEventInfoEXT,
         allocator: Option<&AllocationCallbacks>,
@@ -60,7 +60,7 @@ impl DisplayControlDevice for Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkRegisterDeviceEventEXT.html>
     #[inline]
-    fn register_device_event(
+    fn register_event(
         &self,
         device_event_info: &DeviceEventInfoEXT,
         allocator: Option<&AllocationCallbacks>,

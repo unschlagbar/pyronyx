@@ -51,7 +51,7 @@ pub trait DeviceGeneratedCommandsComputeDevice {
         create_info: &ComputePipelineCreateInfo,
     ) -> MemoryRequirements2<'_>;
 
-    fn get_pipeline_indirect_device_address(
+    fn get_pipeline_indirect_address(
         &self,
         info: &PipelineIndirectDeviceAddressInfoNV,
     ) -> DeviceAddress;
@@ -82,7 +82,7 @@ impl DeviceGeneratedCommandsComputeDevice for Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPipelineIndirectDeviceAddressNV.html>
     #[inline]
-    fn get_pipeline_indirect_device_address(
+    fn get_pipeline_indirect_address(
         &self,
         info: &PipelineIndirectDeviceAddressInfoNV,
     ) -> DeviceAddress {

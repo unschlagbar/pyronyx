@@ -14,7 +14,7 @@ use core::ptr::{from_ref, null};
 impl Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkDestroyDevice.html>
     #[inline]
-    pub fn destroy_device(&self, allocator: Option<&AllocationCallbacks>) {
+    pub fn destroy(&self, allocator: Option<&AllocationCallbacks>) {
         unsafe {
             (self.fns().v1_0.destroy_device.unwrap())(
                 self.handle,
@@ -25,7 +25,7 @@ impl Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkDeviceWaitIdle.html>
     #[inline]
-    pub fn device_wait_idle(&self) -> Result<(), Error> {
+    pub fn wait_idle(&self) -> Result<(), Error> {
         unsafe { (self.fns().v1_0.device_wait_idle.unwrap())(self.handle) }.result()
     }
 

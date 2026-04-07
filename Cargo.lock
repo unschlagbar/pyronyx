@@ -4,7 +4,7 @@ version = 4
 
 [[package]]
 name = "pyronyx"
-version = "0.1.5+1.4.341"
+version = "0.2.0+1.4.341"
 dependencies = [
  "raw-window-handle",
 ]

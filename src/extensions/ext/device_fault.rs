@@ -12,7 +12,7 @@ pub const NAME: &CStr = c"VK_EXT_device_fault";
 pub const SPEC_VERSION: u32 = 2;
 
 pub trait DeviceFaultDevice {
-    fn get_device_fault_info(
+    fn get_fault_info(
         &self,
         fault_counts: *mut DeviceFaultCountsEXT,
     ) -> Result<DeviceFaultInfoEXT<'_>, Error>;
@@ -21,7 +21,7 @@ pub trait DeviceFaultDevice {
 impl DeviceFaultDevice for Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetDeviceFaultInfoEXT.html>
     #[inline]
-    fn get_device_fault_info(
+    fn get_fault_info(
         &self,
         fault_counts: *mut DeviceFaultCountsEXT,
     ) -> Result<DeviceFaultInfoEXT<'_>, Error> {
