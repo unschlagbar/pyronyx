@@ -26,17 +26,15 @@ impl ClusterAccelerationStructureDevice for Device {
         info: &ClusterAccelerationStructureInputInfoNV,
     ) -> AccelerationStructureBuildSizesInfoKHR<'_> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .nv_cluster_acceleration_structure
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_cluster_acceleration_structure_build_sizes_nv;
+
         unsafe {
-            (self
-                .fns()
-                .nv_cluster_acceleration_structure
-                .as_ref()
-                .unwrap()
-                .get_cluster_acceleration_structure_build_sizes_nv)(
-                self.handle,
-                info,
-                out.as_mut_ptr(),
-            );
+            (call)(self.handle, info, out.as_mut_ptr());
             out.assume_init()
         }
     }
@@ -61,15 +59,13 @@ impl ClusterAccelerationStructureCommandBuffer for CommandBuffer {
         &self,
         command_infos: &ClusterAccelerationStructureCommandsInfoNV,
     ) {
-        unsafe {
-            (self
-                .fns()
-                .nv_cluster_acceleration_structure
-                .as_ref()
-                .unwrap()
-                .build_cluster_acceleration_structure_indirect_nv)(
-                self.handle, command_infos
-            )
-        };
+        let call = self
+            .fns()
+            .nv_cluster_acceleration_structure
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .build_cluster_acceleration_structure_indirect_nv;
+
+        unsafe { (call)(self.handle, command_infos) };
     }
 }

@@ -32,17 +32,14 @@ impl ExternalMemoryWin32Device for Device {
         get_win32_handle_info: &MemoryGetWin32HandleInfoKHR,
     ) -> Result<HANDLE, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .khr_external_memory_win32
-                .as_ref()
-                .unwrap()
-                .get_memory_win32_handle_khr)(
-                self.handle, get_win32_handle_info, out.as_mut_ptr()
-            )
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .khr_external_memory_win32
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_memory_win32_handle_khr;
+
+        unsafe { (call)(self.handle, get_win32_handle_info, out.as_mut_ptr()) }.init_on_success(out)
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetMemoryWin32HandlePropertiesKHR.html>
@@ -53,19 +50,13 @@ impl ExternalMemoryWin32Device for Device {
         handle: HANDLE,
     ) -> Result<MemoryWin32HandlePropertiesKHR<'_>, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .khr_external_memory_win32
-                .as_ref()
-                .unwrap()
-                .get_memory_win32_handle_properties_khr)(
-                self.handle,
-                handle_type,
-                handle,
-                out.as_mut_ptr(),
-            )
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .khr_external_memory_win32
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_memory_win32_handle_properties_khr;
+
+        unsafe { (call)(self.handle, handle_type, handle, out.as_mut_ptr()) }.init_on_success(out)
     }
 }

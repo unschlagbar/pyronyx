@@ -25,13 +25,15 @@ impl CustomResolveCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn begin_custom_resolve(&self, begin_custom_resolve_info: Option<&BeginCustomResolveInfoEXT>) {
+        let call = self
+            .fns()
+            .ext_custom_resolve
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .begin_custom_resolve_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_custom_resolve
-                .as_ref()
-                .unwrap()
-                .begin_custom_resolve_ext)(
+            (call)(
                 self.handle,
                 begin_custom_resolve_info.map_or(null(), from_ref),
             )

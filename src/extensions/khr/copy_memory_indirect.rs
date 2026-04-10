@@ -28,14 +28,14 @@ impl CopyMemoryIndirectCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn copy_memory_indirect(&self, copy_memory_indirect_info: &CopyMemoryIndirectInfoKHR) {
-        unsafe {
-            (self
-                .fns()
-                .khr_copy_memory_indirect
-                .as_ref()
-                .unwrap()
-                .copy_memory_indirect_khr)(self.handle, copy_memory_indirect_info)
-        };
+        let call = self
+            .fns()
+            .khr_copy_memory_indirect
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .copy_memory_indirect_khr;
+
+        unsafe { (call)(self.handle, copy_memory_indirect_info) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyMemoryToImageIndirectKHR.html>
@@ -49,15 +49,13 @@ impl CopyMemoryIndirectCommandBuffer for CommandBuffer {
         &self,
         copy_memory_to_image_indirect_info: &CopyMemoryToImageIndirectInfoKHR,
     ) {
-        unsafe {
-            (self
-                .fns()
-                .khr_copy_memory_indirect
-                .as_ref()
-                .unwrap()
-                .copy_memory_to_image_indirect_khr)(
-                self.handle, copy_memory_to_image_indirect_info
-            )
-        };
+        let call = self
+            .fns()
+            .khr_copy_memory_indirect
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .copy_memory_to_image_indirect_khr;
+
+        unsafe { (call)(self.handle, copy_memory_to_image_indirect_info) };
     }
 }

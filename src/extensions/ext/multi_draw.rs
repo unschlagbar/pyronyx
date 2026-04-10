@@ -46,8 +46,15 @@ impl MultiDrawCommandBuffer for CommandBuffer {
         first_instance: u32,
         stride: u32,
     ) {
+        let call = self
+            .fns()
+            .ext_multi_draw
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .draw_multi_ext;
+
         unsafe {
-            (self.fns().ext_multi_draw.as_ref().unwrap().draw_multi_ext)(
+            (call)(
                 self.handle,
                 vertex_info.len() as u32,
                 vertex_info.as_ptr(),
@@ -74,13 +81,15 @@ impl MultiDrawCommandBuffer for CommandBuffer {
         stride: u32,
         vertex_offset: Option<&i32>,
     ) {
+        let call = self
+            .fns()
+            .ext_multi_draw
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .draw_multi_indexed_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_multi_draw
-                .as_ref()
-                .unwrap()
-                .draw_multi_indexed_ext)(
+            (call)(
                 self.handle,
                 index_info.len() as u32,
                 index_info.as_ptr(),

@@ -18,15 +18,13 @@ impl DisplayNativeHdrDevice for Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkSetLocalDimmingAMD.html>
     #[inline]
     fn set_local_dimming(&self, swap_chain: SwapchainKHR, local_dimming_enable: bool) {
-        unsafe {
-            (self
-                .fns()
-                .amd_display_native_hdr
-                .as_ref()
-                .unwrap()
-                .set_local_dimming_amd)(
-                self.handle, swap_chain, local_dimming_enable as _
-            )
-        };
+        let call = self
+            .fns()
+            .amd_display_native_hdr
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .set_local_dimming_amd;
+
+        unsafe { (call)(self.handle, swap_chain, local_dimming_enable as _) };
     }
 }

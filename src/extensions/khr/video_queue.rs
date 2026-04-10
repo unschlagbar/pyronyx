@@ -33,19 +33,14 @@ impl VideoQueuePhysicalDevice for PhysicalDevice {
         video_profile: &VideoProfileInfoKHR,
     ) -> Result<VideoCapabilitiesKHR<'_>, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .khr_video_queue
-                .as_ref()
-                .unwrap()
-                .get_physical_device_video_capabilities_khr)(
-                self.handle,
-                video_profile,
-                out.as_mut_ptr(),
-            )
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .khr_video_queue
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_physical_device_video_capabilities_khr;
+
+        unsafe { (call)(self.handle, video_profile, out.as_mut_ptr()) }.init_on_success(out)
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceVideoFormatPropertiesKHR.html>
@@ -55,13 +50,15 @@ impl VideoQueuePhysicalDevice for PhysicalDevice {
         video_format_info: &PhysicalDeviceVideoFormatInfoKHR,
         video_format_properties: &mut [VideoFormatPropertiesKHR],
     ) -> Result<(), Error> {
+        let call = self
+            .fns()
+            .khr_video_queue
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_physical_device_video_format_properties_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_video_queue
-                .as_ref()
-                .unwrap()
-                .get_physical_device_video_format_properties_khr)(
+            (call)(
                 self.handle,
                 video_format_info,
                 video_format_properties.len() as *mut u32,
@@ -125,13 +122,15 @@ impl VideoQueueDevice for Device {
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<VideoSessionKHR, Error> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .khr_video_queue
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .create_video_session_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_video_queue
-                .as_ref()
-                .unwrap()
-                .create_video_session_khr)(
+            (call)(
                 self.handle,
                 create_info,
                 allocator.map_or(null(), from_ref),
@@ -148,13 +147,15 @@ impl VideoQueueDevice for Device {
         video_session: VideoSessionKHR,
         allocator: Option<&AllocationCallbacks>,
     ) {
+        let call = self
+            .fns()
+            .khr_video_queue
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .destroy_video_session_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_video_queue
-                .as_ref()
-                .unwrap()
-                .destroy_video_session_khr)(
+            (call)(
                 self.handle,
                 video_session,
                 allocator.map_or(null(), from_ref),
@@ -170,13 +171,15 @@ impl VideoQueueDevice for Device {
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<VideoSessionParametersKHR, Error> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .khr_video_queue
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .create_video_session_parameters_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_video_queue
-                .as_ref()
-                .unwrap()
-                .create_video_session_parameters_khr)(
+            (call)(
                 self.handle,
                 create_info,
                 allocator.map_or(null(), from_ref),
@@ -193,19 +196,14 @@ impl VideoQueueDevice for Device {
         video_session_parameters: VideoSessionParametersKHR,
         update_info: &VideoSessionParametersUpdateInfoKHR,
     ) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .khr_video_queue
-                .as_ref()
-                .unwrap()
-                .update_video_session_parameters_khr)(
-                self.handle,
-                video_session_parameters,
-                update_info,
-            )
-        }
-        .result()
+        let call = self
+            .fns()
+            .khr_video_queue
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .update_video_session_parameters_khr;
+
+        unsafe { (call)(self.handle, video_session_parameters, update_info) }.result()
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkDestroyVideoSessionParametersKHR.html>
@@ -215,13 +213,15 @@ impl VideoQueueDevice for Device {
         video_session_parameters: VideoSessionParametersKHR,
         allocator: Option<&AllocationCallbacks>,
     ) {
+        let call = self
+            .fns()
+            .khr_video_queue
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .destroy_video_session_parameters_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_video_queue
-                .as_ref()
-                .unwrap()
-                .destroy_video_session_parameters_khr)(
+            (call)(
                 self.handle,
                 video_session_parameters,
                 allocator.map_or(null(), from_ref),
@@ -236,13 +236,15 @@ impl VideoQueueDevice for Device {
         video_session: VideoSessionKHR,
         memory_requirements: &mut [VideoSessionMemoryRequirementsKHR],
     ) -> Result<(), Error> {
+        let call = self
+            .fns()
+            .khr_video_queue
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_video_session_memory_requirements_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_video_queue
-                .as_ref()
-                .unwrap()
-                .get_video_session_memory_requirements_khr)(
+            (call)(
                 self.handle,
                 video_session,
                 memory_requirements.len() as *mut u32,
@@ -259,13 +261,15 @@ impl VideoQueueDevice for Device {
         video_session: VideoSessionKHR,
         bind_session_memory_infos: &[BindVideoSessionMemoryInfoKHR],
     ) -> Result<(), Error> {
+        let call = self
+            .fns()
+            .khr_video_queue
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .bind_video_session_memory_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_video_queue
-                .as_ref()
-                .unwrap()
-                .bind_video_session_memory_khr)(
+            (call)(
                 self.handle,
                 video_session,
                 bind_session_memory_infos.len() as u32,
@@ -293,14 +297,14 @@ impl VideoQueueCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`.
     #[inline]
     fn begin_video_coding(&self, begin_info: &VideoBeginCodingInfoKHR) {
-        unsafe {
-            (self
-                .fns()
-                .khr_video_queue
-                .as_ref()
-                .unwrap()
-                .begin_video_coding_khr)(self.handle, begin_info)
-        };
+        let call = self
+            .fns()
+            .khr_video_queue
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .begin_video_coding_khr;
+
+        unsafe { (call)(self.handle, begin_info) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdControlVideoCodingKHR.html>
@@ -311,14 +315,14 @@ impl VideoQueueCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`.
     #[inline]
     fn control_video_coding(&self, coding_control_info: &VideoCodingControlInfoKHR) {
-        unsafe {
-            (self
-                .fns()
-                .khr_video_queue
-                .as_ref()
-                .unwrap()
-                .control_video_coding_khr)(self.handle, coding_control_info)
-        };
+        let call = self
+            .fns()
+            .khr_video_queue
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .control_video_coding_khr;
+
+        unsafe { (call)(self.handle, coding_control_info) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdEndVideoCodingKHR.html>
@@ -329,13 +333,13 @@ impl VideoQueueCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`.
     #[inline]
     fn end_video_coding(&self, end_coding_info: &VideoEndCodingInfoKHR) {
-        unsafe {
-            (self
-                .fns()
-                .khr_video_queue
-                .as_ref()
-                .unwrap()
-                .end_video_coding_khr)(self.handle, end_coding_info)
-        };
+        let call = self
+            .fns()
+            .khr_video_queue
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .end_video_coding_khr;
+
+        unsafe { (call)(self.handle, end_coding_info) };
     }
 }

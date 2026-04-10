@@ -29,13 +29,15 @@ impl CoverageReductionModePhysicalDevice for PhysicalDevice {
         &self,
         combinations: &mut [FramebufferMixedSamplesCombinationNV],
     ) -> Result<(), Error> {
+        let call = self
+            .fns()
+            .nv_coverage_reduction_mode
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_physical_device_supported_framebuffer_mixed_samples_combinations_nv;
+
         unsafe {
-            (self
-                .fns()
-                .nv_coverage_reduction_mode
-                .as_ref()
-                .unwrap()
-                .get_physical_device_supported_framebuffer_mixed_samples_combinations_nv)(
+            (call)(
                 self.handle,
                 combinations.len() as *mut u32,
                 combinations.as_mut_ptr(),
@@ -53,7 +55,7 @@ impl CoverageReductionModePhysicalDevice for PhysicalDevice {
                 .fns()
                 .nv_coverage_reduction_mode
                 .as_ref()
-                .unwrap()
+                .expect(Self::EXT_LOAD_ERROR)
                 .get_physical_device_supported_framebuffer_mixed_samples_combinations_nv)(
                 self.handle,
                 out.as_mut_ptr(),

@@ -26,16 +26,13 @@ impl ImageDrmFormatModifierDevice for Device {
         image: Image,
     ) -> Result<ImageDrmFormatModifierPropertiesEXT<'_>, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .ext_image_drm_format_modifier
-                .as_ref()
-                .unwrap()
-                .get_image_drm_format_modifier_properties_ext)(
-                self.handle, image, out.as_mut_ptr()
-            )
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .ext_image_drm_format_modifier
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_image_drm_format_modifier_properties_ext;
+
+        unsafe { (call)(self.handle, image, out.as_mut_ptr()) }.init_on_success(out)
     }
 }

@@ -32,19 +32,14 @@ impl GetSurfaceCapabilities2PhysicalDevice for PhysicalDevice {
         surface_info: &PhysicalDeviceSurfaceInfo2KHR,
     ) -> Result<SurfaceCapabilities2KHR<'_>, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .khr_get_surface_capabilities2
-                .as_ref()
-                .unwrap()
-                .get_physical_device_surface_capabilities2_khr)(
-                self.handle,
-                surface_info,
-                out.as_mut_ptr(),
-            )
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .khr_get_surface_capabilities2
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_physical_device_surface_capabilities2_khr;
+
+        unsafe { (call)(self.handle, surface_info, out.as_mut_ptr()) }.init_on_success(out)
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceSurfaceFormats2KHR.html>
@@ -54,13 +49,15 @@ impl GetSurfaceCapabilities2PhysicalDevice for PhysicalDevice {
         surface_info: &PhysicalDeviceSurfaceInfo2KHR,
         surface_formats: &mut [SurfaceFormat2KHR],
     ) -> Result<(), Error> {
+        let call = self
+            .fns()
+            .khr_get_surface_capabilities2
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_physical_device_surface_formats2_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_get_surface_capabilities2
-                .as_ref()
-                .unwrap()
-                .get_physical_device_surface_formats2_khr)(
+            (call)(
                 self.handle,
                 surface_info,
                 surface_formats.len() as *mut u32,

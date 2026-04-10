@@ -42,16 +42,14 @@ impl CopyMemoryIndirectCommandBuffer for CommandBuffer {
         copy_count: u32,
         stride: u32,
     ) {
-        unsafe {
-            (self
-                .fns()
-                .nv_copy_memory_indirect
-                .as_ref()
-                .unwrap()
-                .copy_memory_indirect_nv)(
-                self.handle, copy_buffer_address, copy_count, stride
-            )
-        };
+        let call = self
+            .fns()
+            .nv_copy_memory_indirect
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .copy_memory_indirect_nv;
+
+        unsafe { (call)(self.handle, copy_buffer_address, copy_count, stride) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyMemoryToImageIndirectNV.html>
@@ -69,13 +67,15 @@ impl CopyMemoryIndirectCommandBuffer for CommandBuffer {
         dst_image_layout: ImageLayout,
         image_subresources: &[ImageSubresourceLayers],
     ) {
+        let call = self
+            .fns()
+            .nv_copy_memory_indirect
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .copy_memory_to_image_indirect_nv;
+
         unsafe {
-            (self
-                .fns()
-                .nv_copy_memory_indirect
-                .as_ref()
-                .unwrap()
-                .copy_memory_to_image_indirect_nv)(
+            (call)(
                 self.handle,
                 copy_buffer_address,
                 image_subresources.len() as u32,

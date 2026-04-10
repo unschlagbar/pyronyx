@@ -31,15 +31,14 @@ impl DebugUtilsDevice for Device {
         &self,
         name_info: &DebugUtilsObjectNameInfoEXT,
     ) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .ext_debug_utils
-                .as_ref()
-                .unwrap()
-                .set_debug_utils_object_name_ext)(self.handle, name_info)
-        }
-        .result()
+        let call = self
+            .fns()
+            .ext_debug_utils
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .set_debug_utils_object_name_ext;
+
+        unsafe { (call)(self.handle, name_info) }.result()
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkSetDebugUtilsObjectTagEXT.html>
@@ -48,15 +47,14 @@ impl DebugUtilsDevice for Device {
         &self,
         tag_info: &DebugUtilsObjectTagInfoEXT,
     ) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .ext_debug_utils
-                .as_ref()
-                .unwrap()
-                .set_debug_utils_object_tag_ext)(self.handle, tag_info)
-        }
-        .result()
+        let call = self
+            .fns()
+            .ext_debug_utils
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .set_debug_utils_object_tag_ext;
+
+        unsafe { (call)(self.handle, tag_info) }.result()
     }
 }
 
@@ -72,40 +70,40 @@ impl DebugUtilsQueue for Queue {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkQueueBeginDebugUtilsLabelEXT.html>
     #[inline]
     fn begin_debug_utils_label(&self, label_info: &DebugUtilsLabelEXT) {
-        unsafe {
-            (self
-                .fns()
-                .ext_debug_utils
-                .as_ref()
-                .unwrap()
-                .queue_begin_debug_utils_label_ext)(self.handle, label_info)
-        };
+        let call = self
+            .fns()
+            .ext_debug_utils
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .queue_begin_debug_utils_label_ext;
+
+        unsafe { (call)(self.handle, label_info) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkQueueEndDebugUtilsLabelEXT.html>
     #[inline]
     fn end_debug_utils_label(&self) {
-        unsafe {
-            (self
-                .fns()
-                .ext_debug_utils
-                .as_ref()
-                .unwrap()
-                .queue_end_debug_utils_label_ext)(self.handle)
-        };
+        let call = self
+            .fns()
+            .ext_debug_utils
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .queue_end_debug_utils_label_ext;
+
+        unsafe { (call)(self.handle) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkQueueInsertDebugUtilsLabelEXT.html>
     #[inline]
     fn insert_debug_utils_label(&self, label_info: &DebugUtilsLabelEXT) {
-        unsafe {
-            (self
-                .fns()
-                .ext_debug_utils
-                .as_ref()
-                .unwrap()
-                .queue_insert_debug_utils_label_ext)(self.handle, label_info)
-        };
+        let call = self
+            .fns()
+            .ext_debug_utils
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .queue_insert_debug_utils_label_ext;
+
+        unsafe { (call)(self.handle, label_info) };
     }
 }
 
@@ -126,14 +124,14 @@ impl DebugUtilsCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn begin_debug_utils_label(&self, label_info: &DebugUtilsLabelEXT) {
-        unsafe {
-            (self
-                .fns()
-                .ext_debug_utils
-                .as_ref()
-                .unwrap()
-                .begin_debug_utils_label_ext)(self.handle, label_info)
-        };
+        let call = self
+            .fns()
+            .ext_debug_utils
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .begin_debug_utils_label_ext;
+
+        unsafe { (call)(self.handle, label_info) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdEndDebugUtilsLabelEXT.html>
@@ -144,14 +142,14 @@ impl DebugUtilsCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn end_debug_utils_label(&self) {
-        unsafe {
-            (self
-                .fns()
-                .ext_debug_utils
-                .as_ref()
-                .unwrap()
-                .end_debug_utils_label_ext)(self.handle)
-        };
+        let call = self
+            .fns()
+            .ext_debug_utils
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .end_debug_utils_label_ext;
+
+        unsafe { (call)(self.handle) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdInsertDebugUtilsLabelEXT.html>
@@ -162,14 +160,14 @@ impl DebugUtilsCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn insert_debug_utils_label(&self, label_info: &DebugUtilsLabelEXT) {
-        unsafe {
-            (self
-                .fns()
-                .ext_debug_utils
-                .as_ref()
-                .unwrap()
-                .insert_debug_utils_label_ext)(self.handle, label_info)
-        };
+        let call = self
+            .fns()
+            .ext_debug_utils
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .insert_debug_utils_label_ext;
+
+        unsafe { (call)(self.handle, label_info) };
     }
 }
 
@@ -203,13 +201,15 @@ impl DebugUtilsInstance for Instance {
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<DebugUtilsMessengerEXT, Error> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .ext_debug_utils
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .create_debug_utils_messenger_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_debug_utils
-                .as_ref()
-                .unwrap()
-                .create_debug_utils_messenger_ext)(
+            (call)(
                 self.handle,
                 create_info,
                 allocator.map_or(null(), from_ref),
@@ -226,18 +226,14 @@ impl DebugUtilsInstance for Instance {
         messenger: DebugUtilsMessengerEXT,
         allocator: Option<&AllocationCallbacks>,
     ) {
-        unsafe {
-            (self
-                .fns()
-                .ext_debug_utils
-                .as_ref()
-                .unwrap()
-                .destroy_debug_utils_messenger_ext)(
-                self.handle,
-                messenger,
-                allocator.map_or(null(), from_ref),
-            )
-        };
+        let call = self
+            .fns()
+            .ext_debug_utils
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .destroy_debug_utils_messenger_ext;
+
+        unsafe { (call)(self.handle, messenger, allocator.map_or(null(), from_ref)) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkSubmitDebugUtilsMessageEXT.html>
@@ -248,18 +244,13 @@ impl DebugUtilsInstance for Instance {
         message_types: DebugUtilsMessageTypeFlagsEXT,
         callback_data: &DebugUtilsMessengerCallbackDataEXT,
     ) {
-        unsafe {
-            (self
-                .fns()
-                .ext_debug_utils
-                .as_ref()
-                .unwrap()
-                .submit_debug_utils_message_ext)(
-                self.handle,
-                message_severity,
-                message_types,
-                callback_data,
-            )
-        };
+        let call = self
+            .fns()
+            .ext_debug_utils
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .submit_debug_utils_message_ext;
+
+        unsafe { (call)(self.handle, message_severity, message_types, callback_data) };
     }
 }

@@ -39,13 +39,15 @@ impl DeferredHostOperationsDevice for Device {
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<DeferredOperationKHR, Error> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .khr_deferred_host_operations
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .create_deferred_operation_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_deferred_host_operations
-                .as_ref()
-                .unwrap()
-                .create_deferred_operation_khr)(
+            (call)(
                 self.handle,
                 allocator.map_or(null(), from_ref),
                 out.as_mut_ptr(),
@@ -61,58 +63,52 @@ impl DeferredHostOperationsDevice for Device {
         operation: DeferredOperationKHR,
         allocator: Option<&AllocationCallbacks>,
     ) {
-        unsafe {
-            (self
-                .fns()
-                .khr_deferred_host_operations
-                .as_ref()
-                .unwrap()
-                .destroy_deferred_operation_khr)(
-                self.handle,
-                operation,
-                allocator.map_or(null(), from_ref),
-            )
-        };
+        let call = self
+            .fns()
+            .khr_deferred_host_operations
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .destroy_deferred_operation_khr;
+
+        unsafe { (call)(self.handle, operation, allocator.map_or(null(), from_ref)) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetDeferredOperationMaxConcurrencyKHR.html>
     #[inline]
     fn get_deferred_operation_max_concurrency(&self, operation: DeferredOperationKHR) -> u32 {
-        unsafe {
-            (self
-                .fns()
-                .khr_deferred_host_operations
-                .as_ref()
-                .unwrap()
-                .get_deferred_operation_max_concurrency_khr)(self.handle, operation)
-        }
+        let call = self
+            .fns()
+            .khr_deferred_host_operations
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_deferred_operation_max_concurrency_khr;
+
+        unsafe { (call)(self.handle, operation) }
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetDeferredOperationResultKHR.html>
     #[inline]
     fn get_deferred_operation_result(&self, operation: DeferredOperationKHR) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .khr_deferred_host_operations
-                .as_ref()
-                .unwrap()
-                .get_deferred_operation_result_khr)(self.handle, operation)
-        }
-        .result()
+        let call = self
+            .fns()
+            .khr_deferred_host_operations
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_deferred_operation_result_khr;
+
+        unsafe { (call)(self.handle, operation) }.result()
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkDeferredOperationJoinKHR.html>
     #[inline]
     fn deferred_operation_join(&self, operation: DeferredOperationKHR) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .khr_deferred_host_operations
-                .as_ref()
-                .unwrap()
-                .deferred_operation_join_khr)(self.handle, operation)
-        }
-        .result()
+        let call = self
+            .fns()
+            .khr_deferred_host_operations
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .deferred_operation_join_khr;
+
+        unsafe { (call)(self.handle, operation) }.result()
     }
 }

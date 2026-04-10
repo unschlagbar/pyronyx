@@ -41,15 +41,14 @@ impl LowLatency2Device for Device {
         swapchain: SwapchainKHR,
         sleep_mode_info: &LatencySleepModeInfoNV,
     ) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .nv_low_latency2
-                .as_ref()
-                .unwrap()
-                .set_latency_sleep_mode_nv)(self.handle, swapchain, sleep_mode_info)
-        }
-        .result()
+        let call = self
+            .fns()
+            .nv_low_latency2
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .set_latency_sleep_mode_nv;
+
+        unsafe { (call)(self.handle, swapchain, sleep_mode_info) }.result()
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkLatencySleepNV.html>
@@ -59,15 +58,14 @@ impl LowLatency2Device for Device {
         swapchain: SwapchainKHR,
         sleep_info: &LatencySleepInfoNV,
     ) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .nv_low_latency2
-                .as_ref()
-                .unwrap()
-                .latency_sleep_nv)(self.handle, swapchain, sleep_info)
-        }
-        .result()
+        let call = self
+            .fns()
+            .nv_low_latency2
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .latency_sleep_nv;
+
+        unsafe { (call)(self.handle, swapchain, sleep_info) }.result()
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkSetLatencyMarkerNV.html>
@@ -77,27 +75,29 @@ impl LowLatency2Device for Device {
         swapchain: SwapchainKHR,
         latency_marker_info: &SetLatencyMarkerInfoNV,
     ) {
-        unsafe {
-            (self
-                .fns()
-                .nv_low_latency2
-                .as_ref()
-                .unwrap()
-                .set_latency_marker_nv)(self.handle, swapchain, latency_marker_info)
-        };
+        let call = self
+            .fns()
+            .nv_low_latency2
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .set_latency_marker_nv;
+
+        unsafe { (call)(self.handle, swapchain, latency_marker_info) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetLatencyTimingsNV.html>
     #[inline]
     fn get_latency_timings(&self, swapchain: SwapchainKHR) -> GetLatencyMarkerInfoNV<'_> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .nv_low_latency2
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_latency_timings_nv;
+
         unsafe {
-            (self
-                .fns()
-                .nv_low_latency2
-                .as_ref()
-                .unwrap()
-                .get_latency_timings_nv)(self.handle, swapchain, out.as_mut_ptr());
+            (call)(self.handle, swapchain, out.as_mut_ptr());
             out.assume_init()
         }
     }
@@ -111,13 +111,13 @@ impl LowLatency2Queue for Queue {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkQueueNotifyOutOfBandNV.html>
     #[inline]
     fn notify_out_of_band(&self, queue_type_info: &OutOfBandQueueTypeInfoNV) {
-        unsafe {
-            (self
-                .fns()
-                .nv_low_latency2
-                .as_ref()
-                .unwrap()
-                .queue_notify_out_of_band_nv)(self.handle, queue_type_info)
-        };
+        let call = self
+            .fns()
+            .nv_low_latency2
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .queue_notify_out_of_band_nv;
+
+        unsafe { (call)(self.handle, queue_type_info) };
     }
 }

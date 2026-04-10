@@ -29,13 +29,15 @@ impl ScreenSurfaceInstance for Instance {
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<SurfaceKHR, Error> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .qnx_screen_surface
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .create_screen_surface_qnx;
+
         unsafe {
-            (self
-                .fns()
-                .qnx_screen_surface
-                .as_ref()
-                .unwrap()
-                .create_screen_surface_qnx)(
+            (call)(
                 self.handle,
                 create_info,
                 allocator.map_or(null(), from_ref),
@@ -62,17 +64,13 @@ impl ScreenSurfacePhysicalDevice for PhysicalDevice {
         queue_family_index: u32,
         window: *mut _screen_window,
     ) -> Bool32 {
-        unsafe {
-            (self
-                .fns()
-                .qnx_screen_surface
-                .as_ref()
-                .unwrap()
-                .get_physical_device_screen_presentation_support_qnx)(
-                self.handle,
-                queue_family_index,
-                window,
-            )
-        }
+        let call = self
+            .fns()
+            .qnx_screen_surface
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_physical_device_screen_presentation_support_qnx;
+
+        unsafe { (call)(self.handle, queue_family_index, window) }
     }
 }

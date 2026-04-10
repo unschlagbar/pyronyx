@@ -21,31 +21,27 @@ impl AcquireDrmDisplayPhysicalDevice for PhysicalDevice {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkAcquireDrmDisplayEXT.html>
     #[inline]
     fn acquire_drm_display(&self, drm_fd: i32, display: DisplayKHR) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .ext_acquire_drm_display
-                .as_ref()
-                .unwrap()
-                .acquire_drm_display_ext)(self.handle, drm_fd, display)
-        }
-        .result()
+        let call = self
+            .fns()
+            .ext_acquire_drm_display
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .acquire_drm_display_ext;
+
+        unsafe { (call)(self.handle, drm_fd, display) }.result()
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetDrmDisplayEXT.html>
     #[inline]
     fn get_drm_display(&self, drm_fd: i32, connector_id: u32) -> Result<DisplayKHR, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .ext_acquire_drm_display
-                .as_ref()
-                .unwrap()
-                .get_drm_display_ext)(
-                self.handle, drm_fd, connector_id, out.as_mut_ptr()
-            )
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .ext_acquire_drm_display
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_drm_display_ext;
+
+        unsafe { (call)(self.handle, drm_fd, connector_id, out.as_mut_ptr()) }.init_on_success(out)
     }
 }

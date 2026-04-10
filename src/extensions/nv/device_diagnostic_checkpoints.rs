@@ -26,14 +26,14 @@ impl DeviceDiagnosticCheckpointsCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_checkpoint(&self, checkpoint_marker: &c_void) {
-        unsafe {
-            (self
-                .fns()
-                .nv_device_diagnostic_checkpoints
-                .as_ref()
-                .unwrap()
-                .set_checkpoint_nv)(self.handle, checkpoint_marker)
-        };
+        let call = self
+            .fns()
+            .nv_device_diagnostic_checkpoints
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .set_checkpoint_nv;
+
+        unsafe { (call)(self.handle, checkpoint_marker) };
     }
 }
 
@@ -50,13 +50,15 @@ impl DeviceDiagnosticCheckpointsQueue for Queue {
     /// Call [`get_checkpoint_data_len()`][`Self::get_checkpoint_data_len()`] to query the number of elements to pass to `out`.
     #[inline]
     fn get_checkpoint_data(&self, checkpoint_data: &mut [CheckpointDataNV]) {
+        let call = self
+            .fns()
+            .nv_device_diagnostic_checkpoints
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_queue_checkpoint_data_nv;
+
         unsafe {
-            (self
-                .fns()
-                .nv_device_diagnostic_checkpoints
-                .as_ref()
-                .unwrap()
-                .get_queue_checkpoint_data_nv)(
+            (call)(
                 self.handle,
                 checkpoint_data.len() as *mut u32,
                 checkpoint_data.as_mut_ptr(),
@@ -73,7 +75,7 @@ impl DeviceDiagnosticCheckpointsQueue for Queue {
                 .fns()
                 .nv_device_diagnostic_checkpoints
                 .as_ref()
-                .unwrap()
+                .expect(Self::EXT_LOAD_ERROR)
                 .get_queue_checkpoint_data_nv)(
                 self.handle, out.as_mut_ptr(), ptr::null_mut()
             );
@@ -84,13 +86,15 @@ impl DeviceDiagnosticCheckpointsQueue for Queue {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetQueueCheckpointData2NV.html>
     #[inline]
     fn get_checkpoint_data2(&self, checkpoint_data: &mut [CheckpointData2NV]) {
+        let call = self
+            .fns()
+            .nv_device_diagnostic_checkpoints
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_queue_checkpoint_data2_nv;
+
         unsafe {
-            (self
-                .fns()
-                .nv_device_diagnostic_checkpoints
-                .as_ref()
-                .unwrap()
-                .get_queue_checkpoint_data2_nv)(
+            (call)(
                 self.handle,
                 checkpoint_data.len() as *mut u32,
                 checkpoint_data.as_mut_ptr(),

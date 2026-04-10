@@ -29,16 +29,13 @@ impl ExternalMemoryWin32Device for Device {
         handle_type: ExternalMemoryHandleTypeFlagsNV,
     ) -> Result<HANDLE, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .nv_external_memory_win32
-                .as_ref()
-                .unwrap()
-                .get_memory_win32_handle_nv)(
-                self.handle, memory, handle_type, out.as_mut_ptr()
-            )
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .nv_external_memory_win32
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_memory_win32_handle_nv;
+
+        unsafe { (call)(self.handle, memory, handle_type, out.as_mut_ptr()) }.init_on_success(out)
     }
 }

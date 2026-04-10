@@ -29,13 +29,15 @@ impl XlibSurfaceInstance for Instance {
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<SurfaceKHR, Error> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .khr_xlib_surface
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .create_xlib_surface_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_xlib_surface
-                .as_ref()
-                .unwrap()
-                .create_xlib_surface_khr)(
+            (call)(
                 self.handle,
                 create_info,
                 allocator.map_or(null(), from_ref),
@@ -64,18 +66,13 @@ impl XlibSurfacePhysicalDevice for PhysicalDevice {
         dpy: *mut Display,
         visual_id: VisualID,
     ) -> Bool32 {
-        unsafe {
-            (self
-                .fns()
-                .khr_xlib_surface
-                .as_ref()
-                .unwrap()
-                .get_physical_device_xlib_presentation_support_khr)(
-                self.handle,
-                queue_family_index,
-                dpy,
-                visual_id,
-            )
-        }
+        let call = self
+            .fns()
+            .khr_xlib_surface
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_physical_device_xlib_presentation_support_khr;
+
+        unsafe { (call)(self.handle, queue_family_index, dpy, visual_id) }
     }
 }

@@ -31,19 +31,14 @@ impl ExternalSemaphoreWin32Device for Device {
         get_win32_handle_info: &SemaphoreGetWin32HandleInfoKHR,
     ) -> Result<HANDLE, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .khr_external_semaphore_win32
-                .as_ref()
-                .unwrap()
-                .get_semaphore_win32_handle_khr)(
-                self.handle,
-                get_win32_handle_info,
-                out.as_mut_ptr(),
-            )
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .khr_external_semaphore_win32
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_semaphore_win32_handle_khr;
+
+        unsafe { (call)(self.handle, get_win32_handle_info, out.as_mut_ptr()) }.init_on_success(out)
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkImportSemaphoreWin32HandleKHR.html>
@@ -52,16 +47,13 @@ impl ExternalSemaphoreWin32Device for Device {
         &self,
         import_semaphore_win32_handle_info: &ImportSemaphoreWin32HandleInfoKHR,
     ) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .khr_external_semaphore_win32
-                .as_ref()
-                .unwrap()
-                .import_semaphore_win32_handle_khr)(
-                self.handle, import_semaphore_win32_handle_info
-            )
-        }
-        .result()
+        let call = self
+            .fns()
+            .khr_external_semaphore_win32
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .import_semaphore_win32_handle_khr;
+
+        unsafe { (call)(self.handle, import_semaphore_win32_handle_info) }.result()
     }
 }

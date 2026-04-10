@@ -66,8 +66,15 @@ impl TensorsDevice for Device {
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<TensorARM, Error> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .arm_tensors
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .create_tensor_arm;
+
         unsafe {
-            (self.fns().arm_tensors.as_ref().unwrap().create_tensor_arm)(
+            (call)(
                 self.handle,
                 create_info,
                 allocator.map_or(null(), from_ref),
@@ -80,13 +87,14 @@ impl TensorsDevice for Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkDestroyTensorARM.html>
     #[inline]
     fn destroy_tensor(&self, tensor: TensorARM, allocator: Option<&AllocationCallbacks>) {
-        unsafe {
-            (self.fns().arm_tensors.as_ref().unwrap().destroy_tensor_arm)(
-                self.handle,
-                tensor,
-                allocator.map_or(null(), from_ref),
-            )
-        };
+        let call = self
+            .fns()
+            .arm_tensors
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .destroy_tensor_arm;
+
+        unsafe { (call)(self.handle, tensor, allocator.map_or(null(), from_ref)) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCreateTensorViewARM.html>
@@ -97,13 +105,15 @@ impl TensorsDevice for Device {
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<TensorViewARM, Error> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .arm_tensors
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .create_tensor_view_arm;
+
         unsafe {
-            (self
-                .fns()
-                .arm_tensors
-                .as_ref()
-                .unwrap()
-                .create_tensor_view_arm)(
+            (call)(
                 self.handle,
                 create_info,
                 allocator.map_or(null(), from_ref),
@@ -120,18 +130,14 @@ impl TensorsDevice for Device {
         tensor_view: TensorViewARM,
         allocator: Option<&AllocationCallbacks>,
     ) {
-        unsafe {
-            (self
-                .fns()
-                .arm_tensors
-                .as_ref()
-                .unwrap()
-                .destroy_tensor_view_arm)(
-                self.handle,
-                tensor_view,
-                allocator.map_or(null(), from_ref),
-            )
-        };
+        let call = self
+            .fns()
+            .arm_tensors
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .destroy_tensor_view_arm;
+
+        unsafe { (call)(self.handle, tensor_view, allocator.map_or(null(), from_ref)) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetTensorMemoryRequirementsARM.html>
@@ -141,15 +147,15 @@ impl TensorsDevice for Device {
         info: &TensorMemoryRequirementsInfoARM,
     ) -> MemoryRequirements2<'_> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .arm_tensors
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_tensor_memory_requirements_arm;
+
         unsafe {
-            (self
-                .fns()
-                .arm_tensors
-                .as_ref()
-                .unwrap()
-                .get_tensor_memory_requirements_arm)(
-                self.handle, info, out.as_mut_ptr()
-            );
+            (call)(self.handle, info, out.as_mut_ptr());
             out.assume_init()
         }
     }
@@ -157,17 +163,14 @@ impl TensorsDevice for Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkBindTensorMemoryARM.html>
     #[inline]
     fn bind_tensor_memory(&self, bind_infos: &[BindTensorMemoryInfoARM]) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .arm_tensors
-                .as_ref()
-                .unwrap()
-                .bind_tensor_memory_arm)(
-                self.handle, bind_infos.len() as u32, bind_infos.as_ptr()
-            )
-        }
-        .result()
+        let call = self
+            .fns()
+            .arm_tensors
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .bind_tensor_memory_arm;
+
+        unsafe { (call)(self.handle, bind_infos.len() as u32, bind_infos.as_ptr()) }.result()
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetDeviceTensorMemoryRequirementsARM.html>
@@ -177,15 +180,15 @@ impl TensorsDevice for Device {
         info: &DeviceTensorMemoryRequirementsARM,
     ) -> MemoryRequirements2<'_> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .arm_tensors
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_device_tensor_memory_requirements_arm;
+
         unsafe {
-            (self
-                .fns()
-                .arm_tensors
-                .as_ref()
-                .unwrap()
-                .get_device_tensor_memory_requirements_arm)(
-                self.handle, info, out.as_mut_ptr()
-            );
+            (call)(self.handle, info, out.as_mut_ptr());
             out.assume_init()
         }
     }
@@ -197,17 +200,14 @@ impl TensorsDevice for Device {
         info: &TensorCaptureDescriptorDataInfoARM,
     ) -> Result<c_void, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .arm_tensors
-                .as_ref()
-                .unwrap()
-                .get_tensor_opaque_capture_descriptor_data_arm)(
-                self.handle, info, out.as_mut_ptr()
-            )
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .arm_tensors
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_tensor_opaque_capture_descriptor_data_arm;
+
+        unsafe { (call)(self.handle, info, out.as_mut_ptr()) }.init_on_success(out)
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetTensorViewOpaqueCaptureDescriptorDataARM.html>
@@ -217,19 +217,14 @@ impl TensorsDevice for Device {
         info: &TensorViewCaptureDescriptorDataInfoARM,
     ) -> Result<c_void, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .arm_tensors
-                .as_ref()
-                .unwrap()
-                .get_tensor_view_opaque_capture_descriptor_data_arm)(
-                self.handle,
-                info,
-                out.as_mut_ptr(),
-            )
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .arm_tensors
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_tensor_view_opaque_capture_descriptor_data_arm;
+
+        unsafe { (call)(self.handle, info, out.as_mut_ptr()) }.init_on_success(out)
     }
 }
 
@@ -246,12 +241,14 @@ impl TensorsCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn copy_tensor(&self, copy_tensor_info: &CopyTensorInfoARM) {
-        unsafe {
-            (self.fns().arm_tensors.as_ref().unwrap().copy_tensor_arm)(
-                self.handle,
-                copy_tensor_info,
-            )
-        };
+        let call = self
+            .fns()
+            .arm_tensors
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .copy_tensor_arm;
+
+        unsafe { (call)(self.handle, copy_tensor_info) };
     }
 }
 
@@ -270,17 +267,15 @@ impl TensorsPhysicalDevice for PhysicalDevice {
         external_tensor_info: &PhysicalDeviceExternalTensorInfoARM,
     ) -> ExternalTensorPropertiesARM<'_> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .arm_tensors
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_physical_device_external_tensor_properties_arm;
+
         unsafe {
-            (self
-                .fns()
-                .arm_tensors
-                .as_ref()
-                .unwrap()
-                .get_physical_device_external_tensor_properties_arm)(
-                self.handle,
-                external_tensor_info,
-                out.as_mut_ptr(),
-            );
+            (call)(self.handle, external_tensor_info, out.as_mut_ptr());
             out.assume_init()
         }
     }

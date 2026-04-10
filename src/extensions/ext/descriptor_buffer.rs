@@ -54,15 +54,15 @@ impl DescriptorBufferDevice for Device {
     #[inline]
     fn get_descriptor_set_layout_size(&self, layout: DescriptorSetLayout) -> DeviceSize {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .ext_descriptor_buffer
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_descriptor_set_layout_size_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_descriptor_buffer
-                .as_ref()
-                .unwrap()
-                .get_descriptor_set_layout_size_ext)(
-                self.handle, layout, out.as_mut_ptr()
-            );
+            (call)(self.handle, layout, out.as_mut_ptr());
             out.assume_init()
         }
     }
@@ -75,18 +75,15 @@ impl DescriptorBufferDevice for Device {
         binding: u32,
     ) -> DeviceSize {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .ext_descriptor_buffer
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_descriptor_set_layout_binding_offset_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_descriptor_buffer
-                .as_ref()
-                .unwrap()
-                .get_descriptor_set_layout_binding_offset_ext)(
-                self.handle,
-                layout,
-                binding,
-                out.as_mut_ptr(),
-            );
+            (call)(self.handle, layout, binding, out.as_mut_ptr());
             out.assume_init()
         }
     }
@@ -94,13 +91,15 @@ impl DescriptorBufferDevice for Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetDescriptorEXT.html>
     #[inline]
     fn get_descriptor(&self, descriptor_info: &DescriptorGetInfoEXT, descriptor: &mut [c_void]) {
+        let call = self
+            .fns()
+            .ext_descriptor_buffer
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_descriptor_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_descriptor_buffer
-                .as_ref()
-                .unwrap()
-                .get_descriptor_ext)(
+            (call)(
                 self.handle,
                 descriptor_info,
                 descriptor.len() as usize,
@@ -116,17 +115,14 @@ impl DescriptorBufferDevice for Device {
         info: &BufferCaptureDescriptorDataInfoEXT,
     ) -> Result<c_void, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .ext_descriptor_buffer
-                .as_ref()
-                .unwrap()
-                .get_buffer_opaque_capture_descriptor_data_ext)(
-                self.handle, info, out.as_mut_ptr()
-            )
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .ext_descriptor_buffer
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_buffer_opaque_capture_descriptor_data_ext;
+
+        unsafe { (call)(self.handle, info, out.as_mut_ptr()) }.init_on_success(out)
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetImageOpaqueCaptureDescriptorDataEXT.html>
@@ -136,17 +132,14 @@ impl DescriptorBufferDevice for Device {
         info: &ImageCaptureDescriptorDataInfoEXT,
     ) -> Result<c_void, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .ext_descriptor_buffer
-                .as_ref()
-                .unwrap()
-                .get_image_opaque_capture_descriptor_data_ext)(
-                self.handle, info, out.as_mut_ptr()
-            )
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .ext_descriptor_buffer
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_image_opaque_capture_descriptor_data_ext;
+
+        unsafe { (call)(self.handle, info, out.as_mut_ptr()) }.init_on_success(out)
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetImageViewOpaqueCaptureDescriptorDataEXT.html>
@@ -156,19 +149,14 @@ impl DescriptorBufferDevice for Device {
         info: &ImageViewCaptureDescriptorDataInfoEXT,
     ) -> Result<c_void, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .ext_descriptor_buffer
-                .as_ref()
-                .unwrap()
-                .get_image_view_opaque_capture_descriptor_data_ext)(
-                self.handle,
-                info,
-                out.as_mut_ptr(),
-            )
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .ext_descriptor_buffer
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_image_view_opaque_capture_descriptor_data_ext;
+
+        unsafe { (call)(self.handle, info, out.as_mut_ptr()) }.init_on_success(out)
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetSamplerOpaqueCaptureDescriptorDataEXT.html>
@@ -178,19 +166,14 @@ impl DescriptorBufferDevice for Device {
         info: &SamplerCaptureDescriptorDataInfoEXT,
     ) -> Result<c_void, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .ext_descriptor_buffer
-                .as_ref()
-                .unwrap()
-                .get_sampler_opaque_capture_descriptor_data_ext)(
-                self.handle,
-                info,
-                out.as_mut_ptr(),
-            )
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .ext_descriptor_buffer
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_sampler_opaque_capture_descriptor_data_ext;
+
+        unsafe { (call)(self.handle, info, out.as_mut_ptr()) }.init_on_success(out)
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT.html>
@@ -200,19 +183,14 @@ impl DescriptorBufferDevice for Device {
         info: &AccelerationStructureCaptureDescriptorDataInfoEXT,
     ) -> Result<c_void, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .ext_descriptor_buffer
-                .as_ref()
-                .unwrap()
-                .get_acceleration_structure_opaque_capture_descriptor_data_ext)(
-                self.handle,
-                info,
-                out.as_mut_ptr(),
-            )
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .ext_descriptor_buffer
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_acceleration_structure_opaque_capture_descriptor_data_ext;
+
+        unsafe { (call)(self.handle, info, out.as_mut_ptr()) }.init_on_success(out)
     }
 }
 
@@ -245,13 +223,15 @@ impl DescriptorBufferCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn bind_descriptor_buffers(&self, binding_infos: &[DescriptorBufferBindingInfoEXT]) {
+        let call = self
+            .fns()
+            .ext_descriptor_buffer
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .bind_descriptor_buffers_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_descriptor_buffer
-                .as_ref()
-                .unwrap()
-                .bind_descriptor_buffers_ext)(
+            (call)(
                 self.handle,
                 binding_infos.len() as u32,
                 binding_infos.as_ptr(),
@@ -275,13 +255,15 @@ impl DescriptorBufferCommandBuffer for CommandBuffer {
         offsets: &[DeviceSize],
     ) {
         assert_eq!(buffer_indices.len(), offsets.len());
+        let call = self
+            .fns()
+            .ext_descriptor_buffer
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .set_descriptor_buffer_offsets_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_descriptor_buffer
-                .as_ref()
-                .unwrap()
-                .set_descriptor_buffer_offsets_ext)(
+            (call)(
                 self.handle,
                 pipeline_bind_point,
                 layout,
@@ -306,18 +288,13 @@ impl DescriptorBufferCommandBuffer for CommandBuffer {
         layout: PipelineLayout,
         set: u32,
     ) {
-        unsafe {
-            (self
-                .fns()
-                .ext_descriptor_buffer
-                .as_ref()
-                .unwrap()
-                .bind_descriptor_buffer_embedded_samplers_ext)(
-                self.handle,
-                pipeline_bind_point,
-                layout,
-                set,
-            )
-        };
+        let call = self
+            .fns()
+            .ext_descriptor_buffer
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .bind_descriptor_buffer_embedded_samplers_ext;
+
+        unsafe { (call)(self.handle, pipeline_bind_point, layout, set) };
     }
 }

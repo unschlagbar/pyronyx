@@ -44,17 +44,14 @@ impl PresentTimingDevice for Device {
         swapchain: SwapchainKHR,
         size: u32,
     ) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .ext_present_timing
-                .as_ref()
-                .unwrap()
-                .set_swapchain_present_timing_queue_size_ext)(
-                self.handle, swapchain, size
-            )
-        }
-        .result()
+        let call = self
+            .fns()
+            .ext_present_timing
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .set_swapchain_present_timing_queue_size_ext;
+
+        unsafe { (call)(self.handle, swapchain, size) }.result()
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetSwapchainTimingPropertiesEXT.html>
@@ -65,13 +62,15 @@ impl PresentTimingDevice for Device {
         swapchain_timing_properties: *mut SwapchainTimingPropertiesEXT,
     ) -> Result<u64, Error> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .ext_present_timing
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_swapchain_timing_properties_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_present_timing
-                .as_ref()
-                .unwrap()
-                .get_swapchain_timing_properties_ext)(
+            (call)(
                 self.handle,
                 swapchain,
                 swapchain_timing_properties,
@@ -89,13 +88,15 @@ impl PresentTimingDevice for Device {
         swapchain_time_domain_properties: *mut SwapchainTimeDomainPropertiesEXT,
     ) -> Result<u64, Error> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .ext_present_timing
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_swapchain_time_domain_properties_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_present_timing
-                .as_ref()
-                .unwrap()
-                .get_swapchain_time_domain_properties_ext)(
+            (call)(
                 self.handle,
                 swapchain,
                 swapchain_time_domain_properties,
@@ -112,18 +113,14 @@ impl PresentTimingDevice for Device {
         past_presentation_timing_info: &PastPresentationTimingInfoEXT,
     ) -> Result<PastPresentationTimingPropertiesEXT<'_>, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .ext_present_timing
-                .as_ref()
-                .unwrap()
-                .get_past_presentation_timing_ext)(
-                self.handle,
-                past_presentation_timing_info,
-                out.as_mut_ptr(),
-            )
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .ext_present_timing
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_past_presentation_timing_ext;
+
+        unsafe { (call)(self.handle, past_presentation_timing_info, out.as_mut_ptr()) }
+            .init_on_success(out)
     }
 }

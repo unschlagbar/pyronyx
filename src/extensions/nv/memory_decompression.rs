@@ -30,13 +30,15 @@ impl MemoryDecompressionCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn decompress_memory(&self, decompress_memory_regions: &[DecompressMemoryRegionNV]) {
+        let call = self
+            .fns()
+            .nv_memory_decompression
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .decompress_memory_nv;
+
         unsafe {
-            (self
-                .fns()
-                .nv_memory_decompression
-                .as_ref()
-                .unwrap()
-                .decompress_memory_nv)(
+            (call)(
                 self.handle,
                 decompress_memory_regions.len() as u32,
                 decompress_memory_regions.as_ptr(),
@@ -57,13 +59,15 @@ impl MemoryDecompressionCommandBuffer for CommandBuffer {
         indirect_commands_count_address: DeviceAddress,
         stride: u32,
     ) {
+        let call = self
+            .fns()
+            .nv_memory_decompression
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .decompress_memory_indirect_count_nv;
+
         unsafe {
-            (self
-                .fns()
-                .nv_memory_decompression
-                .as_ref()
-                .unwrap()
-                .decompress_memory_indirect_count_nv)(
+            (call)(
                 self.handle,
                 indirect_commands_address,
                 indirect_commands_count_address,

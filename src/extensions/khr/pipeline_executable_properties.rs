@@ -38,13 +38,15 @@ impl PipelineExecutablePropertiesDevice for Device {
         pipeline_info: &PipelineInfoKHR,
         properties: &mut [PipelineExecutablePropertiesKHR],
     ) -> Result<(), Error> {
+        let call = self
+            .fns()
+            .khr_pipeline_executable_properties
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_pipeline_executable_properties_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_pipeline_executable_properties
-                .as_ref()
-                .unwrap()
-                .get_pipeline_executable_properties_khr)(
+            (call)(
                 self.handle,
                 pipeline_info,
                 properties.len() as *mut u32,
@@ -61,13 +63,15 @@ impl PipelineExecutablePropertiesDevice for Device {
         executable_info: &PipelineExecutableInfoKHR,
         statistics: &mut [PipelineExecutableStatisticKHR],
     ) -> Result<(), Error> {
+        let call = self
+            .fns()
+            .khr_pipeline_executable_properties
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_pipeline_executable_statistics_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_pipeline_executable_properties
-                .as_ref()
-                .unwrap()
-                .get_pipeline_executable_statistics_khr)(
+            (call)(
                 self.handle,
                 executable_info,
                 statistics.len() as *mut u32,
@@ -84,13 +88,15 @@ impl PipelineExecutablePropertiesDevice for Device {
         executable_info: &PipelineExecutableInfoKHR,
         internal_representations: &mut [PipelineExecutableInternalRepresentationKHR],
     ) -> Result<(), Error> {
+        let call = self
+            .fns()
+            .khr_pipeline_executable_properties
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_pipeline_executable_internal_representations_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_pipeline_executable_properties
-                .as_ref()
-                .unwrap()
-                .get_pipeline_executable_internal_representations_khr)(
+            (call)(
                 self.handle,
                 executable_info,
                 internal_representations.len() as *mut u32,

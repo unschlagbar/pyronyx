@@ -31,19 +31,14 @@ impl ExternalMemoryAndroidHardwareBufferDevice for Device {
         buffer: &AHardwareBuffer,
     ) -> Result<AndroidHardwareBufferPropertiesANDROID<'_>, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .android_external_memory_android_hardware_buffer
-                .as_ref()
-                .unwrap()
-                .get_android_hardware_buffer_properties_android)(
-                self.handle,
-                buffer,
-                out.as_mut_ptr(),
-            )
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .android_external_memory_android_hardware_buffer
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_android_hardware_buffer_properties_android;
+
+        unsafe { (call)(self.handle, buffer, out.as_mut_ptr()) }.init_on_success(out)
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetMemoryAndroidHardwareBufferANDROID.html>
@@ -53,16 +48,13 @@ impl ExternalMemoryAndroidHardwareBufferDevice for Device {
         info: &MemoryGetAndroidHardwareBufferInfoANDROID,
     ) -> Result<*mut AHardwareBuffer, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .android_external_memory_android_hardware_buffer
-                .as_ref()
-                .unwrap()
-                .get_memory_android_hardware_buffer_android)(
-                self.handle, info, out.as_mut_ptr()
-            )
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .android_external_memory_android_hardware_buffer
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_memory_android_hardware_buffer_android;
+
+        unsafe { (call)(self.handle, info, out.as_mut_ptr()) }.init_on_success(out)
     }
 }

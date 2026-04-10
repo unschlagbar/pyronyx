@@ -48,13 +48,15 @@ impl DebugReportInstance for Instance {
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<DebugReportCallbackEXT, Error> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .ext_debug_report
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .create_debug_report_callback_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_debug_report
-                .as_ref()
-                .unwrap()
-                .create_debug_report_callback_ext)(
+            (call)(
                 self.handle,
                 create_info,
                 allocator.map_or(null(), from_ref),
@@ -71,18 +73,14 @@ impl DebugReportInstance for Instance {
         callback: DebugReportCallbackEXT,
         allocator: Option<&AllocationCallbacks>,
     ) {
-        unsafe {
-            (self
-                .fns()
-                .ext_debug_report
-                .as_ref()
-                .unwrap()
-                .destroy_debug_report_callback_ext)(
-                self.handle,
-                callback,
-                allocator.map_or(null(), from_ref),
-            )
-        };
+        let call = self
+            .fns()
+            .ext_debug_report
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .destroy_debug_report_callback_ext;
+
+        unsafe { (call)(self.handle, callback, allocator.map_or(null(), from_ref)) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkDebugReportMessageEXT.html>
@@ -97,13 +95,15 @@ impl DebugReportInstance for Instance {
         layer_prefix: &c_char,
         message: &c_char,
     ) {
+        let call = self
+            .fns()
+            .ext_debug_report
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .debug_report_message_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_debug_report
-                .as_ref()
-                .unwrap()
-                .debug_report_message_ext)(
+            (call)(
                 self.handle,
                 flags,
                 object_type,

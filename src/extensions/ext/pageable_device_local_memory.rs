@@ -18,13 +18,13 @@ impl PageableDeviceLocalMemoryDevice for Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkSetDeviceMemoryPriorityEXT.html>
     #[inline]
     fn set_device_memory_priority(&self, memory: DeviceMemory, priority: f32) {
-        unsafe {
-            (self
-                .fns()
-                .ext_pageable_device_local_memory
-                .as_ref()
-                .unwrap()
-                .set_device_memory_priority_ext)(self.handle, memory, priority)
-        };
+        let call = self
+            .fns()
+            .ext_pageable_device_local_memory
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .set_device_memory_priority_ext;
+
+        unsafe { (call)(self.handle, memory, priority) };
     }
 }

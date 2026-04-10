@@ -26,14 +26,13 @@ impl PresentWait2Device for Device {
         swapchain: SwapchainKHR,
         present_wait2_info: &PresentWait2InfoKHR,
     ) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .khr_present_wait2
-                .as_ref()
-                .unwrap()
-                .wait_for_present2_khr)(self.handle, swapchain, present_wait2_info)
-        }
-        .result()
+        let call = self
+            .fns()
+            .khr_present_wait2
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .wait_for_present2_khr;
+
+        unsafe { (call)(self.handle, swapchain, present_wait2_info) }.result()
     }
 }

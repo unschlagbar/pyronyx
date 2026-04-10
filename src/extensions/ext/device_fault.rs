@@ -26,14 +26,13 @@ impl DeviceFaultDevice for Device {
         fault_counts: *mut DeviceFaultCountsEXT,
     ) -> Result<DeviceFaultInfoEXT<'_>, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .ext_device_fault
-                .as_ref()
-                .unwrap()
-                .get_device_fault_info_ext)(self.handle, fault_counts, out.as_mut_ptr())
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .ext_device_fault
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_device_fault_info_ext;
+
+        unsafe { (call)(self.handle, fault_counts, out.as_mut_ptr()) }.init_on_success(out)
     }
 }

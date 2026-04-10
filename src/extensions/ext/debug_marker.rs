@@ -29,15 +29,14 @@ impl DebugMarkerDevice for Device {
         &self,
         name_info: &DebugMarkerObjectNameInfoEXT,
     ) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .ext_debug_marker
-                .as_ref()
-                .unwrap()
-                .debug_marker_set_object_name_ext)(self.handle, name_info)
-        }
-        .result()
+        let call = self
+            .fns()
+            .ext_debug_marker
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .debug_marker_set_object_name_ext;
+
+        unsafe { (call)(self.handle, name_info) }.result()
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkDebugMarkerSetObjectTagEXT.html>
@@ -46,15 +45,14 @@ impl DebugMarkerDevice for Device {
         &self,
         tag_info: &DebugMarkerObjectTagInfoEXT,
     ) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .ext_debug_marker
-                .as_ref()
-                .unwrap()
-                .debug_marker_set_object_tag_ext)(self.handle, tag_info)
-        }
-        .result()
+        let call = self
+            .fns()
+            .ext_debug_marker
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .debug_marker_set_object_tag_ext;
+
+        unsafe { (call)(self.handle, tag_info) }.result()
     }
 }
 
@@ -75,14 +73,14 @@ impl DebugMarkerCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn debug_marker_begin(&self, marker_info: &DebugMarkerMarkerInfoEXT) {
-        unsafe {
-            (self
-                .fns()
-                .ext_debug_marker
-                .as_ref()
-                .unwrap()
-                .debug_marker_begin_ext)(self.handle, marker_info)
-        };
+        let call = self
+            .fns()
+            .ext_debug_marker
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .debug_marker_begin_ext;
+
+        unsafe { (call)(self.handle, marker_info) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdDebugMarkerEndEXT.html>
@@ -93,14 +91,14 @@ impl DebugMarkerCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn debug_marker_end(&self) {
-        unsafe {
-            (self
-                .fns()
-                .ext_debug_marker
-                .as_ref()
-                .unwrap()
-                .debug_marker_end_ext)(self.handle)
-        };
+        let call = self
+            .fns()
+            .ext_debug_marker
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .debug_marker_end_ext;
+
+        unsafe { (call)(self.handle) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdDebugMarkerInsertEXT.html>
@@ -111,13 +109,13 @@ impl DebugMarkerCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn debug_marker_insert(&self, marker_info: &DebugMarkerMarkerInfoEXT) {
-        unsafe {
-            (self
-                .fns()
-                .ext_debug_marker
-                .as_ref()
-                .unwrap()
-                .debug_marker_insert_ext)(self.handle, marker_info)
-        };
+        let call = self
+            .fns()
+            .ext_debug_marker
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .debug_marker_insert_ext;
+
+        unsafe { (call)(self.handle, marker_info) };
     }
 }

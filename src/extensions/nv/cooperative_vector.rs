@@ -24,13 +24,15 @@ impl CooperativeVectorPhysicalDevice for PhysicalDevice {
         &self,
         properties: &mut [CooperativeVectorPropertiesNV],
     ) -> Result<(), Error> {
+        let call = self
+            .fns()
+            .nv_cooperative_vector
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_physical_device_cooperative_vector_properties_nv;
+
         unsafe {
-            (self
-                .fns()
-                .nv_cooperative_vector
-                .as_ref()
-                .unwrap()
-                .get_physical_device_cooperative_vector_properties_nv)(
+            (call)(
                 self.handle,
                 properties.len() as *mut u32,
                 properties.as_mut_ptr(),
@@ -54,15 +56,14 @@ impl CooperativeVectorDevice for Device {
         &self,
         info: &ConvertCooperativeVectorMatrixInfoNV,
     ) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .nv_cooperative_vector
-                .as_ref()
-                .unwrap()
-                .convert_cooperative_vector_matrix_nv)(self.handle, info)
-        }
-        .result()
+        let call = self
+            .fns()
+            .nv_cooperative_vector
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .convert_cooperative_vector_matrix_nv;
+
+        unsafe { (call)(self.handle, info) }.result()
     }
 }
 
@@ -79,17 +80,13 @@ impl CooperativeVectorCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn convert_cooperative_vector_matrix(&self, infos: &[ConvertCooperativeVectorMatrixInfoNV]) {
-        unsafe {
-            (self
-                .fns()
-                .nv_cooperative_vector
-                .as_ref()
-                .unwrap()
-                .convert_cooperative_vector_matrix_nv)(
-                self.handle,
-                infos.len() as u32,
-                infos.as_ptr(),
-            )
-        };
+        let call = self
+            .fns()
+            .nv_cooperative_vector
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .convert_cooperative_vector_matrix_nv;
+
+        unsafe { (call)(self.handle, infos.len() as u32, infos.as_ptr()) };
     }
 }

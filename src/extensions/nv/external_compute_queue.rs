@@ -35,13 +35,15 @@ impl ExternalComputeQueueDevice for Device {
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<ExternalComputeQueueNV, Error> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .nv_external_compute_queue
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .create_external_compute_queue_nv;
+
         unsafe {
-            (self
-                .fns()
-                .nv_external_compute_queue
-                .as_ref()
-                .unwrap()
-                .create_external_compute_queue_nv)(
+            (call)(
                 self.handle,
                 create_info,
                 allocator.map_or(null(), from_ref),
@@ -58,13 +60,15 @@ impl ExternalComputeQueueDevice for Device {
         external_queue: ExternalComputeQueueNV,
         allocator: Option<&AllocationCallbacks>,
     ) {
+        let call = self
+            .fns()
+            .nv_external_compute_queue
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .destroy_external_compute_queue_nv;
+
         unsafe {
-            (self
-                .fns()
-                .nv_external_compute_queue
-                .as_ref()
-                .unwrap()
-                .destroy_external_compute_queue_nv)(
+            (call)(
                 self.handle,
                 external_queue,
                 allocator.map_or(null(), from_ref),

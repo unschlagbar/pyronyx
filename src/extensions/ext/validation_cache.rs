@@ -48,13 +48,15 @@ impl ValidationCacheDevice for Device {
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<ValidationCacheEXT, Error> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .ext_validation_cache
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .create_validation_cache_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_validation_cache
-                .as_ref()
-                .unwrap()
-                .create_validation_cache_ext)(
+            (call)(
                 self.handle,
                 create_info,
                 allocator.map_or(null(), from_ref),
@@ -71,13 +73,15 @@ impl ValidationCacheDevice for Device {
         validation_cache: ValidationCacheEXT,
         allocator: Option<&AllocationCallbacks>,
     ) {
+        let call = self
+            .fns()
+            .ext_validation_cache
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .destroy_validation_cache_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_validation_cache
-                .as_ref()
-                .unwrap()
-                .destroy_validation_cache_ext)(
+            (call)(
                 self.handle,
                 validation_cache,
                 allocator.map_or(null(), from_ref),
@@ -92,13 +96,15 @@ impl ValidationCacheDevice for Device {
         validation_cache: ValidationCacheEXT,
         data: &mut [c_void],
     ) -> Result<(), Error> {
+        let call = self
+            .fns()
+            .ext_validation_cache
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_validation_cache_data_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_validation_cache
-                .as_ref()
-                .unwrap()
-                .get_validation_cache_data_ext)(
+            (call)(
                 self.handle,
                 validation_cache,
                 data.len() as *mut usize,
@@ -115,13 +121,15 @@ impl ValidationCacheDevice for Device {
         dst_cache: ValidationCacheEXT,
         src_caches: &[ValidationCacheEXT],
     ) -> Result<(), Error> {
+        let call = self
+            .fns()
+            .ext_validation_cache
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .merge_validation_caches_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_validation_cache
-                .as_ref()
-                .unwrap()
-                .merge_validation_caches_ext)(
+            (call)(
                 self.handle,
                 dst_cache,
                 src_caches.len() as u32,

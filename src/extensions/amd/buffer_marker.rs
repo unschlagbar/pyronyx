@@ -43,20 +43,14 @@ impl BufferMarkerCommandBuffer for CommandBuffer {
         dst_offset: DeviceSize,
         marker: u32,
     ) {
-        unsafe {
-            (self
-                .fns()
-                .amd_buffer_marker
-                .as_ref()
-                .unwrap()
-                .write_buffer_marker_amd)(
-                self.handle,
-                pipeline_stage,
-                dst_buffer,
-                dst_offset,
-                marker,
-            )
-        };
+        let call = self
+            .fns()
+            .amd_buffer_marker
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .write_buffer_marker_amd;
+
+        unsafe { (call)(self.handle, pipeline_stage, dst_buffer, dst_offset, marker) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdWriteBufferMarker2AMD.html>
@@ -73,15 +67,13 @@ impl BufferMarkerCommandBuffer for CommandBuffer {
         dst_offset: DeviceSize,
         marker: u32,
     ) {
-        unsafe {
-            (self
-                .fns()
-                .amd_buffer_marker
-                .as_ref()
-                .unwrap()
-                .write_buffer_marker2_amd)(
-                self.handle, stage, dst_buffer, dst_offset, marker
-            )
-        };
+        let call = self
+            .fns()
+            .amd_buffer_marker
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .write_buffer_marker2_amd;
+
+        unsafe { (call)(self.handle, stage, dst_buffer, dst_offset, marker) };
     }
 }

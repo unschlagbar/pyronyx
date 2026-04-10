@@ -32,16 +32,14 @@ impl DeviceGeneratedCommandsComputeCommandBuffer for CommandBuffer {
         pipeline_bind_point: PipelineBindPoint,
         pipeline: Pipeline,
     ) {
-        unsafe {
-            (self
-                .fns()
-                .nv_device_generated_commands_compute
-                .as_ref()
-                .unwrap()
-                .update_pipeline_indirect_buffer_nv)(
-                self.handle, pipeline_bind_point, pipeline
-            )
-        };
+        let call = self
+            .fns()
+            .nv_device_generated_commands_compute
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .update_pipeline_indirect_buffer_nv;
+
+        unsafe { (call)(self.handle, pipeline_bind_point, pipeline) };
     }
 }
 
@@ -65,17 +63,15 @@ impl DeviceGeneratedCommandsComputeDevice for Device {
         create_info: &ComputePipelineCreateInfo,
     ) -> MemoryRequirements2<'_> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .nv_device_generated_commands_compute
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_pipeline_indirect_memory_requirements_nv;
+
         unsafe {
-            (self
-                .fns()
-                .nv_device_generated_commands_compute
-                .as_ref()
-                .unwrap()
-                .get_pipeline_indirect_memory_requirements_nv)(
-                self.handle,
-                create_info,
-                out.as_mut_ptr(),
-            );
+            (call)(self.handle, create_info, out.as_mut_ptr());
             out.assume_init()
         }
     }
@@ -86,13 +82,13 @@ impl DeviceGeneratedCommandsComputeDevice for Device {
         &self,
         info: &PipelineIndirectDeviceAddressInfoNV,
     ) -> DeviceAddress {
-        unsafe {
-            (self
-                .fns()
-                .nv_device_generated_commands_compute
-                .as_ref()
-                .unwrap()
-                .get_pipeline_indirect_device_address_nv)(self.handle, info)
-        }
+        let call = self
+            .fns()
+            .nv_device_generated_commands_compute
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_pipeline_indirect_device_address_nv;
+
+        unsafe { (call)(self.handle, info) }
     }
 }

@@ -23,13 +23,13 @@ impl RayTracingMaintenance1CommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn trace_rays_indirect2(&self, indirect_device_address: DeviceAddress) {
-        unsafe {
-            (self
-                .fns()
-                .khr_ray_tracing_maintenance1
-                .as_ref()
-                .unwrap()
-                .trace_rays_indirect2_khr)(self.handle, indirect_device_address)
-        };
+        let call = self
+            .fns()
+            .khr_ray_tracing_maintenance1
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .trace_rays_indirect2_khr;
+
+        unsafe { (call)(self.handle, indirect_device_address) };
     }
 }

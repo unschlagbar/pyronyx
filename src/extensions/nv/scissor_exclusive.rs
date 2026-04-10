@@ -29,13 +29,15 @@ impl ScissorExclusiveCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_exclusive_scissor(&self, first_exclusive_scissor: u32, exclusive_scissors: &[Rect2D]) {
+        let call = self
+            .fns()
+            .nv_scissor_exclusive
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .set_exclusive_scissor_nv;
+
         unsafe {
-            (self
-                .fns()
-                .nv_scissor_exclusive
-                .as_ref()
-                .unwrap()
-                .set_exclusive_scissor_nv)(
+            (call)(
                 self.handle,
                 first_exclusive_scissor,
                 exclusive_scissors.len() as u32,
@@ -56,13 +58,15 @@ impl ScissorExclusiveCommandBuffer for CommandBuffer {
         first_exclusive_scissor: u32,
         exclusive_scissor_enables: &[Bool32],
     ) {
+        let call = self
+            .fns()
+            .nv_scissor_exclusive
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .set_exclusive_scissor_enable_nv;
+
         unsafe {
-            (self
-                .fns()
-                .nv_scissor_exclusive
-                .as_ref()
-                .unwrap()
-                .set_exclusive_scissor_enable_nv)(
+            (call)(
                 self.handle,
                 first_exclusive_scissor,
                 exclusive_scissor_enables.len() as u32,

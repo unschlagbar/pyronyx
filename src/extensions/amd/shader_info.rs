@@ -31,13 +31,15 @@ impl ShaderInfoDevice for Device {
         info_type: ShaderInfoTypeAMD,
         info: &mut [c_void],
     ) -> Result<(), Error> {
+        let call = self
+            .fns()
+            .amd_shader_info
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_shader_info_amd;
+
         unsafe {
-            (self
-                .fns()
-                .amd_shader_info
-                .as_ref()
-                .unwrap()
-                .get_shader_info_amd)(
+            (call)(
                 self.handle,
                 pipeline,
                 shader_stage,

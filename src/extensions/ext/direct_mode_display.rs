@@ -18,14 +18,13 @@ impl DirectModeDisplayPhysicalDevice for PhysicalDevice {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkReleaseDisplayEXT.html>
     #[inline]
     fn release_display(&self, display: DisplayKHR) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .ext_direct_mode_display
-                .as_ref()
-                .unwrap()
-                .release_display_ext)(self.handle, display)
-        }
-        .result()
+        let call = self
+            .fns()
+            .ext_direct_mode_display
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .release_display_ext;
+
+        unsafe { (call)(self.handle, display) }.result()
     }
 }

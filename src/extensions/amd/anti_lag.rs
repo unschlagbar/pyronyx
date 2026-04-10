@@ -18,13 +18,13 @@ impl AntiLagDevice for Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkAntiLagUpdateAMD.html>
     #[inline]
     fn anti_lag_update(&self, data: &AntiLagDataAMD) {
-        unsafe {
-            (self
-                .fns()
-                .amd_anti_lag
-                .as_ref()
-                .unwrap()
-                .anti_lag_update_amd)(self.handle, data)
-        };
+        let call = self
+            .fns()
+            .amd_anti_lag
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .anti_lag_update_amd;
+
+        unsafe { (call)(self.handle, data) };
     }
 }

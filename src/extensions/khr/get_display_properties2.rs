@@ -41,13 +41,15 @@ impl GetDisplayProperties2PhysicalDevice for PhysicalDevice {
         &self,
         properties: &mut [DisplayProperties2KHR],
     ) -> Result<(), Error> {
+        let call = self
+            .fns()
+            .khr_get_display_properties2
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_physical_device_display_properties2_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_get_display_properties2
-                .as_ref()
-                .unwrap()
-                .get_physical_device_display_properties2_khr)(
+            (call)(
                 self.handle,
                 properties.len() as *mut u32,
                 properties.as_mut_ptr(),
@@ -62,13 +64,15 @@ impl GetDisplayProperties2PhysicalDevice for PhysicalDevice {
         &self,
         properties: &mut [DisplayPlaneProperties2KHR],
     ) -> Result<(), Error> {
+        let call = self
+            .fns()
+            .khr_get_display_properties2
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_physical_device_display_plane_properties2_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_get_display_properties2
-                .as_ref()
-                .unwrap()
-                .get_physical_device_display_plane_properties2_khr)(
+            (call)(
                 self.handle,
                 properties.len() as *mut u32,
                 properties.as_mut_ptr(),
@@ -84,13 +88,15 @@ impl GetDisplayProperties2PhysicalDevice for PhysicalDevice {
         display: DisplayKHR,
         properties: &mut [DisplayModeProperties2KHR],
     ) -> Result<(), Error> {
+        let call = self
+            .fns()
+            .khr_get_display_properties2
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_display_mode_properties2_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_get_display_properties2
-                .as_ref()
-                .unwrap()
-                .get_display_mode_properties2_khr)(
+            (call)(
                 self.handle,
                 display,
                 properties.len() as *mut u32,
@@ -107,18 +113,13 @@ impl GetDisplayProperties2PhysicalDevice for PhysicalDevice {
         display_plane_info: &DisplayPlaneInfo2KHR,
     ) -> Result<DisplayPlaneCapabilities2KHR<'_>, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .khr_get_display_properties2
-                .as_ref()
-                .unwrap()
-                .get_display_plane_capabilities2_khr)(
-                self.handle,
-                display_plane_info,
-                out.as_mut_ptr(),
-            )
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .khr_get_display_properties2
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_display_plane_capabilities2_khr;
+
+        unsafe { (call)(self.handle, display_plane_info, out.as_mut_ptr()) }.init_on_success(out)
     }
 }

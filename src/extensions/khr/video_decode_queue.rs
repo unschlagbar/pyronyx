@@ -23,13 +23,13 @@ impl VideoDecodeQueueCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`.
     #[inline]
     fn decode_video(&self, decode_info: &VideoDecodeInfoKHR) {
-        unsafe {
-            (self
-                .fns()
-                .khr_video_decode_queue
-                .as_ref()
-                .unwrap()
-                .decode_video_khr)(self.handle, decode_info)
-        };
+        let call = self
+            .fns()
+            .khr_video_decode_queue
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .decode_video_khr;
+
+        unsafe { (call)(self.handle, decode_info) };
     }
 }

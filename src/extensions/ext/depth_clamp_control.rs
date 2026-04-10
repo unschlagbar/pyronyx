@@ -32,13 +32,15 @@ impl DepthClampControlCommandBuffer for CommandBuffer {
         depth_clamp_mode: DepthClampModeEXT,
         depth_clamp_range: Option<&DepthClampRangeEXT>,
     ) {
+        let call = self
+            .fns()
+            .ext_depth_clamp_control
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .set_depth_clamp_range_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_depth_clamp_control
-                .as_ref()
-                .unwrap()
-                .set_depth_clamp_range_ext)(
+            (call)(
                 self.handle,
                 depth_clamp_mode,
                 depth_clamp_range.map_or(null(), from_ref),

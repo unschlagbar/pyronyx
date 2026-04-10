@@ -54,13 +54,15 @@ impl DescriptorHeapDevice for Device {
         descriptors: &[HostAddressRangeEXT],
     ) -> Result<(), Error> {
         assert_eq!(samplers.len(), descriptors.len());
+        let call = self
+            .fns()
+            .ext_descriptor_heap
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .write_sampler_descriptors_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_descriptor_heap
-                .as_ref()
-                .unwrap()
-                .write_sampler_descriptors_ext)(
+            (call)(
                 self.handle,
                 samplers.len() as u32,
                 samplers.as_ptr(),
@@ -78,13 +80,15 @@ impl DescriptorHeapDevice for Device {
         descriptors: &[HostAddressRangeEXT],
     ) -> Result<(), Error> {
         assert_eq!(resources.len(), descriptors.len());
+        let call = self
+            .fns()
+            .ext_descriptor_heap
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .write_resource_descriptors_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_descriptor_heap
-                .as_ref()
-                .unwrap()
-                .write_resource_descriptors_ext)(
+            (call)(
                 self.handle,
                 resources.len() as u32,
                 resources.as_ptr(),
@@ -102,13 +106,15 @@ impl DescriptorHeapDevice for Device {
         request_index: bool,
     ) -> Result<u32, Error> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .ext_descriptor_heap
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .register_custom_border_color_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_descriptor_heap
-                .as_ref()
-                .unwrap()
-                .register_custom_border_color_ext)(
+            (call)(
                 self.handle,
                 border_color,
                 request_index as _,
@@ -121,14 +127,14 @@ impl DescriptorHeapDevice for Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkUnregisterCustomBorderColorEXT.html>
     #[inline]
     fn unregister_custom_border_color(&self, index: u32) {
-        unsafe {
-            (self
-                .fns()
-                .ext_descriptor_heap
-                .as_ref()
-                .unwrap()
-                .unregister_custom_border_color_ext)(self.handle, index)
-        };
+        let call = self
+            .fns()
+            .ext_descriptor_heap
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .unregister_custom_border_color_ext;
+
+        unsafe { (call)(self.handle, index) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetImageOpaqueCaptureDataEXT.html>
@@ -139,13 +145,15 @@ impl DescriptorHeapDevice for Device {
         datas: &mut [HostAddressRangeEXT],
     ) -> Result<(), Error> {
         assert_eq!(images.len(), datas.len());
+        let call = self
+            .fns()
+            .ext_descriptor_heap
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_image_opaque_capture_data_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_descriptor_heap
-                .as_ref()
-                .unwrap()
-                .get_image_opaque_capture_data_ext)(
+            (call)(
                 self.handle,
                 images.len() as u32,
                 images.as_ptr(),
@@ -163,13 +171,15 @@ impl DescriptorHeapDevice for Device {
         datas: &mut [HostAddressRangeEXT],
     ) -> Result<(), Error> {
         assert_eq!(tensors.len(), datas.len());
+        let call = self
+            .fns()
+            .ext_descriptor_heap
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_tensor_opaque_capture_data_arm;
+
         unsafe {
-            (self
-                .fns()
-                .ext_descriptor_heap
-                .as_ref()
-                .unwrap()
-                .get_tensor_opaque_capture_data_arm)(
+            (call)(
                 self.handle,
                 tensors.len() as u32,
                 tensors.as_ptr(),
@@ -197,14 +207,14 @@ impl DescriptorHeapCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn bind_sampler_heap(&self, bind_info: &BindHeapInfoEXT) {
-        unsafe {
-            (self
-                .fns()
-                .ext_descriptor_heap
-                .as_ref()
-                .unwrap()
-                .bind_sampler_heap_ext)(self.handle, bind_info)
-        };
+        let call = self
+            .fns()
+            .ext_descriptor_heap
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .bind_sampler_heap_ext;
+
+        unsafe { (call)(self.handle, bind_info) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBindResourceHeapEXT.html>
@@ -215,14 +225,14 @@ impl DescriptorHeapCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn bind_resource_heap(&self, bind_info: &BindHeapInfoEXT) {
-        unsafe {
-            (self
-                .fns()
-                .ext_descriptor_heap
-                .as_ref()
-                .unwrap()
-                .bind_resource_heap_ext)(self.handle, bind_info)
-        };
+        let call = self
+            .fns()
+            .ext_descriptor_heap
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .bind_resource_heap_ext;
+
+        unsafe { (call)(self.handle, bind_info) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdPushDataEXT.html>
@@ -233,14 +243,14 @@ impl DescriptorHeapCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn push_data(&self, push_data_info: &PushDataInfoEXT) {
-        unsafe {
-            (self
-                .fns()
-                .ext_descriptor_heap
-                .as_ref()
-                .unwrap()
-                .push_data_ext)(self.handle, push_data_info)
-        };
+        let call = self
+            .fns()
+            .ext_descriptor_heap
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .push_data_ext;
+
+        unsafe { (call)(self.handle, push_data_info) };
     }
 }
 
@@ -252,13 +262,13 @@ impl DescriptorHeapPhysicalDevice for PhysicalDevice {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceDescriptorSizeEXT.html>
     #[inline]
     fn get_descriptor_size(&self, descriptor_type: DescriptorType) -> DeviceSize {
-        unsafe {
-            (self
-                .fns()
-                .ext_descriptor_heap
-                .as_ref()
-                .unwrap()
-                .get_physical_device_descriptor_size_ext)(self.handle, descriptor_type)
-        }
+        let call = self
+            .fns()
+            .ext_descriptor_heap
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_physical_device_descriptor_size_ext;
+
+        unsafe { (call)(self.handle, descriptor_type) }
     }
 }

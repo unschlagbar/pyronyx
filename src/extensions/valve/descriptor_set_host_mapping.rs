@@ -29,17 +29,15 @@ impl DescriptorSetHostMappingDevice for Device {
         binding_reference: &DescriptorSetBindingReferenceVALVE,
     ) -> DescriptorSetLayoutHostMappingInfoVALVE<'_> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .valve_descriptor_set_host_mapping
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_descriptor_set_layout_host_mapping_info_valve;
+
         unsafe {
-            (self
-                .fns()
-                .valve_descriptor_set_host_mapping
-                .as_ref()
-                .unwrap()
-                .get_descriptor_set_layout_host_mapping_info_valve)(
-                self.handle,
-                binding_reference,
-                out.as_mut_ptr(),
-            );
+            (call)(self.handle, binding_reference, out.as_mut_ptr());
             out.assume_init()
         }
     }
@@ -48,17 +46,15 @@ impl DescriptorSetHostMappingDevice for Device {
     #[inline]
     fn get_descriptor_set_host_mapping(&self, descriptor_set: DescriptorSet) -> *mut c_void {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .valve_descriptor_set_host_mapping
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_descriptor_set_host_mapping_valve;
+
         unsafe {
-            (self
-                .fns()
-                .valve_descriptor_set_host_mapping
-                .as_ref()
-                .unwrap()
-                .get_descriptor_set_host_mapping_valve)(
-                self.handle,
-                descriptor_set,
-                out.as_mut_ptr(),
-            );
+            (call)(self.handle, descriptor_set, out.as_mut_ptr());
             out.assume_init()
         }
     }

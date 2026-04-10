@@ -26,15 +26,14 @@ impl ExternalSemaphoreFdDevice for Device {
     #[inline]
     fn get_semaphore_fd(&self, get_fd_info: &SemaphoreGetFdInfoKHR) -> Result<c_int, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .khr_external_semaphore_fd
-                .as_ref()
-                .unwrap()
-                .get_semaphore_fd_khr)(self.handle, get_fd_info, out.as_mut_ptr())
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .khr_external_semaphore_fd
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_semaphore_fd_khr;
+
+        unsafe { (call)(self.handle, get_fd_info, out.as_mut_ptr()) }.init_on_success(out)
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkImportSemaphoreFdKHR.html>
@@ -43,14 +42,13 @@ impl ExternalSemaphoreFdDevice for Device {
         &self,
         import_semaphore_fd_info: &ImportSemaphoreFdInfoKHR,
     ) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .khr_external_semaphore_fd
-                .as_ref()
-                .unwrap()
-                .import_semaphore_fd_khr)(self.handle, import_semaphore_fd_info)
-        }
-        .result()
+        let call = self
+            .fns()
+            .khr_external_semaphore_fd
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .import_semaphore_fd_khr;
+
+        unsafe { (call)(self.handle, import_semaphore_fd_info) }.result()
     }
 }

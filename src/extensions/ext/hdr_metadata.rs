@@ -19,13 +19,15 @@ impl HdrMetadataDevice for Device {
     #[inline]
     fn set_hdr_metadata(&self, swapchains: &[SwapchainKHR], metadata: &[HdrMetadataEXT]) {
         assert_eq!(swapchains.len(), metadata.len());
+        let call = self
+            .fns()
+            .ext_hdr_metadata
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .set_hdr_metadata_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_hdr_metadata
-                .as_ref()
-                .unwrap()
-                .set_hdr_metadata_ext)(
+            (call)(
                 self.handle,
                 swapchains.len() as u32,
                 swapchains.as_ptr(),

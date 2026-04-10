@@ -43,18 +43,14 @@ impl DeviceGeneratedCommandsCommandBuffer for CommandBuffer {
         is_preprocessed: bool,
         generated_commands_info: &GeneratedCommandsInfoNV,
     ) {
-        unsafe {
-            (self
-                .fns()
-                .nv_device_generated_commands
-                .as_ref()
-                .unwrap()
-                .execute_generated_commands_nv)(
-                self.handle,
-                is_preprocessed as _,
-                generated_commands_info,
-            )
-        };
+        let call = self
+            .fns()
+            .nv_device_generated_commands
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .execute_generated_commands_nv;
+
+        unsafe { (call)(self.handle, is_preprocessed as _, generated_commands_info) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdPreprocessGeneratedCommandsNV.html>
@@ -65,14 +61,14 @@ impl DeviceGeneratedCommandsCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn preprocess_generated_commands(&self, generated_commands_info: &GeneratedCommandsInfoNV) {
-        unsafe {
-            (self
-                .fns()
-                .nv_device_generated_commands
-                .as_ref()
-                .unwrap()
-                .preprocess_generated_commands_nv)(self.handle, generated_commands_info)
-        };
+        let call = self
+            .fns()
+            .nv_device_generated_commands
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .preprocess_generated_commands_nv;
+
+        unsafe { (call)(self.handle, generated_commands_info) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBindPipelineShaderGroupNV.html>
@@ -88,19 +84,14 @@ impl DeviceGeneratedCommandsCommandBuffer for CommandBuffer {
         pipeline: Pipeline,
         group_index: u32,
     ) {
-        unsafe {
-            (self
-                .fns()
-                .nv_device_generated_commands
-                .as_ref()
-                .unwrap()
-                .bind_pipeline_shader_group_nv)(
-                self.handle,
-                pipeline_bind_point,
-                pipeline,
-                group_index,
-            )
-        };
+        let call = self
+            .fns()
+            .nv_device_generated_commands
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .bind_pipeline_shader_group_nv;
+
+        unsafe { (call)(self.handle, pipeline_bind_point, pipeline, group_index) };
     }
 }
 
@@ -131,17 +122,15 @@ impl DeviceGeneratedCommandsDevice for Device {
         info: &GeneratedCommandsMemoryRequirementsInfoNV,
     ) -> MemoryRequirements2<'_> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .nv_device_generated_commands
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_generated_commands_memory_requirements_nv;
+
         unsafe {
-            (self
-                .fns()
-                .nv_device_generated_commands
-                .as_ref()
-                .unwrap()
-                .get_generated_commands_memory_requirements_nv)(
-                self.handle,
-                info,
-                out.as_mut_ptr(),
-            );
+            (call)(self.handle, info, out.as_mut_ptr());
             out.assume_init()
         }
     }
@@ -154,13 +143,15 @@ impl DeviceGeneratedCommandsDevice for Device {
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<IndirectCommandsLayoutNV, Error> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .nv_device_generated_commands
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .create_indirect_commands_layout_nv;
+
         unsafe {
-            (self
-                .fns()
-                .nv_device_generated_commands
-                .as_ref()
-                .unwrap()
-                .create_indirect_commands_layout_nv)(
+            (call)(
                 self.handle,
                 create_info,
                 allocator.map_or(null(), from_ref),
@@ -177,13 +168,15 @@ impl DeviceGeneratedCommandsDevice for Device {
         indirect_commands_layout: IndirectCommandsLayoutNV,
         allocator: Option<&AllocationCallbacks>,
     ) {
+        let call = self
+            .fns()
+            .nv_device_generated_commands
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .destroy_indirect_commands_layout_nv;
+
         unsafe {
-            (self
-                .fns()
-                .nv_device_generated_commands
-                .as_ref()
-                .unwrap()
-                .destroy_indirect_commands_layout_nv)(
+            (call)(
                 self.handle,
                 indirect_commands_layout,
                 allocator.map_or(null(), from_ref),

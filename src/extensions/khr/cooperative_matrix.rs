@@ -24,13 +24,15 @@ impl CooperativeMatrixPhysicalDevice for PhysicalDevice {
         &self,
         properties: &mut [CooperativeMatrixPropertiesKHR],
     ) -> Result<(), Error> {
+        let call = self
+            .fns()
+            .khr_cooperative_matrix
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_physical_device_cooperative_matrix_properties_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_cooperative_matrix
-                .as_ref()
-                .unwrap()
-                .get_physical_device_cooperative_matrix_properties_khr)(
+            (call)(
                 self.handle,
                 properties.len() as *mut u32,
                 properties.as_mut_ptr(),

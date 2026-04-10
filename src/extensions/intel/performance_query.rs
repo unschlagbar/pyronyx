@@ -42,28 +42,27 @@ impl PerformanceQueryDevice for Device {
         &self,
         initialize_info: &InitializePerformanceApiInfoINTEL,
     ) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .intel_performance_query
-                .as_ref()
-                .unwrap()
-                .initialize_performance_api_intel)(self.handle, initialize_info)
-        }
-        .result()
+        let call = self
+            .fns()
+            .intel_performance_query
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .initialize_performance_api_intel;
+
+        unsafe { (call)(self.handle, initialize_info) }.result()
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkUninitializePerformanceApiINTEL.html>
     #[inline]
     fn uninitialize_performance_api(&self) {
-        unsafe {
-            (self
-                .fns()
-                .intel_performance_query
-                .as_ref()
-                .unwrap()
-                .uninitialize_performance_api_intel)(self.handle)
-        };
+        let call = self
+            .fns()
+            .intel_performance_query
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .uninitialize_performance_api_intel;
+
+        unsafe { (call)(self.handle) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkAcquirePerformanceConfigurationINTEL.html>
@@ -73,19 +72,14 @@ impl PerformanceQueryDevice for Device {
         acquire_info: &PerformanceConfigurationAcquireInfoINTEL,
     ) -> Result<PerformanceConfigurationINTEL, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .intel_performance_query
-                .as_ref()
-                .unwrap()
-                .acquire_performance_configuration_intel)(
-                self.handle,
-                acquire_info,
-                out.as_mut_ptr(),
-            )
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .intel_performance_query
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .acquire_performance_configuration_intel;
+
+        unsafe { (call)(self.handle, acquire_info, out.as_mut_ptr()) }.init_on_success(out)
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkReleasePerformanceConfigurationINTEL.html>
@@ -94,15 +88,14 @@ impl PerformanceQueryDevice for Device {
         &self,
         configuration: PerformanceConfigurationINTEL,
     ) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .intel_performance_query
-                .as_ref()
-                .unwrap()
-                .release_performance_configuration_intel)(self.handle, configuration)
-        }
-        .result()
+        let call = self
+            .fns()
+            .intel_performance_query
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .release_performance_configuration_intel;
+
+        unsafe { (call)(self.handle, configuration) }.result()
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPerformanceParameterINTEL.html>
@@ -112,17 +105,14 @@ impl PerformanceQueryDevice for Device {
         parameter: PerformanceParameterTypeINTEL,
     ) -> Result<PerformanceValueINTEL, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .intel_performance_query
-                .as_ref()
-                .unwrap()
-                .get_performance_parameter_intel)(
-                self.handle, parameter, out.as_mut_ptr()
-            )
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .intel_performance_query
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_performance_parameter_intel;
+
+        unsafe { (call)(self.handle, parameter, out.as_mut_ptr()) }.init_on_success(out)
     }
 }
 
@@ -153,15 +143,14 @@ impl PerformanceQueryCommandBuffer for CommandBuffer {
         &self,
         marker_info: &PerformanceMarkerInfoINTEL,
     ) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .intel_performance_query
-                .as_ref()
-                .unwrap()
-                .set_performance_marker_intel)(self.handle, marker_info)
-        }
-        .result()
+        let call = self
+            .fns()
+            .intel_performance_query
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .set_performance_marker_intel;
+
+        unsafe { (call)(self.handle, marker_info) }.result()
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetPerformanceStreamMarkerINTEL.html>
@@ -175,15 +164,14 @@ impl PerformanceQueryCommandBuffer for CommandBuffer {
         &self,
         marker_info: &PerformanceStreamMarkerInfoINTEL,
     ) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .intel_performance_query
-                .as_ref()
-                .unwrap()
-                .set_performance_stream_marker_intel)(self.handle, marker_info)
-        }
-        .result()
+        let call = self
+            .fns()
+            .intel_performance_query
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .set_performance_stream_marker_intel;
+
+        unsafe { (call)(self.handle, marker_info) }.result()
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetPerformanceOverrideINTEL.html>
@@ -197,15 +185,14 @@ impl PerformanceQueryCommandBuffer for CommandBuffer {
         &self,
         override_info: &PerformanceOverrideInfoINTEL,
     ) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .intel_performance_query
-                .as_ref()
-                .unwrap()
-                .set_performance_override_intel)(self.handle, override_info)
-        }
-        .result()
+        let call = self
+            .fns()
+            .intel_performance_query
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .set_performance_override_intel;
+
+        unsafe { (call)(self.handle, override_info) }.result()
     }
 }
 
@@ -223,14 +210,13 @@ impl PerformanceQueryQueue for Queue {
         &self,
         configuration: PerformanceConfigurationINTEL,
     ) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .intel_performance_query
-                .as_ref()
-                .unwrap()
-                .queue_set_performance_configuration_intel)(self.handle, configuration)
-        }
-        .result()
+        let call = self
+            .fns()
+            .intel_performance_query
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .queue_set_performance_configuration_intel;
+
+        unsafe { (call)(self.handle, configuration) }.result()
     }
 }

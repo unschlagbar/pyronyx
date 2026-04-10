@@ -77,6 +77,33 @@ impl PipelineCacheCreateFlags {
     pub const InternallySynchronizedMergeKHR: Self = Self(0b1000);
 }
 
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPipelineDepthStencilStateCreateFlags.html>
+pub type PipelineDepthStencilStateCreateFlags = Flags;
+
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPipelineDynamicStateCreateFlags.html>
+pub type PipelineDynamicStateCreateFlags = Flags;
+
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPipelineColorBlendStateCreateFlags.html>
+pub type PipelineColorBlendStateCreateFlags = Flags;
+
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPipelineMultisampleStateCreateFlags.html>
+pub type PipelineMultisampleStateCreateFlags = Flags;
+
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPipelineRasterizationStateCreateFlags.html>
+pub type PipelineRasterizationStateCreateFlags = Flags;
+
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPipelineViewportStateCreateFlags.html>
+pub type PipelineViewportStateCreateFlags = Flags;
+
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPipelineTessellationStateCreateFlags.html>
+pub type PipelineTessellationStateCreateFlags = Flags;
+
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPipelineInputAssemblyStateCreateFlags.html>
+pub type PipelineInputAssemblyStateCreateFlags = Flags;
+
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPipelineVertexInputStateCreateFlags.html>
+pub type PipelineVertexInputStateCreateFlags = Flags;
+
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPipelineShaderStageCreateFlagBits.html>
 #[repr(transparent)]
 #[derive(Clone, Copy, Hash, PartialEq, Eq)]
@@ -104,6 +131,9 @@ impl DescriptorSetLayoutCreateFlags {
     pub const PerStageNV: Self = Self(0b100_0000);
 }
 
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkBufferViewCreateFlags.html>
+pub type BufferViewCreateFlags = Flags;
+
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkInstanceCreateFlagBits.html>
 #[repr(transparent)]
 #[derive(Clone, Copy, Hash, PartialEq, Eq)]
@@ -113,6 +143,9 @@ vk_bitflags_wrapped!(InstanceCreateFlags, Flags);
 impl InstanceCreateFlags {
     pub const EnumeratePortabilityKHR: Self = Self(0b1);
 }
+
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkDeviceCreateFlags.html>
+pub type DeviceCreateFlags = Flags;
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkDeviceQueueCreateFlagBits.html>
 #[repr(transparent)]
@@ -494,6 +527,9 @@ impl FenceCreateFlags {
     pub const Signaled: Self = Self(0b1);
 }
 
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkSemaphoreCreateFlags.html>
+pub type SemaphoreCreateFlags = Flags;
+
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkFormatFeatureFlagBits.html>
 #[repr(transparent)]
 #[derive(Clone, Copy, Hash, PartialEq, Eq)]
@@ -588,6 +624,9 @@ impl QueryResultFlags {
     pub const Partial: Self = Self(0b1000);
     pub const WithStatusKHR: Self = Self(0b1_0000);
 }
+
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkShaderModuleCreateFlags.html>
+pub type ShaderModuleCreateFlags = Flags;
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkEventCreateFlagBits.html>
 #[repr(transparent)]
@@ -901,6 +940,9 @@ impl DescriptorPoolCreateFlags {
     pub const AllowOverallocationPoolsNV: Self = Self(0b1_0000);
 }
 
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkDescriptorPoolResetFlags.html>
+pub type DescriptorPoolResetFlags = Flags;
+
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkDependencyFlagBits.html>
 #[repr(transparent)]
 #[derive(Clone, Copy, Hash, PartialEq, Eq)]
@@ -1054,6 +1096,9 @@ impl BuildAccelerationStructureFlagsKHR {
     pub const AllowClusterOpacityMicromaps: Self = Self(0b1_0000_0000_0000);
 }
 
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPrivateDataSlotCreateFlags.html>
+pub type PrivateDataSlotCreateFlags = Flags;
+
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkAccelerationStructureCreateFlagBitsKHR.html>
 #[repr(transparent)]
 #[derive(Clone, Copy, Hash, PartialEq, Eq)]
@@ -1065,6 +1110,9 @@ impl AccelerationStructureCreateFlagsKHR {
     pub const DescriptorBufferCaptureReplay: Self = Self(0b1000);
     pub const Motion: Self = Self(0b100);
 }
+
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkDescriptorUpdateTemplateCreateFlags.html>
+pub type DescriptorUpdateTemplateCreateFlags = Flags;
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPipelineCreationFeedbackFlagBits.html>
 #[repr(transparent)]
@@ -1253,6 +1301,12 @@ impl PipelineStageFlags2 {
     pub const MemoryDecompressionEXT: Self = Self(0);
 }
 
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkAccelerationStructureMotionInfoFlagsNV.html>
+pub type AccelerationStructureMotionInfoFlagsNV = Flags;
+
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkAccelerationStructureMotionInstanceFlagsNV.html>
+pub type AccelerationStructureMotionInstanceFlagsNV = Flags;
+
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkFormatFeatureFlagBits2.html>
 #[repr(transparent)]
 #[derive(Clone, Copy, Hash, PartialEq, Eq)]
@@ -1395,6 +1449,9 @@ impl IndirectCommandsInputModeFlagsEXT {
     pub const VulkanIndexBuffer: Self = Self(0b1);
     pub const DxgiIndexBuffer: Self = Self(0b10);
 }
+
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkDirectDriverLoadingFlagsLUNARG.html>
+pub type DirectDriverLoadingFlagsLUNARG = Flags;
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPipelineCreateFlagBits2.html>
 #[repr(transparent)]
@@ -1676,6 +1733,54 @@ impl SwapchainCreateFlagsKHR {
     pub const DeferredMemoryAllocation: Self = Self(0b1000);
 }
 
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkDisplayModeCreateFlagsKHR.html>
+pub type DisplayModeCreateFlagsKHR = Flags;
+
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkDisplaySurfaceCreateFlagsKHR.html>
+pub type DisplaySurfaceCreateFlagsKHR = Flags;
+
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkAndroidSurfaceCreateFlagsKHR.html>
+pub type AndroidSurfaceCreateFlagsKHR = Flags;
+
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkViSurfaceCreateFlagsNN.html>
+pub type ViSurfaceCreateFlagsNN = Flags;
+
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkWaylandSurfaceCreateFlagsKHR.html>
+pub type WaylandSurfaceCreateFlagsKHR = Flags;
+
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkWin32SurfaceCreateFlagsKHR.html>
+pub type Win32SurfaceCreateFlagsKHR = Flags;
+
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkXlibSurfaceCreateFlagsKHR.html>
+pub type XlibSurfaceCreateFlagsKHR = Flags;
+
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkXcbSurfaceCreateFlagsKHR.html>
+pub type XcbSurfaceCreateFlagsKHR = Flags;
+
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkDirectFBSurfaceCreateFlagsEXT.html>
+pub type DirectFBSurfaceCreateFlagsEXT = Flags;
+
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkIOSSurfaceCreateFlagsMVK.html>
+pub type IOSSurfaceCreateFlagsMVK = Flags;
+
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkMacOSSurfaceCreateFlagsMVK.html>
+pub type MacOSSurfaceCreateFlagsMVK = Flags;
+
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkMetalSurfaceCreateFlagsEXT.html>
+pub type MetalSurfaceCreateFlagsEXT = Flags;
+
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkImagePipeSurfaceCreateFlagsFUCHSIA.html>
+pub type ImagePipeSurfaceCreateFlagsFUCHSIA = Flags;
+
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkStreamDescriptorSurfaceCreateFlagsGGP.html>
+pub type StreamDescriptorSurfaceCreateFlagsGGP = Flags;
+
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkHeadlessSurfaceCreateFlagsEXT.html>
+pub type HeadlessSurfaceCreateFlagsEXT = Flags;
+
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkScreenSurfaceCreateFlagsQNX.html>
+pub type ScreenSurfaceCreateFlagsQNX = Flags;
+
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPeerMemoryFeatureFlagBits.html>
 #[repr(transparent)]
 #[derive(Clone, Copy, Hash, PartialEq, Eq)]
@@ -1737,6 +1842,9 @@ impl DebugReportFlagsEXT {
     pub const Error: Self = Self(0b1000);
     pub const Debug: Self = Self(0b1_0000);
 }
+
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkCommandPoolTrimFlags.html>
+pub type CommandPoolTrimFlags = Flags;
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkExternalMemoryHandleTypeFlagBitsNV.html>
 #[repr(transparent)]
@@ -1898,6 +2006,24 @@ impl SurfaceCounterFlagsEXT {
     pub const Vblank: Self = Self(0b1);
 }
 
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPipelineViewportSwizzleStateCreateFlagsNV.html>
+pub type PipelineViewportSwizzleStateCreateFlagsNV = Flags;
+
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPipelineDiscardRectangleStateCreateFlagsEXT.html>
+pub type PipelineDiscardRectangleStateCreateFlagsEXT = Flags;
+
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPipelineCoverageToColorStateCreateFlagsNV.html>
+pub type PipelineCoverageToColorStateCreateFlagsNV = Flags;
+
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPipelineCoverageModulationStateCreateFlagsNV.html>
+pub type PipelineCoverageModulationStateCreateFlagsNV = Flags;
+
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPipelineCoverageReductionStateCreateFlagsNV.html>
+pub type PipelineCoverageReductionStateCreateFlagsNV = Flags;
+
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkValidationCacheCreateFlagsEXT.html>
+pub type ValidationCacheCreateFlagsEXT = Flags;
+
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkDebugUtilsMessageSeverityFlagBitsEXT.html>
 #[repr(transparent)]
 #[derive(Clone, Copy, Hash, PartialEq, Eq)]
@@ -1923,6 +2049,18 @@ impl DebugUtilsMessageTypeFlagsEXT {
     pub const Performance: Self = Self(0b100);
     pub const DeviceAddressBinding: Self = Self(0b1000);
 }
+
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkDebugUtilsMessengerCreateFlagsEXT.html>
+pub type DebugUtilsMessengerCreateFlagsEXT = Flags;
+
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkDebugUtilsMessengerCallbackDataFlagsEXT.html>
+pub type DebugUtilsMessengerCallbackDataFlagsEXT = Flags;
+
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkDeviceMemoryReportFlagsEXT.html>
+pub type DeviceMemoryReportFlagsEXT = Flags;
+
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPipelineRasterizationConservativeStateCreateFlagsEXT.html>
+pub type PipelineRasterizationConservativeStateCreateFlagsEXT = Flags;
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkDescriptorBindingFlagBits.html>
 #[repr(transparent)]
@@ -1963,6 +2101,12 @@ impl ResolveModeFlags {
     pub const CustomEXT: Self = Self(0b10_0000);
 }
 
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPipelineRasterizationStateStreamCreateFlagsEXT.html>
+pub type PipelineRasterizationStateStreamCreateFlagsEXT = Flags;
+
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPipelineRasterizationDepthClipStateCreateFlagsEXT.html>
+pub type PipelineRasterizationDepthClipStateCreateFlagsEXT = Flags;
+
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkToolPurposeFlagBits.html>
 #[repr(transparent)]
 #[derive(Clone, Copy, Hash, PartialEq, Eq)]
@@ -1988,6 +2132,9 @@ vk_bitflags_wrapped!(SubmitFlags, Flags);
 impl SubmitFlags {
     pub const Protected: Self = Self(0b1);
 }
+
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkImageFormatConstraintsFlagsFUCHSIA.html>
+pub type ImageFormatConstraintsFlagsFUCHSIA = Flags;
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkHostImageCopyFlagBits.html>
 #[repr(transparent)]
@@ -2262,6 +2409,9 @@ impl PhysicalDeviceSchedulingControlsFlagsARM {
     pub const ShaderCoreCount: Self = Self(0b1);
 }
 
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkSurfaceCreateFlagsOHOS.html>
+pub type SurfaceCreateFlagsOHOS = Flags;
+
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPresentStageFlagBitsEXT.html>
 #[repr(transparent)]
 #[derive(Clone, Copy, Hash, PartialEq, Eq)]
@@ -2296,6 +2446,9 @@ impl PresentTimingInfoFlagsEXT {
     pub const PresentAtRelativeTime: Self = Self(0b1);
     pub const PresentAtNearestRefreshCycle: Self = Self(0b10);
 }
+
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPerformanceCounterDescriptionFlagsARM.html>
+pub type PerformanceCounterDescriptionFlagsARM = Flags;
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkVideoCodecOperationFlagBitsKHR.html>
 #[repr(transparent)]
@@ -2350,6 +2503,12 @@ impl VideoSessionParametersCreateFlagsKHR {
     pub const QuantizationMapCompatible: Self = Self(0b1);
 }
 
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkVideoBeginCodingFlagsKHR.html>
+pub type VideoBeginCodingFlagsKHR = Flags;
+
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkVideoEndCodingFlagsKHR.html>
+pub type VideoEndCodingFlagsKHR = Flags;
+
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkVideoCodingControlFlagBitsKHR.html>
 #[repr(transparent)]
 #[derive(Clone, Copy, Hash, PartialEq, Eq)]
@@ -2385,6 +2544,9 @@ impl VideoDecodeCapabilityFlagsKHR {
     pub const DpbAndOutputCoincide: Self = Self(0b1);
     pub const DpbAndOutputDistinct: Self = Self(0b10);
 }
+
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkVideoDecodeFlagsKHR.html>
+pub type VideoDecodeFlagsKHR = Flags;
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkVideoDecodeH264PictureLayoutFlagBitsKHR.html>
 #[repr(transparent)]
@@ -2461,6 +2623,9 @@ impl VideoEncodeFeedbackFlagsKHR {
     pub const BitstreamBytesWritten: Self = Self(0b10);
     pub const BitstreamHasOverrides: Self = Self(0b100);
 }
+
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkVideoEncodeRateControlFlagsKHR.html>
+pub type VideoEncodeRateControlFlagsKHR = Flags;
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkVideoEncodeRateControlModeFlagBitsKHR.html>
 #[repr(transparent)]

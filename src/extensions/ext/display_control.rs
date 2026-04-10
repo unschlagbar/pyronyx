@@ -47,15 +47,14 @@ impl DisplayControlDevice for Device {
         display: DisplayKHR,
         display_power_info: &DisplayPowerInfoEXT,
     ) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .ext_display_control
-                .as_ref()
-                .unwrap()
-                .display_power_control_ext)(self.handle, display, display_power_info)
-        }
-        .result()
+        let call = self
+            .fns()
+            .ext_display_control
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .display_power_control_ext;
+
+        unsafe { (call)(self.handle, display, display_power_info) }.result()
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkRegisterDeviceEventEXT.html>
@@ -66,13 +65,15 @@ impl DisplayControlDevice for Device {
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<Fence, Error> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .ext_display_control
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .register_device_event_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_display_control
-                .as_ref()
-                .unwrap()
-                .register_device_event_ext)(
+            (call)(
                 self.handle,
                 device_event_info,
                 allocator.map_or(null(), from_ref),
@@ -91,13 +92,15 @@ impl DisplayControlDevice for Device {
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<Fence, Error> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .ext_display_control
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .register_display_event_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_display_control
-                .as_ref()
-                .unwrap()
-                .register_display_event_ext)(
+            (call)(
                 self.handle,
                 display,
                 display_event_info,
@@ -116,16 +119,13 @@ impl DisplayControlDevice for Device {
         counter: SurfaceCounterFlagsEXT,
     ) -> Result<u64, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .ext_display_control
-                .as_ref()
-                .unwrap()
-                .get_swapchain_counter_ext)(
-                self.handle, swapchain, counter, out.as_mut_ptr()
-            )
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .ext_display_control
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_swapchain_counter_ext;
+
+        unsafe { (call)(self.handle, swapchain, counter, out.as_mut_ptr()) }.init_on_success(out)
     }
 }

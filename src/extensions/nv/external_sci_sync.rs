@@ -33,17 +33,14 @@ impl ExternalSciSyncDevice for Device {
         get_sci_sync_info: &SemaphoreGetSciSyncInfoNV,
     ) -> Result<c_void, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .nv_external_sci_sync
-                .as_ref()
-                .unwrap()
-                .get_semaphore_sci_sync_obj_nv)(
-                self.handle, get_sci_sync_info, out.as_mut_ptr()
-            )
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .nv_external_sci_sync
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_semaphore_sci_sync_obj_nv;
+
+        unsafe { (call)(self.handle, get_sci_sync_info, out.as_mut_ptr()) }.init_on_success(out)
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkImportSemaphoreSciSyncObjNV.html>
@@ -52,16 +49,13 @@ impl ExternalSciSyncDevice for Device {
         &self,
         import_semaphore_sci_sync_info: &ImportSemaphoreSciSyncInfoNV,
     ) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .nv_external_sci_sync
-                .as_ref()
-                .unwrap()
-                .import_semaphore_sci_sync_obj_nv)(
-                self.handle, import_semaphore_sci_sync_info
-            )
-        }
-        .result()
+        let call = self
+            .fns()
+            .nv_external_sci_sync
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .import_semaphore_sci_sync_obj_nv;
+
+        unsafe { (call)(self.handle, import_semaphore_sci_sync_info) }.result()
     }
 }

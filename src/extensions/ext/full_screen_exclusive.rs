@@ -26,18 +26,15 @@ impl FullScreenExclusivePhysicalDevice for PhysicalDevice {
         &self,
         surface_info: &PhysicalDeviceSurfaceInfo2KHR,
     ) -> Result<Vec<PresentModeKHR>, Error> {
+        let call = self
+            .fns()
+            .ext_full_screen_exclusive
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_physical_device_surface_present_modes2_ext;
+
         read_into_vec_result(|count, data| unsafe {
-            (self
-                .fns()
-                .ext_full_screen_exclusive
-                .as_ref()
-                .unwrap()
-                .get_physical_device_surface_present_modes2_ext)(
-                self.handle,
-                surface_info,
-                count,
-                data,
-            )
+            (call)(self.handle, surface_info, count, data)
         })
     }
 }
@@ -61,46 +58,39 @@ impl FullScreenExclusiveDevice for Device {
         surface_info: &PhysicalDeviceSurfaceInfo2KHR,
     ) -> Result<DeviceGroupPresentModeFlagsKHR, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .ext_full_screen_exclusive
-                .as_ref()
-                .unwrap()
-                .get_device_group_surface_present_modes2_ext)(
-                self.handle,
-                surface_info,
-                out.as_mut_ptr(),
-            )
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .ext_full_screen_exclusive
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_device_group_surface_present_modes2_ext;
+
+        unsafe { (call)(self.handle, surface_info, out.as_mut_ptr()) }.init_on_success(out)
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkAcquireFullScreenExclusiveModeEXT.html>
     #[inline]
     fn acquire_full_screen_exclusive_mode(&self, swapchain: SwapchainKHR) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .ext_full_screen_exclusive
-                .as_ref()
-                .unwrap()
-                .acquire_full_screen_exclusive_mode_ext)(self.handle, swapchain)
-        }
-        .result()
+        let call = self
+            .fns()
+            .ext_full_screen_exclusive
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .acquire_full_screen_exclusive_mode_ext;
+
+        unsafe { (call)(self.handle, swapchain) }.result()
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkReleaseFullScreenExclusiveModeEXT.html>
     #[inline]
     fn release_full_screen_exclusive_mode(&self, swapchain: SwapchainKHR) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .ext_full_screen_exclusive
-                .as_ref()
-                .unwrap()
-                .release_full_screen_exclusive_mode_ext)(self.handle, swapchain)
-        }
-        .result()
+        let call = self
+            .fns()
+            .ext_full_screen_exclusive
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .release_full_screen_exclusive_mode_ext;
+
+        unsafe { (call)(self.handle, swapchain) }.result()
     }
 }

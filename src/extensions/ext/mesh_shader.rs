@@ -42,16 +42,14 @@ impl MeshShaderCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn draw_mesh_tasks(&self, group_count_x: u32, group_count_y: u32, group_count_z: u32) {
-        unsafe {
-            (self
-                .fns()
-                .ext_mesh_shader
-                .as_ref()
-                .unwrap()
-                .draw_mesh_tasks_ext)(
-                self.handle, group_count_x, group_count_y, group_count_z
-            )
-        };
+        let call = self
+            .fns()
+            .ext_mesh_shader
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .draw_mesh_tasks_ext;
+
+        unsafe { (call)(self.handle, group_count_x, group_count_y, group_count_z) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdDrawMeshTasksIndirectEXT.html>
@@ -69,16 +67,14 @@ impl MeshShaderCommandBuffer for CommandBuffer {
         draw_count: u32,
         stride: u32,
     ) {
-        unsafe {
-            (self
-                .fns()
-                .ext_mesh_shader
-                .as_ref()
-                .unwrap()
-                .draw_mesh_tasks_indirect_ext)(
-                self.handle, buffer, offset, draw_count, stride
-            )
-        };
+        let call = self
+            .fns()
+            .ext_mesh_shader
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .draw_mesh_tasks_indirect_ext;
+
+        unsafe { (call)(self.handle, buffer, offset, draw_count, stride) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdDrawMeshTasksIndirectCountEXT.html>
@@ -98,13 +94,15 @@ impl MeshShaderCommandBuffer for CommandBuffer {
         max_draw_count: u32,
         stride: u32,
     ) {
+        let call = self
+            .fns()
+            .ext_mesh_shader
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .draw_mesh_tasks_indirect_count_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_mesh_shader
-                .as_ref()
-                .unwrap()
-                .draw_mesh_tasks_indirect_count_ext)(
+            (call)(
                 self.handle,
                 buffer,
                 offset,

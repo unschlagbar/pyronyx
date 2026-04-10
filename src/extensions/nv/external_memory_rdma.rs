@@ -26,13 +26,15 @@ impl ExternalMemoryRdmaDevice for Device {
         memory_get_remote_address_info: &MemoryGetRemoteAddressInfoNV,
     ) -> Result<RemoteAddressNV, Error> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .nv_external_memory_rdma
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_memory_remote_address_nv;
+
         unsafe {
-            (self
-                .fns()
-                .nv_external_memory_rdma
-                .as_ref()
-                .unwrap()
-                .get_memory_remote_address_nv)(
+            (call)(
                 self.handle,
                 memory_get_remote_address_info,
                 out.as_mut_ptr(),

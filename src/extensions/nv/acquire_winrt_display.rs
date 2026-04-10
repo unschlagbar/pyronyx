@@ -21,29 +21,27 @@ impl AcquireWinrtDisplayPhysicalDevice for PhysicalDevice {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkAcquireWinrtDisplayNV.html>
     #[inline]
     fn acquire_winrt_display(&self, display: DisplayKHR) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .nv_acquire_winrt_display
-                .as_ref()
-                .unwrap()
-                .acquire_winrt_display_nv)(self.handle, display)
-        }
-        .result()
+        let call = self
+            .fns()
+            .nv_acquire_winrt_display
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .acquire_winrt_display_nv;
+
+        unsafe { (call)(self.handle, display) }.result()
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetWinrtDisplayNV.html>
     #[inline]
     fn get_winrt_display(&self, device_relative_id: u32) -> Result<DisplayKHR, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .nv_acquire_winrt_display
-                .as_ref()
-                .unwrap()
-                .get_winrt_display_nv)(self.handle, device_relative_id, out.as_mut_ptr())
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .nv_acquire_winrt_display
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_winrt_display_nv;
+
+        unsafe { (call)(self.handle, device_relative_id, out.as_mut_ptr()) }.init_on_success(out)
     }
 }

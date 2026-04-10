@@ -29,13 +29,15 @@ impl PerformanceCountersByRegionPhysicalDevice for PhysicalDevice {
         counter_descriptions: &mut [PerformanceCounterDescriptionARM],
     ) -> Result<(), Error> {
         assert_eq!(counters.len(), counter_descriptions.len());
+        let call = self
+            .fns()
+            .arm_performance_counters_by_region
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .enumerate_physical_device_queue_family_performance_counters_by_region_arm;
+
         unsafe {
-            (self
-                .fns()
-                .arm_performance_counters_by_region
-                .as_ref()
-                .unwrap()
-                .enumerate_physical_device_queue_family_performance_counters_by_region_arm)(
+            (call)(
                 self.handle,
                 queue_family_index,
                 counters.len() as *mut u32,

@@ -42,13 +42,15 @@ impl PerformanceQueryPhysicalDevice for PhysicalDevice {
         counter_descriptions: &mut [PerformanceCounterDescriptionKHR],
     ) -> Result<(), Error> {
         assert_eq!(counters.len(), counter_descriptions.len());
+        let call = self
+            .fns()
+            .khr_performance_query
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .enumerate_physical_device_queue_family_performance_query_counters_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_performance_query
-                .as_ref()
-                .unwrap()
-                .enumerate_physical_device_queue_family_performance_query_counters_khr)(
+            (call)(
                 self.handle,
                 queue_family_index,
                 counters.len() as *mut u32,
@@ -71,7 +73,7 @@ impl PerformanceQueryPhysicalDevice for PhysicalDevice {
                 .fns()
                 .khr_performance_query
                 .as_ref()
-                .unwrap()
+                .expect(Self::EXT_LOAD_ERROR)
                 .enumerate_physical_device_queue_family_performance_query_counters_khr)(
                 self.handle,
                 queue_family_index,
@@ -91,17 +93,15 @@ impl PerformanceQueryPhysicalDevice for PhysicalDevice {
         performance_query_create_info: &QueryPoolPerformanceCreateInfoKHR,
     ) -> u32 {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .khr_performance_query
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_physical_device_queue_family_performance_query_passes_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_performance_query
-                .as_ref()
-                .unwrap()
-                .get_physical_device_queue_family_performance_query_passes_khr)(
-                self.handle,
-                performance_query_create_info,
-                out.as_mut_ptr(),
-            );
+            (call)(self.handle, performance_query_create_info, out.as_mut_ptr());
             out.assume_init()
         }
     }
@@ -117,27 +117,26 @@ impl PerformanceQueryDevice for Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkAcquireProfilingLockKHR.html>
     #[inline]
     fn acquire_profiling_lock(&self, info: &AcquireProfilingLockInfoKHR) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .khr_performance_query
-                .as_ref()
-                .unwrap()
-                .acquire_profiling_lock_khr)(self.handle, info)
-        }
-        .result()
+        let call = self
+            .fns()
+            .khr_performance_query
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .acquire_profiling_lock_khr;
+
+        unsafe { (call)(self.handle, info) }.result()
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkReleaseProfilingLockKHR.html>
     #[inline]
     fn release_profiling_lock(&self) {
-        unsafe {
-            (self
-                .fns()
-                .khr_performance_query
-                .as_ref()
-                .unwrap()
-                .release_profiling_lock_khr)(self.handle)
-        };
+        let call = self
+            .fns()
+            .khr_performance_query
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .release_profiling_lock_khr;
+
+        unsafe { (call)(self.handle) };
     }
 }

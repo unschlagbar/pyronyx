@@ -23,13 +23,13 @@ impl AttachmentFeedbackLoopDynamicStateCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_attachment_feedback_loop_enable(&self, aspect_mask: ImageAspectFlags) {
-        unsafe {
-            (self
-                .fns()
-                .ext_attachment_feedback_loop_dynamic_state
-                .as_ref()
-                .unwrap()
-                .set_attachment_feedback_loop_enable_ext)(self.handle, aspect_mask)
-        };
+        let call = self
+            .fns()
+            .ext_attachment_feedback_loop_dynamic_state
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .set_attachment_feedback_loop_enable_ext;
+
+        unsafe { (call)(self.handle, aspect_mask) };
     }
 }

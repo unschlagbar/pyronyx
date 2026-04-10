@@ -42,14 +42,14 @@ impl MeshShaderCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn draw_mesh_tasks(&self, task_count: u32, first_task: u32) {
-        unsafe {
-            (self
-                .fns()
-                .nv_mesh_shader
-                .as_ref()
-                .unwrap()
-                .draw_mesh_tasks_nv)(self.handle, task_count, first_task)
-        };
+        let call = self
+            .fns()
+            .nv_mesh_shader
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .draw_mesh_tasks_nv;
+
+        unsafe { (call)(self.handle, task_count, first_task) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdDrawMeshTasksIndirectNV.html>
@@ -67,16 +67,14 @@ impl MeshShaderCommandBuffer for CommandBuffer {
         draw_count: u32,
         stride: u32,
     ) {
-        unsafe {
-            (self
-                .fns()
-                .nv_mesh_shader
-                .as_ref()
-                .unwrap()
-                .draw_mesh_tasks_indirect_nv)(
-                self.handle, buffer, offset, draw_count, stride
-            )
-        };
+        let call = self
+            .fns()
+            .nv_mesh_shader
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .draw_mesh_tasks_indirect_nv;
+
+        unsafe { (call)(self.handle, buffer, offset, draw_count, stride) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdDrawMeshTasksIndirectCountNV.html>
@@ -96,13 +94,15 @@ impl MeshShaderCommandBuffer for CommandBuffer {
         max_draw_count: u32,
         stride: u32,
     ) {
+        let call = self
+            .fns()
+            .nv_mesh_shader
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .draw_mesh_tasks_indirect_count_nv;
+
         unsafe {
-            (self
-                .fns()
-                .nv_mesh_shader
-                .as_ref()
-                .unwrap()
-                .draw_mesh_tasks_indirect_count_nv)(
+            (call)(
                 self.handle,
                 buffer,
                 offset,

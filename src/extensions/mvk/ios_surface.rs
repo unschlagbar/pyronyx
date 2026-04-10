@@ -30,13 +30,15 @@ impl IosSurfaceInstance for Instance {
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<SurfaceKHR, Error> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .mvk_ios_surface
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .create_ios_surface_mvk;
+
         unsafe {
-            (self
-                .fns()
-                .mvk_ios_surface
-                .as_ref()
-                .unwrap()
-                .create_ios_surface_mvk)(
+            (call)(
                 self.handle,
                 create_info,
                 allocator.map_or(null(), from_ref),

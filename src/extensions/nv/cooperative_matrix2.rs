@@ -24,13 +24,15 @@ impl CooperativeMatrix2PhysicalDevice for PhysicalDevice {
         &self,
         properties: &mut [CooperativeMatrixFlexibleDimensionsPropertiesNV],
     ) -> Result<(), Error> {
+        let call = self
+            .fns()
+            .nv_cooperative_matrix2
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_physical_device_cooperative_matrix_flexible_dimensions_properties_nv;
+
         unsafe {
-            (self
-                .fns()
-                .nv_cooperative_matrix2
-                .as_ref()
-                .unwrap()
-                .get_physical_device_cooperative_matrix_flexible_dimensions_properties_nv)(
+            (call)(
                 self.handle,
                 properties.len() as *mut u32,
                 properties.as_mut_ptr(),

@@ -23,14 +23,14 @@ impl ObjectRefreshCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn refresh_objects(&self, refresh_objects: &RefreshObjectListKHR) {
-        unsafe {
-            (self
-                .fns()
-                .khr_object_refresh
-                .as_ref()
-                .unwrap()
-                .refresh_objects_khr)(self.handle, refresh_objects)
-        };
+        let call = self
+            .fns()
+            .khr_object_refresh
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .refresh_objects_khr;
+
+        unsafe { (call)(self.handle, refresh_objects) };
     }
 }
 
@@ -48,13 +48,15 @@ impl ObjectRefreshPhysicalDevice for PhysicalDevice {
         &self,
         refreshable_object_types: &mut [ObjectType],
     ) -> Result<(), Error> {
+        let call = self
+            .fns()
+            .khr_object_refresh
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_physical_device_refreshable_object_types_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_object_refresh
-                .as_ref()
-                .unwrap()
-                .get_physical_device_refreshable_object_types_khr)(
+            (call)(
                 self.handle,
                 refreshable_object_types.len() as *mut u32,
                 refreshable_object_types.as_mut_ptr(),

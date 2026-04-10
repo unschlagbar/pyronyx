@@ -85,13 +85,15 @@ impl AccelerationStructureDevice for Device {
         acceleration_structure: AccelerationStructureKHR,
         allocator: Option<&AllocationCallbacks>,
     ) {
+        let call = self
+            .fns()
+            .khr_acceleration_structure
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .destroy_acceleration_structure_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_acceleration_structure
-                .as_ref()
-                .unwrap()
-                .destroy_acceleration_structure_khr)(
+            (call)(
                 self.handle,
                 acceleration_structure,
                 allocator.map_or(null(), from_ref),
@@ -106,15 +108,14 @@ impl AccelerationStructureDevice for Device {
         deferred_operation: DeferredOperationKHR,
         info: &CopyAccelerationStructureInfoKHR,
     ) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .khr_acceleration_structure
-                .as_ref()
-                .unwrap()
-                .copy_acceleration_structure_khr)(self.handle, deferred_operation, info)
-        }
-        .result()
+        let call = self
+            .fns()
+            .khr_acceleration_structure
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .copy_acceleration_structure_khr;
+
+        unsafe { (call)(self.handle, deferred_operation, info) }.result()
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCopyAccelerationStructureToMemoryKHR.html>
@@ -124,17 +125,14 @@ impl AccelerationStructureDevice for Device {
         deferred_operation: DeferredOperationKHR,
         info: &CopyAccelerationStructureToMemoryInfoKHR,
     ) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .khr_acceleration_structure
-                .as_ref()
-                .unwrap()
-                .copy_acceleration_structure_to_memory_khr)(
-                self.handle, deferred_operation, info
-            )
-        }
-        .result()
+        let call = self
+            .fns()
+            .khr_acceleration_structure
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .copy_acceleration_structure_to_memory_khr;
+
+        unsafe { (call)(self.handle, deferred_operation, info) }.result()
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCopyMemoryToAccelerationStructureKHR.html>
@@ -144,17 +142,14 @@ impl AccelerationStructureDevice for Device {
         deferred_operation: DeferredOperationKHR,
         info: &CopyMemoryToAccelerationStructureInfoKHR,
     ) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .khr_acceleration_structure
-                .as_ref()
-                .unwrap()
-                .copy_memory_to_acceleration_structure_khr)(
-                self.handle, deferred_operation, info
-            )
-        }
-        .result()
+        let call = self
+            .fns()
+            .khr_acceleration_structure
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .copy_memory_to_acceleration_structure_khr;
+
+        unsafe { (call)(self.handle, deferred_operation, info) }.result()
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkWriteAccelerationStructuresPropertiesKHR.html>
@@ -166,13 +161,15 @@ impl AccelerationStructureDevice for Device {
         data: &mut [c_void],
         stride: usize,
     ) -> Result<(), Error> {
+        let call = self
+            .fns()
+            .khr_acceleration_structure
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .write_acceleration_structures_properties_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_acceleration_structure
-                .as_ref()
-                .unwrap()
-                .write_acceleration_structures_properties_khr)(
+            (call)(
                 self.handle,
                 acceleration_structures.len() as u32,
                 acceleration_structures.as_ptr(),
@@ -192,17 +189,15 @@ impl AccelerationStructureDevice for Device {
         version_info: &AccelerationStructureVersionInfoKHR,
     ) -> AccelerationStructureCompatibilityKHR {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .khr_acceleration_structure
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_device_acceleration_structure_compatibility_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_acceleration_structure
-                .as_ref()
-                .unwrap()
-                .get_device_acceleration_structure_compatibility_khr)(
-                self.handle,
-                version_info,
-                out.as_mut_ptr(),
-            );
+            (call)(self.handle, version_info, out.as_mut_ptr());
             out.assume_init()
         }
     }
@@ -215,13 +210,15 @@ impl AccelerationStructureDevice for Device {
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<AccelerationStructureKHR, Error> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .khr_acceleration_structure
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .create_acceleration_structure_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_acceleration_structure
-                .as_ref()
-                .unwrap()
-                .create_acceleration_structure_khr)(
+            (call)(
                 self.handle,
                 create_info,
                 allocator.map_or(null(), from_ref),
@@ -240,13 +237,15 @@ impl AccelerationStructureDevice for Device {
         build_range_infos: &[*const AccelerationStructureBuildRangeInfoKHR],
     ) -> Result<(), Error> {
         assert_eq!(infos.len(), build_range_infos.len());
+        let call = self
+            .fns()
+            .khr_acceleration_structure
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .build_acceleration_structures_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_acceleration_structure
-                .as_ref()
-                .unwrap()
-                .build_acceleration_structures_khr)(
+            (call)(
                 self.handle,
                 deferred_operation,
                 infos.len() as u32,
@@ -263,14 +262,14 @@ impl AccelerationStructureDevice for Device {
         &self,
         info: &AccelerationStructureDeviceAddressInfoKHR,
     ) -> DeviceAddress {
-        unsafe {
-            (self
-                .fns()
-                .khr_acceleration_structure
-                .as_ref()
-                .unwrap()
-                .get_acceleration_structure_device_address_khr)(self.handle, info)
-        }
+        let call = self
+            .fns()
+            .khr_acceleration_structure
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_acceleration_structure_device_address_khr;
+
+        unsafe { (call)(self.handle, info) }
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetAccelerationStructureBuildSizesKHR.html>
@@ -282,13 +281,15 @@ impl AccelerationStructureDevice for Device {
         max_primitive_counts: Option<&u32>,
     ) -> AccelerationStructureBuildSizesInfoKHR<'_> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .khr_acceleration_structure
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_acceleration_structure_build_sizes_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_acceleration_structure
-                .as_ref()
-                .unwrap()
-                .get_acceleration_structure_build_sizes_khr)(
+            (call)(
                 self.handle,
                 build_type,
                 build_info,
@@ -345,14 +346,14 @@ impl AccelerationStructureCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn copy_acceleration_structure(&self, info: &CopyAccelerationStructureInfoKHR) {
-        unsafe {
-            (self
-                .fns()
-                .khr_acceleration_structure
-                .as_ref()
-                .unwrap()
-                .copy_acceleration_structure_khr)(self.handle, info)
-        };
+        let call = self
+            .fns()
+            .khr_acceleration_structure
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .copy_acceleration_structure_khr;
+
+        unsafe { (call)(self.handle, info) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyAccelerationStructureToMemoryKHR.html>
@@ -366,14 +367,14 @@ impl AccelerationStructureCommandBuffer for CommandBuffer {
         &self,
         info: &CopyAccelerationStructureToMemoryInfoKHR,
     ) {
-        unsafe {
-            (self
-                .fns()
-                .khr_acceleration_structure
-                .as_ref()
-                .unwrap()
-                .copy_acceleration_structure_to_memory_khr)(self.handle, info)
-        };
+        let call = self
+            .fns()
+            .khr_acceleration_structure
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .copy_acceleration_structure_to_memory_khr;
+
+        unsafe { (call)(self.handle, info) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyMemoryToAccelerationStructureKHR.html>
@@ -387,14 +388,14 @@ impl AccelerationStructureCommandBuffer for CommandBuffer {
         &self,
         info: &CopyMemoryToAccelerationStructureInfoKHR,
     ) {
-        unsafe {
-            (self
-                .fns()
-                .khr_acceleration_structure
-                .as_ref()
-                .unwrap()
-                .copy_memory_to_acceleration_structure_khr)(self.handle, info)
-        };
+        let call = self
+            .fns()
+            .khr_acceleration_structure
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .copy_memory_to_acceleration_structure_khr;
+
+        unsafe { (call)(self.handle, info) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdWriteAccelerationStructuresPropertiesKHR.html>
@@ -411,13 +412,15 @@ impl AccelerationStructureCommandBuffer for CommandBuffer {
         query_pool: QueryPool,
         first_query: u32,
     ) {
+        let call = self
+            .fns()
+            .khr_acceleration_structure
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .write_acceleration_structures_properties_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_acceleration_structure
-                .as_ref()
-                .unwrap()
-                .write_acceleration_structures_properties_khr)(
+            (call)(
                 self.handle,
                 acceleration_structures.len() as u32,
                 acceleration_structures.as_ptr(),
@@ -441,13 +444,15 @@ impl AccelerationStructureCommandBuffer for CommandBuffer {
         build_range_infos: &[*const AccelerationStructureBuildRangeInfoKHR],
     ) {
         assert_eq!(infos.len(), build_range_infos.len());
+        let call = self
+            .fns()
+            .khr_acceleration_structure
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .build_acceleration_structures_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_acceleration_structure
-                .as_ref()
-                .unwrap()
-                .build_acceleration_structures_khr)(
+            (call)(
                 self.handle,
                 infos.len() as u32,
                 infos.as_ptr(),
@@ -473,13 +478,15 @@ impl AccelerationStructureCommandBuffer for CommandBuffer {
         assert_eq!(infos.len(), indirect_device_addresses.len());
         assert_eq!(infos.len(), indirect_strides.len());
         assert_eq!(infos.len(), max_primitive_counts.len());
+        let call = self
+            .fns()
+            .khr_acceleration_structure
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .build_acceleration_structures_indirect_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_acceleration_structure
-                .as_ref()
-                .unwrap()
-                .build_acceleration_structures_indirect_khr)(
+            (call)(
                 self.handle,
                 infos.len() as u32,
                 infos.as_ptr(),

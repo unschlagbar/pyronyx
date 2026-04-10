@@ -54,13 +54,15 @@ impl PipelineBinaryDevice for Device {
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<PipelineBinaryHandlesInfoKHR<'_>, Error> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .khr_pipeline_binary
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .create_pipeline_binaries_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_pipeline_binary
-                .as_ref()
-                .unwrap()
-                .create_pipeline_binaries_khr)(
+            (call)(
                 self.handle,
                 create_info,
                 allocator.map_or(null(), from_ref),
@@ -77,13 +79,15 @@ impl PipelineBinaryDevice for Device {
         pipeline_binary: PipelineBinaryKHR,
         allocator: Option<&AllocationCallbacks>,
     ) {
+        let call = self
+            .fns()
+            .khr_pipeline_binary
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .destroy_pipeline_binary_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_pipeline_binary
-                .as_ref()
-                .unwrap()
-                .destroy_pipeline_binary_khr)(
+            (call)(
                 self.handle,
                 pipeline_binary,
                 allocator.map_or(null(), from_ref),
@@ -98,13 +102,15 @@ impl PipelineBinaryDevice for Device {
         pipeline_create_info: Option<&PipelineCreateInfoKHR>,
     ) -> Result<PipelineBinaryKeyKHR<'_>, Error> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .khr_pipeline_binary
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_pipeline_key_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_pipeline_binary
-                .as_ref()
-                .unwrap()
-                .get_pipeline_key_khr)(
+            (call)(
                 self.handle,
                 pipeline_create_info.map_or(null(), from_ref),
                 out.as_mut_ptr(),
@@ -121,13 +127,15 @@ impl PipelineBinaryDevice for Device {
         pipeline_binary_key: *mut PipelineBinaryKeyKHR,
         pipeline_binary_data: &mut [c_void],
     ) -> Result<(), Error> {
+        let call = self
+            .fns()
+            .khr_pipeline_binary
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_pipeline_binary_data_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_pipeline_binary
-                .as_ref()
-                .unwrap()
-                .get_pipeline_binary_data_khr)(
+            (call)(
                 self.handle,
                 info,
                 pipeline_binary_key,
@@ -145,18 +153,13 @@ impl PipelineBinaryDevice for Device {
         info: &ReleaseCapturedPipelineDataInfoKHR,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .khr_pipeline_binary
-                .as_ref()
-                .unwrap()
-                .release_captured_pipeline_data_khr)(
-                self.handle,
-                info,
-                allocator.map_or(null(), from_ref),
-            )
-        }
-        .result()
+        let call = self
+            .fns()
+            .khr_pipeline_binary
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .release_captured_pipeline_data_khr;
+
+        unsafe { (call)(self.handle, info, allocator.map_or(null(), from_ref)) }.result()
     }
 }

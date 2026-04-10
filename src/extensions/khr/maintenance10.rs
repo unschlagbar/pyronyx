@@ -24,15 +24,13 @@ impl Maintenance10CommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn end_rendering2(&self, rendering_end_info: Option<&RenderingEndInfoKHR>) {
-        unsafe {
-            (self
-                .fns()
-                .khr_maintenance10
-                .as_ref()
-                .unwrap()
-                .end_rendering2_khr)(
-                self.handle, rendering_end_info.map_or(null(), from_ref)
-            )
-        };
+        let call = self
+            .fns()
+            .khr_maintenance10
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .end_rendering2_khr;
+
+        unsafe { (call)(self.handle, rendering_end_info.map_or(null(), from_ref)) };
     }
 }

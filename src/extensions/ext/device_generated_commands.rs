@@ -40,18 +40,14 @@ impl DeviceGeneratedCommandsCommandBuffer for CommandBuffer {
         is_preprocessed: bool,
         generated_commands_info: &GeneratedCommandsInfoEXT,
     ) {
-        unsafe {
-            (self
-                .fns()
-                .ext_device_generated_commands
-                .as_ref()
-                .unwrap()
-                .execute_generated_commands_ext)(
-                self.handle,
-                is_preprocessed as _,
-                generated_commands_info,
-            )
-        };
+        let call = self
+            .fns()
+            .ext_device_generated_commands
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .execute_generated_commands_ext;
+
+        unsafe { (call)(self.handle, is_preprocessed as _, generated_commands_info) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdPreprocessGeneratedCommandsEXT.html>
@@ -66,18 +62,14 @@ impl DeviceGeneratedCommandsCommandBuffer for CommandBuffer {
         generated_commands_info: &GeneratedCommandsInfoEXT,
         state_command_buffer: vkCommandBuffer,
     ) {
-        unsafe {
-            (self
-                .fns()
-                .ext_device_generated_commands
-                .as_ref()
-                .unwrap()
-                .preprocess_generated_commands_ext)(
-                self.handle,
-                generated_commands_info,
-                state_command_buffer,
-            )
-        };
+        let call = self
+            .fns()
+            .ext_device_generated_commands
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .preprocess_generated_commands_ext;
+
+        unsafe { (call)(self.handle, generated_commands_info, state_command_buffer) };
     }
 }
 
@@ -132,17 +124,15 @@ impl DeviceGeneratedCommandsDevice for Device {
         info: &GeneratedCommandsMemoryRequirementsInfoEXT,
     ) -> MemoryRequirements2<'_> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .ext_device_generated_commands
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_generated_commands_memory_requirements_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_device_generated_commands
-                .as_ref()
-                .unwrap()
-                .get_generated_commands_memory_requirements_ext)(
-                self.handle,
-                info,
-                out.as_mut_ptr(),
-            );
+            (call)(self.handle, info, out.as_mut_ptr());
             out.assume_init()
         }
     }
@@ -155,13 +145,15 @@ impl DeviceGeneratedCommandsDevice for Device {
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<IndirectCommandsLayoutEXT, Error> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .ext_device_generated_commands
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .create_indirect_commands_layout_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_device_generated_commands
-                .as_ref()
-                .unwrap()
-                .create_indirect_commands_layout_ext)(
+            (call)(
                 self.handle,
                 create_info,
                 allocator.map_or(null(), from_ref),
@@ -178,13 +170,15 @@ impl DeviceGeneratedCommandsDevice for Device {
         indirect_commands_layout: IndirectCommandsLayoutEXT,
         allocator: Option<&AllocationCallbacks>,
     ) {
+        let call = self
+            .fns()
+            .ext_device_generated_commands
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .destroy_indirect_commands_layout_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_device_generated_commands
-                .as_ref()
-                .unwrap()
-                .destroy_indirect_commands_layout_ext)(
+            (call)(
                 self.handle,
                 indirect_commands_layout,
                 allocator.map_or(null(), from_ref),
@@ -200,13 +194,15 @@ impl DeviceGeneratedCommandsDevice for Device {
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<IndirectExecutionSetEXT, Error> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .ext_device_generated_commands
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .create_indirect_execution_set_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_device_generated_commands
-                .as_ref()
-                .unwrap()
-                .create_indirect_execution_set_ext)(
+            (call)(
                 self.handle,
                 create_info,
                 allocator.map_or(null(), from_ref),
@@ -223,13 +219,15 @@ impl DeviceGeneratedCommandsDevice for Device {
         indirect_execution_set: IndirectExecutionSetEXT,
         allocator: Option<&AllocationCallbacks>,
     ) {
+        let call = self
+            .fns()
+            .ext_device_generated_commands
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .destroy_indirect_execution_set_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_device_generated_commands
-                .as_ref()
-                .unwrap()
-                .destroy_indirect_execution_set_ext)(
+            (call)(
                 self.handle,
                 indirect_execution_set,
                 allocator.map_or(null(), from_ref),
@@ -244,13 +242,15 @@ impl DeviceGeneratedCommandsDevice for Device {
         indirect_execution_set: IndirectExecutionSetEXT,
         execution_set_writes: &[WriteIndirectExecutionSetPipelineEXT],
     ) {
+        let call = self
+            .fns()
+            .ext_device_generated_commands
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .update_indirect_execution_set_pipeline_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_device_generated_commands
-                .as_ref()
-                .unwrap()
-                .update_indirect_execution_set_pipeline_ext)(
+            (call)(
                 self.handle,
                 indirect_execution_set,
                 execution_set_writes.len() as u32,
@@ -266,13 +266,15 @@ impl DeviceGeneratedCommandsDevice for Device {
         indirect_execution_set: IndirectExecutionSetEXT,
         execution_set_writes: &[WriteIndirectExecutionSetShaderEXT],
     ) {
+        let call = self
+            .fns()
+            .ext_device_generated_commands
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .update_indirect_execution_set_shader_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_device_generated_commands
-                .as_ref()
-                .unwrap()
-                .update_indirect_execution_set_shader_ext)(
+            (call)(
                 self.handle,
                 indirect_execution_set,
                 execution_set_writes.len() as u32,

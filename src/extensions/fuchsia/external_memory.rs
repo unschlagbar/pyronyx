@@ -32,19 +32,15 @@ impl ExternalMemoryDevice for Device {
         get_zircon_handle_info: &MemoryGetZirconHandleInfoFUCHSIA,
     ) -> Result<zx_handle_t, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .fuchsia_external_memory
-                .as_ref()
-                .unwrap()
-                .get_memory_zircon_handle_fuchsia)(
-                self.handle,
-                get_zircon_handle_info,
-                out.as_mut_ptr(),
-            )
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .fuchsia_external_memory
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_memory_zircon_handle_fuchsia;
+
+        unsafe { (call)(self.handle, get_zircon_handle_info, out.as_mut_ptr()) }
+            .init_on_success(out)
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetMemoryZirconHandlePropertiesFUCHSIA.html>
@@ -55,19 +51,14 @@ impl ExternalMemoryDevice for Device {
         zircon_handle: zx_handle_t,
     ) -> Result<MemoryZirconHandlePropertiesFUCHSIA<'_>, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .fuchsia_external_memory
-                .as_ref()
-                .unwrap()
-                .get_memory_zircon_handle_properties_fuchsia)(
-                self.handle,
-                handle_type,
-                zircon_handle,
-                out.as_mut_ptr(),
-            )
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .fuchsia_external_memory
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_memory_zircon_handle_properties_fuchsia;
+
+        unsafe { (call)(self.handle, handle_type, zircon_handle, out.as_mut_ptr()) }
+            .init_on_success(out)
     }
 }

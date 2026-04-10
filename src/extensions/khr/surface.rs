@@ -21,13 +21,14 @@ impl SurfaceInstance for Instance {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkDestroySurfaceKHR.html>
     #[inline]
     fn destroy_surface(&self, surface: SurfaceKHR, allocator: Option<&AllocationCallbacks>) {
-        unsafe {
-            (self.fns().khr_surface.as_ref().unwrap().destroy_surface_khr)(
-                self.handle,
-                surface,
-                allocator.map_or(null(), from_ref),
-            )
-        };
+        let call = self
+            .fns()
+            .khr_surface
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .destroy_surface_khr;
+
+        unsafe { (call)(self.handle, surface, allocator.map_or(null(), from_ref)) };
     }
 }
 
@@ -57,21 +58,16 @@ impl SurfacePhysicalDevice for PhysicalDevice {
         surface: SurfaceKHR,
     ) -> Result<bool, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .khr_surface
-                .as_ref()
-                .unwrap()
-                .get_physical_device_surface_support_khr)(
-                self.handle,
-                queue_family_index,
-                surface,
-                out.as_mut_ptr(),
-            )
-        }
-        .init_on_success(out)
-        .map(|v| v != 0)
+        let call = self
+            .fns()
+            .khr_surface
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_physical_device_surface_support_khr;
+
+        unsafe { (call)(self.handle, queue_family_index, surface, out.as_mut_ptr()) }
+            .init_on_success(out)
+            .map(|v| v != 0)
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceSurfaceCapabilitiesKHR.html>
@@ -81,48 +77,39 @@ impl SurfacePhysicalDevice for PhysicalDevice {
         surface: SurfaceKHR,
     ) -> Result<SurfaceCapabilitiesKHR, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .khr_surface
-                .as_ref()
-                .unwrap()
-                .get_physical_device_surface_capabilities_khr)(
-                self.handle,
-                surface,
-                out.as_mut_ptr(),
-            )
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .khr_surface
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_physical_device_surface_capabilities_khr;
+
+        unsafe { (call)(self.handle, surface, out.as_mut_ptr()) }.init_on_success(out)
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceSurfaceFormatsKHR.html>
     #[inline]
     fn get_surface_formats(&self, surface: SurfaceKHR) -> Result<Vec<SurfaceFormatKHR>, Error> {
-        read_into_vec_result(|count, data| unsafe {
-            (self
-                .fns()
-                .khr_surface
-                .as_ref()
-                .unwrap()
-                .get_physical_device_surface_formats_khr)(
-                self.handle, surface, count, data
-            )
-        })
+        let call = self
+            .fns()
+            .khr_surface
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_physical_device_surface_formats_khr;
+
+        read_into_vec_result(|count, data| unsafe { (call)(self.handle, surface, count, data) })
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceSurfacePresentModesKHR.html>
     #[inline]
     fn get_surface_present_modes(&self, surface: SurfaceKHR) -> Result<Vec<PresentModeKHR>, Error> {
-        read_into_vec_result(|count, data| unsafe {
-            (self
-                .fns()
-                .khr_surface
-                .as_ref()
-                .unwrap()
-                .get_physical_device_surface_present_modes_khr)(
-                self.handle, surface, count, data
-            )
-        })
+        let call = self
+            .fns()
+            .khr_surface
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_physical_device_surface_present_modes_khr;
+
+        read_into_vec_result(|count, data| unsafe { (call)(self.handle, surface, count, data) })
     }
 }

@@ -20,13 +20,15 @@ impl MetalObjectsDevice for Device {
     #[inline]
     fn export_metal_objects(&self) -> ExportMetalObjectsInfoEXT<'_> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .ext_metal_objects
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .export_metal_objects_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_metal_objects
-                .as_ref()
-                .unwrap()
-                .export_metal_objects_ext)(self.handle, out.as_mut_ptr());
+            (call)(self.handle, out.as_mut_ptr());
             out.assume_init()
         }
     }

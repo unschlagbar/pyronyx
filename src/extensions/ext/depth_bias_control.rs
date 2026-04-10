@@ -23,13 +23,13 @@ impl DepthBiasControlCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_depth_bias2(&self, depth_bias_info: &DepthBiasInfoEXT) {
-        unsafe {
-            (self
-                .fns()
-                .ext_depth_bias_control
-                .as_ref()
-                .unwrap()
-                .set_depth_bias2_ext)(self.handle, depth_bias_info)
-        };
+        let call = self
+            .fns()
+            .ext_depth_bias_control
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .set_depth_bias2_ext;
+
+        unsafe { (call)(self.handle, depth_bias_info) };
     }
 }

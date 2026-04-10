@@ -35,13 +35,15 @@ impl OpticalFlowPhysicalDevice for PhysicalDevice {
         optical_flow_image_format_info: &OpticalFlowImageFormatInfoNV,
         image_format_properties: &mut [OpticalFlowImageFormatPropertiesNV],
     ) -> Result<(), Error> {
+        let call = self
+            .fns()
+            .nv_optical_flow
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_physical_device_optical_flow_image_formats_nv;
+
         unsafe {
-            (self
-                .fns()
-                .nv_optical_flow
-                .as_ref()
-                .unwrap()
-                .get_physical_device_optical_flow_image_formats_nv)(
+            (call)(
                 self.handle,
                 optical_flow_image_format_info,
                 image_format_properties.len() as *mut u32,
@@ -63,7 +65,7 @@ impl OpticalFlowPhysicalDevice for PhysicalDevice {
                 .fns()
                 .nv_optical_flow
                 .as_ref()
-                .unwrap()
+                .expect(Self::EXT_LOAD_ERROR)
                 .get_physical_device_optical_flow_image_formats_nv)(
                 self.handle,
                 optical_flow_image_format_info,
@@ -107,13 +109,15 @@ impl OpticalFlowDevice for Device {
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<OpticalFlowSessionNV, Error> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .nv_optical_flow
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .create_optical_flow_session_nv;
+
         unsafe {
-            (self
-                .fns()
-                .nv_optical_flow
-                .as_ref()
-                .unwrap()
-                .create_optical_flow_session_nv)(
+            (call)(
                 self.handle,
                 create_info,
                 allocator.map_or(null(), from_ref),
@@ -130,18 +134,14 @@ impl OpticalFlowDevice for Device {
         session: OpticalFlowSessionNV,
         allocator: Option<&AllocationCallbacks>,
     ) {
-        unsafe {
-            (self
-                .fns()
-                .nv_optical_flow
-                .as_ref()
-                .unwrap()
-                .destroy_optical_flow_session_nv)(
-                self.handle,
-                session,
-                allocator.map_or(null(), from_ref),
-            )
-        };
+        let call = self
+            .fns()
+            .nv_optical_flow
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .destroy_optical_flow_session_nv;
+
+        unsafe { (call)(self.handle, session, allocator.map_or(null(), from_ref)) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkBindOpticalFlowSessionImageNV.html>
@@ -153,21 +153,14 @@ impl OpticalFlowDevice for Device {
         view: ImageView,
         layout: ImageLayout,
     ) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .nv_optical_flow
-                .as_ref()
-                .unwrap()
-                .bind_optical_flow_session_image_nv)(
-                self.handle,
-                session,
-                binding_point,
-                view,
-                layout,
-            )
-        }
-        .result()
+        let call = self
+            .fns()
+            .nv_optical_flow
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .bind_optical_flow_session_image_nv;
+
+        unsafe { (call)(self.handle, session, binding_point, view, layout) }.result()
     }
 }
 
@@ -192,13 +185,13 @@ impl OpticalFlowCommandBuffer for CommandBuffer {
         session: OpticalFlowSessionNV,
         execute_info: &OpticalFlowExecuteInfoNV,
     ) {
-        unsafe {
-            (self
-                .fns()
-                .nv_optical_flow
-                .as_ref()
-                .unwrap()
-                .optical_flow_execute_nv)(self.handle, session, execute_info)
-        };
+        let call = self
+            .fns()
+            .nv_optical_flow
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .optical_flow_execute_nv;
+
+        unsafe { (call)(self.handle, session, execute_info) };
     }
 }

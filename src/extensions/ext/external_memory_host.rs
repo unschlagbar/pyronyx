@@ -29,19 +29,14 @@ impl ExternalMemoryHostDevice for Device {
         host_pointer: &c_void,
     ) -> Result<MemoryHostPointerPropertiesEXT<'_>, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .ext_external_memory_host
-                .as_ref()
-                .unwrap()
-                .get_memory_host_pointer_properties_ext)(
-                self.handle,
-                handle_type,
-                host_pointer,
-                out.as_mut_ptr(),
-            )
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .ext_external_memory_host
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_memory_host_pointer_properties_ext;
+
+        unsafe { (call)(self.handle, handle_type, host_pointer, out.as_mut_ptr()) }
+            .init_on_success(out)
     }
 }

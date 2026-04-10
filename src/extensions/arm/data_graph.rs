@@ -75,13 +75,15 @@ impl DataGraphDevice for Device {
         pipelines: &mut [Pipeline],
     ) -> Result<(), Error> {
         assert_eq!(create_infos.len(), pipelines.len());
+        let call = self
+            .fns()
+            .arm_data_graph
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .create_data_graph_pipelines_arm;
+
         unsafe {
-            (self
-                .fns()
-                .arm_data_graph
-                .as_ref()
-                .unwrap()
-                .create_data_graph_pipelines_arm)(
+            (call)(
                 self.handle,
                 deferred_operation,
                 pipeline_cache,
@@ -102,13 +104,15 @@ impl DataGraphDevice for Device {
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<DataGraphPipelineSessionARM, Error> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .arm_data_graph
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .create_data_graph_pipeline_session_arm;
+
         unsafe {
-            (self
-                .fns()
-                .arm_data_graph
-                .as_ref()
-                .unwrap()
-                .create_data_graph_pipeline_session_arm)(
+            (call)(
                 self.handle,
                 create_info,
                 allocator.map_or(null(), from_ref),
@@ -125,13 +129,15 @@ impl DataGraphDevice for Device {
         info: &DataGraphPipelineSessionBindPointRequirementsInfoARM,
         bind_point_requirements: &mut [DataGraphPipelineSessionBindPointRequirementARM],
     ) -> Result<(), Error> {
+        let call = self
+            .fns()
+            .arm_data_graph
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_data_graph_pipeline_session_bind_point_requirements_arm;
+
         unsafe {
-            (self
-                .fns()
-                .arm_data_graph
-                .as_ref()
-                .unwrap()
-                .get_data_graph_pipeline_session_bind_point_requirements_arm)(
+            (call)(
                 self.handle,
                 info,
                 bind_point_requirements.len() as *mut u32,
@@ -148,17 +154,15 @@ impl DataGraphDevice for Device {
         info: &DataGraphPipelineSessionMemoryRequirementsInfoARM,
     ) -> MemoryRequirements2<'_> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .arm_data_graph
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_data_graph_pipeline_session_memory_requirements_arm;
+
         unsafe {
-            (self
-                .fns()
-                .arm_data_graph
-                .as_ref()
-                .unwrap()
-                .get_data_graph_pipeline_session_memory_requirements_arm)(
-                self.handle,
-                info,
-                out.as_mut_ptr(),
-            );
+            (call)(self.handle, info, out.as_mut_ptr());
             out.assume_init()
         }
     }
@@ -169,19 +173,14 @@ impl DataGraphDevice for Device {
         &self,
         bind_infos: &[BindDataGraphPipelineSessionMemoryInfoARM],
     ) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .arm_data_graph
-                .as_ref()
-                .unwrap()
-                .bind_data_graph_pipeline_session_memory_arm)(
-                self.handle,
-                bind_infos.len() as u32,
-                bind_infos.as_ptr(),
-            )
-        }
-        .result()
+        let call = self
+            .fns()
+            .arm_data_graph
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .bind_data_graph_pipeline_session_memory_arm;
+
+        unsafe { (call)(self.handle, bind_infos.len() as u32, bind_infos.as_ptr()) }.result()
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkDestroyDataGraphPipelineSessionARM.html>
@@ -191,18 +190,14 @@ impl DataGraphDevice for Device {
         session: DataGraphPipelineSessionARM,
         allocator: Option<&AllocationCallbacks>,
     ) {
-        unsafe {
-            (self
-                .fns()
-                .arm_data_graph
-                .as_ref()
-                .unwrap()
-                .destroy_data_graph_pipeline_session_arm)(
-                self.handle,
-                session,
-                allocator.map_or(null(), from_ref),
-            )
-        };
+        let call = self
+            .fns()
+            .arm_data_graph
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .destroy_data_graph_pipeline_session_arm;
+
+        unsafe { (call)(self.handle, session, allocator.map_or(null(), from_ref)) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetDataGraphPipelineAvailablePropertiesARM.html>
@@ -212,13 +207,15 @@ impl DataGraphDevice for Device {
         pipeline_info: &DataGraphPipelineInfoARM,
         properties: &mut [DataGraphPipelinePropertyARM],
     ) -> Result<(), Error> {
+        let call = self
+            .fns()
+            .arm_data_graph
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_data_graph_pipeline_available_properties_arm;
+
         unsafe {
-            (self
-                .fns()
-                .arm_data_graph
-                .as_ref()
-                .unwrap()
-                .get_data_graph_pipeline_available_properties_arm)(
+            (call)(
                 self.handle,
                 pipeline_info,
                 properties.len() as *mut u32,
@@ -235,13 +232,15 @@ impl DataGraphDevice for Device {
         pipeline_info: &DataGraphPipelineInfoARM,
         properties: &mut [DataGraphPipelinePropertyQueryResultARM],
     ) -> Result<(), Error> {
+        let call = self
+            .fns()
+            .arm_data_graph
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_data_graph_pipeline_properties_arm;
+
         unsafe {
-            (self
-                .fns()
-                .arm_data_graph
-                .as_ref()
-                .unwrap()
-                .get_data_graph_pipeline_properties_arm)(
+            (call)(
                 self.handle,
                 pipeline_info,
                 properties.len() as u32,
@@ -274,16 +273,14 @@ impl DataGraphCommandBuffer for CommandBuffer {
         session: DataGraphPipelineSessionARM,
         info: Option<&DataGraphPipelineDispatchInfoARM>,
     ) {
-        unsafe {
-            (self
-                .fns()
-                .arm_data_graph
-                .as_ref()
-                .unwrap()
-                .dispatch_data_graph_arm)(
-                self.handle, session, info.map_or(null(), from_ref)
-            )
-        };
+        let call = self
+            .fns()
+            .arm_data_graph
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .dispatch_data_graph_arm;
+
+        unsafe { (call)(self.handle, session, info.map_or(null(), from_ref)) };
     }
 }
 
@@ -308,13 +305,15 @@ impl DataGraphPhysicalDevice for PhysicalDevice {
         queue_family_index: u32,
         queue_family_data_graph_properties: &mut [QueueFamilyDataGraphPropertiesARM],
     ) -> Result<(), Error> {
+        let call = self
+            .fns()
+            .arm_data_graph
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_physical_device_queue_family_data_graph_properties_arm;
+
         unsafe {
-            (self
-                .fns()
-                .arm_data_graph
-                .as_ref()
-                .unwrap()
-                .get_physical_device_queue_family_data_graph_properties_arm)(
+            (call)(
                 self.handle,
                 queue_family_index,
                 queue_family_data_graph_properties.len() as *mut u32,
@@ -331,13 +330,15 @@ impl DataGraphPhysicalDevice for PhysicalDevice {
         queue_family_data_graph_processing_engine_info: &PhysicalDeviceQueueFamilyDataGraphProcessingEngineInfoARM,
     ) -> QueueFamilyDataGraphProcessingEnginePropertiesARM<'_> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .arm_data_graph
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_physical_device_queue_family_data_graph_processing_engine_properties_arm;
+
         unsafe {
-            (self
-                .fns()
-                .arm_data_graph
-                .as_ref()
-                .unwrap()
-                .get_physical_device_queue_family_data_graph_processing_engine_properties_arm)(
+            (call)(
                 self.handle,
                 queue_family_data_graph_processing_engine_info,
                 out.as_mut_ptr(),

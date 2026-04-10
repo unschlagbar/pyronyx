@@ -29,13 +29,15 @@ impl StreamDescriptorSurfaceInstance for Instance {
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<SurfaceKHR, Error> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .ggp_stream_descriptor_surface
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .create_stream_descriptor_surface_ggp;
+
         unsafe {
-            (self
-                .fns()
-                .ggp_stream_descriptor_surface
-                .as_ref()
-                .unwrap()
-                .create_stream_descriptor_surface_ggp)(
+            (call)(
                 self.handle,
                 create_info,
                 allocator.map_or(null(), from_ref),

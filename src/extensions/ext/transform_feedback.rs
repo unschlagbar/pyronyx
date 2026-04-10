@@ -71,13 +71,15 @@ impl TransformFeedbackCommandBuffer for CommandBuffer {
     ) {
         assert_eq!(buffers.len(), offsets.len());
         assert_eq!(buffers.len(), sizes.len());
+        let call = self
+            .fns()
+            .ext_transform_feedback
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .bind_transform_feedback_buffers_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_transform_feedback
-                .as_ref()
-                .unwrap()
-                .bind_transform_feedback_buffers_ext)(
+            (call)(
                 self.handle,
                 first_binding,
                 buffers.len() as u32,
@@ -102,13 +104,15 @@ impl TransformFeedbackCommandBuffer for CommandBuffer {
         counter_buffer_offsets: &[DeviceSize],
     ) {
         assert_eq!(counter_buffers.len(), counter_buffer_offsets.len());
+        let call = self
+            .fns()
+            .ext_transform_feedback
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .begin_transform_feedback_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_transform_feedback
-                .as_ref()
-                .unwrap()
-                .begin_transform_feedback_ext)(
+            (call)(
                 self.handle,
                 first_counter_buffer,
                 counter_buffers.len() as u32,
@@ -132,13 +136,15 @@ impl TransformFeedbackCommandBuffer for CommandBuffer {
         counter_buffer_offsets: &[DeviceSize],
     ) {
         assert_eq!(counter_buffers.len(), counter_buffer_offsets.len());
+        let call = self
+            .fns()
+            .ext_transform_feedback
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .end_transform_feedback_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_transform_feedback
-                .as_ref()
-                .unwrap()
-                .end_transform_feedback_ext)(
+            (call)(
                 self.handle,
                 first_counter_buffer,
                 counter_buffers.len() as u32,
@@ -162,14 +168,14 @@ impl TransformFeedbackCommandBuffer for CommandBuffer {
         flags: QueryControlFlags,
         index: u32,
     ) {
-        unsafe {
-            (self
-                .fns()
-                .ext_transform_feedback
-                .as_ref()
-                .unwrap()
-                .begin_query_indexed_ext)(self.handle, query_pool, query, flags, index)
-        };
+        let call = self
+            .fns()
+            .ext_transform_feedback
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .begin_query_indexed_ext;
+
+        unsafe { (call)(self.handle, query_pool, query, flags, index) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdEndQueryIndexedEXT.html>
@@ -180,14 +186,14 @@ impl TransformFeedbackCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn end_query_indexed(&self, query_pool: QueryPool, query: u32, index: u32) {
-        unsafe {
-            (self
-                .fns()
-                .ext_transform_feedback
-                .as_ref()
-                .unwrap()
-                .end_query_indexed_ext)(self.handle, query_pool, query, index)
-        };
+        let call = self
+            .fns()
+            .ext_transform_feedback
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .end_query_indexed_ext;
+
+        unsafe { (call)(self.handle, query_pool, query, index) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdDrawIndirectByteCountEXT.html>
@@ -207,13 +213,15 @@ impl TransformFeedbackCommandBuffer for CommandBuffer {
         counter_offset: u32,
         vertex_stride: u32,
     ) {
+        let call = self
+            .fns()
+            .ext_transform_feedback
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .draw_indirect_byte_count_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_transform_feedback
-                .as_ref()
-                .unwrap()
-                .draw_indirect_byte_count_ext)(
+            (call)(
                 self.handle,
                 instance_count,
                 first_instance,

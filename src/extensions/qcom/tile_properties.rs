@@ -32,13 +32,15 @@ impl TilePropertiesDevice for Device {
         framebuffer: Framebuffer,
         properties: &mut [TilePropertiesQCOM],
     ) -> Result<(), Error> {
+        let call = self
+            .fns()
+            .qcom_tile_properties
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_framebuffer_tile_properties_qcom;
+
         unsafe {
-            (self
-                .fns()
-                .qcom_tile_properties
-                .as_ref()
-                .unwrap()
-                .get_framebuffer_tile_properties_qcom)(
+            (call)(
                 self.handle,
                 framebuffer,
                 properties.len() as *mut u32,
@@ -55,18 +57,13 @@ impl TilePropertiesDevice for Device {
         rendering_info: &RenderingInfo,
     ) -> Result<TilePropertiesQCOM<'_>, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .qcom_tile_properties
-                .as_ref()
-                .unwrap()
-                .get_dynamic_rendering_tile_properties_qcom)(
-                self.handle,
-                rendering_info,
-                out.as_mut_ptr(),
-            )
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .qcom_tile_properties
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_dynamic_rendering_tile_properties_qcom;
+
+        unsafe { (call)(self.handle, rendering_info, out.as_mut_ptr()) }.init_on_success(out)
     }
 }

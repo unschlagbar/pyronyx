@@ -32,17 +32,14 @@ impl DisplayTimingDevice for Device {
         swapchain: SwapchainKHR,
     ) -> Result<RefreshCycleDurationGOOGLE, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .google_display_timing
-                .as_ref()
-                .unwrap()
-                .get_refresh_cycle_duration_google)(
-                self.handle, swapchain, out.as_mut_ptr()
-            )
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .google_display_timing
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_refresh_cycle_duration_google;
+
+        unsafe { (call)(self.handle, swapchain, out.as_mut_ptr()) }.init_on_success(out)
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPastPresentationTimingGOOGLE.html>
@@ -52,13 +49,15 @@ impl DisplayTimingDevice for Device {
         swapchain: SwapchainKHR,
         presentation_timings: &mut [PastPresentationTimingGOOGLE],
     ) -> Result<(), Error> {
+        let call = self
+            .fns()
+            .google_display_timing
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_past_presentation_timing_google;
+
         unsafe {
-            (self
-                .fns()
-                .google_display_timing
-                .as_ref()
-                .unwrap()
-                .get_past_presentation_timing_google)(
+            (call)(
                 self.handle,
                 swapchain,
                 presentation_timings.len() as *mut u32,

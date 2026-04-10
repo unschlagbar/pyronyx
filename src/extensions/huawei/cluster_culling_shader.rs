@@ -26,16 +26,14 @@ impl ClusterCullingShaderCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn draw_cluster(&self, group_count_x: u32, group_count_y: u32, group_count_z: u32) {
-        unsafe {
-            (self
-                .fns()
-                .huawei_cluster_culling_shader
-                .as_ref()
-                .unwrap()
-                .draw_cluster_huawei)(
-                self.handle, group_count_x, group_count_y, group_count_z
-            )
-        };
+        let call = self
+            .fns()
+            .huawei_cluster_culling_shader
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .draw_cluster_huawei;
+
+        unsafe { (call)(self.handle, group_count_x, group_count_y, group_count_z) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdDrawClusterIndirectHUAWEI.html>
@@ -47,13 +45,13 @@ impl ClusterCullingShaderCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn draw_cluster_indirect(&self, buffer: Buffer, offset: DeviceSize) {
-        unsafe {
-            (self
-                .fns()
-                .huawei_cluster_culling_shader
-                .as_ref()
-                .unwrap()
-                .draw_cluster_indirect_huawei)(self.handle, buffer, offset)
-        };
+        let call = self
+            .fns()
+            .huawei_cluster_culling_shader
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .draw_cluster_indirect_huawei;
+
+        unsafe { (call)(self.handle, buffer, offset) };
     }
 }

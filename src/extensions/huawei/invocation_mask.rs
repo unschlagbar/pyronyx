@@ -23,13 +23,13 @@ impl InvocationMaskCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn bind_invocation_mask(&self, image_view: ImageView, image_layout: ImageLayout) {
-        unsafe {
-            (self
-                .fns()
-                .huawei_invocation_mask
-                .as_ref()
-                .unwrap()
-                .bind_invocation_mask_huawei)(self.handle, image_view, image_layout)
-        };
+        let call = self
+            .fns()
+            .huawei_invocation_mask
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .bind_invocation_mask_huawei;
+
+        unsafe { (call)(self.handle, image_view, image_layout) };
     }
 }

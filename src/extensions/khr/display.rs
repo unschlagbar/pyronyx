@@ -50,13 +50,15 @@ impl DisplayPhysicalDevice for PhysicalDevice {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceDisplayPropertiesKHR.html>
     #[inline]
     fn get_display_properties(&self, properties: &mut [DisplayPropertiesKHR]) -> Result<(), Error> {
+        let call = self
+            .fns()
+            .khr_display
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_physical_device_display_properties_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_display
-                .as_ref()
-                .unwrap()
-                .get_physical_device_display_properties_khr)(
+            (call)(
                 self.handle,
                 properties.len() as *mut u32,
                 properties.as_mut_ptr(),
@@ -71,13 +73,15 @@ impl DisplayPhysicalDevice for PhysicalDevice {
         &self,
         properties: &mut [DisplayPlanePropertiesKHR],
     ) -> Result<(), Error> {
+        let call = self
+            .fns()
+            .khr_display
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_physical_device_display_plane_properties_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_display
-                .as_ref()
-                .unwrap()
-                .get_physical_device_display_plane_properties_khr)(
+            (call)(
                 self.handle,
                 properties.len() as *mut u32,
                 properties.as_mut_ptr(),
@@ -93,13 +97,15 @@ impl DisplayPhysicalDevice for PhysicalDevice {
         plane_index: u32,
         displays: &mut [DisplayKHR],
     ) -> Result<(), Error> {
+        let call = self
+            .fns()
+            .khr_display
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_display_plane_supported_displays_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_display
-                .as_ref()
-                .unwrap()
-                .get_display_plane_supported_displays_khr)(
+            (call)(
                 self.handle,
                 plane_index,
                 displays.len() as *mut u32,
@@ -116,13 +122,15 @@ impl DisplayPhysicalDevice for PhysicalDevice {
         display: DisplayKHR,
         properties: &mut [DisplayModePropertiesKHR],
     ) -> Result<(), Error> {
+        let call = self
+            .fns()
+            .khr_display
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_display_mode_properties_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_display
-                .as_ref()
-                .unwrap()
-                .get_display_mode_properties_khr)(
+            (call)(
                 self.handle,
                 display,
                 properties.len() as *mut u32,
@@ -141,13 +149,15 @@ impl DisplayPhysicalDevice for PhysicalDevice {
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<DisplayModeKHR, Error> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .khr_display
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .create_display_mode_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_display
-                .as_ref()
-                .unwrap()
-                .create_display_mode_khr)(
+            (call)(
                 self.handle,
                 display,
                 create_info,
@@ -166,20 +176,14 @@ impl DisplayPhysicalDevice for PhysicalDevice {
         plane_index: u32,
     ) -> Result<DisplayPlaneCapabilitiesKHR, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .khr_display
-                .as_ref()
-                .unwrap()
-                .get_display_plane_capabilities_khr)(
-                self.handle,
-                mode,
-                plane_index,
-                out.as_mut_ptr(),
-            )
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .khr_display
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_display_plane_capabilities_khr;
+
+        unsafe { (call)(self.handle, mode, plane_index, out.as_mut_ptr()) }.init_on_success(out)
     }
 }
 
@@ -200,13 +204,15 @@ impl DisplayInstance for Instance {
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<SurfaceKHR, Error> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .khr_display
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .create_display_plane_surface_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_display
-                .as_ref()
-                .unwrap()
-                .create_display_plane_surface_khr)(
+            (call)(
                 self.handle,
                 create_info,
                 allocator.map_or(null(), from_ref),

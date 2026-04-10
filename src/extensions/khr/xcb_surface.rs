@@ -29,13 +29,15 @@ impl XcbSurfaceInstance for Instance {
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<SurfaceKHR, Error> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .khr_xcb_surface
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .create_xcb_surface_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_xcb_surface
-                .as_ref()
-                .unwrap()
-                .create_xcb_surface_khr)(
+            (call)(
                 self.handle,
                 create_info,
                 allocator.map_or(null(), from_ref),
@@ -64,18 +66,13 @@ impl XcbSurfacePhysicalDevice for PhysicalDevice {
         connection: *mut xcb_connection_t,
         visual_id: xcb_visualid_t,
     ) -> Bool32 {
-        unsafe {
-            (self
-                .fns()
-                .khr_xcb_surface
-                .as_ref()
-                .unwrap()
-                .get_physical_device_xcb_presentation_support_khr)(
-                self.handle,
-                queue_family_index,
-                connection,
-                visual_id,
-            )
-        }
+        let call = self
+            .fns()
+            .khr_xcb_surface
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_physical_device_xcb_presentation_support_khr;
+
+        unsafe { (call)(self.handle, queue_family_index, connection, visual_id) }
     }
 }

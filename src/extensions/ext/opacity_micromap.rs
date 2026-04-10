@@ -75,13 +75,15 @@ impl OpacityMicromapDevice for Device {
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<MicromapEXT, Error> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .ext_opacity_micromap
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .create_micromap_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_opacity_micromap
-                .as_ref()
-                .unwrap()
-                .create_micromap_ext)(
+            (call)(
                 self.handle,
                 create_info,
                 allocator.map_or(null(), from_ref),
@@ -98,13 +100,15 @@ impl OpacityMicromapDevice for Device {
         deferred_operation: DeferredOperationKHR,
         infos: &[MicromapBuildInfoEXT],
     ) -> Result<(), Error> {
+        let call = self
+            .fns()
+            .ext_opacity_micromap
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .build_micromaps_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_opacity_micromap
-                .as_ref()
-                .unwrap()
-                .build_micromaps_ext)(
+            (call)(
                 self.handle,
                 deferred_operation,
                 infos.len() as u32,
@@ -117,16 +121,14 @@ impl OpacityMicromapDevice for Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkDestroyMicromapEXT.html>
     #[inline]
     fn destroy_micromap(&self, micromap: MicromapEXT, allocator: Option<&AllocationCallbacks>) {
-        unsafe {
-            (self
-                .fns()
-                .ext_opacity_micromap
-                .as_ref()
-                .unwrap()
-                .destroy_micromap_ext)(
-                self.handle, micromap, allocator.map_or(null(), from_ref)
-            )
-        };
+        let call = self
+            .fns()
+            .ext_opacity_micromap
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .destroy_micromap_ext;
+
+        unsafe { (call)(self.handle, micromap, allocator.map_or(null(), from_ref)) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCopyMicromapEXT.html>
@@ -136,15 +138,14 @@ impl OpacityMicromapDevice for Device {
         deferred_operation: DeferredOperationKHR,
         info: &CopyMicromapInfoEXT,
     ) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .ext_opacity_micromap
-                .as_ref()
-                .unwrap()
-                .copy_micromap_ext)(self.handle, deferred_operation, info)
-        }
-        .result()
+        let call = self
+            .fns()
+            .ext_opacity_micromap
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .copy_micromap_ext;
+
+        unsafe { (call)(self.handle, deferred_operation, info) }.result()
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCopyMicromapToMemoryEXT.html>
@@ -154,15 +155,14 @@ impl OpacityMicromapDevice for Device {
         deferred_operation: DeferredOperationKHR,
         info: &CopyMicromapToMemoryInfoEXT,
     ) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .ext_opacity_micromap
-                .as_ref()
-                .unwrap()
-                .copy_micromap_to_memory_ext)(self.handle, deferred_operation, info)
-        }
-        .result()
+        let call = self
+            .fns()
+            .ext_opacity_micromap
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .copy_micromap_to_memory_ext;
+
+        unsafe { (call)(self.handle, deferred_operation, info) }.result()
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCopyMemoryToMicromapEXT.html>
@@ -172,15 +172,14 @@ impl OpacityMicromapDevice for Device {
         deferred_operation: DeferredOperationKHR,
         info: &CopyMemoryToMicromapInfoEXT,
     ) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .ext_opacity_micromap
-                .as_ref()
-                .unwrap()
-                .copy_memory_to_micromap_ext)(self.handle, deferred_operation, info)
-        }
-        .result()
+        let call = self
+            .fns()
+            .ext_opacity_micromap
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .copy_memory_to_micromap_ext;
+
+        unsafe { (call)(self.handle, deferred_operation, info) }.result()
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkWriteMicromapsPropertiesEXT.html>
@@ -192,13 +191,15 @@ impl OpacityMicromapDevice for Device {
         data: &mut [c_void],
         stride: usize,
     ) -> Result<(), Error> {
+        let call = self
+            .fns()
+            .ext_opacity_micromap
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .write_micromaps_properties_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_opacity_micromap
-                .as_ref()
-                .unwrap()
-                .write_micromaps_properties_ext)(
+            (call)(
                 self.handle,
                 micromaps.len() as u32,
                 micromaps.as_ptr(),
@@ -218,17 +219,15 @@ impl OpacityMicromapDevice for Device {
         version_info: &MicromapVersionInfoEXT,
     ) -> AccelerationStructureCompatibilityKHR {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .ext_opacity_micromap
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_device_micromap_compatibility_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_opacity_micromap
-                .as_ref()
-                .unwrap()
-                .get_device_micromap_compatibility_ext)(
-                self.handle,
-                version_info,
-                out.as_mut_ptr(),
-            );
+            (call)(self.handle, version_info, out.as_mut_ptr());
             out.assume_init()
         }
     }
@@ -241,18 +240,15 @@ impl OpacityMicromapDevice for Device {
         build_info: &MicromapBuildInfoEXT,
     ) -> MicromapBuildSizesInfoEXT<'_> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .ext_opacity_micromap
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_micromap_build_sizes_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_opacity_micromap
-                .as_ref()
-                .unwrap()
-                .get_micromap_build_sizes_ext)(
-                self.handle,
-                build_type,
-                build_info,
-                out.as_mut_ptr(),
-            );
+            (call)(self.handle, build_type, build_info, out.as_mut_ptr());
             out.assume_init()
         }
     }
@@ -285,14 +281,14 @@ impl OpacityMicromapCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn build_micromaps(&self, infos: &[MicromapBuildInfoEXT]) {
-        unsafe {
-            (self
-                .fns()
-                .ext_opacity_micromap
-                .as_ref()
-                .unwrap()
-                .build_micromaps_ext)(self.handle, infos.len() as u32, infos.as_ptr())
-        };
+        let call = self
+            .fns()
+            .ext_opacity_micromap
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .build_micromaps_ext;
+
+        unsafe { (call)(self.handle, infos.len() as u32, infos.as_ptr()) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyMicromapEXT.html>
@@ -303,14 +299,14 @@ impl OpacityMicromapCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn copy_micromap(&self, info: &CopyMicromapInfoEXT) {
-        unsafe {
-            (self
-                .fns()
-                .ext_opacity_micromap
-                .as_ref()
-                .unwrap()
-                .copy_micromap_ext)(self.handle, info)
-        };
+        let call = self
+            .fns()
+            .ext_opacity_micromap
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .copy_micromap_ext;
+
+        unsafe { (call)(self.handle, info) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyMicromapToMemoryEXT.html>
@@ -321,14 +317,14 @@ impl OpacityMicromapCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn copy_micromap_to_memory(&self, info: &CopyMicromapToMemoryInfoEXT) {
-        unsafe {
-            (self
-                .fns()
-                .ext_opacity_micromap
-                .as_ref()
-                .unwrap()
-                .copy_micromap_to_memory_ext)(self.handle, info)
-        };
+        let call = self
+            .fns()
+            .ext_opacity_micromap
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .copy_micromap_to_memory_ext;
+
+        unsafe { (call)(self.handle, info) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyMemoryToMicromapEXT.html>
@@ -339,14 +335,14 @@ impl OpacityMicromapCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn copy_memory_to_micromap(&self, info: &CopyMemoryToMicromapInfoEXT) {
-        unsafe {
-            (self
-                .fns()
-                .ext_opacity_micromap
-                .as_ref()
-                .unwrap()
-                .copy_memory_to_micromap_ext)(self.handle, info)
-        };
+        let call = self
+            .fns()
+            .ext_opacity_micromap
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .copy_memory_to_micromap_ext;
+
+        unsafe { (call)(self.handle, info) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdWriteMicromapsPropertiesEXT.html>
@@ -363,13 +359,15 @@ impl OpacityMicromapCommandBuffer for CommandBuffer {
         query_pool: QueryPool,
         first_query: u32,
     ) {
+        let call = self
+            .fns()
+            .ext_opacity_micromap
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .write_micromaps_properties_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_opacity_micromap
-                .as_ref()
-                .unwrap()
-                .write_micromaps_properties_ext)(
+            (call)(
                 self.handle,
                 micromaps.len() as u32,
                 micromaps.as_ptr(),

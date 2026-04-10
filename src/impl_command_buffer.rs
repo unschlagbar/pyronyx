@@ -10,19 +10,37 @@ impl CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkBeginCommandBuffer.html>
     #[inline]
     pub fn begin(&self, begin_info: &CommandBufferBeginInfo) -> Result<(), Error> {
-        unsafe { (self.fns().v1_0.begin_command_buffer.unwrap())(self.handle, begin_info) }.result()
+        let call = self
+            .fns()
+            .v1_0
+            .begin_command_buffer
+            .expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, begin_info) }.result()
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkEndCommandBuffer.html>
     #[inline]
     pub fn end(&self) -> Result<(), Error> {
-        unsafe { (self.fns().v1_0.end_command_buffer.unwrap())(self.handle) }.result()
+        let call = self
+            .fns()
+            .v1_0
+            .end_command_buffer
+            .expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle) }.result()
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkResetCommandBuffer.html>
     #[inline]
     pub fn reset(&self, flags: CommandBufferResetFlags) -> Result<(), Error> {
-        unsafe { (self.fns().v1_0.reset_command_buffer.unwrap())(self.handle, flags) }.result()
+        let call = self
+            .fns()
+            .v1_0
+            .reset_command_buffer
+            .expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, flags) }.result()
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBindPipeline.html>
@@ -33,9 +51,9 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn bind_pipeline(&self, pipeline_bind_point: PipelineBindPoint, pipeline: Pipeline) {
-        unsafe {
-            (self.fns().v1_0.bind_pipeline.unwrap())(self.handle, pipeline_bind_point, pipeline)
-        };
+        let call = self.fns().v1_0.bind_pipeline.expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, pipeline_bind_point, pipeline) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetViewport.html>
@@ -46,8 +64,10 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_viewport(&self, first_viewport: u32, viewports: &[Viewport]) {
+        let call = self.fns().v1_0.set_viewport.expect(Self::CORE_LOAD_ERROR);
+
         unsafe {
-            (self.fns().v1_0.set_viewport.unwrap())(
+            (call)(
                 self.handle,
                 first_viewport,
                 viewports.len() as u32,
@@ -64,8 +84,10 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_scissor(&self, first_scissor: u32, scissors: &[Rect2D]) {
+        let call = self.fns().v1_0.set_scissor.expect(Self::CORE_LOAD_ERROR);
+
         unsafe {
-            (self.fns().v1_0.set_scissor.unwrap())(
+            (call)(
                 self.handle,
                 first_scissor,
                 scissors.len() as u32,
@@ -82,7 +104,9 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_line_width(&self, line_width: f32) {
-        unsafe { (self.fns().v1_0.set_line_width.unwrap())(self.handle, line_width) };
+        let call = self.fns().v1_0.set_line_width.expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, line_width) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetDepthBias.html>
@@ -98,8 +122,10 @@ impl CommandBuffer {
         depth_bias_clamp: f32,
         depth_bias_slope_factor: f32,
     ) {
+        let call = self.fns().v1_0.set_depth_bias.expect(Self::CORE_LOAD_ERROR);
+
         unsafe {
-            (self.fns().v1_0.set_depth_bias.unwrap())(
+            (call)(
                 self.handle,
                 depth_bias_constant_factor,
                 depth_bias_clamp,
@@ -116,7 +142,13 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_blend_constants(&self, blend_constants: f32) {
-        unsafe { (self.fns().v1_0.set_blend_constants.unwrap())(self.handle, blend_constants) };
+        let call = self
+            .fns()
+            .v1_0
+            .set_blend_constants
+            .expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, blend_constants) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetDepthBounds.html>
@@ -127,13 +159,13 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_depth_bounds(&self, min_depth_bounds: f32, max_depth_bounds: f32) {
-        unsafe {
-            (self.fns().v1_0.set_depth_bounds.unwrap())(
-                self.handle,
-                min_depth_bounds,
-                max_depth_bounds,
-            )
-        };
+        let call = self
+            .fns()
+            .v1_0
+            .set_depth_bounds
+            .expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, min_depth_bounds, max_depth_bounds) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetStencilCompareMask.html>
@@ -144,13 +176,13 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_stencil_compare_mask(&self, face_mask: StencilFaceFlags, compare_mask: u32) {
-        unsafe {
-            (self.fns().v1_0.set_stencil_compare_mask.unwrap())(
-                self.handle,
-                face_mask,
-                compare_mask,
-            )
-        };
+        let call = self
+            .fns()
+            .v1_0
+            .set_stencil_compare_mask
+            .expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, face_mask, compare_mask) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetStencilWriteMask.html>
@@ -161,9 +193,13 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_stencil_write_mask(&self, face_mask: StencilFaceFlags, write_mask: u32) {
-        unsafe {
-            (self.fns().v1_0.set_stencil_write_mask.unwrap())(self.handle, face_mask, write_mask)
-        };
+        let call = self
+            .fns()
+            .v1_0
+            .set_stencil_write_mask
+            .expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, face_mask, write_mask) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetStencilReference.html>
@@ -174,9 +210,13 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_stencil_reference(&self, face_mask: StencilFaceFlags, reference: u32) {
-        unsafe {
-            (self.fns().v1_0.set_stencil_reference.unwrap())(self.handle, face_mask, reference)
-        };
+        let call = self
+            .fns()
+            .v1_0
+            .set_stencil_reference
+            .expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, face_mask, reference) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBindDescriptorSets.html>
@@ -194,8 +234,14 @@ impl CommandBuffer {
         descriptor_sets: &[DescriptorSet],
         dynamic_offsets: &[u32],
     ) {
+        let call = self
+            .fns()
+            .v1_0
+            .bind_descriptor_sets
+            .expect(Self::CORE_LOAD_ERROR);
+
         unsafe {
-            (self.fns().v1_0.bind_descriptor_sets.unwrap())(
+            (call)(
                 self.handle,
                 pipeline_bind_point,
                 layout,
@@ -216,9 +262,13 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn bind_index_buffer(&self, buffer: Buffer, offset: DeviceSize, index_type: IndexType) {
-        unsafe {
-            (self.fns().v1_0.bind_index_buffer.unwrap())(self.handle, buffer, offset, index_type)
-        };
+        let call = self
+            .fns()
+            .v1_0
+            .bind_index_buffer
+            .expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, buffer, offset, index_type) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBindVertexBuffers.html>
@@ -235,8 +285,14 @@ impl CommandBuffer {
         offsets: &[DeviceSize],
     ) {
         assert_eq!(buffers.len(), offsets.len());
+        let call = self
+            .fns()
+            .v1_0
+            .bind_vertex_buffers
+            .expect(Self::CORE_LOAD_ERROR);
+
         unsafe {
-            (self.fns().v1_0.bind_vertex_buffers.unwrap())(
+            (call)(
                 self.handle,
                 first_binding,
                 buffers.len() as u32,
@@ -261,8 +317,10 @@ impl CommandBuffer {
         first_vertex: u32,
         first_instance: u32,
     ) {
+        let call = self.fns().v1_0.draw.expect(Self::CORE_LOAD_ERROR);
+
         unsafe {
-            (self.fns().v1_0.draw.unwrap())(
+            (call)(
                 self.handle,
                 vertex_count,
                 instance_count,
@@ -288,8 +346,10 @@ impl CommandBuffer {
         vertex_offset: i32,
         first_instance: u32,
     ) {
+        let call = self.fns().v1_0.draw_indexed.expect(Self::CORE_LOAD_ERROR);
+
         unsafe {
-            (self.fns().v1_0.draw_indexed.unwrap())(
+            (call)(
                 self.handle,
                 index_count,
                 instance_count,
@@ -309,15 +369,9 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn draw_indirect(&self, buffer: Buffer, offset: DeviceSize, draw_count: u32, stride: u32) {
-        unsafe {
-            (self.fns().v1_0.draw_indirect.unwrap())(
-                self.handle,
-                buffer,
-                offset,
-                draw_count,
-                stride,
-            )
-        };
+        let call = self.fns().v1_0.draw_indirect.expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, buffer, offset, draw_count, stride) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdDrawIndexedIndirect.html>
@@ -335,15 +389,13 @@ impl CommandBuffer {
         draw_count: u32,
         stride: u32,
     ) {
-        unsafe {
-            (self.fns().v1_0.draw_indexed_indirect.unwrap())(
-                self.handle,
-                buffer,
-                offset,
-                draw_count,
-                stride,
-            )
-        };
+        let call = self
+            .fns()
+            .v1_0
+            .draw_indexed_indirect
+            .expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, buffer, offset, draw_count, stride) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdDispatch.html>
@@ -355,14 +407,9 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn dispatch(&self, group_count_x: u32, group_count_y: u32, group_count_z: u32) {
-        unsafe {
-            (self.fns().v1_0.dispatch.unwrap())(
-                self.handle,
-                group_count_x,
-                group_count_y,
-                group_count_z,
-            )
-        };
+        let call = self.fns().v1_0.dispatch.expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, group_count_x, group_count_y, group_count_z) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdDispatchIndirect.html>
@@ -374,7 +421,13 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn dispatch_indirect(&self, buffer: Buffer, offset: DeviceSize) {
-        unsafe { (self.fns().v1_0.dispatch_indirect.unwrap())(self.handle, buffer, offset) };
+        let call = self
+            .fns()
+            .v1_0
+            .dispatch_indirect
+            .expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, buffer, offset) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyBuffer.html>
@@ -385,8 +438,10 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn copy_buffer(&self, src_buffer: Buffer, dst_buffer: Buffer, regions: &[BufferCopy]) {
+        let call = self.fns().v1_0.copy_buffer.expect(Self::CORE_LOAD_ERROR);
+
         unsafe {
-            (self.fns().v1_0.copy_buffer.unwrap())(
+            (call)(
                 self.handle,
                 src_buffer,
                 dst_buffer,
@@ -411,8 +466,10 @@ impl CommandBuffer {
         dst_image_layout: ImageLayout,
         regions: &[ImageCopy],
     ) {
+        let call = self.fns().v1_0.copy_image.expect(Self::CORE_LOAD_ERROR);
+
         unsafe {
-            (self.fns().v1_0.copy_image.unwrap())(
+            (call)(
                 self.handle,
                 src_image,
                 src_image_layout,
@@ -440,8 +497,10 @@ impl CommandBuffer {
         regions: &[ImageBlit],
         filter: Filter,
     ) {
+        let call = self.fns().v1_0.blit_image.expect(Self::CORE_LOAD_ERROR);
+
         unsafe {
-            (self.fns().v1_0.blit_image.unwrap())(
+            (call)(
                 self.handle,
                 src_image,
                 src_image_layout,
@@ -468,8 +527,14 @@ impl CommandBuffer {
         dst_image_layout: ImageLayout,
         regions: &[BufferImageCopy],
     ) {
+        let call = self
+            .fns()
+            .v1_0
+            .copy_buffer_to_image
+            .expect(Self::CORE_LOAD_ERROR);
+
         unsafe {
-            (self.fns().v1_0.copy_buffer_to_image.unwrap())(
+            (call)(
                 self.handle,
                 src_buffer,
                 dst_image,
@@ -494,8 +559,14 @@ impl CommandBuffer {
         dst_buffer: Buffer,
         regions: &[BufferImageCopy],
     ) {
+        let call = self
+            .fns()
+            .v1_0
+            .copy_image_to_buffer
+            .expect(Self::CORE_LOAD_ERROR);
+
         unsafe {
-            (self.fns().v1_0.copy_image_to_buffer.unwrap())(
+            (call)(
                 self.handle,
                 src_image,
                 src_image_layout,
@@ -514,8 +585,10 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn update_buffer(&self, dst_buffer: Buffer, dst_offset: DeviceSize, data: &[c_void]) {
+        let call = self.fns().v1_0.update_buffer.expect(Self::CORE_LOAD_ERROR);
+
         unsafe {
-            (self.fns().v1_0.update_buffer.unwrap())(
+            (call)(
                 self.handle,
                 dst_buffer,
                 dst_offset,
@@ -539,9 +612,9 @@ impl CommandBuffer {
         size: DeviceSize,
         data: u32,
     ) {
-        unsafe {
-            (self.fns().v1_0.fill_buffer.unwrap())(self.handle, dst_buffer, dst_offset, size, data)
-        };
+        let call = self.fns().v1_0.fill_buffer.expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, dst_buffer, dst_offset, size, data) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdClearColorImage.html>
@@ -558,8 +631,14 @@ impl CommandBuffer {
         color: &ClearColorValue,
         ranges: &[ImageSubresourceRange],
     ) {
+        let call = self
+            .fns()
+            .v1_0
+            .clear_color_image
+            .expect(Self::CORE_LOAD_ERROR);
+
         unsafe {
-            (self.fns().v1_0.clear_color_image.unwrap())(
+            (call)(
                 self.handle,
                 image,
                 image_layout,
@@ -584,8 +663,14 @@ impl CommandBuffer {
         depth_stencil: &ClearDepthStencilValue,
         ranges: &[ImageSubresourceRange],
     ) {
+        let call = self
+            .fns()
+            .v1_0
+            .clear_depth_stencil_image
+            .expect(Self::CORE_LOAD_ERROR);
+
         unsafe {
-            (self.fns().v1_0.clear_depth_stencil_image.unwrap())(
+            (call)(
                 self.handle,
                 image,
                 image_layout,
@@ -605,8 +690,14 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn clear_attachments(&self, attachments: &[ClearAttachment], rects: &[ClearRect]) {
+        let call = self
+            .fns()
+            .v1_0
+            .clear_attachments
+            .expect(Self::CORE_LOAD_ERROR);
+
         unsafe {
-            (self.fns().v1_0.clear_attachments.unwrap())(
+            (call)(
                 self.handle,
                 attachments.len() as u32,
                 attachments.as_ptr(),
@@ -631,8 +722,10 @@ impl CommandBuffer {
         dst_image_layout: ImageLayout,
         regions: &[ImageResolve],
     ) {
+        let call = self.fns().v1_0.resolve_image.expect(Self::CORE_LOAD_ERROR);
+
         unsafe {
-            (self.fns().v1_0.resolve_image.unwrap())(
+            (call)(
                 self.handle,
                 src_image,
                 src_image_layout,
@@ -652,7 +745,9 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_event(&self, event: Event, stage_mask: PipelineStageFlags) {
-        unsafe { (self.fns().v1_0.set_event.unwrap())(self.handle, event, stage_mask) };
+        let call = self.fns().v1_0.set_event.expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, event, stage_mask) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdResetEvent.html>
@@ -663,7 +758,9 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn reset_event(&self, event: Event, stage_mask: PipelineStageFlags) {
-        unsafe { (self.fns().v1_0.reset_event.unwrap())(self.handle, event, stage_mask) };
+        let call = self.fns().v1_0.reset_event.expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, event, stage_mask) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdWaitEvents.html>
@@ -682,8 +779,10 @@ impl CommandBuffer {
         buffer_memory_barriers: &[BufferMemoryBarrier],
         image_memory_barriers: &[ImageMemoryBarrier],
     ) {
+        let call = self.fns().v1_0.wait_events.expect(Self::CORE_LOAD_ERROR);
+
         unsafe {
-            (self.fns().v1_0.wait_events.unwrap())(
+            (call)(
                 self.handle,
                 events.len() as u32,
                 events.as_ptr(),
@@ -715,8 +814,14 @@ impl CommandBuffer {
         buffer_memory_barriers: &[BufferMemoryBarrier],
         image_memory_barriers: &[ImageMemoryBarrier],
     ) {
+        let call = self
+            .fns()
+            .v1_0
+            .pipeline_barrier
+            .expect(Self::CORE_LOAD_ERROR);
+
         unsafe {
-            (self.fns().v1_0.pipeline_barrier.unwrap())(
+            (call)(
                 self.handle,
                 src_stage_mask,
                 dst_stage_mask,
@@ -739,7 +844,9 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn begin_query(&self, query_pool: QueryPool, query: u32, flags: QueryControlFlags) {
-        unsafe { (self.fns().v1_0.begin_query.unwrap())(self.handle, query_pool, query, flags) };
+        let call = self.fns().v1_0.begin_query.expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, query_pool, query, flags) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdEndQuery.html>
@@ -750,7 +857,9 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn end_query(&self, query_pool: QueryPool, query: u32) {
-        unsafe { (self.fns().v1_0.end_query.unwrap())(self.handle, query_pool, query) };
+        let call = self.fns().v1_0.end_query.expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, query_pool, query) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdResetQueryPool.html>
@@ -761,14 +870,13 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn reset_query_pool(&self, query_pool: QueryPool, first_query: u32, query_count: u32) {
-        unsafe {
-            (self.fns().v1_0.reset_query_pool.unwrap())(
-                self.handle,
-                query_pool,
-                first_query,
-                query_count,
-            )
-        };
+        let call = self
+            .fns()
+            .v1_0
+            .reset_query_pool
+            .expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, query_pool, first_query, query_count) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdWriteTimestamp.html>
@@ -784,14 +892,13 @@ impl CommandBuffer {
         query_pool: QueryPool,
         query: u32,
     ) {
-        unsafe {
-            (self.fns().v1_0.write_timestamp.unwrap())(
-                self.handle,
-                pipeline_stage,
-                query_pool,
-                query,
-            )
-        };
+        let call = self
+            .fns()
+            .v1_0
+            .write_timestamp
+            .expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, pipeline_stage, query_pool, query) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyQueryPoolResults.html>
@@ -811,8 +918,14 @@ impl CommandBuffer {
         stride: DeviceSize,
         flags: QueryResultFlags,
     ) {
+        let call = self
+            .fns()
+            .v1_0
+            .copy_query_pool_results
+            .expect(Self::CORE_LOAD_ERROR);
+
         unsafe {
-            (self.fns().v1_0.copy_query_pool_results.unwrap())(
+            (call)(
                 self.handle,
                 query_pool,
                 first_query,
@@ -839,8 +952,10 @@ impl CommandBuffer {
         offset: u32,
         values: &[c_void],
     ) {
+        let call = self.fns().v1_0.push_constants.expect(Self::CORE_LOAD_ERROR);
+
         unsafe {
-            (self.fns().v1_0.push_constants.unwrap())(
+            (call)(
                 self.handle,
                 layout,
                 stage_flags,
@@ -863,9 +978,13 @@ impl CommandBuffer {
         render_pass_begin: &RenderPassBeginInfo,
         contents: SubpassContents,
     ) {
-        unsafe {
-            (self.fns().v1_0.begin_render_pass.unwrap())(self.handle, render_pass_begin, contents)
-        };
+        let call = self
+            .fns()
+            .v1_0
+            .begin_render_pass
+            .expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, render_pass_begin, contents) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdNextSubpass.html>
@@ -876,7 +995,9 @@ impl CommandBuffer {
     /// Command buffer level: `primary`.
     #[inline]
     pub fn next_subpass(&self, contents: SubpassContents) {
-        unsafe { (self.fns().v1_0.next_subpass.unwrap())(self.handle, contents) };
+        let call = self.fns().v1_0.next_subpass.expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, contents) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdEndRenderPass.html>
@@ -887,7 +1008,13 @@ impl CommandBuffer {
     /// Command buffer level: `primary`.
     #[inline]
     pub fn end_render_pass(&self) {
-        unsafe { (self.fns().v1_0.end_render_pass.unwrap())(self.handle) };
+        let call = self
+            .fns()
+            .v1_0
+            .end_render_pass
+            .expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdExecuteCommands.html>
@@ -898,8 +1025,14 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn execute_commands(&self, command_buffers: &[vkCommandBuffer]) {
+        let call = self
+            .fns()
+            .v1_0
+            .execute_commands
+            .expect(Self::CORE_LOAD_ERROR);
+
         unsafe {
-            (self.fns().v1_0.execute_commands.unwrap())(
+            (call)(
                 self.handle,
                 command_buffers.len() as u32,
                 command_buffers.as_ptr(),
@@ -921,8 +1054,14 @@ impl CommandBuffer {
         set: u32,
         descriptor_writes: &[WriteDescriptorSet],
     ) {
+        let call = self
+            .fns()
+            .v1_4
+            .push_descriptor_set
+            .expect(Self::CORE_LOAD_ERROR);
+
         unsafe {
-            (self.fns().v1_4.push_descriptor_set.unwrap())(
+            (call)(
                 self.handle,
                 pipeline_bind_point,
                 layout,
@@ -941,7 +1080,13 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_device_mask(&self, device_mask: u32) {
-        unsafe { (self.fns().v1_1.set_device_mask.unwrap())(self.handle, device_mask) };
+        let call = self
+            .fns()
+            .v1_1
+            .set_device_mask
+            .expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, device_mask) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdDispatchBase.html>
@@ -961,8 +1106,10 @@ impl CommandBuffer {
         group_count_y: u32,
         group_count_z: u32,
     ) {
+        let call = self.fns().v1_1.dispatch_base.expect(Self::CORE_LOAD_ERROR);
+
         unsafe {
-            (self.fns().v1_1.dispatch_base.unwrap())(
+            (call)(
                 self.handle,
                 base_group_x,
                 base_group_y,
@@ -988,15 +1135,13 @@ impl CommandBuffer {
         set: u32,
         data: &c_void,
     ) {
-        unsafe {
-            (self.fns().v1_4.push_descriptor_set_with_template.unwrap())(
-                self.handle,
-                descriptor_update_template,
-                layout,
-                set,
-                data,
-            )
-        };
+        let call = self
+            .fns()
+            .v1_4
+            .push_descriptor_set_with_template
+            .expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, descriptor_update_template, layout, set, data) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBeginRenderPass2.html>
@@ -1011,13 +1156,13 @@ impl CommandBuffer {
         render_pass_begin: &RenderPassBeginInfo,
         subpass_begin_info: &SubpassBeginInfo,
     ) {
-        unsafe {
-            (self.fns().v1_2.begin_render_pass2.unwrap())(
-                self.handle,
-                render_pass_begin,
-                subpass_begin_info,
-            )
-        };
+        let call = self
+            .fns()
+            .v1_2
+            .begin_render_pass2
+            .expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, render_pass_begin, subpass_begin_info) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdNextSubpass2.html>
@@ -1032,13 +1177,9 @@ impl CommandBuffer {
         subpass_begin_info: &SubpassBeginInfo,
         subpass_end_info: &SubpassEndInfo,
     ) {
-        unsafe {
-            (self.fns().v1_2.next_subpass2.unwrap())(
-                self.handle,
-                subpass_begin_info,
-                subpass_end_info,
-            )
-        };
+        let call = self.fns().v1_2.next_subpass2.expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, subpass_begin_info, subpass_end_info) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdEndRenderPass2.html>
@@ -1049,7 +1190,13 @@ impl CommandBuffer {
     /// Command buffer level: `primary`.
     #[inline]
     pub fn end_render_pass2(&self, subpass_end_info: &SubpassEndInfo) {
-        unsafe { (self.fns().v1_2.end_render_pass2.unwrap())(self.handle, subpass_end_info) };
+        let call = self
+            .fns()
+            .v1_2
+            .end_render_pass2
+            .expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, subpass_end_info) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdDrawIndirectCount.html>
@@ -1069,8 +1216,14 @@ impl CommandBuffer {
         max_draw_count: u32,
         stride: u32,
     ) {
+        let call = self
+            .fns()
+            .v1_2
+            .draw_indirect_count
+            .expect(Self::CORE_LOAD_ERROR);
+
         unsafe {
-            (self.fns().v1_2.draw_indirect_count.unwrap())(
+            (call)(
                 self.handle,
                 buffer,
                 offset,
@@ -1099,8 +1252,14 @@ impl CommandBuffer {
         max_draw_count: u32,
         stride: u32,
     ) {
+        let call = self
+            .fns()
+            .v1_2
+            .draw_indexed_indirect_count
+            .expect(Self::CORE_LOAD_ERROR);
+
         unsafe {
-            (self.fns().v1_2.draw_indexed_indirect_count.unwrap())(
+            (call)(
                 self.handle,
                 buffer,
                 offset,
@@ -1120,13 +1279,13 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_line_stipple(&self, line_stipple_factor: u32, line_stipple_pattern: u16) {
-        unsafe {
-            (self.fns().v1_4.set_line_stipple.unwrap())(
-                self.handle,
-                line_stipple_factor,
-                line_stipple_pattern,
-            )
-        };
+        let call = self
+            .fns()
+            .v1_4
+            .set_line_stipple
+            .expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, line_stipple_factor, line_stipple_pattern) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetCullMode.html>
@@ -1137,7 +1296,9 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_cull_mode(&self, cull_mode: CullModeFlags) {
-        unsafe { (self.fns().v1_3.set_cull_mode.unwrap())(self.handle, cull_mode) };
+        let call = self.fns().v1_3.set_cull_mode.expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, cull_mode) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetFrontFace.html>
@@ -1148,7 +1309,9 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_front_face(&self, front_face: FrontFace) {
-        unsafe { (self.fns().v1_3.set_front_face.unwrap())(self.handle, front_face) };
+        let call = self.fns().v1_3.set_front_face.expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, front_face) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetPrimitiveTopology.html>
@@ -1159,9 +1322,13 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_primitive_topology(&self, primitive_topology: PrimitiveTopology) {
-        unsafe {
-            (self.fns().v1_3.set_primitive_topology.unwrap())(self.handle, primitive_topology)
-        };
+        let call = self
+            .fns()
+            .v1_3
+            .set_primitive_topology
+            .expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, primitive_topology) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetViewportWithCount.html>
@@ -1172,13 +1339,13 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_viewport_with_count(&self, viewports: &[Viewport]) {
-        unsafe {
-            (self.fns().v1_3.set_viewport_with_count.unwrap())(
-                self.handle,
-                viewports.len() as u32,
-                viewports.as_ptr(),
-            )
-        };
+        let call = self
+            .fns()
+            .v1_3
+            .set_viewport_with_count
+            .expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, viewports.len() as u32, viewports.as_ptr()) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetScissorWithCount.html>
@@ -1189,13 +1356,13 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_scissor_with_count(&self, scissors: &[Rect2D]) {
-        unsafe {
-            (self.fns().v1_3.set_scissor_with_count.unwrap())(
-                self.handle,
-                scissors.len() as u32,
-                scissors.as_ptr(),
-            )
-        };
+        let call = self
+            .fns()
+            .v1_3
+            .set_scissor_with_count
+            .expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, scissors.len() as u32, scissors.as_ptr()) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBindIndexBuffer2.html>
@@ -1212,15 +1379,13 @@ impl CommandBuffer {
         size: DeviceSize,
         index_type: IndexType,
     ) {
-        unsafe {
-            (self.fns().v1_4.bind_index_buffer2.unwrap())(
-                self.handle,
-                buffer,
-                offset,
-                size,
-                index_type,
-            )
-        };
+        let call = self
+            .fns()
+            .v1_4
+            .bind_index_buffer2
+            .expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, buffer, offset, size, index_type) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBindVertexBuffers2.html>
@@ -1241,8 +1406,14 @@ impl CommandBuffer {
         assert_eq!(buffers.len(), offsets.len());
         assert_eq!(buffers.len(), sizes.len());
         assert_eq!(buffers.len(), strides.len());
+        let call = self
+            .fns()
+            .v1_3
+            .bind_vertex_buffers2
+            .expect(Self::CORE_LOAD_ERROR);
+
         unsafe {
-            (self.fns().v1_3.bind_vertex_buffers2.unwrap())(
+            (call)(
                 self.handle,
                 first_binding,
                 buffers.len() as u32,
@@ -1262,9 +1433,13 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_depth_test_enable(&self, depth_test_enable: bool) {
-        unsafe {
-            (self.fns().v1_3.set_depth_test_enable.unwrap())(self.handle, depth_test_enable as _)
-        };
+        let call = self
+            .fns()
+            .v1_3
+            .set_depth_test_enable
+            .expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, depth_test_enable as _) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetDepthWriteEnable.html>
@@ -1275,9 +1450,13 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_depth_write_enable(&self, depth_write_enable: bool) {
-        unsafe {
-            (self.fns().v1_3.set_depth_write_enable.unwrap())(self.handle, depth_write_enable as _)
-        };
+        let call = self
+            .fns()
+            .v1_3
+            .set_depth_write_enable
+            .expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, depth_write_enable as _) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetDepthCompareOp.html>
@@ -1288,7 +1467,13 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_depth_compare_op(&self, depth_compare_op: CompareOp) {
-        unsafe { (self.fns().v1_3.set_depth_compare_op.unwrap())(self.handle, depth_compare_op) };
+        let call = self
+            .fns()
+            .v1_3
+            .set_depth_compare_op
+            .expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, depth_compare_op) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetDepthBoundsTestEnable.html>
@@ -1299,12 +1484,13 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_depth_bounds_test_enable(&self, depth_bounds_test_enable: bool) {
-        unsafe {
-            (self.fns().v1_3.set_depth_bounds_test_enable.unwrap())(
-                self.handle,
-                depth_bounds_test_enable as _,
-            )
-        };
+        let call = self
+            .fns()
+            .v1_3
+            .set_depth_bounds_test_enable
+            .expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, depth_bounds_test_enable as _) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetStencilTestEnable.html>
@@ -1315,12 +1501,13 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_stencil_test_enable(&self, stencil_test_enable: bool) {
-        unsafe {
-            (self.fns().v1_3.set_stencil_test_enable.unwrap())(
-                self.handle,
-                stencil_test_enable as _,
-            )
-        };
+        let call = self
+            .fns()
+            .v1_3
+            .set_stencil_test_enable
+            .expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, stencil_test_enable as _) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetStencilOp.html>
@@ -1338,8 +1525,10 @@ impl CommandBuffer {
         depth_fail_op: StencilOp,
         compare_op: CompareOp,
     ) {
+        let call = self.fns().v1_3.set_stencil_op.expect(Self::CORE_LOAD_ERROR);
+
         unsafe {
-            (self.fns().v1_3.set_stencil_op.unwrap())(
+            (call)(
                 self.handle,
                 face_mask,
                 fail_op,
@@ -1358,12 +1547,13 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_rasterizer_discard_enable(&self, rasterizer_discard_enable: bool) {
-        unsafe {
-            (self.fns().v1_3.set_rasterizer_discard_enable.unwrap())(
-                self.handle,
-                rasterizer_discard_enable as _,
-            )
-        };
+        let call = self
+            .fns()
+            .v1_3
+            .set_rasterizer_discard_enable
+            .expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, rasterizer_discard_enable as _) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetDepthBiasEnable.html>
@@ -1374,9 +1564,13 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_depth_bias_enable(&self, depth_bias_enable: bool) {
-        unsafe {
-            (self.fns().v1_3.set_depth_bias_enable.unwrap())(self.handle, depth_bias_enable as _)
-        };
+        let call = self
+            .fns()
+            .v1_3
+            .set_depth_bias_enable
+            .expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, depth_bias_enable as _) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetPrimitiveRestartEnable.html>
@@ -1387,12 +1581,13 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_primitive_restart_enable(&self, primitive_restart_enable: bool) {
-        unsafe {
-            (self.fns().v1_3.set_primitive_restart_enable.unwrap())(
-                self.handle,
-                primitive_restart_enable as _,
-            )
-        };
+        let call = self
+            .fns()
+            .v1_3
+            .set_primitive_restart_enable
+            .expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, primitive_restart_enable as _) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyBuffer2.html>
@@ -1403,7 +1598,9 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn copy_buffer2(&self, copy_buffer_info: &CopyBufferInfo2) {
-        unsafe { (self.fns().v1_3.copy_buffer2.unwrap())(self.handle, copy_buffer_info) };
+        let call = self.fns().v1_3.copy_buffer2.expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, copy_buffer_info) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyImage2.html>
@@ -1414,7 +1611,9 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn copy_image2(&self, copy_image_info: &CopyImageInfo2) {
-        unsafe { (self.fns().v1_3.copy_image2.unwrap())(self.handle, copy_image_info) };
+        let call = self.fns().v1_3.copy_image2.expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, copy_image_info) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBlitImage2.html>
@@ -1425,7 +1624,9 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn blit_image2(&self, blit_image_info: &BlitImageInfo2) {
-        unsafe { (self.fns().v1_3.blit_image2.unwrap())(self.handle, blit_image_info) };
+        let call = self.fns().v1_3.blit_image2.expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, blit_image_info) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyBufferToImage2.html>
@@ -1436,9 +1637,13 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn copy_buffer_to_image2(&self, copy_buffer_to_image_info: &CopyBufferToImageInfo2) {
-        unsafe {
-            (self.fns().v1_3.copy_buffer_to_image2.unwrap())(self.handle, copy_buffer_to_image_info)
-        };
+        let call = self
+            .fns()
+            .v1_3
+            .copy_buffer_to_image2
+            .expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, copy_buffer_to_image_info) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdCopyImageToBuffer2.html>
@@ -1449,9 +1654,13 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn copy_image_to_buffer2(&self, copy_image_to_buffer_info: &CopyImageToBufferInfo2) {
-        unsafe {
-            (self.fns().v1_3.copy_image_to_buffer2.unwrap())(self.handle, copy_image_to_buffer_info)
-        };
+        let call = self
+            .fns()
+            .v1_3
+            .copy_image_to_buffer2
+            .expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, copy_image_to_buffer_info) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdResolveImage2.html>
@@ -1462,7 +1671,9 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn resolve_image2(&self, resolve_image_info: &ResolveImageInfo2) {
-        unsafe { (self.fns().v1_3.resolve_image2.unwrap())(self.handle, resolve_image_info) };
+        let call = self.fns().v1_3.resolve_image2.expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, resolve_image_info) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetEvent2.html>
@@ -1473,7 +1684,9 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_event2(&self, event: Event, dependency_info: &DependencyInfo) {
-        unsafe { (self.fns().v1_3.set_event2.unwrap())(self.handle, event, dependency_info) };
+        let call = self.fns().v1_3.set_event2.expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, event, dependency_info) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdResetEvent2.html>
@@ -1484,7 +1697,9 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn reset_event2(&self, event: Event, stage_mask: PipelineStageFlags2) {
-        unsafe { (self.fns().v1_3.reset_event2.unwrap())(self.handle, event, stage_mask) };
+        let call = self.fns().v1_3.reset_event2.expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, event, stage_mask) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdWaitEvents2.html>
@@ -1496,8 +1711,10 @@ impl CommandBuffer {
     #[inline]
     pub fn wait_events2(&self, events: &[Event], dependency_infos: &[DependencyInfo]) {
         assert_eq!(events.len(), dependency_infos.len());
+        let call = self.fns().v1_3.wait_events2.expect(Self::CORE_LOAD_ERROR);
+
         unsafe {
-            (self.fns().v1_3.wait_events2.unwrap())(
+            (call)(
                 self.handle,
                 events.len() as u32,
                 events.as_ptr(),
@@ -1514,7 +1731,13 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn pipeline_barrier2(&self, dependency_info: &DependencyInfo) {
-        unsafe { (self.fns().v1_3.pipeline_barrier2.unwrap())(self.handle, dependency_info) };
+        let call = self
+            .fns()
+            .v1_3
+            .pipeline_barrier2
+            .expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, dependency_info) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdWriteTimestamp2.html>
@@ -1525,9 +1748,13 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn write_timestamp2(&self, stage: PipelineStageFlags2, query_pool: QueryPool, query: u32) {
-        unsafe {
-            (self.fns().v1_3.write_timestamp2.unwrap())(self.handle, stage, query_pool, query)
-        };
+        let call = self
+            .fns()
+            .v1_3
+            .write_timestamp2
+            .expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, stage, query_pool, query) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBeginRendering.html>
@@ -1538,7 +1765,13 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn begin_rendering(&self, rendering_info: &RenderingInfo) {
-        unsafe { (self.fns().v1_3.begin_rendering.unwrap())(self.handle, rendering_info) };
+        let call = self
+            .fns()
+            .v1_3
+            .begin_rendering
+            .expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, rendering_info) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdEndRendering.html>
@@ -1549,7 +1782,9 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn end_rendering(&self) {
-        unsafe { (self.fns().v1_3.end_rendering.unwrap())(self.handle) };
+        let call = self.fns().v1_3.end_rendering.expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBindDescriptorSets2.html>
@@ -1560,9 +1795,13 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn bind_descriptor_sets2(&self, bind_descriptor_sets_info: &BindDescriptorSetsInfo) {
-        unsafe {
-            (self.fns().v1_4.bind_descriptor_sets2.unwrap())(self.handle, bind_descriptor_sets_info)
-        };
+        let call = self
+            .fns()
+            .v1_4
+            .bind_descriptor_sets2
+            .expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, bind_descriptor_sets_info) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdPushConstants2.html>
@@ -1573,7 +1812,13 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn push_constants2(&self, push_constants_info: &PushConstantsInfo) {
-        unsafe { (self.fns().v1_4.push_constants2.unwrap())(self.handle, push_constants_info) };
+        let call = self
+            .fns()
+            .v1_4
+            .push_constants2
+            .expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, push_constants_info) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdPushDescriptorSet2.html>
@@ -1584,9 +1829,13 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn push_descriptor_set2(&self, push_descriptor_set_info: &PushDescriptorSetInfo) {
-        unsafe {
-            (self.fns().v1_4.push_descriptor_set2.unwrap())(self.handle, push_descriptor_set_info)
-        };
+        let call = self
+            .fns()
+            .v1_4
+            .push_descriptor_set2
+            .expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, push_descriptor_set_info) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdPushDescriptorSetWithTemplate2.html>
@@ -1600,12 +1849,13 @@ impl CommandBuffer {
         &self,
         push_descriptor_set_with_template_info: &PushDescriptorSetWithTemplateInfo,
     ) {
-        unsafe {
-            (self.fns().v1_4.push_descriptor_set_with_template2.unwrap())(
-                self.handle,
-                push_descriptor_set_with_template_info,
-            )
-        };
+        let call = self
+            .fns()
+            .v1_4
+            .push_descriptor_set_with_template2
+            .expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, push_descriptor_set_with_template_info) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetRenderingAttachmentLocations.html>
@@ -1619,12 +1869,13 @@ impl CommandBuffer {
         &self,
         location_info: &RenderingAttachmentLocationInfo,
     ) {
-        unsafe {
-            (self.fns().v1_4.set_rendering_attachment_locations.unwrap())(
-                self.handle,
-                location_info,
-            )
-        };
+        let call = self
+            .fns()
+            .v1_4
+            .set_rendering_attachment_locations
+            .expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, location_info) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetRenderingInputAttachmentIndices.html>
@@ -1638,12 +1889,12 @@ impl CommandBuffer {
         &self,
         input_attachment_index_info: &RenderingInputAttachmentIndexInfo,
     ) {
-        unsafe {
-            (self
-                .fns()
-                .v1_4
-                .set_rendering_input_attachment_indices
-                .unwrap())(self.handle, input_attachment_index_info)
-        };
+        let call = self
+            .fns()
+            .v1_4
+            .set_rendering_input_attachment_indices
+            .expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, input_attachment_index_info) };
     }
 }

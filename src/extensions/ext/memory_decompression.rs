@@ -32,14 +32,14 @@ impl MemoryDecompressionCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn decompress_memory(&self, decompress_memory_info_ext: &DecompressMemoryInfoEXT) {
-        unsafe {
-            (self
-                .fns()
-                .ext_memory_decompression
-                .as_ref()
-                .unwrap()
-                .decompress_memory_ext)(self.handle, decompress_memory_info_ext)
-        };
+        let call = self
+            .fns()
+            .ext_memory_decompression
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .decompress_memory_ext;
+
+        unsafe { (call)(self.handle, decompress_memory_info_ext) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdDecompressMemoryIndirectCountEXT.html>
@@ -57,13 +57,15 @@ impl MemoryDecompressionCommandBuffer for CommandBuffer {
         max_decompression_count: u32,
         stride: u32,
     ) {
+        let call = self
+            .fns()
+            .ext_memory_decompression
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .decompress_memory_indirect_count_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_memory_decompression
-                .as_ref()
-                .unwrap()
-                .decompress_memory_indirect_count_ext)(
+            (call)(
                 self.handle,
                 decompression_method,
                 indirect_commands_address,

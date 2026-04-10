@@ -26,18 +26,13 @@ impl DisplaySurfaceCounterPhysicalDevice for PhysicalDevice {
         surface: SurfaceKHR,
     ) -> Result<SurfaceCapabilities2EXT<'_>, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .ext_display_surface_counter
-                .as_ref()
-                .unwrap()
-                .get_physical_device_surface_capabilities2_ext)(
-                self.handle,
-                surface,
-                out.as_mut_ptr(),
-            )
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .ext_display_surface_counter
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_physical_device_surface_capabilities2_ext;
+
+        unsafe { (call)(self.handle, surface, out.as_mut_ptr()) }.init_on_success(out)
     }
 }

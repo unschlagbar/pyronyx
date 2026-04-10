@@ -31,17 +31,14 @@ impl ExternalFenceWin32Device for Device {
         get_win32_handle_info: &FenceGetWin32HandleInfoKHR,
     ) -> Result<HANDLE, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .khr_external_fence_win32
-                .as_ref()
-                .unwrap()
-                .get_fence_win32_handle_khr)(
-                self.handle, get_win32_handle_info, out.as_mut_ptr()
-            )
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .khr_external_fence_win32
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_fence_win32_handle_khr;
+
+        unsafe { (call)(self.handle, get_win32_handle_info, out.as_mut_ptr()) }.init_on_success(out)
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkImportFenceWin32HandleKHR.html>
@@ -50,16 +47,13 @@ impl ExternalFenceWin32Device for Device {
         &self,
         import_fence_win32_handle_info: &ImportFenceWin32HandleInfoKHR,
     ) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .khr_external_fence_win32
-                .as_ref()
-                .unwrap()
-                .import_fence_win32_handle_khr)(
-                self.handle, import_fence_win32_handle_info
-            )
-        }
-        .result()
+        let call = self
+            .fns()
+            .khr_external_fence_win32
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .import_fence_win32_handle_khr;
+
+        unsafe { (call)(self.handle, import_fence_win32_handle_info) }.result()
     }
 }

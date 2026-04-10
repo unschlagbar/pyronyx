@@ -26,17 +26,15 @@ impl PartitionedAccelerationStructureDevice for Device {
         info: &PartitionedAccelerationStructureInstancesInputNV,
     ) -> AccelerationStructureBuildSizesInfoKHR<'_> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .nv_partitioned_acceleration_structure
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_partitioned_acceleration_structures_build_sizes_nv;
+
         unsafe {
-            (self
-                .fns()
-                .nv_partitioned_acceleration_structure
-                .as_ref()
-                .unwrap()
-                .get_partitioned_acceleration_structures_build_sizes_nv)(
-                self.handle,
-                info,
-                out.as_mut_ptr(),
-            );
+            (call)(self.handle, info, out.as_mut_ptr());
             out.assume_init()
         }
     }
@@ -61,13 +59,13 @@ impl PartitionedAccelerationStructureCommandBuffer for CommandBuffer {
         &self,
         build_info: &BuildPartitionedAccelerationStructureInfoNV,
     ) {
-        unsafe {
-            (self
-                .fns()
-                .nv_partitioned_acceleration_structure
-                .as_ref()
-                .unwrap()
-                .build_partitioned_acceleration_structures_nv)(self.handle, build_info)
-        };
+        let call = self
+            .fns()
+            .nv_partitioned_acceleration_structure
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .build_partitioned_acceleration_structures_nv;
+
+        unsafe { (call)(self.handle, build_info) };
     }
 }

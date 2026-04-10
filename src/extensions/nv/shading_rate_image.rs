@@ -35,14 +35,14 @@ impl ShadingRateImageCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn bind_shading_rate_image(&self, image_view: ImageView, image_layout: ImageLayout) {
-        unsafe {
-            (self
-                .fns()
-                .nv_shading_rate_image
-                .as_ref()
-                .unwrap()
-                .bind_shading_rate_image_nv)(self.handle, image_view, image_layout)
-        };
+        let call = self
+            .fns()
+            .nv_shading_rate_image
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .bind_shading_rate_image_nv;
+
+        unsafe { (call)(self.handle, image_view, image_layout) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetViewportShadingRatePaletteNV.html>
@@ -57,13 +57,15 @@ impl ShadingRateImageCommandBuffer for CommandBuffer {
         first_viewport: u32,
         shading_rate_palettes: &[ShadingRatePaletteNV],
     ) {
+        let call = self
+            .fns()
+            .nv_shading_rate_image
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .set_viewport_shading_rate_palette_nv;
+
         unsafe {
-            (self
-                .fns()
-                .nv_shading_rate_image
-                .as_ref()
-                .unwrap()
-                .set_viewport_shading_rate_palette_nv)(
+            (call)(
                 self.handle,
                 first_viewport,
                 shading_rate_palettes.len() as u32,
@@ -84,13 +86,15 @@ impl ShadingRateImageCommandBuffer for CommandBuffer {
         sample_order_type: CoarseSampleOrderTypeNV,
         custom_sample_orders: &[CoarseSampleOrderCustomNV],
     ) {
+        let call = self
+            .fns()
+            .nv_shading_rate_image
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .set_coarse_sample_order_nv;
+
         unsafe {
-            (self
-                .fns()
-                .nv_shading_rate_image
-                .as_ref()
-                .unwrap()
-                .set_coarse_sample_order_nv)(
+            (call)(
                 self.handle,
                 sample_order_type,
                 custom_sample_orders.len() as u32,

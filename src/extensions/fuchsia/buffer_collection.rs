@@ -52,13 +52,15 @@ impl BufferCollectionDevice for Device {
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<BufferCollectionFUCHSIA, Error> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .fuchsia_buffer_collection
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .create_buffer_collection_fuchsia;
+
         unsafe {
-            (self
-                .fns()
-                .fuchsia_buffer_collection
-                .as_ref()
-                .unwrap()
-                .create_buffer_collection_fuchsia)(
+            (call)(
                 self.handle,
                 create_info,
                 allocator.map_or(null(), from_ref),
@@ -75,19 +77,14 @@ impl BufferCollectionDevice for Device {
         collection: BufferCollectionFUCHSIA,
         buffer_constraints_info: &BufferConstraintsInfoFUCHSIA,
     ) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .fuchsia_buffer_collection
-                .as_ref()
-                .unwrap()
-                .set_buffer_collection_buffer_constraints_fuchsia)(
-                self.handle,
-                collection,
-                buffer_constraints_info,
-            )
-        }
-        .result()
+        let call = self
+            .fns()
+            .fuchsia_buffer_collection
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .set_buffer_collection_buffer_constraints_fuchsia;
+
+        unsafe { (call)(self.handle, collection, buffer_constraints_info) }.result()
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkSetBufferCollectionImageConstraintsFUCHSIA.html>
@@ -97,19 +94,14 @@ impl BufferCollectionDevice for Device {
         collection: BufferCollectionFUCHSIA,
         image_constraints_info: &ImageConstraintsInfoFUCHSIA,
     ) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .fuchsia_buffer_collection
-                .as_ref()
-                .unwrap()
-                .set_buffer_collection_image_constraints_fuchsia)(
-                self.handle,
-                collection,
-                image_constraints_info,
-            )
-        }
-        .result()
+        let call = self
+            .fns()
+            .fuchsia_buffer_collection
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .set_buffer_collection_image_constraints_fuchsia;
+
+        unsafe { (call)(self.handle, collection, image_constraints_info) }.result()
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkDestroyBufferCollectionFUCHSIA.html>
@@ -119,18 +111,14 @@ impl BufferCollectionDevice for Device {
         collection: BufferCollectionFUCHSIA,
         allocator: Option<&AllocationCallbacks>,
     ) {
-        unsafe {
-            (self
-                .fns()
-                .fuchsia_buffer_collection
-                .as_ref()
-                .unwrap()
-                .destroy_buffer_collection_fuchsia)(
-                self.handle,
-                collection,
-                allocator.map_or(null(), from_ref),
-            )
-        };
+        let call = self
+            .fns()
+            .fuchsia_buffer_collection
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .destroy_buffer_collection_fuchsia;
+
+        unsafe { (call)(self.handle, collection, allocator.map_or(null(), from_ref)) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetBufferCollectionPropertiesFUCHSIA.html>
@@ -140,18 +128,13 @@ impl BufferCollectionDevice for Device {
         collection: BufferCollectionFUCHSIA,
     ) -> Result<BufferCollectionPropertiesFUCHSIA<'_>, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .fuchsia_buffer_collection
-                .as_ref()
-                .unwrap()
-                .get_buffer_collection_properties_fuchsia)(
-                self.handle,
-                collection,
-                out.as_mut_ptr(),
-            )
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .fuchsia_buffer_collection
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_buffer_collection_properties_fuchsia;
+
+        unsafe { (call)(self.handle, collection, out.as_mut_ptr()) }.init_on_success(out)
     }
 }

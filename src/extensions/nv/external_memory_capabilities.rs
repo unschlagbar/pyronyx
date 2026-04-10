@@ -37,13 +37,15 @@ impl ExternalMemoryCapabilitiesPhysicalDevice for PhysicalDevice {
         external_handle_type: ExternalMemoryHandleTypeFlagsNV,
     ) -> Result<ExternalImageFormatPropertiesNV, Error> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .nv_external_memory_capabilities
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_physical_device_external_image_format_properties_nv;
+
         unsafe {
-            (self
-                .fns()
-                .nv_external_memory_capabilities
-                .as_ref()
-                .unwrap()
-                .get_physical_device_external_image_format_properties_nv)(
+            (call)(
                 self.handle,
                 format,
                 ty,

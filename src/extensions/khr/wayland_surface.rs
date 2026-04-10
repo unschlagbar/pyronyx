@@ -29,13 +29,15 @@ impl WaylandSurfaceInstance for Instance {
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<SurfaceKHR, Error> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .khr_wayland_surface
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .create_wayland_surface_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_wayland_surface
-                .as_ref()
-                .unwrap()
-                .create_wayland_surface_khr)(
+            (call)(
                 self.handle,
                 create_info,
                 allocator.map_or(null(), from_ref),
@@ -62,17 +64,13 @@ impl WaylandSurfacePhysicalDevice for PhysicalDevice {
         queue_family_index: u32,
         display: *mut wl_display,
     ) -> Bool32 {
-        unsafe {
-            (self
-                .fns()
-                .khr_wayland_surface
-                .as_ref()
-                .unwrap()
-                .get_physical_device_wayland_presentation_support_khr)(
-                self.handle,
-                queue_family_index,
-                display,
-            )
-        }
+        let call = self
+            .fns()
+            .khr_wayland_surface
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_physical_device_wayland_presentation_support_khr;
+
+        unsafe { (call)(self.handle, queue_family_index, display) }
     }
 }

@@ -54,13 +54,15 @@ impl RayTracingPipelineCommandBuffer for CommandBuffer {
         height: u32,
         depth: u32,
     ) {
+        let call = self
+            .fns()
+            .khr_ray_tracing_pipeline
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .trace_rays_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_ray_tracing_pipeline
-                .as_ref()
-                .unwrap()
-                .trace_rays_khr)(
+            (call)(
                 self.handle,
                 raygen_shader_binding_table,
                 miss_shader_binding_table,
@@ -88,13 +90,15 @@ impl RayTracingPipelineCommandBuffer for CommandBuffer {
         callable_shader_binding_table: &StridedDeviceAddressRegionKHR,
         indirect_device_address: DeviceAddress,
     ) {
+        let call = self
+            .fns()
+            .khr_ray_tracing_pipeline
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .trace_rays_indirect_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_ray_tracing_pipeline
-                .as_ref()
-                .unwrap()
-                .trace_rays_indirect_khr)(
+            (call)(
                 self.handle,
                 raygen_shader_binding_table,
                 miss_shader_binding_table,
@@ -113,16 +117,14 @@ impl RayTracingPipelineCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_ray_tracing_pipeline_stack_size(&self, pipeline_stack_size: u32) {
-        unsafe {
-            (self
-                .fns()
-                .khr_ray_tracing_pipeline
-                .as_ref()
-                .unwrap()
-                .set_ray_tracing_pipeline_stack_size_khr)(
-                self.handle, pipeline_stack_size
-            )
-        };
+        let call = self
+            .fns()
+            .khr_ray_tracing_pipeline
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .set_ray_tracing_pipeline_stack_size_khr;
+
+        unsafe { (call)(self.handle, pipeline_stack_size) };
     }
 }
 
@@ -170,13 +172,15 @@ impl RayTracingPipelineDevice for Device {
         group_count: u32,
         data: &mut [c_void],
     ) -> Result<(), Error> {
+        let call = self
+            .fns()
+            .khr_ray_tracing_pipeline
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_ray_tracing_shader_group_handles_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_ray_tracing_pipeline
-                .as_ref()
-                .unwrap()
-                .get_ray_tracing_shader_group_handles_khr)(
+            (call)(
                 self.handle,
                 pipeline,
                 first_group,
@@ -197,13 +201,15 @@ impl RayTracingPipelineDevice for Device {
         group_count: u32,
         data: &mut [c_void],
     ) -> Result<(), Error> {
+        let call = self
+            .fns()
+            .khr_ray_tracing_pipeline
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_ray_tracing_capture_replay_shader_group_handles_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_ray_tracing_pipeline
-                .as_ref()
-                .unwrap()
-                .get_ray_tracing_capture_replay_shader_group_handles_khr)(
+            (call)(
                 self.handle,
                 pipeline,
                 first_group,
@@ -226,13 +232,15 @@ impl RayTracingPipelineDevice for Device {
         pipelines: &mut [Pipeline],
     ) -> Result<(), Error> {
         assert_eq!(create_infos.len(), pipelines.len());
+        let call = self
+            .fns()
+            .khr_ray_tracing_pipeline
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .create_ray_tracing_pipelines_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_ray_tracing_pipeline
-                .as_ref()
-                .unwrap()
-                .create_ray_tracing_pipelines_khr)(
+            (call)(
                 self.handle,
                 deferred_operation,
                 pipeline_cache,
@@ -253,18 +261,13 @@ impl RayTracingPipelineDevice for Device {
         group: u32,
         group_shader: ShaderGroupShaderKHR,
     ) -> DeviceSize {
-        unsafe {
-            (self
-                .fns()
-                .khr_ray_tracing_pipeline
-                .as_ref()
-                .unwrap()
-                .get_ray_tracing_shader_group_stack_size_khr)(
-                self.handle,
-                pipeline,
-                group,
-                group_shader,
-            )
-        }
+        let call = self
+            .fns()
+            .khr_ray_tracing_pipeline
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_ray_tracing_shader_group_stack_size_khr;
+
+        unsafe { (call)(self.handle, pipeline, group, group_shader) }
     }
 }

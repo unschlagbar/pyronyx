@@ -12,12 +12,13 @@ impl Instance {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkDestroyInstance.html>
     #[inline]
     pub fn destroy(&self, allocator: Option<&AllocationCallbacks>) {
-        unsafe {
-            (self.fns().v1_0.destroy_instance.unwrap())(
-                self.handle,
-                allocator.map_or(null(), from_ref),
-            )
-        };
+        let call = self
+            .fns()
+            .v1_0
+            .destroy_instance
+            .expect(Self::CORE_LOAD_ERROR);
+
+        unsafe { (call)(self.handle, allocator.map_or(null(), from_ref)) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkEnumeratePhysicalDeviceGroups.html>
@@ -28,8 +29,14 @@ impl Instance {
         &self,
         physical_device_group_properties: &mut [PhysicalDeviceGroupProperties],
     ) -> Result<(), Error> {
+        let call = self
+            .fns()
+            .v1_1
+            .enumerate_physical_device_groups
+            .expect(Self::CORE_LOAD_ERROR);
+
         unsafe {
-            (self.fns().v1_1.enumerate_physical_device_groups.unwrap())(
+            (call)(
                 self.handle,
                 physical_device_group_properties.len() as *mut u32,
                 physical_device_group_properties.as_mut_ptr(),
@@ -43,10 +50,12 @@ impl Instance {
     pub fn enumerate_physical_device_groups_len(&self) -> Result<usize, Error> {
         let mut out: MaybeUninit<u32> = MaybeUninit::uninit();
         unsafe {
-            (self.fns().v1_1.enumerate_physical_device_groups.unwrap())(
-                self.handle,
-                out.as_mut_ptr(),
-                ptr::null_mut(),
+            (self
+                .fns()
+                .v1_1
+                .enumerate_physical_device_groups
+                .expect(Self::CORE_LOAD_ERROR))(
+                self.handle, out.as_mut_ptr(), ptr::null_mut()
             )
         }
         .init_on_success(out)

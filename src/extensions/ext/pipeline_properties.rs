@@ -26,16 +26,13 @@ impl PipelinePropertiesDevice for Device {
         pipeline_info: &PipelineInfoEXT,
     ) -> Result<BaseOutStructure<'_>, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .ext_pipeline_properties
-                .as_ref()
-                .unwrap()
-                .get_pipeline_properties_ext)(
-                self.handle, pipeline_info, out.as_mut_ptr()
-            )
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .ext_pipeline_properties
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_pipeline_properties_ext;
+
+        unsafe { (call)(self.handle, pipeline_info, out.as_mut_ptr()) }.init_on_success(out)
     }
 }

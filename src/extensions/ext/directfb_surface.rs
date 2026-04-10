@@ -29,13 +29,15 @@ impl DirectfbSurfaceInstance for Instance {
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<SurfaceKHR, Error> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .ext_directfb_surface
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .create_direct_fb_surface_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_directfb_surface
-                .as_ref()
-                .unwrap()
-                .create_direct_fb_surface_ext)(
+            (call)(
                 self.handle,
                 create_info,
                 allocator.map_or(null(), from_ref),
@@ -62,17 +64,13 @@ impl DirectfbSurfacePhysicalDevice for PhysicalDevice {
         queue_family_index: u32,
         dfb: *mut IDirectFB,
     ) -> Bool32 {
-        unsafe {
-            (self
-                .fns()
-                .ext_directfb_surface
-                .as_ref()
-                .unwrap()
-                .get_physical_device_direct_fb_presentation_support_ext)(
-                self.handle,
-                queue_family_index,
-                dfb,
-            )
-        }
+        let call = self
+            .fns()
+            .ext_directfb_surface
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_physical_device_direct_fb_presentation_support_ext;
+
+        unsafe { (call)(self.handle, queue_family_index, dfb) }
     }
 }

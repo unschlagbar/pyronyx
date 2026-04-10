@@ -28,14 +28,14 @@ impl TileShadingCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn dispatch_tile(&self, dispatch_tile_info: &DispatchTileInfoQCOM) {
-        unsafe {
-            (self
-                .fns()
-                .qcom_tile_shading
-                .as_ref()
-                .unwrap()
-                .dispatch_tile_qcom)(self.handle, dispatch_tile_info)
-        };
+        let call = self
+            .fns()
+            .qcom_tile_shading
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .dispatch_tile_qcom;
+
+        unsafe { (call)(self.handle, dispatch_tile_info) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBeginPerTileExecutionQCOM.html>
@@ -46,14 +46,14 @@ impl TileShadingCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn begin_per_tile_execution(&self, per_tile_begin_info: &PerTileBeginInfoQCOM) {
-        unsafe {
-            (self
-                .fns()
-                .qcom_tile_shading
-                .as_ref()
-                .unwrap()
-                .begin_per_tile_execution_qcom)(self.handle, per_tile_begin_info)
-        };
+        let call = self
+            .fns()
+            .qcom_tile_shading
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .begin_per_tile_execution_qcom;
+
+        unsafe { (call)(self.handle, per_tile_begin_info) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdEndPerTileExecutionQCOM.html>
@@ -64,13 +64,13 @@ impl TileShadingCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn end_per_tile_execution(&self, per_tile_end_info: &PerTileEndInfoQCOM) {
-        unsafe {
-            (self
-                .fns()
-                .qcom_tile_shading
-                .as_ref()
-                .unwrap()
-                .end_per_tile_execution_qcom)(self.handle, per_tile_end_info)
-        };
+        let call = self
+            .fns()
+            .qcom_tile_shading
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .end_per_tile_execution_qcom;
+
+        unsafe { (call)(self.handle, per_tile_end_info) };
     }
 }

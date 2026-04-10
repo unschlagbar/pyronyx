@@ -26,14 +26,13 @@ impl ExternalMemoryScreenBufferDevice for Device {
         buffer: &_screen_buffer,
     ) -> Result<ScreenBufferPropertiesQNX<'_>, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .qnx_external_memory_screen_buffer
-                .as_ref()
-                .unwrap()
-                .get_screen_buffer_properties_qnx)(self.handle, buffer, out.as_mut_ptr())
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .qnx_external_memory_screen_buffer
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_screen_buffer_properties_qnx;
+
+        unsafe { (call)(self.handle, buffer, out.as_mut_ptr()) }.init_on_success(out)
     }
 }

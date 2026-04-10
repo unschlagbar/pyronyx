@@ -31,19 +31,15 @@ impl ExternalSemaphoreDevice for Device {
         get_zircon_handle_info: &SemaphoreGetZirconHandleInfoFUCHSIA,
     ) -> Result<zx_handle_t, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .fuchsia_external_semaphore
-                .as_ref()
-                .unwrap()
-                .get_semaphore_zircon_handle_fuchsia)(
-                self.handle,
-                get_zircon_handle_info,
-                out.as_mut_ptr(),
-            )
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .fuchsia_external_semaphore
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_semaphore_zircon_handle_fuchsia;
+
+        unsafe { (call)(self.handle, get_zircon_handle_info, out.as_mut_ptr()) }
+            .init_on_success(out)
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkImportSemaphoreZirconHandleFUCHSIA.html>
@@ -52,17 +48,13 @@ impl ExternalSemaphoreDevice for Device {
         &self,
         import_semaphore_zircon_handle_info: &ImportSemaphoreZirconHandleInfoFUCHSIA,
     ) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .fuchsia_external_semaphore
-                .as_ref()
-                .unwrap()
-                .import_semaphore_zircon_handle_fuchsia)(
-                self.handle,
-                import_semaphore_zircon_handle_info,
-            )
-        }
-        .result()
+        let call = self
+            .fns()
+            .fuchsia_external_semaphore
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .import_semaphore_zircon_handle_fuchsia;
+
+        unsafe { (call)(self.handle, import_semaphore_zircon_handle_info) }.result()
     }
 }

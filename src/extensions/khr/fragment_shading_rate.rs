@@ -31,14 +31,14 @@ impl FragmentShadingRateCommandBuffer for CommandBuffer {
         fragment_size: &Extent2D,
         combiner_ops: FragmentShadingRateCombinerOpKHR,
     ) {
-        unsafe {
-            (self
-                .fns()
-                .khr_fragment_shading_rate
-                .as_ref()
-                .unwrap()
-                .set_fragment_shading_rate_khr)(self.handle, fragment_size, combiner_ops)
-        };
+        let call = self
+            .fns()
+            .khr_fragment_shading_rate
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .set_fragment_shading_rate_khr;
+
+        unsafe { (call)(self.handle, fragment_size, combiner_ops) };
     }
 }
 
@@ -56,13 +56,15 @@ impl FragmentShadingRatePhysicalDevice for PhysicalDevice {
         &self,
         fragment_shading_rates: &mut [PhysicalDeviceFragmentShadingRateKHR],
     ) -> Result<(), Error> {
+        let call = self
+            .fns()
+            .khr_fragment_shading_rate
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_physical_device_fragment_shading_rates_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_fragment_shading_rate
-                .as_ref()
-                .unwrap()
-                .get_physical_device_fragment_shading_rates_khr)(
+            (call)(
                 self.handle,
                 fragment_shading_rates.len() as *mut u32,
                 fragment_shading_rates.as_mut_ptr(),

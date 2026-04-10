@@ -31,15 +31,13 @@ impl FragmentShadingRateEnumsCommandBuffer for CommandBuffer {
         shading_rate: FragmentShadingRateNV,
         combiner_ops: FragmentShadingRateCombinerOpKHR,
     ) {
-        unsafe {
-            (self
-                .fns()
-                .nv_fragment_shading_rate_enums
-                .as_ref()
-                .unwrap()
-                .set_fragment_shading_rate_enum_nv)(
-                self.handle, shading_rate, combiner_ops
-            )
-        };
+        let call = self
+            .fns()
+            .nv_fragment_shading_rate_enums
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .set_fragment_shading_rate_enum_nv;
+
+        unsafe { (call)(self.handle, shading_rate, combiner_ops) };
     }
 }

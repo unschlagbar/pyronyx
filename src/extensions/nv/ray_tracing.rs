@@ -58,15 +58,14 @@ impl RayTracingDevice for Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCompileDeferredNV.html>
     #[inline]
     fn compile_deferred(&self, pipeline: Pipeline, shader: u32) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .nv_ray_tracing
-                .as_ref()
-                .unwrap()
-                .compile_deferred_nv)(self.handle, pipeline, shader)
-        }
-        .result()
+        let call = self
+            .fns()
+            .nv_ray_tracing
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .compile_deferred_nv;
+
+        unsafe { (call)(self.handle, pipeline, shader) }.result()
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCreateAccelerationStructureNV.html>
@@ -77,13 +76,15 @@ impl RayTracingDevice for Device {
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<AccelerationStructureNV, Error> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .nv_ray_tracing
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .create_acceleration_structure_nv;
+
         unsafe {
-            (self
-                .fns()
-                .nv_ray_tracing
-                .as_ref()
-                .unwrap()
-                .create_acceleration_structure_nv)(
+            (call)(
                 self.handle,
                 create_info,
                 allocator.map_or(null(), from_ref),
@@ -100,13 +101,15 @@ impl RayTracingDevice for Device {
         acceleration_structure: AccelerationStructureNV,
         allocator: Option<&AllocationCallbacks>,
     ) {
+        let call = self
+            .fns()
+            .nv_ray_tracing
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .destroy_acceleration_structure_nv;
+
         unsafe {
-            (self
-                .fns()
-                .nv_ray_tracing
-                .as_ref()
-                .unwrap()
-                .destroy_acceleration_structure_nv)(
+            (call)(
                 self.handle,
                 acceleration_structure,
                 allocator.map_or(null(), from_ref),
@@ -121,17 +124,15 @@ impl RayTracingDevice for Device {
         info: &AccelerationStructureMemoryRequirementsInfoNV,
     ) -> MemoryRequirements2KHR<'_> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .nv_ray_tracing
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_acceleration_structure_memory_requirements_nv;
+
         unsafe {
-            (self
-                .fns()
-                .nv_ray_tracing
-                .as_ref()
-                .unwrap()
-                .get_acceleration_structure_memory_requirements_nv)(
-                self.handle,
-                info,
-                out.as_mut_ptr(),
-            );
+            (call)(self.handle, info, out.as_mut_ptr());
             out.assume_init()
         }
     }
@@ -142,19 +143,14 @@ impl RayTracingDevice for Device {
         &self,
         bind_infos: &[BindAccelerationStructureMemoryInfoNV],
     ) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .nv_ray_tracing
-                .as_ref()
-                .unwrap()
-                .bind_acceleration_structure_memory_nv)(
-                self.handle,
-                bind_infos.len() as u32,
-                bind_infos.as_ptr(),
-            )
-        }
-        .result()
+        let call = self
+            .fns()
+            .nv_ray_tracing
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .bind_acceleration_structure_memory_nv;
+
+        unsafe { (call)(self.handle, bind_infos.len() as u32, bind_infos.as_ptr()) }.result()
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetAccelerationStructureHandleNV.html>
@@ -164,13 +160,15 @@ impl RayTracingDevice for Device {
         acceleration_structure: AccelerationStructureNV,
         data: &mut [c_void],
     ) -> Result<(), Error> {
+        let call = self
+            .fns()
+            .nv_ray_tracing
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_acceleration_structure_handle_nv;
+
         unsafe {
-            (self
-                .fns()
-                .nv_ray_tracing
-                .as_ref()
-                .unwrap()
-                .get_acceleration_structure_handle_nv)(
+            (call)(
                 self.handle,
                 acceleration_structure,
                 data.len() as usize,
@@ -190,13 +188,15 @@ impl RayTracingDevice for Device {
         pipelines: &mut [Pipeline],
     ) -> Result<(), Error> {
         assert_eq!(create_infos.len(), pipelines.len());
+        let call = self
+            .fns()
+            .nv_ray_tracing
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .create_ray_tracing_pipelines_nv;
+
         unsafe {
-            (self
-                .fns()
-                .nv_ray_tracing
-                .as_ref()
-                .unwrap()
-                .create_ray_tracing_pipelines_nv)(
+            (call)(
                 self.handle,
                 pipeline_cache,
                 create_infos.len() as u32,
@@ -270,14 +270,14 @@ impl RayTracingCommandBuffer for CommandBuffer {
         src: AccelerationStructureNV,
         mode: CopyAccelerationStructureModeKHR,
     ) {
-        unsafe {
-            (self
-                .fns()
-                .nv_ray_tracing
-                .as_ref()
-                .unwrap()
-                .copy_acceleration_structure_nv)(self.handle, dst, src, mode)
-        };
+        let call = self
+            .fns()
+            .nv_ray_tracing
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .copy_acceleration_structure_nv;
+
+        unsafe { (call)(self.handle, dst, src, mode) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdWriteAccelerationStructuresPropertiesNV.html>
@@ -294,13 +294,15 @@ impl RayTracingCommandBuffer for CommandBuffer {
         query_pool: QueryPool,
         first_query: u32,
     ) {
+        let call = self
+            .fns()
+            .nv_ray_tracing
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .write_acceleration_structures_properties_nv;
+
         unsafe {
-            (self
-                .fns()
-                .nv_ray_tracing
-                .as_ref()
-                .unwrap()
-                .write_acceleration_structures_properties_nv)(
+            (call)(
                 self.handle,
                 acceleration_structures.len() as u32,
                 acceleration_structures.as_ptr(),
@@ -329,13 +331,15 @@ impl RayTracingCommandBuffer for CommandBuffer {
         scratch: Buffer,
         scratch_offset: DeviceSize,
     ) {
+        let call = self
+            .fns()
+            .nv_ray_tracing
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .build_acceleration_structure_nv;
+
         unsafe {
-            (self
-                .fns()
-                .nv_ray_tracing
-                .as_ref()
-                .unwrap()
-                .build_acceleration_structure_nv)(
+            (call)(
                 self.handle,
                 info,
                 instance_data,
@@ -373,8 +377,15 @@ impl RayTracingCommandBuffer for CommandBuffer {
         height: u32,
         depth: u32,
     ) {
+        let call = self
+            .fns()
+            .nv_ray_tracing
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .trace_rays_nv;
+
         unsafe {
-            (self.fns().nv_ray_tracing.as_ref().unwrap().trace_rays_nv)(
+            (call)(
                 self.handle,
                 raygen_shader_binding_table_buffer,
                 raygen_shader_binding_offset,

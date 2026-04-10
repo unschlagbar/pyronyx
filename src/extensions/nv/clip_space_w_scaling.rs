@@ -31,13 +31,15 @@ impl ClipSpaceWScalingCommandBuffer for CommandBuffer {
         first_viewport: u32,
         viewport_w_scalings: &[ViewportWScalingNV],
     ) {
+        let call = self
+            .fns()
+            .nv_clip_space_w_scaling
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .set_viewport_w_scaling_nv;
+
         unsafe {
-            (self
-                .fns()
-                .nv_clip_space_w_scaling
-                .as_ref()
-                .unwrap()
-                .set_viewport_w_scaling_nv)(
+            (call)(
                 self.handle,
                 first_viewport,
                 viewport_w_scalings.len() as u32,

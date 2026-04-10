@@ -26,19 +26,14 @@ impl SubpassShadingDevice for Device {
         renderpass: RenderPass,
     ) -> Result<Extent2D, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .huawei_subpass_shading
-                .as_ref()
-                .unwrap()
-                .get_device_subpass_shading_max_workgroup_size_huawei)(
-                self.handle,
-                renderpass,
-                out.as_mut_ptr(),
-            )
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .huawei_subpass_shading
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_device_subpass_shading_max_workgroup_size_huawei;
+
+        unsafe { (call)(self.handle, renderpass, out.as_mut_ptr()) }.init_on_success(out)
     }
 }
 
@@ -55,13 +50,13 @@ impl SubpassShadingCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn subpass_shading(&self) {
-        unsafe {
-            (self
-                .fns()
-                .huawei_subpass_shading
-                .as_ref()
-                .unwrap()
-                .subpass_shading_huawei)(self.handle)
-        };
+        let call = self
+            .fns()
+            .huawei_subpass_shading
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .subpass_shading_huawei;
+
+        unsafe { (call)(self.handle) };
     }
 }

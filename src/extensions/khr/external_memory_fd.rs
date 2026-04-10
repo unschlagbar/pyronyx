@@ -27,15 +27,14 @@ impl ExternalMemoryFdDevice for Device {
     #[inline]
     fn get_memory_fd(&self, get_fd_info: &MemoryGetFdInfoKHR) -> Result<c_int, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .khr_external_memory_fd
-                .as_ref()
-                .unwrap()
-                .get_memory_fd_khr)(self.handle, get_fd_info, out.as_mut_ptr())
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .khr_external_memory_fd
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_memory_fd_khr;
+
+        unsafe { (call)(self.handle, get_fd_info, out.as_mut_ptr()) }.init_on_success(out)
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetMemoryFdPropertiesKHR.html>
@@ -46,16 +45,13 @@ impl ExternalMemoryFdDevice for Device {
         fd: c_int,
     ) -> Result<MemoryFdPropertiesKHR<'_>, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .khr_external_memory_fd
-                .as_ref()
-                .unwrap()
-                .get_memory_fd_properties_khr)(
-                self.handle, handle_type, fd, out.as_mut_ptr()
-            )
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .khr_external_memory_fd
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_memory_fd_properties_khr;
+
+        unsafe { (call)(self.handle, handle_type, fd, out.as_mut_ptr()) }.init_on_success(out)
     }
 }

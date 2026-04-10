@@ -31,17 +31,14 @@ impl DeviceGroupDevice for Device {
         &self,
     ) -> Result<DeviceGroupPresentCapabilitiesKHR<'_>, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .khr_device_group
-                .as_ref()
-                .unwrap()
-                .get_device_group_present_capabilities_khr)(
-                self.handle, out.as_mut_ptr()
-            )
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .khr_device_group
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_device_group_present_capabilities_khr;
+
+        unsafe { (call)(self.handle, out.as_mut_ptr()) }.init_on_success(out)
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetDeviceGroupSurfacePresentModesKHR.html>
@@ -51,32 +48,28 @@ impl DeviceGroupDevice for Device {
         surface: SurfaceKHR,
     ) -> Result<DeviceGroupPresentModeFlagsKHR, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .khr_device_group
-                .as_ref()
-                .unwrap()
-                .get_device_group_surface_present_modes_khr)(
-                self.handle, surface, out.as_mut_ptr()
-            )
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .khr_device_group
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_device_group_surface_present_modes_khr;
+
+        unsafe { (call)(self.handle, surface, out.as_mut_ptr()) }.init_on_success(out)
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkAcquireNextImage2KHR.html>
     #[inline]
     fn acquire_next_image2(&self, acquire_info: &AcquireNextImageInfoKHR) -> Result<u32, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .khr_device_group
-                .as_ref()
-                .unwrap()
-                .acquire_next_image2_khr)(self.handle, acquire_info, out.as_mut_ptr())
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .khr_device_group
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .acquire_next_image2_khr;
+
+        unsafe { (call)(self.handle, acquire_info, out.as_mut_ptr()) }.init_on_success(out)
     }
 }
 
@@ -96,13 +89,15 @@ impl DeviceGroupPhysicalDevice for PhysicalDevice {
         surface: SurfaceKHR,
         rects: &mut [Rect2D],
     ) -> Result<(), Error> {
+        let call = self
+            .fns()
+            .khr_device_group
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_physical_device_present_rectangles_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_device_group
-                .as_ref()
-                .unwrap()
-                .get_physical_device_present_rectangles_khr)(
+            (call)(
                 self.handle,
                 surface,
                 rects.len() as *mut u32,

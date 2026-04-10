@@ -31,16 +31,14 @@ impl ConditionalRenderingCommandBuffer for CommandBuffer {
         &self,
         conditional_rendering_begin: &ConditionalRenderingBeginInfoEXT,
     ) {
-        unsafe {
-            (self
-                .fns()
-                .ext_conditional_rendering
-                .as_ref()
-                .unwrap()
-                .begin_conditional_rendering_ext)(
-                self.handle, conditional_rendering_begin
-            )
-        };
+        let call = self
+            .fns()
+            .ext_conditional_rendering
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .begin_conditional_rendering_ext;
+
+        unsafe { (call)(self.handle, conditional_rendering_begin) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdEndConditionalRenderingEXT.html>
@@ -51,13 +49,13 @@ impl ConditionalRenderingCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn end_conditional_rendering(&self) {
-        unsafe {
-            (self
-                .fns()
-                .ext_conditional_rendering
-                .as_ref()
-                .unwrap()
-                .end_conditional_rendering_ext)(self.handle)
-        };
+        let call = self
+            .fns()
+            .ext_conditional_rendering
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .end_conditional_rendering_ext;
+
+        unsafe { (call)(self.handle) };
     }
 }

@@ -32,27 +32,27 @@ impl ImageViewHandleDevice for Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetImageViewHandleNVX.html>
     #[inline]
     fn get_image_view_handle(&self, info: &ImageViewHandleInfoNVX) -> u32 {
-        unsafe {
-            (self
-                .fns()
-                .nvx_image_view_handle
-                .as_ref()
-                .unwrap()
-                .get_image_view_handle_nvx)(self.handle, info)
-        }
+        let call = self
+            .fns()
+            .nvx_image_view_handle
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_image_view_handle_nvx;
+
+        unsafe { (call)(self.handle, info) }
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetImageViewHandle64NVX.html>
     #[inline]
     fn get_image_view_handle64(&self, info: &ImageViewHandleInfoNVX) -> u64 {
-        unsafe {
-            (self
-                .fns()
-                .nvx_image_view_handle
-                .as_ref()
-                .unwrap()
-                .get_image_view_handle64_nvx)(self.handle, info)
-        }
+        let call = self
+            .fns()
+            .nvx_image_view_handle
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_image_view_handle64_nvx;
+
+        unsafe { (call)(self.handle, info) }
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetImageViewAddressNVX.html>
@@ -62,15 +62,14 @@ impl ImageViewHandleDevice for Device {
         image_view: ImageView,
     ) -> Result<ImageViewAddressPropertiesNVX<'_>, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .nvx_image_view_handle
-                .as_ref()
-                .unwrap()
-                .get_image_view_address_nvx)(self.handle, image_view, out.as_mut_ptr())
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .nvx_image_view_handle
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_image_view_address_nvx;
+
+        unsafe { (call)(self.handle, image_view, out.as_mut_ptr()) }.init_on_success(out)
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetDeviceCombinedImageSamplerIndexNVX.html>
@@ -80,17 +79,13 @@ impl ImageViewHandleDevice for Device {
         image_view_index: u64,
         sampler_index: u64,
     ) -> u64 {
-        unsafe {
-            (self
-                .fns()
-                .nvx_image_view_handle
-                .as_ref()
-                .unwrap()
-                .get_device_combined_image_sampler_index_nvx)(
-                self.handle,
-                image_view_index,
-                sampler_index,
-            )
-        }
+        let call = self
+            .fns()
+            .nvx_image_view_handle
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_device_combined_image_sampler_index_nvx;
+
+        unsafe { (call)(self.handle, image_view_index, sampler_index) }
     }
 }

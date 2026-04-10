@@ -26,15 +26,14 @@ impl ExternalMemorySciBufDevice for Device {
         get_sci_buf_info: &MemoryGetSciBufInfoNV,
     ) -> Result<NvSciBufObj, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .nv_external_memory_sci_buf
-                .as_ref()
-                .unwrap()
-                .get_memory_sci_buf_nv)(self.handle, get_sci_buf_info, out.as_mut_ptr())
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .nv_external_memory_sci_buf
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_memory_sci_buf_nv;
+
+        unsafe { (call)(self.handle, get_sci_buf_info, out.as_mut_ptr()) }.init_on_success(out)
     }
 }
 
@@ -57,33 +56,26 @@ impl ExternalMemorySciBufPhysicalDevice for PhysicalDevice {
         handle: NvSciBufObj,
     ) -> Result<MemorySciBufPropertiesNV<'_>, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .nv_external_memory_sci_buf
-                .as_ref()
-                .unwrap()
-                .get_physical_device_external_memory_sci_buf_properties_nv)(
-                self.handle,
-                handle_type,
-                handle,
-                out.as_mut_ptr(),
-            )
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .nv_external_memory_sci_buf
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_physical_device_external_memory_sci_buf_properties_nv;
+
+        unsafe { (call)(self.handle, handle_type, handle, out.as_mut_ptr()) }.init_on_success(out)
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceSciBufAttributesNV.html>
     #[inline]
     fn get_sci_buf_attributes(&self, attributes: NvSciBufAttrList) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .nv_external_memory_sci_buf
-                .as_ref()
-                .unwrap()
-                .get_physical_device_sci_buf_attributes_nv)(self.handle, attributes)
-        }
-        .result()
+        let call = self
+            .fns()
+            .nv_external_memory_sci_buf
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_physical_device_sci_buf_attributes_nv;
+
+        unsafe { (call)(self.handle, attributes) }.result()
     }
 }

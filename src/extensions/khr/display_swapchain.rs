@@ -30,13 +30,15 @@ impl DisplaySwapchainDevice for Device {
         swapchains: &mut [SwapchainKHR],
     ) -> Result<(), Error> {
         assert_eq!(create_infos.len(), swapchains.len());
+        let call = self
+            .fns()
+            .khr_display_swapchain
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .create_shared_swapchains_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_display_swapchain
-                .as_ref()
-                .unwrap()
-                .create_shared_swapchains_khr)(
+            (call)(
                 self.handle,
                 create_infos.len() as u32,
                 create_infos.as_ptr(),

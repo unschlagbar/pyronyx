@@ -63,6 +63,9 @@ pub struct Instance {
 }
 
 impl Instance {
+    pub(crate) const CORE_LOAD_ERROR: &str = "Instance extension function is not loaded or not aviable. You may want to increase you `vk::InstanceCreateInfo.app_info.api_version`";
+    pub(crate) const EXT_LOAD_ERROR: &str = "Instance core function is not loaded or not aviable. You may use a extension that is not present in `vk::InstanceCreateInfo.enabled_extension_names`";
+
     /// Returns the raw `VkInstance` handle.
     pub const fn handle(&self) -> vkInstance {
         self.handle
@@ -73,14 +76,12 @@ impl Instance {
         &self.v_table
     }
 
-    /// Returns the vulkan version this fn was created for
+    /// Returns the vulkan version this [`Instance`] was created for
     pub const fn api_version(&self) -> u32 {
         self.api_version
     }
 
-    /// Returns a reference to the function table for this instance.
-    ///
-    /// All generated methods on `Instance` ultimately call through this.
+    /// Returns a reference to the function table for this [`Instance`].
     pub const fn fns(&self) -> &InstanceFn {
         &self.v_table.instance
     }
@@ -274,7 +275,11 @@ impl Instance {
     #[inline]
     pub fn enumerate_physical_devices_raw(&self) -> Result<Vec<vkPhysicalDevice>, Error> {
         read_into_vec_result(|count, data| unsafe {
-            (self.fns().v1_0.enumerate_physical_devices.unwrap())(self.handle(), count, data)
+            (self
+                .fns()
+                .v1_0
+                .enumerate_physical_devices
+                .expect(Self::CORE_LOAD_ERROR))(self.handle(), count, data)
         })
     }
 }
@@ -292,12 +297,15 @@ pub struct PhysicalDevice {
 }
 
 impl PhysicalDevice {
+    pub(crate) const CORE_LOAD_ERROR: &str = "PhysicalDevice Instance extension function is not loaded or not aviable. You may want to increase you `vk::InstanceCreateInfo.app_info.api_version`";
+    pub(crate) const EXT_LOAD_ERROR: &str = "PhysicalDevice Instance core function is not loaded or not aviable. You may use a extension that is not present in `vk::InstanceCreateInfo.enabled_extension_names`";
+
     /// Returns the raw `VkPhysicalDevice` handle.
     pub const fn handle(&self) -> vkPhysicalDevice {
         self.handle
     }
 
-    /// Returns the function table for this physical device.
+    /// Returns the function table for this [`PhysicalDevice`].
     pub const fn fns(&self) -> &PhysicalDeviceFn {
         self.v_table
     }
@@ -321,7 +329,11 @@ impl PhysicalDevice {
     ) -> Result<Device, Error> {
         let mut handle = MaybeUninit::uninit();
         let result = unsafe {
-            (self.v_table.v1_0.create_device.unwrap())(
+            (self
+                .v_table
+                .v1_0
+                .create_device
+                .expect(Self::CORE_LOAD_ERROR))(
                 self.handle,
                 create_info,
                 raw_option(allocator),
@@ -378,6 +390,9 @@ pub struct Device {
 }
 
 impl Device {
+    pub(crate) const CORE_LOAD_ERROR: &str = "Device extension function is not loaded or not aviable. You may want to increase you `vk::InstanceCreateInfo.app_info.api_version`";
+    pub(crate) const EXT_LOAD_ERROR: &str = "Device core function is not loaded or not aviable. You may use a extension that is not present in `vk::InstanceCreateInfo.enabled_extension_names`";
+
     /// Returns the raw `VkDevice` handle.
     pub const fn handle(&self) -> vkDevice {
         self.handle
@@ -424,7 +439,11 @@ impl Device {
     pub fn get_device_queue_raw(&self, queue_family_index: u32, queue_index: u32) -> vkQueue {
         let mut out = MaybeUninit::uninit();
         unsafe {
-            (self.fns().v1_0.get_device_queue.unwrap())(
+            (self
+                .fns()
+                .v1_0
+                .get_device_queue
+                .expect(Self::CORE_LOAD_ERROR))(
                 self.handle(),
                 queue_family_index,
                 queue_index,
@@ -473,7 +492,9 @@ impl Device {
                 .fns()
                 .v1_1 // Vulkan 1.1 dispatch table
                 .get_device_queue2
-                .unwrap())(self.handle(), queue_info, out.as_mut_ptr())
+                .expect(Self::CORE_LOAD_ERROR))(
+                self.handle(), queue_info, out.as_mut_ptr()
+            )
         }
         unsafe { out.assume_init() }
     }
@@ -522,10 +543,12 @@ impl Device {
     ) -> Result<Vec<vkCommandBuffer>, Error> {
         let mut buffers = Vec::with_capacity(allocate_info.command_buffer_count as usize);
         unsafe {
-            (self.fns().v1_0.allocate_command_buffers.unwrap())(
-                self.handle(),
-                allocate_info,
-                buffers.as_mut_ptr(),
+            (self
+                .fns()
+                .v1_0
+                .allocate_command_buffers
+                .expect(Self::CORE_LOAD_ERROR))(
+                self.handle(), allocate_info, buffers.as_mut_ptr()
             )
             .set_len_on_success(buffers, allocate_info.command_buffer_count as usize)
         }
@@ -543,12 +566,15 @@ pub struct Queue {
 }
 
 impl Queue {
+    pub(crate) const CORE_LOAD_ERROR: &str = "Queue Device extension function is not loaded or not aviable. You may want to increase you `vk::InstanceCreateInfo.app_info.api_version`";
+    pub(crate) const EXT_LOAD_ERROR: &str = "Queue Device core function is not loaded or not aviable. You may use a extension that is not present in `vk::InstanceCreateInfo.enabled_extension_names`";
+
     /// Returns the raw `VkQueue` handle.
     pub const fn handle(&self) -> vkQueue {
         self.handle
     }
 
-    /// Returns the function table for this queue.
+    /// Returns the function table for this [`Queue`].
     pub const fn fns(&self) -> &QueueFn {
         self.v_table
     }
@@ -565,6 +591,9 @@ pub struct CommandBuffer {
 }
 
 impl CommandBuffer {
+    pub(crate) const CORE_LOAD_ERROR: &str = "CommandBuffer Device extension function is not loaded or not aviable. You may want to increase you `vk::InstanceCreateInfo.app_info.api_version`";
+    pub(crate) const EXT_LOAD_ERROR: &str = "CommandBuffer Device core function is not loaded or not aviable. You may use a extension that is not present in `vk::InstanceCreateInfo.enabled_extension_names`";
+
     /// Returns the raw `VkCommandBuffer` handle.
     pub const fn handle(&self) -> vkCommandBuffer {
         self.handle
@@ -577,7 +606,7 @@ impl CommandBuffer {
         }
     }
 
-    /// Returns the function table for this command buffer.
+    /// Returns the function table for this [`CommandBuffer`].
     pub const fn fns(&self) -> &CommandBufferFn {
         self.v_table
             .expect("No v-table use `self.handle().to_command_buffer(device)`")

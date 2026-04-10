@@ -55,19 +55,15 @@ impl ExternalSciSync2Device for Device {
         get_sci_sync_handle_info: &FenceGetSciSyncInfoNV,
     ) -> Result<c_void, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .nv_external_sci_sync2
-                .as_ref()
-                .unwrap()
-                .get_fence_sci_sync_fence_nv)(
-                self.handle,
-                get_sci_sync_handle_info,
-                out.as_mut_ptr(),
-            )
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .nv_external_sci_sync2
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_fence_sci_sync_fence_nv;
+
+        unsafe { (call)(self.handle, get_sci_sync_handle_info, out.as_mut_ptr()) }
+            .init_on_success(out)
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetFenceSciSyncObjNV.html>
@@ -77,17 +73,15 @@ impl ExternalSciSync2Device for Device {
         get_sci_sync_handle_info: &FenceGetSciSyncInfoNV,
     ) -> Result<c_void, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .nv_external_sci_sync2
-                .as_ref()
-                .unwrap()
-                .get_fence_sci_sync_obj_nv)(
-                self.handle, get_sci_sync_handle_info, out.as_mut_ptr()
-            )
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .nv_external_sci_sync2
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_fence_sci_sync_obj_nv;
+
+        unsafe { (call)(self.handle, get_sci_sync_handle_info, out.as_mut_ptr()) }
+            .init_on_success(out)
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkImportFenceSciSyncFenceNV.html>
@@ -96,15 +90,14 @@ impl ExternalSciSync2Device for Device {
         &self,
         import_fence_sci_sync_info: &ImportFenceSciSyncInfoNV,
     ) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .nv_external_sci_sync2
-                .as_ref()
-                .unwrap()
-                .import_fence_sci_sync_fence_nv)(self.handle, import_fence_sci_sync_info)
-        }
-        .result()
+        let call = self
+            .fns()
+            .nv_external_sci_sync2
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .import_fence_sci_sync_fence_nv;
+
+        unsafe { (call)(self.handle, import_fence_sci_sync_info) }.result()
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkImportFenceSciSyncObjNV.html>
@@ -113,15 +106,14 @@ impl ExternalSciSync2Device for Device {
         &self,
         import_fence_sci_sync_info: &ImportFenceSciSyncInfoNV,
     ) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .nv_external_sci_sync2
-                .as_ref()
-                .unwrap()
-                .import_fence_sci_sync_obj_nv)(self.handle, import_fence_sci_sync_info)
-        }
-        .result()
+        let call = self
+            .fns()
+            .nv_external_sci_sync2
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .import_fence_sci_sync_obj_nv;
+
+        unsafe { (call)(self.handle, import_fence_sci_sync_info) }.result()
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCreateSemaphoreSciSyncPoolNV.html>
@@ -132,13 +124,15 @@ impl ExternalSciSync2Device for Device {
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<SemaphoreSciSyncPoolNV, Error> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .nv_external_sci_sync2
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .create_semaphore_sci_sync_pool_nv;
+
         unsafe {
-            (self
-                .fns()
-                .nv_external_sci_sync2
-                .as_ref()
-                .unwrap()
-                .create_semaphore_sci_sync_pool_nv)(
+            (call)(
                 self.handle,
                 create_info,
                 allocator.map_or(null(), from_ref),
@@ -155,13 +149,15 @@ impl ExternalSciSync2Device for Device {
         semaphore_pool: SemaphoreSciSyncPoolNV,
         allocator: Option<&AllocationCallbacks>,
     ) {
+        let call = self
+            .fns()
+            .nv_external_sci_sync2
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .destroy_semaphore_sci_sync_pool_nv;
+
         unsafe {
-            (self
-                .fns()
-                .nv_external_sci_sync2
-                .as_ref()
-                .unwrap()
-                .destroy_semaphore_sci_sync_pool_nv)(
+            (call)(
                 self.handle,
                 semaphore_pool,
                 allocator.map_or(null(), from_ref),
@@ -186,18 +182,13 @@ impl ExternalSciSync2PhysicalDevice for PhysicalDevice {
         sci_sync_attributes_info: &SciSyncAttributesInfoNV,
         attributes: NvSciSyncAttrList,
     ) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .nv_external_sci_sync2
-                .as_ref()
-                .unwrap()
-                .get_physical_device_sci_sync_attributes_nv)(
-                self.handle,
-                sci_sync_attributes_info,
-                attributes,
-            )
-        }
-        .result()
+        let call = self
+            .fns()
+            .nv_external_sci_sync2
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_physical_device_sci_sync_attributes_nv;
+
+        unsafe { (call)(self.handle, sci_sync_attributes_info, attributes) }.result()
     }
 }

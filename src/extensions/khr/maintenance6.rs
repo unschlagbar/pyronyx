@@ -34,17 +34,14 @@ impl Maintenance6CommandBuffer for CommandBuffer {
         &self,
         set_descriptor_buffer_offsets_info: &SetDescriptorBufferOffsetsInfoEXT,
     ) {
-        unsafe {
-            (self
-                .fns()
-                .khr_maintenance6
-                .as_ref()
-                .unwrap()
-                .set_descriptor_buffer_offsets2_ext)(
-                self.handle,
-                set_descriptor_buffer_offsets_info,
-            )
-        };
+        let call = self
+            .fns()
+            .khr_maintenance6
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .set_descriptor_buffer_offsets2_ext;
+
+        unsafe { (call)(self.handle, set_descriptor_buffer_offsets_info) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdBindDescriptorBufferEmbeddedSamplers2EXT.html>
@@ -58,16 +55,13 @@ impl Maintenance6CommandBuffer for CommandBuffer {
         &self,
         bind_descriptor_buffer_embedded_samplers_info: &BindDescriptorBufferEmbeddedSamplersInfoEXT,
     ) {
-        unsafe {
-            (self
-                .fns()
-                .khr_maintenance6
-                .as_ref()
-                .unwrap()
-                .bind_descriptor_buffer_embedded_samplers2_ext)(
-                self.handle,
-                bind_descriptor_buffer_embedded_samplers_info,
-            )
-        };
+        let call = self
+            .fns()
+            .khr_maintenance6
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .bind_descriptor_buffer_embedded_samplers2_ext;
+
+        unsafe { (call)(self.handle, bind_descriptor_buffer_embedded_samplers_info) };
     }
 }

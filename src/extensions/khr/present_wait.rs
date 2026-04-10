@@ -28,14 +28,13 @@ impl PresentWaitDevice for Device {
         present_id: u64,
         timeout: u64,
     ) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .khr_present_wait
-                .as_ref()
-                .unwrap()
-                .wait_for_present_khr)(self.handle, swapchain, present_id, timeout)
-        }
-        .result()
+        let call = self
+            .fns()
+            .khr_present_wait
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .wait_for_present_khr;
+
+        unsafe { (call)(self.handle, swapchain, present_id, timeout) }.result()
     }
 }

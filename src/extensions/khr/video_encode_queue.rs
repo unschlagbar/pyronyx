@@ -27,19 +27,14 @@ impl VideoEncodeQueuePhysicalDevice for PhysicalDevice {
         quality_level_info: &PhysicalDeviceVideoEncodeQualityLevelInfoKHR,
     ) -> Result<VideoEncodeQualityLevelPropertiesKHR<'_>, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .khr_video_encode_queue
-                .as_ref()
-                .unwrap()
-                .get_physical_device_video_encode_quality_level_properties_khr)(
-                self.handle,
-                quality_level_info,
-                out.as_mut_ptr(),
-            )
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .khr_video_encode_queue
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_physical_device_video_encode_quality_level_properties_khr;
+
+        unsafe { (call)(self.handle, quality_level_info, out.as_mut_ptr()) }.init_on_success(out)
     }
 }
 
@@ -61,13 +56,15 @@ impl VideoEncodeQueueDevice for Device {
         feedback_info: *mut VideoEncodeSessionParametersFeedbackInfoKHR,
         data: &mut [c_void],
     ) -> Result<(), Error> {
+        let call = self
+            .fns()
+            .khr_video_encode_queue
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_encoded_video_session_parameters_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_video_encode_queue
-                .as_ref()
-                .unwrap()
-                .get_encoded_video_session_parameters_khr)(
+            (call)(
                 self.handle,
                 video_session_parameters_info,
                 feedback_info,
@@ -92,13 +89,13 @@ impl VideoEncodeQueueCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`.
     #[inline]
     fn encode_video(&self, encode_info: &VideoEncodeInfoKHR) {
-        unsafe {
-            (self
-                .fns()
-                .khr_video_encode_queue
-                .as_ref()
-                .unwrap()
-                .encode_video_khr)(self.handle, encode_info)
-        };
+        let call = self
+            .fns()
+            .khr_video_encode_queue
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .encode_video_khr;
+
+        unsafe { (call)(self.handle, encode_info) };
     }
 }

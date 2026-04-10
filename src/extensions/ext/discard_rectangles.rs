@@ -27,13 +27,15 @@ impl DiscardRectanglesCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_discard_rectangle(&self, first_discard_rectangle: u32, discard_rectangles: &[Rect2D]) {
+        let call = self
+            .fns()
+            .ext_discard_rectangles
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .set_discard_rectangle_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_discard_rectangles
-                .as_ref()
-                .unwrap()
-                .set_discard_rectangle_ext)(
+            (call)(
                 self.handle,
                 first_discard_rectangle,
                 discard_rectangles.len() as u32,
@@ -50,16 +52,14 @@ impl DiscardRectanglesCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_discard_rectangle_enable(&self, discard_rectangle_enable: bool) {
-        unsafe {
-            (self
-                .fns()
-                .ext_discard_rectangles
-                .as_ref()
-                .unwrap()
-                .set_discard_rectangle_enable_ext)(
-                self.handle, discard_rectangle_enable as _
-            )
-        };
+        let call = self
+            .fns()
+            .ext_discard_rectangles
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .set_discard_rectangle_enable_ext;
+
+        unsafe { (call)(self.handle, discard_rectangle_enable as _) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCmdSetDiscardRectangleModeEXT.html>
@@ -70,13 +70,13 @@ impl DiscardRectanglesCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_discard_rectangle_mode(&self, discard_rectangle_mode: DiscardRectangleModeEXT) {
-        unsafe {
-            (self
-                .fns()
-                .ext_discard_rectangles
-                .as_ref()
-                .unwrap()
-                .set_discard_rectangle_mode_ext)(self.handle, discard_rectangle_mode)
-        };
+        let call = self
+            .fns()
+            .ext_discard_rectangles
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .set_discard_rectangle_mode_ext;
+
+        unsafe { (call)(self.handle, discard_rectangle_mode) };
     }
 }

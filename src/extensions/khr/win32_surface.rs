@@ -29,13 +29,15 @@ impl Win32SurfaceInstance for Instance {
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<SurfaceKHR, Error> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .khr_win32_surface
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .create_win32_surface_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_win32_surface
-                .as_ref()
-                .unwrap()
-                .create_win32_surface_khr)(
+            (call)(
                 self.handle,
                 create_info,
                 allocator.map_or(null(), from_ref),
@@ -54,16 +56,13 @@ impl Win32SurfacePhysicalDevice for PhysicalDevice {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceWin32PresentationSupportKHR.html>
     #[inline]
     fn get_win32_presentation_support(&self, queue_family_index: u32) -> Bool32 {
-        unsafe {
-            (self
-                .fns()
-                .khr_win32_surface
-                .as_ref()
-                .unwrap()
-                .get_physical_device_win32_presentation_support_khr)(
-                self.handle,
-                queue_family_index,
-            )
-        }
+        let call = self
+            .fns()
+            .khr_win32_surface
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_physical_device_win32_presentation_support_khr;
+
+        unsafe { (call)(self.handle, queue_family_index) }
     }
 }

@@ -47,13 +47,15 @@ impl CudaKernelLaunchDevice for Device {
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<CudaModuleNV, Error> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .nv_cuda_kernel_launch
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .create_cuda_module_nv;
+
         unsafe {
-            (self
-                .fns()
-                .nv_cuda_kernel_launch
-                .as_ref()
-                .unwrap()
-                .create_cuda_module_nv)(
+            (call)(
                 self.handle,
                 create_info,
                 allocator.map_or(null(), from_ref),
@@ -66,14 +68,14 @@ impl CudaKernelLaunchDevice for Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetCudaModuleCacheNV.html>
     #[inline]
     fn get_cuda_module_cache(&self, module: CudaModuleNV) -> Result<Vec<c_void>, Error> {
-        read_into_vec_result(|count, data| unsafe {
-            (self
-                .fns()
-                .nv_cuda_kernel_launch
-                .as_ref()
-                .unwrap()
-                .get_cuda_module_cache_nv)(self.handle, module, count, data)
-        })
+        let call = self
+            .fns()
+            .nv_cuda_kernel_launch
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_cuda_module_cache_nv;
+
+        read_into_vec_result(|count, data| unsafe { (call)(self.handle, module, count, data) })
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCreateCudaFunctionNV.html>
@@ -84,13 +86,15 @@ impl CudaKernelLaunchDevice for Device {
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<CudaFunctionNV, Error> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .nv_cuda_kernel_launch
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .create_cuda_function_nv;
+
         unsafe {
-            (self
-                .fns()
-                .nv_cuda_kernel_launch
-                .as_ref()
-                .unwrap()
-                .create_cuda_function_nv)(
+            (call)(
                 self.handle,
                 create_info,
                 allocator.map_or(null(), from_ref),
@@ -103,16 +107,14 @@ impl CudaKernelLaunchDevice for Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkDestroyCudaModuleNV.html>
     #[inline]
     fn destroy_cuda_module(&self, module: CudaModuleNV, allocator: Option<&AllocationCallbacks>) {
-        unsafe {
-            (self
-                .fns()
-                .nv_cuda_kernel_launch
-                .as_ref()
-                .unwrap()
-                .destroy_cuda_module_nv)(
-                self.handle, module, allocator.map_or(null(), from_ref)
-            )
-        };
+        let call = self
+            .fns()
+            .nv_cuda_kernel_launch
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .destroy_cuda_module_nv;
+
+        unsafe { (call)(self.handle, module, allocator.map_or(null(), from_ref)) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkDestroyCudaFunctionNV.html>
@@ -122,18 +124,14 @@ impl CudaKernelLaunchDevice for Device {
         function: CudaFunctionNV,
         allocator: Option<&AllocationCallbacks>,
     ) {
-        unsafe {
-            (self
-                .fns()
-                .nv_cuda_kernel_launch
-                .as_ref()
-                .unwrap()
-                .destroy_cuda_function_nv)(
-                self.handle,
-                function,
-                allocator.map_or(null(), from_ref),
-            )
-        };
+        let call = self
+            .fns()
+            .nv_cuda_kernel_launch
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .destroy_cuda_function_nv;
+
+        unsafe { (call)(self.handle, function, allocator.map_or(null(), from_ref)) };
     }
 }
 
@@ -150,13 +148,13 @@ impl CudaKernelLaunchCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn cuda_launch_kernel(&self, launch_info: &CudaLaunchInfoNV) {
-        unsafe {
-            (self
-                .fns()
-                .nv_cuda_kernel_launch
-                .as_ref()
-                .unwrap()
-                .cuda_launch_kernel_nv)(self.handle, launch_info)
-        };
+        let call = self
+            .fns()
+            .nv_cuda_kernel_launch
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .cuda_launch_kernel_nv;
+
+        unsafe { (call)(self.handle, launch_info) };
     }
 }

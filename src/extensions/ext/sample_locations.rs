@@ -24,14 +24,14 @@ impl SampleLocationsCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_sample_locations(&self, sample_locations_info: &SampleLocationsInfoEXT) {
-        unsafe {
-            (self
-                .fns()
-                .ext_sample_locations
-                .as_ref()
-                .unwrap()
-                .set_sample_locations_ext)(self.handle, sample_locations_info)
-        };
+        let call = self
+            .fns()
+            .ext_sample_locations
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .set_sample_locations_ext;
+
+        unsafe { (call)(self.handle, sample_locations_info) };
     }
 }
 
@@ -48,17 +48,15 @@ impl SampleLocationsPhysicalDevice for PhysicalDevice {
         samples: SampleCountFlags,
     ) -> MultisamplePropertiesEXT<'_> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .ext_sample_locations
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_physical_device_multisample_properties_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_sample_locations
-                .as_ref()
-                .unwrap()
-                .get_physical_device_multisample_properties_ext)(
-                self.handle,
-                samples,
-                out.as_mut_ptr(),
-            );
+            (call)(self.handle, samples, out.as_mut_ptr());
             out.assume_init()
         }
     }

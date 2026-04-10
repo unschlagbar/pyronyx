@@ -25,15 +25,14 @@ impl AcquireXlibDisplayPhysicalDevice for PhysicalDevice {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkAcquireXlibDisplayEXT.html>
     #[inline]
     fn acquire_xlib_display(&self, dpy: *mut Display, display: DisplayKHR) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .ext_acquire_xlib_display
-                .as_ref()
-                .unwrap()
-                .acquire_xlib_display_ext)(self.handle, dpy, display)
-        }
-        .result()
+        let call = self
+            .fns()
+            .ext_acquire_xlib_display
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .acquire_xlib_display_ext;
+
+        unsafe { (call)(self.handle, dpy, display) }.result()
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetRandROutputDisplayEXT.html>
@@ -44,16 +43,13 @@ impl AcquireXlibDisplayPhysicalDevice for PhysicalDevice {
         rr_output: RROutput,
     ) -> Result<DisplayKHR, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .ext_acquire_xlib_display
-                .as_ref()
-                .unwrap()
-                .get_rand_r_output_display_ext)(
-                self.handle, dpy, rr_output, out.as_mut_ptr()
-            )
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .ext_acquire_xlib_display
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_rand_r_output_display_ext;
+
+        unsafe { (call)(self.handle, dpy, rr_output, out.as_mut_ptr()) }.init_on_success(out)
     }
 }

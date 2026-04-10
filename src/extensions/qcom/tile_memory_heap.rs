@@ -24,15 +24,13 @@ impl TileMemoryHeapCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn bind_tile_memory(&self, tile_memory_bind_info: Option<&TileMemoryBindInfoQCOM>) {
-        unsafe {
-            (self
-                .fns()
-                .qcom_tile_memory_heap
-                .as_ref()
-                .unwrap()
-                .bind_tile_memory_qcom)(
-                self.handle, tile_memory_bind_info.map_or(null(), from_ref)
-            )
-        };
+        let call = self
+            .fns()
+            .qcom_tile_memory_heap
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .bind_tile_memory_qcom;
+
+        unsafe { (call)(self.handle, tile_memory_bind_info.map_or(null(), from_ref)) };
     }
 }

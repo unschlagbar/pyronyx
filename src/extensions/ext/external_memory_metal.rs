@@ -33,17 +33,14 @@ impl ExternalMemoryMetalDevice for Device {
         get_metal_handle_info: &MemoryGetMetalHandleInfoEXT,
     ) -> Result<*mut c_void, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .ext_external_memory_metal
-                .as_ref()
-                .unwrap()
-                .get_memory_metal_handle_ext)(
-                self.handle, get_metal_handle_info, out.as_mut_ptr()
-            )
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .ext_external_memory_metal
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_memory_metal_handle_ext;
+
+        unsafe { (call)(self.handle, get_metal_handle_info, out.as_mut_ptr()) }.init_on_success(out)
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetMemoryMetalHandlePropertiesEXT.html>
@@ -54,19 +51,13 @@ impl ExternalMemoryMetalDevice for Device {
         handle: &c_void,
     ) -> Result<MemoryMetalHandlePropertiesEXT<'_>, Error> {
         let mut out = MaybeUninit::uninit();
-        unsafe {
-            (self
-                .fns()
-                .ext_external_memory_metal
-                .as_ref()
-                .unwrap()
-                .get_memory_metal_handle_properties_ext)(
-                self.handle,
-                handle_type,
-                handle,
-                out.as_mut_ptr(),
-            )
-        }
-        .init_on_success(out)
+        let call = self
+            .fns()
+            .ext_external_memory_metal
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_memory_metal_handle_properties_ext;
+
+        unsafe { (call)(self.handle, handle_type, handle, out.as_mut_ptr()) }.init_on_success(out)
     }
 }

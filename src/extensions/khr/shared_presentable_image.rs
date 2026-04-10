@@ -18,14 +18,13 @@ impl SharedPresentableImageDevice for Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetSwapchainStatusKHR.html>
     #[inline]
     fn get_swapchain_status(&self, swapchain: SwapchainKHR) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .khr_shared_presentable_image
-                .as_ref()
-                .unwrap()
-                .get_swapchain_status_khr)(self.handle, swapchain)
-        }
-        .result()
+        let call = self
+            .fns()
+            .khr_shared_presentable_image
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_swapchain_status_khr;
+
+        unsafe { (call)(self.handle, swapchain) }.result()
     }
 }

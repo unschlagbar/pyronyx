@@ -31,15 +31,15 @@ impl ShaderModuleIdentifierDevice for Device {
         shader_module: ShaderModule,
     ) -> ShaderModuleIdentifierEXT<'_> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .ext_shader_module_identifier
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_shader_module_identifier_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_shader_module_identifier
-                .as_ref()
-                .unwrap()
-                .get_shader_module_identifier_ext)(
-                self.handle, shader_module, out.as_mut_ptr()
-            );
+            (call)(self.handle, shader_module, out.as_mut_ptr());
             out.assume_init()
         }
     }
@@ -51,17 +51,15 @@ impl ShaderModuleIdentifierDevice for Device {
         create_info: &ShaderModuleCreateInfo,
     ) -> ShaderModuleIdentifierEXT<'_> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .ext_shader_module_identifier
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_shader_module_create_info_identifier_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_shader_module_identifier
-                .as_ref()
-                .unwrap()
-                .get_shader_module_create_info_identifier_ext)(
-                self.handle,
-                create_info,
-                out.as_mut_ptr(),
-            );
+            (call)(self.handle, create_info, out.as_mut_ptr());
             out.assume_init()
         }
     }

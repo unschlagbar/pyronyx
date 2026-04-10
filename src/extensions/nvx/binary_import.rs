@@ -39,13 +39,15 @@ impl BinaryImportDevice for Device {
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<CuModuleNVX, Error> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .nvx_binary_import
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .create_cu_module_nvx;
+
         unsafe {
-            (self
-                .fns()
-                .nvx_binary_import
-                .as_ref()
-                .unwrap()
-                .create_cu_module_nvx)(
+            (call)(
                 self.handle,
                 create_info,
                 allocator.map_or(null(), from_ref),
@@ -63,13 +65,15 @@ impl BinaryImportDevice for Device {
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<CuFunctionNVX, Error> {
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .nvx_binary_import
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .create_cu_function_nvx;
+
         unsafe {
-            (self
-                .fns()
-                .nvx_binary_import
-                .as_ref()
-                .unwrap()
-                .create_cu_function_nvx)(
+            (call)(
                 self.handle,
                 create_info,
                 allocator.map_or(null(), from_ref),
@@ -82,16 +86,14 @@ impl BinaryImportDevice for Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkDestroyCuModuleNVX.html>
     #[inline]
     fn destroy_cu_module(&self, module: CuModuleNVX, allocator: Option<&AllocationCallbacks>) {
-        unsafe {
-            (self
-                .fns()
-                .nvx_binary_import
-                .as_ref()
-                .unwrap()
-                .destroy_cu_module_nvx)(
-                self.handle, module, allocator.map_or(null(), from_ref)
-            )
-        };
+        let call = self
+            .fns()
+            .nvx_binary_import
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .destroy_cu_module_nvx;
+
+        unsafe { (call)(self.handle, module, allocator.map_or(null(), from_ref)) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkDestroyCuFunctionNVX.html>
@@ -101,16 +103,14 @@ impl BinaryImportDevice for Device {
         function: CuFunctionNVX,
         allocator: Option<&AllocationCallbacks>,
     ) {
-        unsafe {
-            (self
-                .fns()
-                .nvx_binary_import
-                .as_ref()
-                .unwrap()
-                .destroy_cu_function_nvx)(
-                self.handle, function, allocator.map_or(null(), from_ref)
-            )
-        };
+        let call = self
+            .fns()
+            .nvx_binary_import
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .destroy_cu_function_nvx;
+
+        unsafe { (call)(self.handle, function, allocator.map_or(null(), from_ref)) };
     }
 }
 
@@ -127,13 +127,13 @@ impl BinaryImportCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn cu_launch_kernel(&self, launch_info: &CuLaunchInfoNVX) {
-        unsafe {
-            (self
-                .fns()
-                .nvx_binary_import
-                .as_ref()
-                .unwrap()
-                .cu_launch_kernel_nvx)(self.handle, launch_info)
-        };
+        let call = self
+            .fns()
+            .nvx_binary_import
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .cu_launch_kernel_nvx;
+
+        unsafe { (call)(self.handle, launch_info) };
     }
 }

@@ -23,13 +23,15 @@ impl ColorWriteEnableCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_color_write_enable(&self, color_write_enables: &[Bool32]) {
+        let call = self
+            .fns()
+            .ext_color_write_enable
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .set_color_write_enable_ext;
+
         unsafe {
-            (self
-                .fns()
-                .ext_color_write_enable
-                .as_ref()
-                .unwrap()
-                .set_color_write_enable_ext)(
+            (call)(
                 self.handle,
                 color_write_enables.len() as u32,
                 color_write_enables.as_ptr(),

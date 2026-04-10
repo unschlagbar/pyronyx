@@ -24,14 +24,13 @@ impl SwapchainMaintenance1Device for Device {
         &self,
         release_info: &ReleaseSwapchainImagesInfoKHR,
     ) -> Result<(), Error> {
-        unsafe {
-            (self
-                .fns()
-                .khr_swapchain_maintenance1
-                .as_ref()
-                .unwrap()
-                .release_swapchain_images_khr)(self.handle, release_info)
-        }
-        .result()
+        let call = self
+            .fns()
+            .khr_swapchain_maintenance1
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .release_swapchain_images_khr;
+
+        unsafe { (call)(self.handle, release_info) }.result()
     }
 }

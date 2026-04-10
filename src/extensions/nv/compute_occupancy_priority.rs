@@ -23,13 +23,13 @@ impl ComputeOccupancyPriorityCommandBuffer for CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     fn set_compute_occupancy_priority(&self, parameters: &ComputeOccupancyPriorityParametersNV) {
-        unsafe {
-            (self
-                .fns()
-                .nv_compute_occupancy_priority
-                .as_ref()
-                .unwrap()
-                .set_compute_occupancy_priority_nv)(self.handle, parameters)
-        };
+        let call = self
+            .fns()
+            .nv_compute_occupancy_priority
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .set_compute_occupancy_priority_nv;
+
+        unsafe { (call)(self.handle, parameters) };
     }
 }

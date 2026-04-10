@@ -25,13 +25,15 @@ impl CalibratedTimestampsPhysicalDevice for PhysicalDevice {
         &self,
         time_domains: &mut [TimeDomainKHR],
     ) -> Result<(), Error> {
+        let call = self
+            .fns()
+            .khr_calibrated_timestamps
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_physical_device_calibrateable_time_domains_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_calibrated_timestamps
-                .as_ref()
-                .unwrap()
-                .get_physical_device_calibrateable_time_domains_khr)(
+            (call)(
                 self.handle,
                 time_domains.len() as *mut u32,
                 time_domains.as_mut_ptr(),
@@ -59,13 +61,15 @@ impl CalibratedTimestampsDevice for Device {
     ) -> Result<u64, Error> {
         assert_eq!(timestamp_infos.len(), timestamps.len());
         let mut out = MaybeUninit::uninit();
+        let call = self
+            .fns()
+            .khr_calibrated_timestamps
+            .as_ref()
+            .expect(Self::EXT_LOAD_ERROR)
+            .get_calibrated_timestamps_khr;
+
         unsafe {
-            (self
-                .fns()
-                .khr_calibrated_timestamps
-                .as_ref()
-                .unwrap()
-                .get_calibrated_timestamps_khr)(
+            (call)(
                 self.handle,
                 timestamp_infos.len() as u32,
                 timestamp_infos.as_ptr(),
