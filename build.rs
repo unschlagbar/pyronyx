@@ -24,7 +24,7 @@ fn handle_android_linking() {
         Some(path) if path.is_dir() => path,
         _ => {
             println!(
-                "cargo::error=ANDROID_NDK_HOME is not set. \
+                "cargo::warning=ANDROID_NDK_HOME is not set. \
                  Vulkan linking for Android will fail. \
                  Please install the Android NDK from https://developer.android.com/ndk/downloads"
             );

@@ -59,7 +59,7 @@ impl OpticalFlowPhysicalDevice for PhysicalDevice {
         &self,
         optical_flow_image_format_info: &OpticalFlowImageFormatInfoNV,
     ) -> Result<usize, Error> {
-        let mut out: MaybeUninit<u32> = MaybeUninit::uninit();
+        let mut out: MaybeUninit<usize> = MaybeUninit::uninit();
         unsafe {
             (self
                 .fns()
@@ -69,12 +69,11 @@ impl OpticalFlowPhysicalDevice for PhysicalDevice {
                 .get_physical_device_optical_flow_image_formats_nv)(
                 self.handle,
                 optical_flow_image_format_info,
-                out.as_mut_ptr(),
+                out.as_mut_ptr() as *mut u32,
                 ptr::null_mut(),
             )
         }
         .init_on_success(out)
-        .map(|o| o as usize)
     }
 }
 

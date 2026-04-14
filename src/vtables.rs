@@ -4,23 +4,9 @@
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 use super::vk::*;
-use core::ffi::{CStr, c_void};
-use core::mem::transmute_copy;
-pub fn to_option<T: Copy>(val: *const c_void) -> Option<T> {
-    if val.is_null() {
-        None
-    } else {
-        Some(unsafe { transmute_copy(&val) })
-    }
-}
-
-fn to_panic<T: Copy>(val: *const c_void) -> T {
-    if val.is_null() {
-        panic!("Not supported fn!");
-    } else {
-        unsafe { transmute_copy(&val) }
-    }
-}
+use crate::utils::to_option;
+use crate::utils::to_panic;
+use core::ffi::{CStr, c_char, c_void};
 #[derive(Clone)]
 pub struct InstanceFn {
     pub v1_0: InstanceFnv1_0,
@@ -50,7 +36,7 @@ impl InstanceFn {
     pub fn load<F: FnMut(&CStr) -> *const c_void>(
         mut loader: F,
         api_version: u32,
-        extensions: &[*const i8],
+        extensions: &[*const c_char],
     ) -> Self {
         let mut out = Self {
             v1_0: InstanceFnv1_0::load(&mut loader),
@@ -485,7 +471,7 @@ impl PhysicalDeviceFn {
     pub fn load<F: FnMut(&CStr) -> *const c_void>(
         mut loader: F,
         api_version: u32,
-        extensions: &[*const i8],
+        extensions: &[*const c_char],
     ) -> Self {
         let mut out = Self {
             v1_0: PhysicalDeviceFnv1_0::load(&mut loader),
@@ -1586,7 +1572,7 @@ impl DeviceFn {
     pub fn load<F: FnMut(&CStr) -> *const c_void>(
         mut loader: F,
         api_version: u32,
-        extensions: &[*const i8],
+        extensions: &[*const c_char],
     ) -> Self {
         let mut out = Self {
             v1_0: DeviceFnv1_0::load(&mut loader),
@@ -3900,7 +3886,7 @@ impl QueueFn {
     pub fn load<F: FnMut(&CStr) -> *const c_void>(
         mut loader: F,
         api_version: u32,
-        extensions: &[*const i8],
+        extensions: &[*const c_char],
     ) -> Self {
         let mut out = Self {
             v1_0: QueueFnv1_0::load(&mut loader),
@@ -4123,7 +4109,7 @@ impl CommandBufferFn {
     pub fn load<F: FnMut(&CStr) -> *const c_void>(
         mut loader: F,
         api_version: u32,
-        extensions: &[*const i8],
+        extensions: &[*const c_char],
     ) -> Self {
         let mut out = Self {
             v1_0: CommandBufferFnv1_0::load(&mut loader),
@@ -5823,7 +5809,7 @@ impl InstanceVTable {
     pub fn load<F: FnMut(&CStr) -> *const c_void>(
         mut loader: F,
         api_version: u32,
-        extensions: &[*const i8],
+        extensions: &[*const c_char],
     ) -> Self {
         debug_assert!(api_version >= API_VERSION_1_0);
         Self {
@@ -5844,7 +5830,7 @@ impl DeviceVTable {
     pub fn load<F: FnMut(&CStr) -> *const c_void>(
         mut loader: F,
         api_version: u32,
-        extensions: &[*const i8],
+        extensions: &[*const c_char],
     ) -> Self {
         debug_assert!(api_version >= API_VERSION_1_0);
         Self {

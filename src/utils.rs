@@ -1,7 +1,25 @@
 use core::fmt::Debug;
 use core::ptr;
+use std::ffi::c_void;
+use std::mem::transmute_copy;
 
 use crate::vk;
+
+pub fn to_option<T: Copy>(val: *const c_void) -> Option<T> {
+    if val.is_null() {
+        None
+    } else {
+        Some(unsafe { transmute_copy(&val) })
+    }
+}
+
+pub fn to_panic<T: Copy>(val: *const c_void) -> T {
+    if val.is_null() {
+        panic!("Extension function not aviable!")
+    } else {
+        unsafe { transmute_copy(&val) }
+    }
+}
 
 pub(crate) fn raw_option<T>(value: Option<&T>) -> *const T {
     match value {

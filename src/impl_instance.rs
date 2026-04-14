@@ -48,17 +48,18 @@ impl Instance {
     /// Returns the required slice length for Call [`enumerate_physical_device_groups`][`Self::enumerate_physical_device_groups`].
     #[inline]
     pub fn enumerate_physical_device_groups_len(&self) -> Result<usize, Error> {
-        let mut out: MaybeUninit<u32> = MaybeUninit::uninit();
+        let mut out: MaybeUninit<usize> = MaybeUninit::uninit();
         unsafe {
             (self
                 .fns()
                 .v1_1
                 .enumerate_physical_device_groups
                 .expect(Self::CORE_LOAD_ERROR))(
-                self.handle, out.as_mut_ptr(), ptr::null_mut()
+                self.handle,
+                out.as_mut_ptr() as *mut u32,
+                ptr::null_mut(),
             )
         }
         .init_on_success(out)
-        .map(|o| o as usize)
     }
 }

@@ -69,7 +69,7 @@ impl DeviceDiagnosticCheckpointsQueue for Queue {
     /// Returns the required slice length for Call [`get_checkpoint_data`][`Self::get_checkpoint_data`].
     #[inline]
     fn get_checkpoint_data_len(&self) -> usize {
-        let mut out: MaybeUninit<u32> = MaybeUninit::uninit();
+        let mut out: MaybeUninit<usize> = MaybeUninit::uninit();
         unsafe {
             (self
                 .fns()
@@ -77,9 +77,11 @@ impl DeviceDiagnosticCheckpointsQueue for Queue {
                 .as_ref()
                 .expect(Self::EXT_LOAD_ERROR)
                 .get_queue_checkpoint_data_nv)(
-                self.handle, out.as_mut_ptr(), ptr::null_mut()
+                self.handle,
+                out.as_mut_ptr() as *mut u32,
+                ptr::null_mut(),
             );
-            out.assume_init() as usize
+            out.assume_init()
         }
     }
 

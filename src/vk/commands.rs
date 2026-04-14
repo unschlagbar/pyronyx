@@ -9,6 +9,7 @@ use super::bitflags::*;
 use super::enums::*;
 use super::platform_types::*;
 use super::types::*;
+use crate::utils::to_option;
 use core::ffi::{c_char, c_int, c_void};
 
 // ── fn-pointer Typen ──────────────────────────────────────────────

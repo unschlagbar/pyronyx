@@ -33,7 +33,7 @@
 //!   official C API – the wrapper does **not** add reference counting.
 
 use crate::{
-    utils::{raw_option, read_into_vec_result},
+    utils::{raw_option, read_into_vec_result, to_option},
     vk::{
         self, AllocationCallbacks, CommandBufferAllocateInfo, DeviceCreateInfo, Error,
         InstanceCreateInfo, get_instance_proc_addr, vkCommandBuffer, vkCreateInstance, vkDevice,
@@ -41,11 +41,11 @@ use crate::{
     },
     vtables::{
         CommandBufferFn, DeviceFn, DeviceVTable, InstanceFn, InstanceVTable, PhysicalDeviceFn,
-        QueueFn, to_option,
+        QueueFn,
     },
 };
 use core::{
-    ffi::CStr,
+    ffi::{CStr, c_char},
     fmt,
     mem::{MaybeUninit, transmute},
     slice,
@@ -63,8 +63,8 @@ pub struct Instance {
 }
 
 impl Instance {
-    pub(crate) const CORE_LOAD_ERROR: &str = "Instance extension function is not loaded or not aviable. You may want to increase you `vk::InstanceCreateInfo.app_info.api_version`";
-    pub(crate) const EXT_LOAD_ERROR: &str = "Instance core function is not loaded or not aviable. You may use a extension that is not present in `vk::InstanceCreateInfo.enabled_extension_names`";
+    pub(crate) const CORE_LOAD_ERROR: &str = "Instance core function is not loaded or not aviable. You may want to increase you `vk::InstanceCreateInfo.application_info.api_version`";
+    pub(crate) const EXT_LOAD_ERROR: &str = "Instance ext function is not loaded or not aviable. You may use a extension that is not present in `vk::InstanceCreateInfo.enabled_extension_names`";
 
     /// Returns the raw `VkInstance` handle.
     pub const fn handle(&self) -> vkInstance {
@@ -219,14 +219,14 @@ impl Instance {
         let loader =
             |name: &CStr| unsafe { transmute(get_instance_proc_addr(instance, name.as_ptr())) };
 
-        let extensions: &[*const i8] = if create_info.enabled_extension_names.is_null()
+        let extensions: &[*const c_char] = if create_info.enabled_extension_names.is_null()
             || create_info.enabled_extension_count == 0
         {
             &[]
         } else {
             unsafe {
                 slice::from_raw_parts(
-                    create_info.enabled_extension_names.cast(),
+                    create_info.enabled_extension_names,
                     create_info.enabled_extension_count as usize,
                 )
             }
@@ -297,8 +297,8 @@ pub struct PhysicalDevice {
 }
 
 impl PhysicalDevice {
-    pub(crate) const CORE_LOAD_ERROR: &str = "PhysicalDevice Instance extension function is not loaded or not aviable. You may want to increase you `vk::InstanceCreateInfo.app_info.api_version`";
-    pub(crate) const EXT_LOAD_ERROR: &str = "PhysicalDevice Instance core function is not loaded or not aviable. You may use a extension that is not present in `vk::InstanceCreateInfo.enabled_extension_names`";
+    pub(crate) const CORE_LOAD_ERROR: &str = "PhysicalDevice Instance core function is not loaded or not aviable. You may want to increase you `vk::InstanceCreateInfo.application_info.api_version`";
+    pub(crate) const EXT_LOAD_ERROR: &str = "PhysicalDevice Instance ext function is not loaded or not aviable. You may use a extension that is not present in `vk::InstanceCreateInfo.enabled_extension_names`";
 
     /// Returns the raw `VkPhysicalDevice` handle.
     pub const fn handle(&self) -> vkPhysicalDevice {
@@ -355,14 +355,14 @@ impl PhysicalDevice {
 
         let loader = |name: &CStr| unsafe { transmute((device_loader)(handle, name.as_ptr())) };
 
-        let extensions: &[*const i8] = if create_info.enabled_extension_names.is_null()
+        let extensions: &[*const c_char] = if create_info.enabled_extension_names.is_null()
             || create_info.enabled_extension_count == 0
         {
             &[]
         } else {
             unsafe {
                 slice::from_raw_parts(
-                    create_info.enabled_extension_names.cast(),
+                    create_info.enabled_extension_names,
                     create_info.enabled_extension_count as usize,
                 )
             }
@@ -390,8 +390,8 @@ pub struct Device {
 }
 
 impl Device {
-    pub(crate) const CORE_LOAD_ERROR: &str = "Device extension function is not loaded or not aviable. You may want to increase you `vk::InstanceCreateInfo.app_info.api_version`";
-    pub(crate) const EXT_LOAD_ERROR: &str = "Device core function is not loaded or not aviable. You may use a extension that is not present in `vk::InstanceCreateInfo.enabled_extension_names`";
+    pub(crate) const CORE_LOAD_ERROR: &str = "Device core function is not loaded or not aviable. You may want to increase you `vk::InstanceCreateInfo.application_info.api_version`";
+    pub(crate) const EXT_LOAD_ERROR: &str = "Device ext function is not loaded or not aviable. You may use a extension that is not present in `vk::InstanceCreateInfo.enabled_extension_names`";
 
     /// Returns the raw `VkDevice` handle.
     pub const fn handle(&self) -> vkDevice {
@@ -566,8 +566,8 @@ pub struct Queue {
 }
 
 impl Queue {
-    pub(crate) const CORE_LOAD_ERROR: &str = "Queue Device extension function is not loaded or not aviable. You may want to increase you `vk::InstanceCreateInfo.app_info.api_version`";
-    pub(crate) const EXT_LOAD_ERROR: &str = "Queue Device core function is not loaded or not aviable. You may use a extension that is not present in `vk::InstanceCreateInfo.enabled_extension_names`";
+    pub(crate) const CORE_LOAD_ERROR: &str = "Queue Device core function is not loaded or not aviable. You may want to increase you `vk::InstanceCreateInfo.application_info.api_version`";
+    pub(crate) const EXT_LOAD_ERROR: &str = "Queue Device ext function is not loaded or not aviable. You may use a extension that is not present in `vk::InstanceCreateInfo.enabled_extension_names`";
 
     /// Returns the raw `VkQueue` handle.
     pub const fn handle(&self) -> vkQueue {
@@ -591,8 +591,8 @@ pub struct CommandBuffer {
 }
 
 impl CommandBuffer {
-    pub(crate) const CORE_LOAD_ERROR: &str = "CommandBuffer Device extension function is not loaded or not aviable. You may want to increase you `vk::InstanceCreateInfo.app_info.api_version`";
-    pub(crate) const EXT_LOAD_ERROR: &str = "CommandBuffer Device core function is not loaded or not aviable. You may use a extension that is not present in `vk::InstanceCreateInfo.enabled_extension_names`";
+    pub(crate) const CORE_LOAD_ERROR: &str = "CommandBuffer Device core function is not loaded or not aviable. You may want to increase you `vk::InstanceCreateInfo.application_info.api_version`";
+    pub(crate) const EXT_LOAD_ERROR: &str = "CommandBuffer Device ext function is not loaded or not aviable. You may use a extension that is not present in `vk::InstanceCreateInfo.enabled_extension_names`";
 
     /// Returns the raw `VkCommandBuffer` handle.
     pub const fn handle(&self) -> vkCommandBuffer {

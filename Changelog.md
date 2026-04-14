@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.2.2]
+
+### Added
+
+Missing len functions.
+
+### Fix
+
+Builing on systems where c_char = u8, Raspberry pi in my case
+
 ## [0.2.1]
 
 ### Added Error Messages for not loaded functions

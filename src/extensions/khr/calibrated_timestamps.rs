@@ -6,6 +6,7 @@
 use crate::vk::*;
 use core::ffi::CStr;
 use core::mem::MaybeUninit;
+use core::ptr;
 
 /// Type: `Device`
 pub const NAME: &CStr = c"VK_KHR_calibrated_timestamps";
@@ -16,10 +17,13 @@ pub trait CalibratedTimestampsPhysicalDevice {
         &self,
         time_domains: &mut [TimeDomainKHR],
     ) -> Result<(), Error>;
+    fn get_calibrateable_time_domains_len(&self) -> Result<usize, Error>;
 }
 
 impl CalibratedTimestampsPhysicalDevice for PhysicalDevice {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceCalibrateableTimeDomainsKHR.html>
+    ///
+    /// Call [`get_calibrateable_time_domains_len()`][`Self::get_calibrateable_time_domains_len()`] to query the number of elements to pass to `out`.
     #[inline]
     fn get_calibrateable_time_domains(
         &self,
@@ -40,6 +44,25 @@ impl CalibratedTimestampsPhysicalDevice for PhysicalDevice {
             )
         }
         .result()
+    }
+
+    /// Returns the required slice length for Call [`get_calibrateable_time_domains`][`Self::get_calibrateable_time_domains`].
+    #[inline]
+    fn get_calibrateable_time_domains_len(&self) -> Result<usize, Error> {
+        let mut out: MaybeUninit<usize> = MaybeUninit::uninit();
+        unsafe {
+            (self
+                .fns()
+                .khr_calibrated_timestamps
+                .as_ref()
+                .expect(Self::EXT_LOAD_ERROR)
+                .get_physical_device_calibrateable_time_domains_khr)(
+                self.handle,
+                out.as_mut_ptr() as *mut u32,
+                ptr::null_mut(),
+            )
+        }
+        .init_on_success(out)
     }
 }
 

@@ -1574,7 +1574,7 @@ impl Device {
         &self,
         info: &DeviceImageMemoryRequirements,
     ) -> usize {
-        let mut out: MaybeUninit<u32> = MaybeUninit::uninit();
+        let mut out: MaybeUninit<usize> = MaybeUninit::uninit();
         unsafe {
             (self
                 .fns()
@@ -1583,10 +1583,10 @@ impl Device {
                 .expect(Self::CORE_LOAD_ERROR))(
                 self.handle,
                 info,
-                out.as_mut_ptr(),
+                out.as_mut_ptr() as *mut u32,
                 ptr::null_mut(),
             );
-            out.assume_init() as usize
+            out.assume_init()
         }
     }
 

@@ -21,8 +21,7 @@ pub use handles::*;
 pub use platform_types::*;
 pub use types::*;
 
-use crate::utils::read_into_vec_result;
-use crate::vtables::to_option;
+use crate::utils::{read_into_vec_result, to_option};
 
 pub use crate::vkGetInstanceProcAddr as get_instance_proc_addr;
 
