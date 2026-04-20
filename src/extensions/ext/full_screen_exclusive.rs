@@ -16,7 +16,7 @@ pub trait FullScreenExclusivePhysicalDevice {
     fn get_surface_present_modes2(
         &self,
         surface_info: &PhysicalDeviceSurfaceInfo2KHR,
-    ) -> Result<Vec<PresentModeKHR>, Error>;
+    ) -> Result<Vec<PresentModeKHR>>;
 }
 
 impl FullScreenExclusivePhysicalDevice for PhysicalDevice {
@@ -25,7 +25,7 @@ impl FullScreenExclusivePhysicalDevice for PhysicalDevice {
     fn get_surface_present_modes2(
         &self,
         surface_info: &PhysicalDeviceSurfaceInfo2KHR,
-    ) -> Result<Vec<PresentModeKHR>, Error> {
+    ) -> Result<Vec<PresentModeKHR>> {
         let call = self
             .fns()
             .ext_full_screen_exclusive
@@ -43,11 +43,11 @@ pub trait FullScreenExclusiveDevice {
     fn get_group_surface_present_modes2(
         &self,
         surface_info: &PhysicalDeviceSurfaceInfo2KHR,
-    ) -> Result<DeviceGroupPresentModeFlagsKHR, Error>;
+    ) -> Result<DeviceGroupPresentModeFlagsKHR>;
 
-    fn acquire_full_screen_exclusive_mode(&self, swapchain: SwapchainKHR) -> Result<(), Error>;
+    fn acquire_full_screen_exclusive_mode(&self, swapchain: SwapchainKHR) -> Result<()>;
 
-    fn release_full_screen_exclusive_mode(&self, swapchain: SwapchainKHR) -> Result<(), Error>;
+    fn release_full_screen_exclusive_mode(&self, swapchain: SwapchainKHR) -> Result<()>;
 }
 
 impl FullScreenExclusiveDevice for Device {
@@ -56,7 +56,7 @@ impl FullScreenExclusiveDevice for Device {
     fn get_group_surface_present_modes2(
         &self,
         surface_info: &PhysicalDeviceSurfaceInfo2KHR,
-    ) -> Result<DeviceGroupPresentModeFlagsKHR, Error> {
+    ) -> Result<DeviceGroupPresentModeFlagsKHR> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -70,7 +70,7 @@ impl FullScreenExclusiveDevice for Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkAcquireFullScreenExclusiveModeEXT.html>
     #[inline]
-    fn acquire_full_screen_exclusive_mode(&self, swapchain: SwapchainKHR) -> Result<(), Error> {
+    fn acquire_full_screen_exclusive_mode(&self, swapchain: SwapchainKHR) -> Result<()> {
         let call = self
             .fns()
             .ext_full_screen_exclusive
@@ -83,7 +83,7 @@ impl FullScreenExclusiveDevice for Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkReleaseFullScreenExclusiveModeEXT.html>
     #[inline]
-    fn release_full_screen_exclusive_mode(&self, swapchain: SwapchainKHR) -> Result<(), Error> {
+    fn release_full_screen_exclusive_mode(&self, swapchain: SwapchainKHR) -> Result<()> {
         let call = self
             .fns()
             .ext_full_screen_exclusive

@@ -19,7 +19,7 @@ pub trait DebugReportInstance {
         &self,
         create_info: &DebugReportCallbackCreateInfoEXT,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<DebugReportCallbackEXT, Error>;
+    ) -> Result<DebugReportCallbackEXT>;
 
     fn destroy_debug_report_callback(
         &self,
@@ -46,7 +46,7 @@ impl DebugReportInstance for Instance {
         &self,
         create_info: &DebugReportCallbackCreateInfoEXT,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<DebugReportCallbackEXT, Error> {
+    ) -> Result<DebugReportCallbackEXT> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()

@@ -33,30 +33,19 @@ impl SurfaceInstance for Instance {
 }
 
 pub trait SurfacePhysicalDevice {
-    fn get_surface_support(
-        &self,
-        queue_family_index: u32,
-        surface: SurfaceKHR,
-    ) -> Result<bool, Error>;
+    fn get_surface_support(&self, queue_family_index: u32, surface: SurfaceKHR) -> Result<bool>;
 
-    fn get_surface_capabilities(
-        &self,
-        surface: SurfaceKHR,
-    ) -> Result<SurfaceCapabilitiesKHR, Error>;
+    fn get_surface_capabilities(&self, surface: SurfaceKHR) -> Result<SurfaceCapabilitiesKHR>;
 
-    fn get_surface_formats(&self, surface: SurfaceKHR) -> Result<Vec<SurfaceFormatKHR>, Error>;
+    fn get_surface_formats(&self, surface: SurfaceKHR) -> Result<Vec<SurfaceFormatKHR>>;
 
-    fn get_surface_present_modes(&self, surface: SurfaceKHR) -> Result<Vec<PresentModeKHR>, Error>;
+    fn get_surface_present_modes(&self, surface: SurfaceKHR) -> Result<Vec<PresentModeKHR>>;
 }
 
 impl SurfacePhysicalDevice for PhysicalDevice {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceSurfaceSupportKHR.html>
     #[inline]
-    fn get_surface_support(
-        &self,
-        queue_family_index: u32,
-        surface: SurfaceKHR,
-    ) -> Result<bool, Error> {
+    fn get_surface_support(&self, queue_family_index: u32, surface: SurfaceKHR) -> Result<bool> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -72,10 +61,7 @@ impl SurfacePhysicalDevice for PhysicalDevice {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceSurfaceCapabilitiesKHR.html>
     #[inline]
-    fn get_surface_capabilities(
-        &self,
-        surface: SurfaceKHR,
-    ) -> Result<SurfaceCapabilitiesKHR, Error> {
+    fn get_surface_capabilities(&self, surface: SurfaceKHR) -> Result<SurfaceCapabilitiesKHR> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -89,7 +75,7 @@ impl SurfacePhysicalDevice for PhysicalDevice {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceSurfaceFormatsKHR.html>
     #[inline]
-    fn get_surface_formats(&self, surface: SurfaceKHR) -> Result<Vec<SurfaceFormatKHR>, Error> {
+    fn get_surface_formats(&self, surface: SurfaceKHR) -> Result<Vec<SurfaceFormatKHR>> {
         let call = self
             .fns()
             .khr_surface
@@ -102,7 +88,7 @@ impl SurfacePhysicalDevice for PhysicalDevice {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceSurfacePresentModesKHR.html>
     #[inline]
-    fn get_surface_present_modes(&self, surface: SurfaceKHR) -> Result<Vec<PresentModeKHR>, Error> {
+    fn get_surface_present_modes(&self, surface: SurfaceKHR) -> Result<Vec<PresentModeKHR>> {
         let call = self
             .fns()
             .khr_surface

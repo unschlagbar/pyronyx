@@ -17,19 +17,19 @@ pub trait BufferCollectionDevice {
         &self,
         create_info: &BufferCollectionCreateInfoFUCHSIA,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<BufferCollectionFUCHSIA, Error>;
+    ) -> Result<BufferCollectionFUCHSIA>;
 
     fn set_buffer_collection_buffer_constraints(
         &self,
         collection: BufferCollectionFUCHSIA,
         buffer_constraints_info: &BufferConstraintsInfoFUCHSIA,
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 
     fn set_buffer_collection_image_constraints(
         &self,
         collection: BufferCollectionFUCHSIA,
         image_constraints_info: &ImageConstraintsInfoFUCHSIA,
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 
     fn destroy_buffer_collection(
         &self,
@@ -40,7 +40,7 @@ pub trait BufferCollectionDevice {
     fn get_buffer_collection_properties(
         &self,
         collection: BufferCollectionFUCHSIA,
-    ) -> Result<BufferCollectionPropertiesFUCHSIA<'_>, Error>;
+    ) -> Result<BufferCollectionPropertiesFUCHSIA<'_>>;
 }
 
 impl BufferCollectionDevice for Device {
@@ -50,7 +50,7 @@ impl BufferCollectionDevice for Device {
         &self,
         create_info: &BufferCollectionCreateInfoFUCHSIA,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<BufferCollectionFUCHSIA, Error> {
+    ) -> Result<BufferCollectionFUCHSIA> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -76,7 +76,7 @@ impl BufferCollectionDevice for Device {
         &self,
         collection: BufferCollectionFUCHSIA,
         buffer_constraints_info: &BufferConstraintsInfoFUCHSIA,
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .fuchsia_buffer_collection
@@ -93,7 +93,7 @@ impl BufferCollectionDevice for Device {
         &self,
         collection: BufferCollectionFUCHSIA,
         image_constraints_info: &ImageConstraintsInfoFUCHSIA,
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .fuchsia_buffer_collection
@@ -126,7 +126,7 @@ impl BufferCollectionDevice for Device {
     fn get_buffer_collection_properties(
         &self,
         collection: BufferCollectionFUCHSIA,
-    ) -> Result<BufferCollectionPropertiesFUCHSIA<'_>, Error> {
+    ) -> Result<BufferCollectionPropertiesFUCHSIA<'_>> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()

@@ -18,11 +18,11 @@ pub trait OpticalFlowPhysicalDevice {
         &self,
         optical_flow_image_format_info: &OpticalFlowImageFormatInfoNV,
         image_format_properties: &mut [OpticalFlowImageFormatPropertiesNV],
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
     fn get_optical_flow_image_formats_len(
         &self,
         optical_flow_image_format_info: &OpticalFlowImageFormatInfoNV,
-    ) -> Result<usize, Error>;
+    ) -> Result<usize>;
 }
 
 impl OpticalFlowPhysicalDevice for PhysicalDevice {
@@ -34,7 +34,7 @@ impl OpticalFlowPhysicalDevice for PhysicalDevice {
         &self,
         optical_flow_image_format_info: &OpticalFlowImageFormatInfoNV,
         image_format_properties: &mut [OpticalFlowImageFormatPropertiesNV],
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .nv_optical_flow
@@ -58,7 +58,7 @@ impl OpticalFlowPhysicalDevice for PhysicalDevice {
     fn get_optical_flow_image_formats_len(
         &self,
         optical_flow_image_format_info: &OpticalFlowImageFormatInfoNV,
-    ) -> Result<usize, Error> {
+    ) -> Result<usize> {
         let mut out: MaybeUninit<usize> = MaybeUninit::uninit();
         unsafe {
             (self
@@ -82,7 +82,7 @@ pub trait OpticalFlowDevice {
         &self,
         create_info: &OpticalFlowSessionCreateInfoNV,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<OpticalFlowSessionNV, Error>;
+    ) -> Result<OpticalFlowSessionNV>;
 
     fn destroy_optical_flow_session(
         &self,
@@ -96,7 +96,7 @@ pub trait OpticalFlowDevice {
         binding_point: OpticalFlowSessionBindingPointNV,
         view: ImageView,
         layout: ImageLayout,
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 }
 
 impl OpticalFlowDevice for Device {
@@ -106,7 +106,7 @@ impl OpticalFlowDevice for Device {
         &self,
         create_info: &OpticalFlowSessionCreateInfoNV,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<OpticalFlowSessionNV, Error> {
+    ) -> Result<OpticalFlowSessionNV> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -151,7 +151,7 @@ impl OpticalFlowDevice for Device {
         binding_point: OpticalFlowSessionBindingPointNV,
         view: ImageView,
         layout: ImageLayout,
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .nv_optical_flow

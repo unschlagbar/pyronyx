@@ -17,7 +17,7 @@ pub trait HeadlessSurfaceInstance {
         &self,
         create_info: &HeadlessSurfaceCreateInfoEXT,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<SurfaceKHR, Error>;
+    ) -> Result<SurfaceKHR>;
 }
 
 impl HeadlessSurfaceInstance for Instance {
@@ -27,7 +27,7 @@ impl HeadlessSurfaceInstance for Instance {
         &self,
         create_info: &HeadlessSurfaceCreateInfoEXT,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<SurfaceKHR, Error> {
+    ) -> Result<SurfaceKHR> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()

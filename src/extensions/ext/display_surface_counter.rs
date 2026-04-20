@@ -12,10 +12,8 @@ pub const NAME: &CStr = c"VK_EXT_display_surface_counter";
 pub const SPEC_VERSION: u32 = 1;
 
 pub trait DisplaySurfaceCounterPhysicalDevice {
-    fn get_surface_capabilities2(
-        &self,
-        surface: SurfaceKHR,
-    ) -> Result<SurfaceCapabilities2EXT<'_>, Error>;
+    fn get_surface_capabilities2(&self, surface: SurfaceKHR)
+    -> Result<SurfaceCapabilities2EXT<'_>>;
 }
 
 impl DisplaySurfaceCounterPhysicalDevice for PhysicalDevice {
@@ -24,7 +22,7 @@ impl DisplaySurfaceCounterPhysicalDevice for PhysicalDevice {
     fn get_surface_capabilities2(
         &self,
         surface: SurfaceKHR,
-    ) -> Result<SurfaceCapabilities2EXT<'_>, Error> {
+    ) -> Result<SurfaceCapabilities2EXT<'_>> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()

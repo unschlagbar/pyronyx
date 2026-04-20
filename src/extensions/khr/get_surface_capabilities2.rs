@@ -15,13 +15,13 @@ pub trait GetSurfaceCapabilities2PhysicalDevice {
     fn get_surface_capabilities2(
         &self,
         surface_info: &PhysicalDeviceSurfaceInfo2KHR,
-    ) -> Result<SurfaceCapabilities2KHR<'_>, Error>;
+    ) -> Result<SurfaceCapabilities2KHR<'_>>;
 
     fn get_surface_formats2(
         &self,
         surface_info: &PhysicalDeviceSurfaceInfo2KHR,
         surface_formats: &mut [SurfaceFormat2KHR],
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 }
 
 impl GetSurfaceCapabilities2PhysicalDevice for PhysicalDevice {
@@ -30,7 +30,7 @@ impl GetSurfaceCapabilities2PhysicalDevice for PhysicalDevice {
     fn get_surface_capabilities2(
         &self,
         surface_info: &PhysicalDeviceSurfaceInfo2KHR,
-    ) -> Result<SurfaceCapabilities2KHR<'_>, Error> {
+    ) -> Result<SurfaceCapabilities2KHR<'_>> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -48,7 +48,7 @@ impl GetSurfaceCapabilities2PhysicalDevice for PhysicalDevice {
         &self,
         surface_info: &PhysicalDeviceSurfaceInfo2KHR,
         surface_formats: &mut [SurfaceFormat2KHR],
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .khr_get_surface_capabilities2

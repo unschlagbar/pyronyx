@@ -12,19 +12,13 @@ pub const NAME: &CStr = c"VK_NV_external_memory_sci_buf";
 pub const SPEC_VERSION: u32 = 2;
 
 pub trait ExternalMemorySciBufDevice {
-    fn get_memory_sci_buf(
-        &self,
-        get_sci_buf_info: &MemoryGetSciBufInfoNV,
-    ) -> Result<NvSciBufObj, Error>;
+    fn get_memory_sci_buf(&self, get_sci_buf_info: &MemoryGetSciBufInfoNV) -> Result<NvSciBufObj>;
 }
 
 impl ExternalMemorySciBufDevice for Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetMemorySciBufNV.html>
     #[inline]
-    fn get_memory_sci_buf(
-        &self,
-        get_sci_buf_info: &MemoryGetSciBufInfoNV,
-    ) -> Result<NvSciBufObj, Error> {
+    fn get_memory_sci_buf(&self, get_sci_buf_info: &MemoryGetSciBufInfoNV) -> Result<NvSciBufObj> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -42,9 +36,9 @@ pub trait ExternalMemorySciBufPhysicalDevice {
         &self,
         handle_type: ExternalMemoryHandleTypeFlags,
         handle: NvSciBufObj,
-    ) -> Result<MemorySciBufPropertiesNV<'_>, Error>;
+    ) -> Result<MemorySciBufPropertiesNV<'_>>;
 
-    fn get_sci_buf_attributes(&self, attributes: NvSciBufAttrList) -> Result<(), Error>;
+    fn get_sci_buf_attributes(&self, attributes: NvSciBufAttrList) -> Result<()>;
 }
 
 impl ExternalMemorySciBufPhysicalDevice for PhysicalDevice {
@@ -54,7 +48,7 @@ impl ExternalMemorySciBufPhysicalDevice for PhysicalDevice {
         &self,
         handle_type: ExternalMemoryHandleTypeFlags,
         handle: NvSciBufObj,
-    ) -> Result<MemorySciBufPropertiesNV<'_>, Error> {
+    ) -> Result<MemorySciBufPropertiesNV<'_>> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -68,7 +62,7 @@ impl ExternalMemorySciBufPhysicalDevice for PhysicalDevice {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceSciBufAttributesNV.html>
     #[inline]
-    fn get_sci_buf_attributes(&self, attributes: NvSciBufAttrList) -> Result<(), Error> {
+    fn get_sci_buf_attributes(&self, attributes: NvSciBufAttrList) -> Result<()> {
         let call = self
             .fns()
             .nv_external_memory_sci_buf

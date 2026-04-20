@@ -17,7 +17,7 @@ pub trait ExternalMemoryWin32Device {
         &self,
         memory: DeviceMemory,
         handle_type: ExternalMemoryHandleTypeFlagsNV,
-    ) -> Result<HANDLE, Error>;
+    ) -> Result<HANDLE>;
 }
 
 impl ExternalMemoryWin32Device for Device {
@@ -27,7 +27,7 @@ impl ExternalMemoryWin32Device for Device {
         &self,
         memory: DeviceMemory,
         handle_type: ExternalMemoryHandleTypeFlagsNV,
-    ) -> Result<HANDLE, Error> {
+    ) -> Result<HANDLE> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()

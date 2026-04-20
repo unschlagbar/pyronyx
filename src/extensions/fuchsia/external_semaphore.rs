@@ -15,12 +15,12 @@ pub trait ExternalSemaphoreDevice {
     fn get_semaphore_zircon_handle(
         &self,
         get_zircon_handle_info: &SemaphoreGetZirconHandleInfoFUCHSIA,
-    ) -> Result<zx_handle_t, Error>;
+    ) -> Result<zx_handle_t>;
 
     fn import_semaphore_zircon_handle(
         &self,
         import_semaphore_zircon_handle_info: &ImportSemaphoreZirconHandleInfoFUCHSIA,
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 }
 
 impl ExternalSemaphoreDevice for Device {
@@ -29,7 +29,7 @@ impl ExternalSemaphoreDevice for Device {
     fn get_semaphore_zircon_handle(
         &self,
         get_zircon_handle_info: &SemaphoreGetZirconHandleInfoFUCHSIA,
-    ) -> Result<zx_handle_t, Error> {
+    ) -> Result<zx_handle_t> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -47,7 +47,7 @@ impl ExternalSemaphoreDevice for Device {
     fn import_semaphore_zircon_handle(
         &self,
         import_semaphore_zircon_handle_info: &ImportSemaphoreZirconHandleInfoFUCHSIA,
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .fuchsia_external_semaphore

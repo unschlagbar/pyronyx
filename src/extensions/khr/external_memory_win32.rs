@@ -15,13 +15,13 @@ pub trait ExternalMemoryWin32Device {
     fn get_memory_win32_handle(
         &self,
         get_win32_handle_info: &MemoryGetWin32HandleInfoKHR,
-    ) -> Result<HANDLE, Error>;
+    ) -> Result<HANDLE>;
 
     fn get_memory_win32_handle_properties(
         &self,
         handle_type: ExternalMemoryHandleTypeFlags,
         handle: HANDLE,
-    ) -> Result<MemoryWin32HandlePropertiesKHR<'_>, Error>;
+    ) -> Result<MemoryWin32HandlePropertiesKHR<'_>>;
 }
 
 impl ExternalMemoryWin32Device for Device {
@@ -30,7 +30,7 @@ impl ExternalMemoryWin32Device for Device {
     fn get_memory_win32_handle(
         &self,
         get_win32_handle_info: &MemoryGetWin32HandleInfoKHR,
-    ) -> Result<HANDLE, Error> {
+    ) -> Result<HANDLE> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -48,7 +48,7 @@ impl ExternalMemoryWin32Device for Device {
         &self,
         handle_type: ExternalMemoryHandleTypeFlags,
         handle: HANDLE,
-    ) -> Result<MemoryWin32HandlePropertiesKHR<'_>, Error> {
+    ) -> Result<MemoryWin32HandlePropertiesKHR<'_>> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()

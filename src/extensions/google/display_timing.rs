@@ -15,13 +15,13 @@ pub trait DisplayTimingDevice {
     fn get_refresh_cycle_duration(
         &self,
         swapchain: SwapchainKHR,
-    ) -> Result<RefreshCycleDurationGOOGLE, Error>;
+    ) -> Result<RefreshCycleDurationGOOGLE>;
 
     fn get_past_presentation_timing(
         &self,
         swapchain: SwapchainKHR,
         presentation_timings: &mut [PastPresentationTimingGOOGLE],
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 }
 
 impl DisplayTimingDevice for Device {
@@ -30,7 +30,7 @@ impl DisplayTimingDevice for Device {
     fn get_refresh_cycle_duration(
         &self,
         swapchain: SwapchainKHR,
-    ) -> Result<RefreshCycleDurationGOOGLE, Error> {
+    ) -> Result<RefreshCycleDurationGOOGLE> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -48,7 +48,7 @@ impl DisplayTimingDevice for Device {
         &self,
         swapchain: SwapchainKHR,
         presentation_timings: &mut [PastPresentationTimingGOOGLE],
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .google_display_timing

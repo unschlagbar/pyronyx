@@ -13,11 +13,8 @@ pub const NAME: &CStr = c"VK_KHR_calibrated_timestamps";
 pub const SPEC_VERSION: u32 = 1;
 
 pub trait CalibratedTimestampsPhysicalDevice {
-    fn get_calibrateable_time_domains(
-        &self,
-        time_domains: &mut [TimeDomainKHR],
-    ) -> Result<(), Error>;
-    fn get_calibrateable_time_domains_len(&self) -> Result<usize, Error>;
+    fn get_calibrateable_time_domains(&self, time_domains: &mut [TimeDomainKHR]) -> Result<()>;
+    fn get_calibrateable_time_domains_len(&self) -> Result<usize>;
 }
 
 impl CalibratedTimestampsPhysicalDevice for PhysicalDevice {
@@ -25,10 +22,7 @@ impl CalibratedTimestampsPhysicalDevice for PhysicalDevice {
     ///
     /// Call [`get_calibrateable_time_domains_len()`][`Self::get_calibrateable_time_domains_len()`] to query the number of elements to pass to `out`.
     #[inline]
-    fn get_calibrateable_time_domains(
-        &self,
-        time_domains: &mut [TimeDomainKHR],
-    ) -> Result<(), Error> {
+    fn get_calibrateable_time_domains(&self, time_domains: &mut [TimeDomainKHR]) -> Result<()> {
         let call = self
             .fns()
             .khr_calibrated_timestamps
@@ -48,7 +42,7 @@ impl CalibratedTimestampsPhysicalDevice for PhysicalDevice {
 
     /// Returns the required slice length for Call [`get_calibrateable_time_domains`][`Self::get_calibrateable_time_domains`].
     #[inline]
-    fn get_calibrateable_time_domains_len(&self) -> Result<usize, Error> {
+    fn get_calibrateable_time_domains_len(&self) -> Result<usize> {
         let mut out: MaybeUninit<usize> = MaybeUninit::uninit();
         unsafe {
             (self
@@ -71,7 +65,7 @@ pub trait CalibratedTimestampsDevice {
         &self,
         timestamp_infos: &[CalibratedTimestampInfoKHR],
         timestamps: &mut [u64],
-    ) -> Result<u64, Error>;
+    ) -> Result<u64>;
 }
 
 impl CalibratedTimestampsDevice for Device {
@@ -81,7 +75,7 @@ impl CalibratedTimestampsDevice for Device {
         &self,
         timestamp_infos: &[CalibratedTimestampInfoKHR],
         timestamps: &mut [u64],
-    ) -> Result<u64, Error> {
+    ) -> Result<u64> {
         assert_eq!(timestamp_infos.len(), timestamps.len());
         let mut out = MaybeUninit::uninit();
         let call = self

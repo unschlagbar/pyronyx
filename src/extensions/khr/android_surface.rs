@@ -17,7 +17,7 @@ pub trait AndroidSurfaceInstance {
         &self,
         create_info: &AndroidSurfaceCreateInfoKHR,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<SurfaceKHR, Error>;
+    ) -> Result<SurfaceKHR>;
 }
 
 impl AndroidSurfaceInstance for Instance {
@@ -27,7 +27,7 @@ impl AndroidSurfaceInstance for Instance {
         &self,
         create_info: &AndroidSurfaceCreateInfoKHR,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<SurfaceKHR, Error> {
+    ) -> Result<SurfaceKHR> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()

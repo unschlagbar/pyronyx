@@ -28,7 +28,7 @@ impl Instance {
     pub fn enumerate_physical_device_groups(
         &self,
         physical_device_group_properties: &mut [PhysicalDeviceGroupProperties],
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .v1_1
@@ -47,7 +47,7 @@ impl Instance {
 
     /// Returns the required slice length for Call [`enumerate_physical_device_groups`][`Self::enumerate_physical_device_groups`].
     #[inline]
-    pub fn enumerate_physical_device_groups_len(&self) -> Result<usize, Error> {
+    pub fn enumerate_physical_device_groups_len(&self) -> Result<usize> {
         let mut out: MaybeUninit<usize> = MaybeUninit::uninit();
         unsafe {
             (self

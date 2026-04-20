@@ -17,26 +17,26 @@ pub trait DisplayControlDevice {
         &self,
         display: DisplayKHR,
         display_power_info: &DisplayPowerInfoEXT,
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 
     fn register_event(
         &self,
         device_event_info: &DeviceEventInfoEXT,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<Fence, Error>;
+    ) -> Result<Fence>;
 
     fn register_display_event(
         &self,
         display: DisplayKHR,
         display_event_info: &DisplayEventInfoEXT,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<Fence, Error>;
+    ) -> Result<Fence>;
 
     fn get_swapchain_counter(
         &self,
         swapchain: SwapchainKHR,
         counter: SurfaceCounterFlagsEXT,
-    ) -> Result<u64, Error>;
+    ) -> Result<u64>;
 }
 
 impl DisplayControlDevice for Device {
@@ -46,7 +46,7 @@ impl DisplayControlDevice for Device {
         &self,
         display: DisplayKHR,
         display_power_info: &DisplayPowerInfoEXT,
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .ext_display_control
@@ -63,7 +63,7 @@ impl DisplayControlDevice for Device {
         &self,
         device_event_info: &DeviceEventInfoEXT,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<Fence, Error> {
+    ) -> Result<Fence> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -90,7 +90,7 @@ impl DisplayControlDevice for Device {
         display: DisplayKHR,
         display_event_info: &DisplayEventInfoEXT,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<Fence, Error> {
+    ) -> Result<Fence> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -117,7 +117,7 @@ impl DisplayControlDevice for Device {
         &self,
         swapchain: SwapchainKHR,
         counter: SurfaceCounterFlagsEXT,
-    ) -> Result<u64, Error> {
+    ) -> Result<u64> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()

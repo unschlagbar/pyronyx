@@ -97,7 +97,7 @@ impl PhysicalDevice {
         tiling: ImageTiling,
         usage: ImageUsageFlags,
         flags: ImageCreateFlags,
-    ) -> Result<ImageFormatProperties, Error> {
+    ) -> Result<ImageFormatProperties> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -121,7 +121,7 @@ impl PhysicalDevice {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkEnumerateDeviceLayerProperties.html>
     #[inline]
-    pub fn enumerate_device_layer_properties(&self) -> Result<Vec<LayerProperties>, Error> {
+    pub fn enumerate_device_layer_properties(&self) -> Result<Vec<LayerProperties>> {
         let call = self
             .fns()
             .v1_0
@@ -136,7 +136,7 @@ impl PhysicalDevice {
     pub fn enumerate_device_extension_properties(
         &self,
         layer_name: Option<&c_char>,
-    ) -> Result<Vec<ExtensionProperties>, Error> {
+    ) -> Result<Vec<ExtensionProperties>> {
         let call = self
             .fns()
             .v1_0
@@ -227,7 +227,7 @@ impl PhysicalDevice {
     pub fn get_image_format_properties2(
         &self,
         image_format_info: &PhysicalDeviceImageFormatInfo2,
-    ) -> Result<ImageFormatProperties2<'_>, Error> {
+    ) -> Result<ImageFormatProperties2<'_>> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -406,7 +406,7 @@ impl PhysicalDevice {
     pub fn get_tool_properties(
         &self,
         tool_properties: &mut [PhysicalDeviceToolProperties],
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .v1_3
@@ -425,7 +425,7 @@ impl PhysicalDevice {
 
     /// Returns the required slice length for Call [`get_tool_properties`][`Self::get_tool_properties`].
     #[inline]
-    pub fn get_tool_properties_len(&self) -> Result<usize, Error> {
+    pub fn get_tool_properties_len(&self) -> Result<usize> {
         let mut out: MaybeUninit<usize> = MaybeUninit::uninit();
         unsafe {
             (self

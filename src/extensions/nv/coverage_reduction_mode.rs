@@ -16,8 +16,8 @@ pub trait CoverageReductionModePhysicalDevice {
     fn get_supported_framebuffer_mixed_samples_combinations(
         &self,
         combinations: &mut [FramebufferMixedSamplesCombinationNV],
-    ) -> Result<(), Error>;
-    fn get_supported_framebuffer_mixed_samples_combinations_len(&self) -> Result<usize, Error>;
+    ) -> Result<()>;
+    fn get_supported_framebuffer_mixed_samples_combinations_len(&self) -> Result<usize>;
 }
 
 impl CoverageReductionModePhysicalDevice for PhysicalDevice {
@@ -28,7 +28,7 @@ impl CoverageReductionModePhysicalDevice for PhysicalDevice {
     fn get_supported_framebuffer_mixed_samples_combinations(
         &self,
         combinations: &mut [FramebufferMixedSamplesCombinationNV],
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .nv_coverage_reduction_mode
@@ -48,7 +48,7 @@ impl CoverageReductionModePhysicalDevice for PhysicalDevice {
 
     /// Returns the required slice length for Call [`get_supported_framebuffer_mixed_samples_combinations`][`Self::get_supported_framebuffer_mixed_samples_combinations`].
     #[inline]
-    fn get_supported_framebuffer_mixed_samples_combinations_len(&self) -> Result<usize, Error> {
+    fn get_supported_framebuffer_mixed_samples_combinations_len(&self) -> Result<usize> {
         let mut out: MaybeUninit<usize> = MaybeUninit::uninit();
         unsafe {
             (self

@@ -135,7 +135,7 @@ pub trait RayTracingPipelineDevice {
         first_group: u32,
         group_count: u32,
         data: &mut [c_void],
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 
     fn get_ray_tracing_capture_replay_shader_group_handles(
         &self,
@@ -143,7 +143,7 @@ pub trait RayTracingPipelineDevice {
         first_group: u32,
         group_count: u32,
         data: &mut [c_void],
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 
     fn create_ray_tracing_pipelines(
         &self,
@@ -152,7 +152,7 @@ pub trait RayTracingPipelineDevice {
         create_infos: &[RayTracingPipelineCreateInfoKHR],
         allocator: Option<&AllocationCallbacks>,
         pipelines: &mut [Pipeline],
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 
     fn get_ray_tracing_shader_group_stack_size(
         &self,
@@ -171,7 +171,7 @@ impl RayTracingPipelineDevice for Device {
         first_group: u32,
         group_count: u32,
         data: &mut [c_void],
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .khr_ray_tracing_pipeline
@@ -200,7 +200,7 @@ impl RayTracingPipelineDevice for Device {
         first_group: u32,
         group_count: u32,
         data: &mut [c_void],
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .khr_ray_tracing_pipeline
@@ -230,7 +230,7 @@ impl RayTracingPipelineDevice for Device {
         create_infos: &[RayTracingPipelineCreateInfoKHR],
         allocator: Option<&AllocationCallbacks>,
         pipelines: &mut [Pipeline],
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         assert_eq!(create_infos.len(), pipelines.len());
         let call = self
             .fns()

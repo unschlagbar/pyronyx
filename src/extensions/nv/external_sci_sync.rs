@@ -17,12 +17,12 @@ pub trait ExternalSciSyncDevice {
     fn get_semaphore_sci_sync_obj(
         &self,
         get_sci_sync_info: &SemaphoreGetSciSyncInfoNV,
-    ) -> Result<c_void, Error>;
+    ) -> Result<c_void>;
 
     fn import_semaphore_sci_sync_obj(
         &self,
         import_semaphore_sci_sync_info: &ImportSemaphoreSciSyncInfoNV,
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 }
 
 impl ExternalSciSyncDevice for Device {
@@ -31,7 +31,7 @@ impl ExternalSciSyncDevice for Device {
     fn get_semaphore_sci_sync_obj(
         &self,
         get_sci_sync_info: &SemaphoreGetSciSyncInfoNV,
-    ) -> Result<c_void, Error> {
+    ) -> Result<c_void> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -48,7 +48,7 @@ impl ExternalSciSyncDevice for Device {
     fn import_semaphore_sci_sync_obj(
         &self,
         import_semaphore_sci_sync_info: &ImportSemaphoreSciSyncInfoNV,
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .nv_external_sci_sync

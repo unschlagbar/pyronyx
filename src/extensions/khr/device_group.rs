@@ -12,24 +12,20 @@ pub const NAME: &CStr = c"VK_KHR_device_group";
 pub const SPEC_VERSION: u32 = 4;
 
 pub trait DeviceGroupDevice {
-    fn get_group_present_capabilities(
-        &self,
-    ) -> Result<DeviceGroupPresentCapabilitiesKHR<'_>, Error>;
+    fn get_group_present_capabilities(&self) -> Result<DeviceGroupPresentCapabilitiesKHR<'_>>;
 
     fn get_group_surface_present_modes(
         &self,
         surface: SurfaceKHR,
-    ) -> Result<DeviceGroupPresentModeFlagsKHR, Error>;
+    ) -> Result<DeviceGroupPresentModeFlagsKHR>;
 
-    fn acquire_next_image2(&self, acquire_info: &AcquireNextImageInfoKHR) -> Result<u32, Error>;
+    fn acquire_next_image2(&self, acquire_info: &AcquireNextImageInfoKHR) -> Result<u32>;
 }
 
 impl DeviceGroupDevice for Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetDeviceGroupPresentCapabilitiesKHR.html>
     #[inline]
-    fn get_group_present_capabilities(
-        &self,
-    ) -> Result<DeviceGroupPresentCapabilitiesKHR<'_>, Error> {
+    fn get_group_present_capabilities(&self) -> Result<DeviceGroupPresentCapabilitiesKHR<'_>> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -46,7 +42,7 @@ impl DeviceGroupDevice for Device {
     fn get_group_surface_present_modes(
         &self,
         surface: SurfaceKHR,
-    ) -> Result<DeviceGroupPresentModeFlagsKHR, Error> {
+    ) -> Result<DeviceGroupPresentModeFlagsKHR> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -60,7 +56,7 @@ impl DeviceGroupDevice for Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkAcquireNextImage2KHR.html>
     #[inline]
-    fn acquire_next_image2(&self, acquire_info: &AcquireNextImageInfoKHR) -> Result<u32, Error> {
+    fn acquire_next_image2(&self, acquire_info: &AcquireNextImageInfoKHR) -> Result<u32> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -74,21 +70,13 @@ impl DeviceGroupDevice for Device {
 }
 
 pub trait DeviceGroupPhysicalDevice {
-    fn get_present_rectangles(
-        &self,
-        surface: SurfaceKHR,
-        rects: &mut [Rect2D],
-    ) -> Result<(), Error>;
+    fn get_present_rectangles(&self, surface: SurfaceKHR, rects: &mut [Rect2D]) -> Result<()>;
 }
 
 impl DeviceGroupPhysicalDevice for PhysicalDevice {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDevicePresentRectanglesKHR.html>
     #[inline]
-    fn get_present_rectangles(
-        &self,
-        surface: SurfaceKHR,
-        rects: &mut [Rect2D],
-    ) -> Result<(), Error> {
+    fn get_present_rectangles(&self, surface: SurfaceKHR, rects: &mut [Rect2D]) -> Result<()> {
         let call = self
             .fns()
             .khr_device_group

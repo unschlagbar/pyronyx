@@ -15,19 +15,19 @@ pub trait PipelineExecutablePropertiesDevice {
         &self,
         pipeline_info: &PipelineInfoKHR,
         properties: &mut [PipelineExecutablePropertiesKHR],
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 
     fn get_pipeline_executable_statistics(
         &self,
         executable_info: &PipelineExecutableInfoKHR,
         statistics: &mut [PipelineExecutableStatisticKHR],
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 
     fn get_pipeline_executable_internal_representations(
         &self,
         executable_info: &PipelineExecutableInfoKHR,
         internal_representations: &mut [PipelineExecutableInternalRepresentationKHR],
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 }
 
 impl PipelineExecutablePropertiesDevice for Device {
@@ -37,7 +37,7 @@ impl PipelineExecutablePropertiesDevice for Device {
         &self,
         pipeline_info: &PipelineInfoKHR,
         properties: &mut [PipelineExecutablePropertiesKHR],
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .khr_pipeline_executable_properties
@@ -62,7 +62,7 @@ impl PipelineExecutablePropertiesDevice for Device {
         &self,
         executable_info: &PipelineExecutableInfoKHR,
         statistics: &mut [PipelineExecutableStatisticKHR],
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .khr_pipeline_executable_properties
@@ -87,7 +87,7 @@ impl PipelineExecutablePropertiesDevice for Device {
         &self,
         executable_info: &PipelineExecutableInfoKHR,
         internal_representations: &mut [PipelineExecutableInternalRepresentationKHR],
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .khr_pipeline_executable_properties

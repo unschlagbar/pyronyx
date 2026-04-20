@@ -15,7 +15,7 @@ pub trait ExternalMemoryScreenBufferDevice {
     fn get_screen_buffer_properties(
         &self,
         buffer: &_screen_buffer,
-    ) -> Result<ScreenBufferPropertiesQNX<'_>, Error>;
+    ) -> Result<ScreenBufferPropertiesQNX<'_>>;
 }
 
 impl ExternalMemoryScreenBufferDevice for Device {
@@ -24,7 +24,7 @@ impl ExternalMemoryScreenBufferDevice for Device {
     fn get_screen_buffer_properties(
         &self,
         buffer: &_screen_buffer,
-    ) -> Result<ScreenBufferPropertiesQNX<'_>, Error> {
+    ) -> Result<ScreenBufferPropertiesQNX<'_>> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()

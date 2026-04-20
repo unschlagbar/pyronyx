@@ -24,19 +24,19 @@ pub trait AccelerationStructureDevice {
         &self,
         deferred_operation: DeferredOperationKHR,
         info: &CopyAccelerationStructureInfoKHR,
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 
     fn copy_acceleration_structure_to_memory(
         &self,
         deferred_operation: DeferredOperationKHR,
         info: &CopyAccelerationStructureToMemoryInfoKHR,
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 
     fn copy_memory_to_acceleration_structure(
         &self,
         deferred_operation: DeferredOperationKHR,
         info: &CopyMemoryToAccelerationStructureInfoKHR,
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 
     fn write_acceleration_structures_properties(
         &self,
@@ -44,7 +44,7 @@ pub trait AccelerationStructureDevice {
         query_type: QueryType,
         data: &mut [c_void],
         stride: usize,
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 
     fn get_acceleration_structure_compatibility(
         &self,
@@ -55,14 +55,14 @@ pub trait AccelerationStructureDevice {
         &self,
         create_info: &AccelerationStructureCreateInfoKHR,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<AccelerationStructureKHR, Error>;
+    ) -> Result<AccelerationStructureKHR>;
 
     fn build_acceleration_structures(
         &self,
         deferred_operation: DeferredOperationKHR,
         infos: &[AccelerationStructureBuildGeometryInfoKHR],
         build_range_infos: &[*const AccelerationStructureBuildRangeInfoKHR],
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 
     fn get_acceleration_structure_address(
         &self,
@@ -107,7 +107,7 @@ impl AccelerationStructureDevice for Device {
         &self,
         deferred_operation: DeferredOperationKHR,
         info: &CopyAccelerationStructureInfoKHR,
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .khr_acceleration_structure
@@ -124,7 +124,7 @@ impl AccelerationStructureDevice for Device {
         &self,
         deferred_operation: DeferredOperationKHR,
         info: &CopyAccelerationStructureToMemoryInfoKHR,
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .khr_acceleration_structure
@@ -141,7 +141,7 @@ impl AccelerationStructureDevice for Device {
         &self,
         deferred_operation: DeferredOperationKHR,
         info: &CopyMemoryToAccelerationStructureInfoKHR,
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .khr_acceleration_structure
@@ -160,7 +160,7 @@ impl AccelerationStructureDevice for Device {
         query_type: QueryType,
         data: &mut [c_void],
         stride: usize,
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .khr_acceleration_structure
@@ -208,7 +208,7 @@ impl AccelerationStructureDevice for Device {
         &self,
         create_info: &AccelerationStructureCreateInfoKHR,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<AccelerationStructureKHR, Error> {
+    ) -> Result<AccelerationStructureKHR> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -235,7 +235,7 @@ impl AccelerationStructureDevice for Device {
         deferred_operation: DeferredOperationKHR,
         infos: &[AccelerationStructureBuildGeometryInfoKHR],
         build_range_infos: &[*const AccelerationStructureBuildRangeInfoKHR],
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         assert_eq!(infos.len(), build_range_infos.len());
         let call = self
             .fns()

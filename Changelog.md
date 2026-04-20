@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.3]
+
+### Added
+
+vk::Result type as wrapper for Result<T, vk::Error>
+vk::Error now implements std::error::Error;
+
+
 ## [0.2.2]
 
 ### Added

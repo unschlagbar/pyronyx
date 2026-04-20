@@ -17,13 +17,13 @@ pub trait BinaryImportDevice {
         &self,
         create_info: &CuModuleCreateInfoNVX,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<CuModuleNVX, Error>;
+    ) -> Result<CuModuleNVX>;
 
     fn create_cu_function(
         &self,
         create_info: &CuFunctionCreateInfoNVX,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<CuFunctionNVX, Error>;
+    ) -> Result<CuFunctionNVX>;
 
     fn destroy_cu_module(&self, module: CuModuleNVX, allocator: Option<&AllocationCallbacks>);
 
@@ -37,7 +37,7 @@ impl BinaryImportDevice for Device {
         &self,
         create_info: &CuModuleCreateInfoNVX,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<CuModuleNVX, Error> {
+    ) -> Result<CuModuleNVX> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -63,7 +63,7 @@ impl BinaryImportDevice for Device {
         &self,
         create_info: &CuFunctionCreateInfoNVX,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<CuFunctionNVX, Error> {
+    ) -> Result<CuFunctionNVX> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()

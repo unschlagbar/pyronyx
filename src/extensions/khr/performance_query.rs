@@ -18,11 +18,11 @@ pub trait PerformanceQueryPhysicalDevice {
         queue_family_index: u32,
         counters: &mut [PerformanceCounterKHR],
         counter_descriptions: &mut [PerformanceCounterDescriptionKHR],
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
     fn enumerate_queue_family_performance_query_counters_len(
         &self,
         queue_family_index: u32,
-    ) -> Result<usize, Error>;
+    ) -> Result<usize>;
 
     fn get_queue_family_performance_query_passes(
         &self,
@@ -40,7 +40,7 @@ impl PerformanceQueryPhysicalDevice for PhysicalDevice {
         queue_family_index: u32,
         counters: &mut [PerformanceCounterKHR],
         counter_descriptions: &mut [PerformanceCounterDescriptionKHR],
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         assert_eq!(counters.len(), counter_descriptions.len());
         let call = self
             .fns()
@@ -66,7 +66,7 @@ impl PerformanceQueryPhysicalDevice for PhysicalDevice {
     fn enumerate_queue_family_performance_query_counters_len(
         &self,
         queue_family_index: u32,
-    ) -> Result<usize, Error> {
+    ) -> Result<usize> {
         let mut out: MaybeUninit<usize> = MaybeUninit::uninit();
         unsafe {
             (self
@@ -107,7 +107,7 @@ impl PerformanceQueryPhysicalDevice for PhysicalDevice {
 }
 
 pub trait PerformanceQueryDevice {
-    fn acquire_profiling_lock(&self, info: &AcquireProfilingLockInfoKHR) -> Result<(), Error>;
+    fn acquire_profiling_lock(&self, info: &AcquireProfilingLockInfoKHR) -> Result<()>;
 
     fn release_profiling_lock(&self);
 }
@@ -115,7 +115,7 @@ pub trait PerformanceQueryDevice {
 impl PerformanceQueryDevice for Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkAcquireProfilingLockKHR.html>
     #[inline]
-    fn acquire_profiling_lock(&self, info: &AcquireProfilingLockInfoKHR) -> Result<(), Error> {
+    fn acquire_profiling_lock(&self, info: &AcquireProfilingLockInfoKHR) -> Result<()> {
         let call = self
             .fns()
             .khr_performance_query

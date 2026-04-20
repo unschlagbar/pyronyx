@@ -17,7 +17,7 @@ pub trait DirectfbSurfaceInstance {
         &self,
         create_info: &DirectFBSurfaceCreateInfoEXT,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<SurfaceKHR, Error>;
+    ) -> Result<SurfaceKHR>;
 }
 
 impl DirectfbSurfaceInstance for Instance {
@@ -27,7 +27,7 @@ impl DirectfbSurfaceInstance for Instance {
         &self,
         create_info: &DirectFBSurfaceCreateInfoEXT,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<SurfaceKHR, Error> {
+    ) -> Result<SurfaceKHR> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()

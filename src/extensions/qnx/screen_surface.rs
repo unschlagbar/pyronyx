@@ -17,7 +17,7 @@ pub trait ScreenSurfaceInstance {
         &self,
         create_info: &ScreenSurfaceCreateInfoQNX,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<SurfaceKHR, Error>;
+    ) -> Result<SurfaceKHR>;
 }
 
 impl ScreenSurfaceInstance for Instance {
@@ -27,7 +27,7 @@ impl ScreenSurfaceInstance for Instance {
         &self,
         create_info: &ScreenSurfaceCreateInfoQNX,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<SurfaceKHR, Error> {
+    ) -> Result<SurfaceKHR> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()

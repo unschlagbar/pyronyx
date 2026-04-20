@@ -15,12 +15,12 @@ pub trait ExternalMemoryDevice {
     fn get_native_buffer_properties(
         &self,
         buffer: &OH_NativeBuffer,
-    ) -> Result<NativeBufferPropertiesOHOS<'_>, Error>;
+    ) -> Result<NativeBufferPropertiesOHOS<'_>>;
 
     fn get_memory_native_buffer(
         &self,
         info: &MemoryGetNativeBufferInfoOHOS,
-    ) -> Result<*mut OH_NativeBuffer, Error>;
+    ) -> Result<*mut OH_NativeBuffer>;
 }
 
 impl ExternalMemoryDevice for Device {
@@ -29,7 +29,7 @@ impl ExternalMemoryDevice for Device {
     fn get_native_buffer_properties(
         &self,
         buffer: &OH_NativeBuffer,
-    ) -> Result<NativeBufferPropertiesOHOS<'_>, Error> {
+    ) -> Result<NativeBufferPropertiesOHOS<'_>> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -46,7 +46,7 @@ impl ExternalMemoryDevice for Device {
     fn get_memory_native_buffer(
         &self,
         info: &MemoryGetNativeBufferInfoOHOS,
-    ) -> Result<*mut OH_NativeBuffer, Error> {
+    ) -> Result<*mut OH_NativeBuffer> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()

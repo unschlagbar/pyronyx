@@ -14,7 +14,7 @@ pub trait CooperativeMatrixPhysicalDevice {
     fn get_cooperative_matrix_properties(
         &self,
         properties: &mut [CooperativeMatrixPropertiesKHR],
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 }
 
 impl CooperativeMatrixPhysicalDevice for PhysicalDevice {
@@ -23,7 +23,7 @@ impl CooperativeMatrixPhysicalDevice for PhysicalDevice {
     fn get_cooperative_matrix_properties(
         &self,
         properties: &mut [CooperativeMatrixPropertiesKHR],
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .khr_cooperative_matrix

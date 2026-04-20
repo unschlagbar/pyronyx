@@ -11,24 +11,15 @@ pub const NAME: &CStr = c"VK_EXT_debug_marker";
 pub const SPEC_VERSION: u32 = 4;
 
 pub trait DebugMarkerDevice {
-    fn debug_marker_set_object_name(
-        &self,
-        name_info: &DebugMarkerObjectNameInfoEXT,
-    ) -> Result<(), Error>;
+    fn debug_marker_set_object_name(&self, name_info: &DebugMarkerObjectNameInfoEXT) -> Result<()>;
 
-    fn debug_marker_set_object_tag(
-        &self,
-        tag_info: &DebugMarkerObjectTagInfoEXT,
-    ) -> Result<(), Error>;
+    fn debug_marker_set_object_tag(&self, tag_info: &DebugMarkerObjectTagInfoEXT) -> Result<()>;
 }
 
 impl DebugMarkerDevice for Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkDebugMarkerSetObjectNameEXT.html>
     #[inline]
-    fn debug_marker_set_object_name(
-        &self,
-        name_info: &DebugMarkerObjectNameInfoEXT,
-    ) -> Result<(), Error> {
+    fn debug_marker_set_object_name(&self, name_info: &DebugMarkerObjectNameInfoEXT) -> Result<()> {
         let call = self
             .fns()
             .ext_debug_marker
@@ -41,10 +32,7 @@ impl DebugMarkerDevice for Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkDebugMarkerSetObjectTagEXT.html>
     #[inline]
-    fn debug_marker_set_object_tag(
-        &self,
-        tag_info: &DebugMarkerObjectTagInfoEXT,
-    ) -> Result<(), Error> {
+    fn debug_marker_set_object_tag(&self, tag_info: &DebugMarkerObjectTagInfoEXT) -> Result<()> {
         let call = self
             .fns()
             .ext_debug_marker

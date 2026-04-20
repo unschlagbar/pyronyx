@@ -25,8 +25,10 @@ use crate::utils::{read_into_vec_result, to_option};
 
 pub use crate::vkGetInstanceProcAddr as get_instance_proc_addr;
 
+pub type Result<T> = std::result::Result<T, Error>;
+
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkEnumerateInstanceLayerProperties.html>
-pub fn enumerate_instance_layer_properties() -> Result<Vec<LayerProperties>, Error> {
+pub fn enumerate_instance_layer_properties() -> Result<Vec<LayerProperties>> {
     let pfn: vkEnumerateInstanceLayerProperties = to_option(unsafe {
         transmute(get_instance_proc_addr(
             vkInstance::null(),
@@ -40,7 +42,7 @@ pub fn enumerate_instance_layer_properties() -> Result<Vec<LayerProperties>, Err
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkEnumerateInstanceExtensionProperties.html>
 pub fn enumerate_instance_extension_properties(
     layer_name: Option<&CStr>,
-) -> Result<Vec<ExtensionProperties>, Error> {
+) -> Result<Vec<ExtensionProperties>> {
     let pfn: vkEnumerateInstanceExtensionProperties = to_option(unsafe {
         transmute(get_instance_proc_addr(
             vkInstance::null(),
@@ -80,7 +82,7 @@ pub fn enumerate_instance_version() -> u32 {
 
 impl vkResult {
     #[inline]
-    pub fn init_on_success<T>(&self, v: MaybeUninit<T>) -> Result<T, Error> {
+    pub fn init_on_success<T>(&self, v: MaybeUninit<T>) -> Result<T> {
         match self {
             Self::Success => Ok(unsafe { v.assume_init() }),
             _ => Err((*self).into()),
@@ -88,7 +90,7 @@ impl vkResult {
     }
 
     #[inline]
-    pub fn result(&self) -> Result<(), Error> {
+    pub fn result(&self) -> Result<()> {
         match self {
             Self::Success => Ok(()),
             _ => Err((*self).into()),
@@ -96,7 +98,7 @@ impl vkResult {
     }
 
     #[inline]
-    pub unsafe fn set_len_on_success<T>(self, mut v: Vec<T>, len: usize) -> Result<Vec<T>, Error> {
+    pub unsafe fn set_len_on_success<T>(self, mut v: Vec<T>, len: usize) -> Result<Vec<T>> {
         match self {
             Self::Success => {
                 unsafe { v.set_len(len) };

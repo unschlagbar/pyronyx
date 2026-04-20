@@ -16,13 +16,13 @@ pub trait VideoQueuePhysicalDevice {
     fn get_video_capabilities(
         &self,
         video_profile: &VideoProfileInfoKHR,
-    ) -> Result<VideoCapabilitiesKHR<'_>, Error>;
+    ) -> Result<VideoCapabilitiesKHR<'_>>;
 
     fn get_video_format_properties(
         &self,
         video_format_info: &PhysicalDeviceVideoFormatInfoKHR,
         video_format_properties: &mut [VideoFormatPropertiesKHR],
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 }
 
 impl VideoQueuePhysicalDevice for PhysicalDevice {
@@ -31,7 +31,7 @@ impl VideoQueuePhysicalDevice for PhysicalDevice {
     fn get_video_capabilities(
         &self,
         video_profile: &VideoProfileInfoKHR,
-    ) -> Result<VideoCapabilitiesKHR<'_>, Error> {
+    ) -> Result<VideoCapabilitiesKHR<'_>> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -49,7 +49,7 @@ impl VideoQueuePhysicalDevice for PhysicalDevice {
         &self,
         video_format_info: &PhysicalDeviceVideoFormatInfoKHR,
         video_format_properties: &mut [VideoFormatPropertiesKHR],
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .khr_video_queue
@@ -74,7 +74,7 @@ pub trait VideoQueueDevice {
         &self,
         create_info: &VideoSessionCreateInfoKHR,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<VideoSessionKHR, Error>;
+    ) -> Result<VideoSessionKHR>;
 
     fn destroy_video_session(
         &self,
@@ -86,13 +86,13 @@ pub trait VideoQueueDevice {
         &self,
         create_info: &VideoSessionParametersCreateInfoKHR,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<VideoSessionParametersKHR, Error>;
+    ) -> Result<VideoSessionParametersKHR>;
 
     fn update_video_session_parameters(
         &self,
         video_session_parameters: VideoSessionParametersKHR,
         update_info: &VideoSessionParametersUpdateInfoKHR,
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 
     fn destroy_video_session_parameters(
         &self,
@@ -104,13 +104,13 @@ pub trait VideoQueueDevice {
         &self,
         video_session: VideoSessionKHR,
         memory_requirements: &mut [VideoSessionMemoryRequirementsKHR],
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 
     fn bind_video_session_memory(
         &self,
         video_session: VideoSessionKHR,
         bind_session_memory_infos: &[BindVideoSessionMemoryInfoKHR],
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 }
 
 impl VideoQueueDevice for Device {
@@ -120,7 +120,7 @@ impl VideoQueueDevice for Device {
         &self,
         create_info: &VideoSessionCreateInfoKHR,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<VideoSessionKHR, Error> {
+    ) -> Result<VideoSessionKHR> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -169,7 +169,7 @@ impl VideoQueueDevice for Device {
         &self,
         create_info: &VideoSessionParametersCreateInfoKHR,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<VideoSessionParametersKHR, Error> {
+    ) -> Result<VideoSessionParametersKHR> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -195,7 +195,7 @@ impl VideoQueueDevice for Device {
         &self,
         video_session_parameters: VideoSessionParametersKHR,
         update_info: &VideoSessionParametersUpdateInfoKHR,
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .khr_video_queue
@@ -235,7 +235,7 @@ impl VideoQueueDevice for Device {
         &self,
         video_session: VideoSessionKHR,
         memory_requirements: &mut [VideoSessionMemoryRequirementsKHR],
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .khr_video_queue
@@ -260,7 +260,7 @@ impl VideoQueueDevice for Device {
         &self,
         video_session: VideoSessionKHR,
         bind_session_memory_infos: &[BindVideoSessionMemoryInfoKHR],
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .khr_video_queue

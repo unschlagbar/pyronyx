@@ -12,35 +12,29 @@ pub const NAME: &CStr = c"VK_KHR_get_display_properties2";
 pub const SPEC_VERSION: u32 = 1;
 
 pub trait GetDisplayProperties2PhysicalDevice {
-    fn get_display_properties2(
-        &self,
-        properties: &mut [DisplayProperties2KHR],
-    ) -> Result<(), Error>;
+    fn get_display_properties2(&self, properties: &mut [DisplayProperties2KHR]) -> Result<()>;
 
     fn get_display_plane_properties2(
         &self,
         properties: &mut [DisplayPlaneProperties2KHR],
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 
     fn get_display_mode_properties2(
         &self,
         display: DisplayKHR,
         properties: &mut [DisplayModeProperties2KHR],
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 
     fn get_display_plane_capabilities2(
         &self,
         display_plane_info: &DisplayPlaneInfo2KHR,
-    ) -> Result<DisplayPlaneCapabilities2KHR<'_>, Error>;
+    ) -> Result<DisplayPlaneCapabilities2KHR<'_>>;
 }
 
 impl GetDisplayProperties2PhysicalDevice for PhysicalDevice {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceDisplayProperties2KHR.html>
     #[inline]
-    fn get_display_properties2(
-        &self,
-        properties: &mut [DisplayProperties2KHR],
-    ) -> Result<(), Error> {
+    fn get_display_properties2(&self, properties: &mut [DisplayProperties2KHR]) -> Result<()> {
         let call = self
             .fns()
             .khr_get_display_properties2
@@ -63,7 +57,7 @@ impl GetDisplayProperties2PhysicalDevice for PhysicalDevice {
     fn get_display_plane_properties2(
         &self,
         properties: &mut [DisplayPlaneProperties2KHR],
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .khr_get_display_properties2
@@ -87,7 +81,7 @@ impl GetDisplayProperties2PhysicalDevice for PhysicalDevice {
         &self,
         display: DisplayKHR,
         properties: &mut [DisplayModeProperties2KHR],
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .khr_get_display_properties2
@@ -111,7 +105,7 @@ impl GetDisplayProperties2PhysicalDevice for PhysicalDevice {
     fn get_display_plane_capabilities2(
         &self,
         display_plane_info: &DisplayPlaneInfo2KHR,
-    ) -> Result<DisplayPlaneCapabilities2KHR<'_>, Error> {
+    ) -> Result<DisplayPlaneCapabilities2KHR<'_>> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()

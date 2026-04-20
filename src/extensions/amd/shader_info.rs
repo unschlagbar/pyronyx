@@ -20,13 +20,13 @@ pub trait ShaderInfoDevice {
         shader_stage: ShaderStageFlags,
         info_type: ShaderInfoTypeAMD,
         info: &mut [c_void],
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
     fn get_shader_info_len(
         &self,
         pipeline: Pipeline,
         shader_stage: ShaderStageFlags,
         info_type: ShaderInfoTypeAMD,
-    ) -> Result<usize, Error>;
+    ) -> Result<usize>;
 }
 
 impl ShaderInfoDevice for Device {
@@ -40,7 +40,7 @@ impl ShaderInfoDevice for Device {
         shader_stage: ShaderStageFlags,
         info_type: ShaderInfoTypeAMD,
         info: &mut [c_void],
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .amd_shader_info
@@ -68,7 +68,7 @@ impl ShaderInfoDevice for Device {
         pipeline: Pipeline,
         shader_stage: ShaderStageFlags,
         info_type: ShaderInfoTypeAMD,
-    ) -> Result<usize, Error> {
+    ) -> Result<usize> {
         let mut out: MaybeUninit<usize> = MaybeUninit::uninit();
         unsafe {
             (self

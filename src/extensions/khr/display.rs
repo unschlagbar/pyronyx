@@ -13,43 +13,43 @@ pub const NAME: &CStr = c"VK_KHR_display";
 pub const SPEC_VERSION: u32 = 23;
 
 pub trait DisplayPhysicalDevice {
-    fn get_display_properties(&self, properties: &mut [DisplayPropertiesKHR]) -> Result<(), Error>;
+    fn get_display_properties(&self, properties: &mut [DisplayPropertiesKHR]) -> Result<()>;
 
     fn get_display_plane_properties(
         &self,
         properties: &mut [DisplayPlanePropertiesKHR],
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 
     fn get_display_plane_supported_displays(
         &self,
         plane_index: u32,
         displays: &mut [DisplayKHR],
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 
     fn get_display_mode_properties(
         &self,
         display: DisplayKHR,
         properties: &mut [DisplayModePropertiesKHR],
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 
     fn create_display_mode(
         &self,
         display: DisplayKHR,
         create_info: &DisplayModeCreateInfoKHR,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<DisplayModeKHR, Error>;
+    ) -> Result<DisplayModeKHR>;
 
     fn get_display_plane_capabilities(
         &self,
         mode: DisplayModeKHR,
         plane_index: u32,
-    ) -> Result<DisplayPlaneCapabilitiesKHR, Error>;
+    ) -> Result<DisplayPlaneCapabilitiesKHR>;
 }
 
 impl DisplayPhysicalDevice for PhysicalDevice {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceDisplayPropertiesKHR.html>
     #[inline]
-    fn get_display_properties(&self, properties: &mut [DisplayPropertiesKHR]) -> Result<(), Error> {
+    fn get_display_properties(&self, properties: &mut [DisplayPropertiesKHR]) -> Result<()> {
         let call = self
             .fns()
             .khr_display
@@ -72,7 +72,7 @@ impl DisplayPhysicalDevice for PhysicalDevice {
     fn get_display_plane_properties(
         &self,
         properties: &mut [DisplayPlanePropertiesKHR],
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .khr_display
@@ -96,7 +96,7 @@ impl DisplayPhysicalDevice for PhysicalDevice {
         &self,
         plane_index: u32,
         displays: &mut [DisplayKHR],
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .khr_display
@@ -121,7 +121,7 @@ impl DisplayPhysicalDevice for PhysicalDevice {
         &self,
         display: DisplayKHR,
         properties: &mut [DisplayModePropertiesKHR],
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .khr_display
@@ -147,7 +147,7 @@ impl DisplayPhysicalDevice for PhysicalDevice {
         display: DisplayKHR,
         create_info: &DisplayModeCreateInfoKHR,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<DisplayModeKHR, Error> {
+    ) -> Result<DisplayModeKHR> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -174,7 +174,7 @@ impl DisplayPhysicalDevice for PhysicalDevice {
         &self,
         mode: DisplayModeKHR,
         plane_index: u32,
-    ) -> Result<DisplayPlaneCapabilitiesKHR, Error> {
+    ) -> Result<DisplayPlaneCapabilitiesKHR> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -192,7 +192,7 @@ pub trait DisplayInstance {
         &self,
         create_info: &DisplaySurfaceCreateInfoKHR,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<SurfaceKHR, Error>;
+    ) -> Result<SurfaceKHR>;
 }
 
 impl DisplayInstance for Instance {
@@ -202,7 +202,7 @@ impl DisplayInstance for Instance {
         &self,
         create_info: &DisplaySurfaceCreateInfoKHR,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<SurfaceKHR, Error> {
+    ) -> Result<SurfaceKHR> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()

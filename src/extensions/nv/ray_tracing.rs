@@ -15,13 +15,13 @@ pub const NAME: &CStr = c"VK_NV_ray_tracing";
 pub const SPEC_VERSION: u32 = 3;
 
 pub trait RayTracingDevice {
-    fn compile_deferred(&self, pipeline: Pipeline, shader: u32) -> Result<(), Error>;
+    fn compile_deferred(&self, pipeline: Pipeline, shader: u32) -> Result<()>;
 
     fn create_acceleration_structure(
         &self,
         create_info: &AccelerationStructureCreateInfoNV,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<AccelerationStructureNV, Error>;
+    ) -> Result<AccelerationStructureNV>;
 
     fn destroy_acceleration_structure(
         &self,
@@ -37,13 +37,13 @@ pub trait RayTracingDevice {
     fn bind_acceleration_structure_memory(
         &self,
         bind_infos: &[BindAccelerationStructureMemoryInfoNV],
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 
     fn get_acceleration_structure_handle(
         &self,
         acceleration_structure: AccelerationStructureNV,
         data: &mut [c_void],
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 
     fn create_ray_tracing_pipelines(
         &self,
@@ -51,13 +51,13 @@ pub trait RayTracingDevice {
         create_infos: &[RayTracingPipelineCreateInfoNV],
         allocator: Option<&AllocationCallbacks>,
         pipelines: &mut [Pipeline],
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 }
 
 impl RayTracingDevice for Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCompileDeferredNV.html>
     #[inline]
-    fn compile_deferred(&self, pipeline: Pipeline, shader: u32) -> Result<(), Error> {
+    fn compile_deferred(&self, pipeline: Pipeline, shader: u32) -> Result<()> {
         let call = self
             .fns()
             .nv_ray_tracing
@@ -74,7 +74,7 @@ impl RayTracingDevice for Device {
         &self,
         create_info: &AccelerationStructureCreateInfoNV,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<AccelerationStructureNV, Error> {
+    ) -> Result<AccelerationStructureNV> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -142,7 +142,7 @@ impl RayTracingDevice for Device {
     fn bind_acceleration_structure_memory(
         &self,
         bind_infos: &[BindAccelerationStructureMemoryInfoNV],
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .nv_ray_tracing
@@ -159,7 +159,7 @@ impl RayTracingDevice for Device {
         &self,
         acceleration_structure: AccelerationStructureNV,
         data: &mut [c_void],
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .nv_ray_tracing
@@ -186,7 +186,7 @@ impl RayTracingDevice for Device {
         create_infos: &[RayTracingPipelineCreateInfoNV],
         allocator: Option<&AllocationCallbacks>,
         pipelines: &mut [Pipeline],
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         assert_eq!(create_infos.len(), pipelines.len());
         let call = self
             .fns()

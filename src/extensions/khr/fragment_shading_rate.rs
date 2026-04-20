@@ -46,7 +46,7 @@ pub trait FragmentShadingRatePhysicalDevice {
     fn get_fragment_shading_rates(
         &self,
         fragment_shading_rates: &mut [PhysicalDeviceFragmentShadingRateKHR],
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 }
 
 impl FragmentShadingRatePhysicalDevice for PhysicalDevice {
@@ -55,7 +55,7 @@ impl FragmentShadingRatePhysicalDevice for PhysicalDevice {
     fn get_fragment_shading_rates(
         &self,
         fragment_shading_rates: &mut [PhysicalDeviceFragmentShadingRateKHR],
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .khr_fragment_shading_rate

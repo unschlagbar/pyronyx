@@ -16,7 +16,7 @@ pub trait DeferredHostOperationsDevice {
     fn create_deferred_operation(
         &self,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<DeferredOperationKHR, Error>;
+    ) -> Result<DeferredOperationKHR>;
 
     fn destroy_deferred_operation(
         &self,
@@ -26,9 +26,9 @@ pub trait DeferredHostOperationsDevice {
 
     fn get_deferred_operation_max_concurrency(&self, operation: DeferredOperationKHR) -> u32;
 
-    fn get_deferred_operation_result(&self, operation: DeferredOperationKHR) -> Result<(), Error>;
+    fn get_deferred_operation_result(&self, operation: DeferredOperationKHR) -> Result<()>;
 
-    fn deferred_operation_join(&self, operation: DeferredOperationKHR) -> Result<(), Error>;
+    fn deferred_operation_join(&self, operation: DeferredOperationKHR) -> Result<()>;
 }
 
 impl DeferredHostOperationsDevice for Device {
@@ -37,7 +37,7 @@ impl DeferredHostOperationsDevice for Device {
     fn create_deferred_operation(
         &self,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<DeferredOperationKHR, Error> {
+    ) -> Result<DeferredOperationKHR> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -88,7 +88,7 @@ impl DeferredHostOperationsDevice for Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetDeferredOperationResultKHR.html>
     #[inline]
-    fn get_deferred_operation_result(&self, operation: DeferredOperationKHR) -> Result<(), Error> {
+    fn get_deferred_operation_result(&self, operation: DeferredOperationKHR) -> Result<()> {
         let call = self
             .fns()
             .khr_deferred_host_operations
@@ -101,7 +101,7 @@ impl DeferredHostOperationsDevice for Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkDeferredOperationJoinKHR.html>
     #[inline]
-    fn deferred_operation_join(&self, operation: DeferredOperationKHR) -> Result<(), Error> {
+    fn deferred_operation_join(&self, operation: DeferredOperationKHR) -> Result<()> {
         let call = self
             .fns()
             .khr_deferred_host_operations

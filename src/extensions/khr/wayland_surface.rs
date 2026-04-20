@@ -17,7 +17,7 @@ pub trait WaylandSurfaceInstance {
         &self,
         create_info: &WaylandSurfaceCreateInfoKHR,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<SurfaceKHR, Error>;
+    ) -> Result<SurfaceKHR>;
 }
 
 impl WaylandSurfaceInstance for Instance {
@@ -27,7 +27,7 @@ impl WaylandSurfaceInstance for Instance {
         &self,
         create_info: &WaylandSurfaceCreateInfoKHR,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<SurfaceKHR, Error> {
+    ) -> Result<SurfaceKHR> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()

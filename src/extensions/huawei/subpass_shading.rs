@@ -12,19 +12,13 @@ pub const NAME: &CStr = c"VK_HUAWEI_subpass_shading";
 pub const SPEC_VERSION: u32 = 3;
 
 pub trait SubpassShadingDevice {
-    fn get_subpass_shading_max_workgroup_size(
-        &self,
-        renderpass: RenderPass,
-    ) -> Result<Extent2D, Error>;
+    fn get_subpass_shading_max_workgroup_size(&self, renderpass: RenderPass) -> Result<Extent2D>;
 }
 
 impl SubpassShadingDevice for Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI.html>
     #[inline]
-    fn get_subpass_shading_max_workgroup_size(
-        &self,
-        renderpass: RenderPass,
-    ) -> Result<Extent2D, Error> {
+    fn get_subpass_shading_max_workgroup_size(&self, renderpass: RenderPass) -> Result<Extent2D> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()

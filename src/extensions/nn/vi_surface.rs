@@ -17,7 +17,7 @@ pub trait ViSurfaceInstance {
         &self,
         create_info: &ViSurfaceCreateInfoNN,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<SurfaceKHR, Error>;
+    ) -> Result<SurfaceKHR>;
 }
 
 impl ViSurfaceInstance for Instance {
@@ -27,7 +27,7 @@ impl ViSurfaceInstance for Instance {
         &self,
         create_info: &ViSurfaceCreateInfoNN,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<SurfaceKHR, Error> {
+    ) -> Result<SurfaceKHR> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()

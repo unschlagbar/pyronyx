@@ -18,11 +18,11 @@ pub trait SwapchainDevice {
         &self,
         create_info: &SwapchainCreateInfoKHR,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<SwapchainKHR, Error>;
+    ) -> Result<SwapchainKHR>;
 
     fn destroy_swapchain(&self, swapchain: SwapchainKHR, allocator: Option<&AllocationCallbacks>);
 
-    fn get_swapchain_images(&self, swapchain: SwapchainKHR) -> Result<Vec<Image>, Error>;
+    fn get_swapchain_images(&self, swapchain: SwapchainKHR) -> Result<Vec<Image>>;
 
     fn acquire_next_image(
         &self,
@@ -30,7 +30,7 @@ pub trait SwapchainDevice {
         timeout: u64,
         semaphore: Semaphore,
         fence: Fence,
-    ) -> Result<u32, Error>;
+    ) -> Result<u32>;
 }
 
 impl SwapchainDevice for Device {
@@ -40,7 +40,7 @@ impl SwapchainDevice for Device {
         &self,
         create_info: &SwapchainCreateInfoKHR,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<SwapchainKHR, Error> {
+    ) -> Result<SwapchainKHR> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -75,7 +75,7 @@ impl SwapchainDevice for Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetSwapchainImagesKHR.html>
     #[inline]
-    fn get_swapchain_images(&self, swapchain: SwapchainKHR) -> Result<Vec<Image>, Error> {
+    fn get_swapchain_images(&self, swapchain: SwapchainKHR) -> Result<Vec<Image>> {
         let call = self
             .fns()
             .khr_swapchain
@@ -94,7 +94,7 @@ impl SwapchainDevice for Device {
         timeout: u64,
         semaphore: Semaphore,
         fence: Fence,
-    ) -> Result<u32, Error> {
+    ) -> Result<u32> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -118,13 +118,13 @@ impl SwapchainDevice for Device {
 }
 
 pub trait SwapchainQueue {
-    fn present(&self, present_info: &PresentInfoKHR) -> Result<(), Error>;
+    fn present(&self, present_info: &PresentInfoKHR) -> Result<()>;
 }
 
 impl SwapchainQueue for Queue {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkQueuePresentKHR.html>
     #[inline]
-    fn present(&self, present_info: &PresentInfoKHR) -> Result<(), Error> {
+    fn present(&self, present_info: &PresentInfoKHR) -> Result<()> {
         let call = self
             .fns()
             .khr_swapchain

@@ -17,7 +17,7 @@ pub trait ImagepipeSurfaceInstance {
         &self,
         create_info: &ImagePipeSurfaceCreateInfoFUCHSIA,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<SurfaceKHR, Error>;
+    ) -> Result<SurfaceKHR>;
 }
 
 impl ImagepipeSurfaceInstance for Instance {
@@ -27,7 +27,7 @@ impl ImagepipeSurfaceInstance for Instance {
         &self,
         create_info: &ImagePipeSurfaceCreateInfoFUCHSIA,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<SurfaceKHR, Error> {
+    ) -> Result<SurfaceKHR> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()

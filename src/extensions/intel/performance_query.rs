@@ -15,24 +15,24 @@ pub trait PerformanceQueryDevice {
     fn initialize_performance_api(
         &self,
         initialize_info: &InitializePerformanceApiInfoINTEL,
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 
     fn uninitialize_performance_api(&self);
 
     fn acquire_performance_configuration(
         &self,
         acquire_info: &PerformanceConfigurationAcquireInfoINTEL,
-    ) -> Result<PerformanceConfigurationINTEL, Error>;
+    ) -> Result<PerformanceConfigurationINTEL>;
 
     fn release_performance_configuration(
         &self,
         configuration: PerformanceConfigurationINTEL,
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 
     fn get_performance_parameter(
         &self,
         parameter: PerformanceParameterTypeINTEL,
-    ) -> Result<PerformanceValueINTEL, Error>;
+    ) -> Result<PerformanceValueINTEL>;
 }
 
 impl PerformanceQueryDevice for Device {
@@ -41,7 +41,7 @@ impl PerformanceQueryDevice for Device {
     fn initialize_performance_api(
         &self,
         initialize_info: &InitializePerformanceApiInfoINTEL,
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .intel_performance_query
@@ -70,7 +70,7 @@ impl PerformanceQueryDevice for Device {
     fn acquire_performance_configuration(
         &self,
         acquire_info: &PerformanceConfigurationAcquireInfoINTEL,
-    ) -> Result<PerformanceConfigurationINTEL, Error> {
+    ) -> Result<PerformanceConfigurationINTEL> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -87,7 +87,7 @@ impl PerformanceQueryDevice for Device {
     fn release_performance_configuration(
         &self,
         configuration: PerformanceConfigurationINTEL,
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .intel_performance_query
@@ -103,7 +103,7 @@ impl PerformanceQueryDevice for Device {
     fn get_performance_parameter(
         &self,
         parameter: PerformanceParameterTypeINTEL,
-    ) -> Result<PerformanceValueINTEL, Error> {
+    ) -> Result<PerformanceValueINTEL> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -117,18 +117,14 @@ impl PerformanceQueryDevice for Device {
 }
 
 pub trait PerformanceQueryCommandBuffer {
-    fn set_performance_marker(&self, marker_info: &PerformanceMarkerInfoINTEL)
-    -> Result<(), Error>;
+    fn set_performance_marker(&self, marker_info: &PerformanceMarkerInfoINTEL) -> Result<()>;
 
     fn set_performance_stream_marker(
         &self,
         marker_info: &PerformanceStreamMarkerInfoINTEL,
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 
-    fn set_performance_override(
-        &self,
-        override_info: &PerformanceOverrideInfoINTEL,
-    ) -> Result<(), Error>;
+    fn set_performance_override(&self, override_info: &PerformanceOverrideInfoINTEL) -> Result<()>;
 }
 
 impl PerformanceQueryCommandBuffer for CommandBuffer {
@@ -139,10 +135,7 @@ impl PerformanceQueryCommandBuffer for CommandBuffer {
     /// Use inside and outside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
-    fn set_performance_marker(
-        &self,
-        marker_info: &PerformanceMarkerInfoINTEL,
-    ) -> Result<(), Error> {
+    fn set_performance_marker(&self, marker_info: &PerformanceMarkerInfoINTEL) -> Result<()> {
         let call = self
             .fns()
             .intel_performance_query
@@ -163,7 +156,7 @@ impl PerformanceQueryCommandBuffer for CommandBuffer {
     fn set_performance_stream_marker(
         &self,
         marker_info: &PerformanceStreamMarkerInfoINTEL,
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .intel_performance_query
@@ -181,10 +174,7 @@ impl PerformanceQueryCommandBuffer for CommandBuffer {
     /// Use inside and outside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
-    fn set_performance_override(
-        &self,
-        override_info: &PerformanceOverrideInfoINTEL,
-    ) -> Result<(), Error> {
+    fn set_performance_override(&self, override_info: &PerformanceOverrideInfoINTEL) -> Result<()> {
         let call = self
             .fns()
             .intel_performance_query
@@ -200,7 +190,7 @@ pub trait PerformanceQueryQueue {
     fn set_performance_configuration(
         &self,
         configuration: PerformanceConfigurationINTEL,
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 }
 
 impl PerformanceQueryQueue for Queue {
@@ -209,7 +199,7 @@ impl PerformanceQueryQueue for Queue {
     fn set_performance_configuration(
         &self,
         configuration: PerformanceConfigurationINTEL,
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .intel_performance_query

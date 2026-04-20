@@ -17,28 +17,28 @@ pub trait ExternalSciSync2Device {
     fn get_fence_sci_sync_fence(
         &self,
         get_sci_sync_handle_info: &FenceGetSciSyncInfoNV,
-    ) -> Result<c_void, Error>;
+    ) -> Result<c_void>;
 
     fn get_fence_sci_sync_obj(
         &self,
         get_sci_sync_handle_info: &FenceGetSciSyncInfoNV,
-    ) -> Result<c_void, Error>;
+    ) -> Result<c_void>;
 
     fn import_fence_sci_sync_fence(
         &self,
         import_fence_sci_sync_info: &ImportFenceSciSyncInfoNV,
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 
     fn import_fence_sci_sync_obj(
         &self,
         import_fence_sci_sync_info: &ImportFenceSciSyncInfoNV,
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 
     fn create_semaphore_sci_sync_pool(
         &self,
         create_info: &SemaphoreSciSyncPoolCreateInfoNV,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<SemaphoreSciSyncPoolNV, Error>;
+    ) -> Result<SemaphoreSciSyncPoolNV>;
 
     fn destroy_semaphore_sci_sync_pool(
         &self,
@@ -53,7 +53,7 @@ impl ExternalSciSync2Device for Device {
     fn get_fence_sci_sync_fence(
         &self,
         get_sci_sync_handle_info: &FenceGetSciSyncInfoNV,
-    ) -> Result<c_void, Error> {
+    ) -> Result<c_void> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -71,7 +71,7 @@ impl ExternalSciSync2Device for Device {
     fn get_fence_sci_sync_obj(
         &self,
         get_sci_sync_handle_info: &FenceGetSciSyncInfoNV,
-    ) -> Result<c_void, Error> {
+    ) -> Result<c_void> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -89,7 +89,7 @@ impl ExternalSciSync2Device for Device {
     fn import_fence_sci_sync_fence(
         &self,
         import_fence_sci_sync_info: &ImportFenceSciSyncInfoNV,
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .nv_external_sci_sync2
@@ -105,7 +105,7 @@ impl ExternalSciSync2Device for Device {
     fn import_fence_sci_sync_obj(
         &self,
         import_fence_sci_sync_info: &ImportFenceSciSyncInfoNV,
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .nv_external_sci_sync2
@@ -122,7 +122,7 @@ impl ExternalSciSync2Device for Device {
         &self,
         create_info: &SemaphoreSciSyncPoolCreateInfoNV,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<SemaphoreSciSyncPoolNV, Error> {
+    ) -> Result<SemaphoreSciSyncPoolNV> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -171,7 +171,7 @@ pub trait ExternalSciSync2PhysicalDevice {
         &self,
         sci_sync_attributes_info: &SciSyncAttributesInfoNV,
         attributes: NvSciSyncAttrList,
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 }
 
 impl ExternalSciSync2PhysicalDevice for PhysicalDevice {
@@ -181,7 +181,7 @@ impl ExternalSciSync2PhysicalDevice for PhysicalDevice {
         &self,
         sci_sync_attributes_info: &SciSyncAttributesInfoNV,
         attributes: NvSciSyncAttrList,
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .nv_external_sci_sync2

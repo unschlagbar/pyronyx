@@ -15,12 +15,12 @@ pub trait ExternalMemoryAndroidHardwareBufferDevice {
     fn get_android_hardware_buffer_properties(
         &self,
         buffer: &AHardwareBuffer,
-    ) -> Result<AndroidHardwareBufferPropertiesANDROID<'_>, Error>;
+    ) -> Result<AndroidHardwareBufferPropertiesANDROID<'_>>;
 
     fn get_memory_android_hardware_buffer(
         &self,
         info: &MemoryGetAndroidHardwareBufferInfoANDROID,
-    ) -> Result<*mut AHardwareBuffer, Error>;
+    ) -> Result<*mut AHardwareBuffer>;
 }
 
 impl ExternalMemoryAndroidHardwareBufferDevice for Device {
@@ -29,7 +29,7 @@ impl ExternalMemoryAndroidHardwareBufferDevice for Device {
     fn get_android_hardware_buffer_properties(
         &self,
         buffer: &AHardwareBuffer,
-    ) -> Result<AndroidHardwareBufferPropertiesANDROID<'_>, Error> {
+    ) -> Result<AndroidHardwareBufferPropertiesANDROID<'_>> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -46,7 +46,7 @@ impl ExternalMemoryAndroidHardwareBufferDevice for Device {
     fn get_memory_android_hardware_buffer(
         &self,
         info: &MemoryGetAndroidHardwareBufferInfoANDROID,
-    ) -> Result<*mut AHardwareBuffer, Error> {
+    ) -> Result<*mut AHardwareBuffer> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()

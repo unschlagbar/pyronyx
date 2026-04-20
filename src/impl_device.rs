@@ -22,7 +22,7 @@ impl Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkDeviceWaitIdle.html>
     #[inline]
-    pub fn wait_idle(&self) -> Result<(), Error> {
+    pub fn wait_idle(&self) -> Result<()> {
         let call = self
             .fns()
             .v1_0
@@ -38,7 +38,7 @@ impl Device {
         &self,
         allocate_info: &MemoryAllocateInfo,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<DeviceMemory, Error> {
+    ) -> Result<DeviceMemory> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -73,7 +73,7 @@ impl Device {
         offset: DeviceSize,
         size: DeviceSize,
         flags: MemoryMapFlags,
-    ) -> Result<*mut c_void, Error> {
+    ) -> Result<*mut c_void> {
         let mut out = MaybeUninit::uninit();
         let call = self.fns().v1_0.map_memory.expect(Self::CORE_LOAD_ERROR);
 
@@ -91,10 +91,7 @@ impl Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkFlushMappedMemoryRanges.html>
     #[inline]
-    pub fn flush_mapped_memory_ranges(
-        &self,
-        memory_ranges: &[MappedMemoryRange],
-    ) -> Result<(), Error> {
+    pub fn flush_mapped_memory_ranges(&self, memory_ranges: &[MappedMemoryRange]) -> Result<()> {
         let call = self
             .fns()
             .v1_0
@@ -116,7 +113,7 @@ impl Device {
     pub fn invalidate_mapped_memory_ranges(
         &self,
         memory_ranges: &[MappedMemoryRange],
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .v1_0
@@ -172,7 +169,7 @@ impl Device {
         buffer: Buffer,
         memory: DeviceMemory,
         memory_offset: DeviceSize,
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .v1_0
@@ -205,7 +202,7 @@ impl Device {
         image: Image,
         memory: DeviceMemory,
         memory_offset: DeviceSize,
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .v1_0
@@ -236,7 +233,7 @@ impl Device {
         &self,
         create_info: &FenceCreateInfo,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<Fence, Error> {
+    ) -> Result<Fence> {
         let mut out = MaybeUninit::uninit();
         let call = self.fns().v1_0.create_fence.expect(Self::CORE_LOAD_ERROR);
 
@@ -261,7 +258,7 @@ impl Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkResetFences.html>
     #[inline]
-    pub fn reset_fences(&self, fences: &[Fence]) -> Result<(), Error> {
+    pub fn reset_fences(&self, fences: &[Fence]) -> Result<()> {
         let call = self.fns().v1_0.reset_fences.expect(Self::CORE_LOAD_ERROR);
 
         unsafe { (call)(self.handle, fences.len() as u32, fences.as_ptr()) }.result()
@@ -269,7 +266,7 @@ impl Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetFenceStatus.html>
     #[inline]
-    pub fn get_fence_status(&self, fence: Fence) -> Result<(), Error> {
+    pub fn get_fence_status(&self, fence: Fence) -> Result<()> {
         let call = self
             .fns()
             .v1_0
@@ -281,12 +278,7 @@ impl Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkWaitForFences.html>
     #[inline]
-    pub fn wait_for_fences(
-        &self,
-        fences: &[Fence],
-        wait_all: bool,
-        timeout: u64,
-    ) -> Result<(), Error> {
+    pub fn wait_for_fences(&self, fences: &[Fence], wait_all: bool, timeout: u64) -> Result<()> {
         let call = self
             .fns()
             .v1_0
@@ -311,7 +303,7 @@ impl Device {
         &self,
         create_info: &SemaphoreCreateInfo,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<Semaphore, Error> {
+    ) -> Result<Semaphore> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -348,7 +340,7 @@ impl Device {
         &self,
         create_info: &EventCreateInfo,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<Event, Error> {
+    ) -> Result<Event> {
         let mut out = MaybeUninit::uninit();
         let call = self.fns().v1_0.create_event.expect(Self::CORE_LOAD_ERROR);
 
@@ -373,7 +365,7 @@ impl Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetEventStatus.html>
     #[inline]
-    pub fn get_event_status(&self, event: Event) -> Result<(), Error> {
+    pub fn get_event_status(&self, event: Event) -> Result<()> {
         let call = self
             .fns()
             .v1_0
@@ -385,7 +377,7 @@ impl Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkSetEvent.html>
     #[inline]
-    pub fn set_event(&self, event: Event) -> Result<(), Error> {
+    pub fn set_event(&self, event: Event) -> Result<()> {
         let call = self.fns().v1_0.set_event.expect(Self::CORE_LOAD_ERROR);
 
         unsafe { (call)(self.handle, event) }.result()
@@ -393,7 +385,7 @@ impl Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkResetEvent.html>
     #[inline]
-    pub fn reset_event(&self, event: Event) -> Result<(), Error> {
+    pub fn reset_event(&self, event: Event) -> Result<()> {
         let call = self.fns().v1_0.reset_event.expect(Self::CORE_LOAD_ERROR);
 
         unsafe { (call)(self.handle, event) }.result()
@@ -405,7 +397,7 @@ impl Device {
         &self,
         create_info: &QueryPoolCreateInfo,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<QueryPool, Error> {
+    ) -> Result<QueryPool> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -450,7 +442,7 @@ impl Device {
         data: &mut [c_void],
         stride: DeviceSize,
         flags: QueryResultFlags,
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .v1_0
@@ -490,7 +482,7 @@ impl Device {
         &self,
         create_info: &BufferCreateInfo,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<Buffer, Error> {
+    ) -> Result<Buffer> {
         let mut out = MaybeUninit::uninit();
         let call = self.fns().v1_0.create_buffer.expect(Self::CORE_LOAD_ERROR);
 
@@ -519,7 +511,7 @@ impl Device {
         &self,
         create_info: &BufferViewCreateInfo,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<BufferView, Error> {
+    ) -> Result<BufferView> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -560,7 +552,7 @@ impl Device {
         &self,
         create_info: &ImageCreateInfo,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<Image, Error> {
+    ) -> Result<Image> {
         let mut out = MaybeUninit::uninit();
         let call = self.fns().v1_0.create_image.expect(Self::CORE_LOAD_ERROR);
 
@@ -609,7 +601,7 @@ impl Device {
         &self,
         create_info: &ImageViewCreateInfo,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<ImageView, Error> {
+    ) -> Result<ImageView> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -650,7 +642,7 @@ impl Device {
         &self,
         create_info: &ShaderModuleCreateInfo,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<ShaderModule, Error> {
+    ) -> Result<ShaderModule> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -697,7 +689,7 @@ impl Device {
         &self,
         create_info: &PipelineCacheCreateInfo,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<PipelineCache, Error> {
+    ) -> Result<PipelineCache> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -740,10 +732,7 @@ impl Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPipelineCacheData.html>
     #[inline]
-    pub fn get_pipeline_cache_data(
-        &self,
-        pipeline_cache: PipelineCache,
-    ) -> Result<Vec<c_void>, Error> {
+    pub fn get_pipeline_cache_data(&self, pipeline_cache: PipelineCache) -> Result<Vec<c_void>> {
         let call = self
             .fns()
             .v1_0
@@ -761,7 +750,7 @@ impl Device {
         &self,
         dst_cache: PipelineCache,
         src_caches: &[PipelineCache],
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .v1_0
@@ -787,7 +776,7 @@ impl Device {
         create_infos: &[GraphicsPipelineCreateInfo],
         allocator: Option<&AllocationCallbacks>,
         pipelines: &mut [Pipeline],
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         assert_eq!(create_infos.len(), pipelines.len());
         let call = self
             .fns()
@@ -816,7 +805,7 @@ impl Device {
         create_infos: &[ComputePipelineCreateInfo],
         allocator: Option<&AllocationCallbacks>,
         pipelines: &mut [Pipeline],
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         assert_eq!(create_infos.len(), pipelines.len());
         let call = self
             .fns()
@@ -855,7 +844,7 @@ impl Device {
         &self,
         create_info: &PipelineLayoutCreateInfo,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<PipelineLayout, Error> {
+    ) -> Result<PipelineLayout> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -902,7 +891,7 @@ impl Device {
         &self,
         create_info: &SamplerCreateInfo,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<Sampler, Error> {
+    ) -> Result<Sampler> {
         let mut out = MaybeUninit::uninit();
         let call = self.fns().v1_0.create_sampler.expect(Self::CORE_LOAD_ERROR);
 
@@ -935,7 +924,7 @@ impl Device {
         &self,
         create_info: &DescriptorSetLayoutCreateInfo,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<DescriptorSetLayout, Error> {
+    ) -> Result<DescriptorSetLayout> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -982,7 +971,7 @@ impl Device {
         &self,
         create_info: &DescriptorPoolCreateInfo,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<DescriptorPool, Error> {
+    ) -> Result<DescriptorPool> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -1029,7 +1018,7 @@ impl Device {
         &self,
         descriptor_pool: DescriptorPool,
         flags: DescriptorPoolResetFlags,
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .v1_0
@@ -1045,7 +1034,7 @@ impl Device {
         &self,
         allocate_info: &DescriptorSetAllocateInfo,
         descriptor_sets: &mut [DescriptorSet],
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         assert_eq!(
             descriptor_sets.len(),
             allocate_info.descriptor_set_count as usize
@@ -1065,7 +1054,7 @@ impl Device {
         &self,
         descriptor_pool: DescriptorPool,
         descriptor_sets: &[DescriptorSet],
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .v1_0
@@ -1113,7 +1102,7 @@ impl Device {
         &self,
         create_info: &FramebufferCreateInfo,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<Framebuffer, Error> {
+    ) -> Result<Framebuffer> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -1154,7 +1143,7 @@ impl Device {
         &self,
         create_info: &RenderPassCreateInfo,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<RenderPass, Error> {
+    ) -> Result<RenderPass> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -1230,7 +1219,7 @@ impl Device {
         &self,
         create_info: &CommandPoolCreateInfo,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<CommandPool, Error> {
+    ) -> Result<CommandPool> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -1277,7 +1266,7 @@ impl Device {
         &self,
         command_pool: CommandPool,
         flags: CommandPoolResetFlags,
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .v1_0
@@ -1351,7 +1340,7 @@ impl Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkBindBufferMemory2.html>
     #[inline]
-    pub fn bind_buffer_memory2(&self, bind_infos: &[BindBufferMemoryInfo]) -> Result<(), Error> {
+    pub fn bind_buffer_memory2(&self, bind_infos: &[BindBufferMemoryInfo]) -> Result<()> {
         let call = self
             .fns()
             .v1_1
@@ -1363,7 +1352,7 @@ impl Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkBindImageMemory2.html>
     #[inline]
-    pub fn bind_image_memory2(&self, bind_infos: &[BindImageMemoryInfo]) -> Result<(), Error> {
+    pub fn bind_image_memory2(&self, bind_infos: &[BindImageMemoryInfo]) -> Result<()> {
         let call = self
             .fns()
             .v1_1
@@ -1379,7 +1368,7 @@ impl Device {
         &self,
         create_info: &DescriptorUpdateTemplateCreateInfo,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<DescriptorUpdateTemplate, Error> {
+    ) -> Result<DescriptorUpdateTemplate> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -1596,7 +1585,7 @@ impl Device {
         &self,
         create_info: &SamplerYcbcrConversionCreateInfo,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<SamplerYcbcrConversion, Error> {
+    ) -> Result<SamplerYcbcrConversion> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -1662,7 +1651,7 @@ impl Device {
         &self,
         create_info: &RenderPassCreateInfo2,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<RenderPass, Error> {
+    ) -> Result<RenderPass> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -1683,7 +1672,7 @@ impl Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetSemaphoreCounterValue.html>
     #[inline]
-    pub fn get_semaphore_counter_value(&self, semaphore: Semaphore) -> Result<u64, Error> {
+    pub fn get_semaphore_counter_value(&self, semaphore: Semaphore) -> Result<u64> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -1696,11 +1685,7 @@ impl Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkWaitSemaphores.html>
     #[inline]
-    pub fn wait_semaphores(
-        &self,
-        wait_info: &SemaphoreWaitInfo,
-        timeout: u64,
-    ) -> Result<(), Error> {
+    pub fn wait_semaphores(&self, wait_info: &SemaphoreWaitInfo, timeout: u64) -> Result<()> {
         let call = self
             .fns()
             .v1_2
@@ -1712,7 +1697,7 @@ impl Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkSignalSemaphore.html>
     #[inline]
-    pub fn signal_semaphore(&self, signal_info: &SemaphoreSignalInfo) -> Result<(), Error> {
+    pub fn signal_semaphore(&self, signal_info: &SemaphoreSignalInfo) -> Result<()> {
         let call = self
             .fns()
             .v1_2
@@ -1768,7 +1753,7 @@ impl Device {
         fault_query_behavior: FaultQueryBehavior,
         unrecorded_faults: *mut Bool32,
         faults: &mut [FaultData],
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self.fns().v1_0.get_fault_data.expect(Self::CORE_LOAD_ERROR);
 
         unsafe {
@@ -1789,7 +1774,7 @@ impl Device {
         &self,
         create_info: &PrivateDataSlotCreateInfo,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<PrivateDataSlot, Error> {
+    ) -> Result<PrivateDataSlot> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -1838,7 +1823,7 @@ impl Device {
         object_handle: u64,
         private_data_slot: PrivateDataSlot,
         data: u64,
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .v1_3
@@ -1889,7 +1874,7 @@ impl Device {
     pub fn copy_memory_to_image(
         &self,
         copy_memory_to_image_info: &CopyMemoryToImageInfo,
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .v1_4
@@ -1904,7 +1889,7 @@ impl Device {
     pub fn copy_image_to_memory(
         &self,
         copy_image_to_memory_info: &CopyImageToMemoryInfo,
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .v1_4
@@ -1919,7 +1904,7 @@ impl Device {
     pub fn copy_image_to_image(
         &self,
         copy_image_to_image_info: &CopyImageToImageInfo,
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .v1_4
@@ -1934,7 +1919,7 @@ impl Device {
     pub fn transition_image_layout(
         &self,
         transitions: &[HostImageLayoutTransitionInfo],
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .v1_4
@@ -2005,7 +1990,7 @@ impl Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkMapMemory2.html>
     #[inline]
-    pub fn map_memory2(&self, memory_map_info: &MemoryMapInfo) -> Result<*mut c_void, Error> {
+    pub fn map_memory2(&self, memory_map_info: &MemoryMapInfo) -> Result<*mut c_void> {
         let mut out = MaybeUninit::uninit();
         let call = self.fns().v1_4.map_memory2.expect(Self::CORE_LOAD_ERROR);
 
@@ -2014,7 +1999,7 @@ impl Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkUnmapMemory2.html>
     #[inline]
-    pub fn unmap_memory2(&self, memory_unmap_info: &MemoryUnmapInfo) -> Result<(), Error> {
+    pub fn unmap_memory2(&self, memory_unmap_info: &MemoryUnmapInfo) -> Result<()> {
         let call = self.fns().v1_4.unmap_memory2.expect(Self::CORE_LOAD_ERROR);
 
         unsafe { (call)(self.handle, memory_unmap_info) }.result()

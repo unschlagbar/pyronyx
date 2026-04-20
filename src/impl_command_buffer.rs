@@ -9,7 +9,7 @@ use core::ffi::c_void;
 impl CommandBuffer {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkBeginCommandBuffer.html>
     #[inline]
-    pub fn begin(&self, begin_info: &CommandBufferBeginInfo) -> Result<(), Error> {
+    pub fn begin(&self, begin_info: &CommandBufferBeginInfo) -> Result<()> {
         let call = self
             .fns()
             .v1_0
@@ -21,7 +21,7 @@ impl CommandBuffer {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkEndCommandBuffer.html>
     #[inline]
-    pub fn end(&self) -> Result<(), Error> {
+    pub fn end(&self) -> Result<()> {
         let call = self
             .fns()
             .v1_0
@@ -33,7 +33,7 @@ impl CommandBuffer {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkResetCommandBuffer.html>
     #[inline]
-    pub fn reset(&self, flags: CommandBufferResetFlags) -> Result<(), Error> {
+    pub fn reset(&self, flags: CommandBufferResetFlags) -> Result<()> {
         let call = self
             .fns()
             .v1_0

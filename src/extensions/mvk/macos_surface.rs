@@ -18,7 +18,7 @@ pub trait MacosSurfaceInstance {
         &self,
         create_info: &MacOSSurfaceCreateInfoMVK,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<SurfaceKHR, Error>;
+    ) -> Result<SurfaceKHR>;
 }
 
 impl MacosSurfaceInstance for Instance {
@@ -28,7 +28,7 @@ impl MacosSurfaceInstance for Instance {
         &self,
         create_info: &MacOSSurfaceCreateInfoMVK,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<SurfaceKHR, Error> {
+    ) -> Result<SurfaceKHR> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()

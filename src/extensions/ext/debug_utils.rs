@@ -13,24 +13,15 @@ pub const NAME: &CStr = c"VK_EXT_debug_utils";
 pub const SPEC_VERSION: u32 = 2;
 
 pub trait DebugUtilsDevice {
-    fn set_debug_utils_object_name(
-        &self,
-        name_info: &DebugUtilsObjectNameInfoEXT,
-    ) -> Result<(), Error>;
+    fn set_debug_utils_object_name(&self, name_info: &DebugUtilsObjectNameInfoEXT) -> Result<()>;
 
-    fn set_debug_utils_object_tag(
-        &self,
-        tag_info: &DebugUtilsObjectTagInfoEXT,
-    ) -> Result<(), Error>;
+    fn set_debug_utils_object_tag(&self, tag_info: &DebugUtilsObjectTagInfoEXT) -> Result<()>;
 }
 
 impl DebugUtilsDevice for Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkSetDebugUtilsObjectNameEXT.html>
     #[inline]
-    fn set_debug_utils_object_name(
-        &self,
-        name_info: &DebugUtilsObjectNameInfoEXT,
-    ) -> Result<(), Error> {
+    fn set_debug_utils_object_name(&self, name_info: &DebugUtilsObjectNameInfoEXT) -> Result<()> {
         let call = self
             .fns()
             .ext_debug_utils
@@ -43,10 +34,7 @@ impl DebugUtilsDevice for Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkSetDebugUtilsObjectTagEXT.html>
     #[inline]
-    fn set_debug_utils_object_tag(
-        &self,
-        tag_info: &DebugUtilsObjectTagInfoEXT,
-    ) -> Result<(), Error> {
+    fn set_debug_utils_object_tag(&self, tag_info: &DebugUtilsObjectTagInfoEXT) -> Result<()> {
         let call = self
             .fns()
             .ext_debug_utils
@@ -176,7 +164,7 @@ pub trait DebugUtilsInstance {
         &self,
         create_info: &DebugUtilsMessengerCreateInfoEXT,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<DebugUtilsMessengerEXT, Error>;
+    ) -> Result<DebugUtilsMessengerEXT>;
 
     fn destroy_debug_utils_messenger(
         &self,
@@ -199,7 +187,7 @@ impl DebugUtilsInstance for Instance {
         &self,
         create_info: &DebugUtilsMessengerCreateInfoEXT,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<DebugUtilsMessengerEXT, Error> {
+    ) -> Result<DebugUtilsMessengerEXT> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()

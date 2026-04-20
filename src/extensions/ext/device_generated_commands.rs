@@ -83,7 +83,7 @@ pub trait DeviceGeneratedCommandsDevice {
         &self,
         create_info: &IndirectCommandsLayoutCreateInfoEXT,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<IndirectCommandsLayoutEXT, Error>;
+    ) -> Result<IndirectCommandsLayoutEXT>;
 
     fn destroy_indirect_commands_layout(
         &self,
@@ -95,7 +95,7 @@ pub trait DeviceGeneratedCommandsDevice {
         &self,
         create_info: &IndirectExecutionSetCreateInfoEXT,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<IndirectExecutionSetEXT, Error>;
+    ) -> Result<IndirectExecutionSetEXT>;
 
     fn destroy_indirect_execution_set(
         &self,
@@ -143,7 +143,7 @@ impl DeviceGeneratedCommandsDevice for Device {
         &self,
         create_info: &IndirectCommandsLayoutCreateInfoEXT,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<IndirectCommandsLayoutEXT, Error> {
+    ) -> Result<IndirectCommandsLayoutEXT> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -192,7 +192,7 @@ impl DeviceGeneratedCommandsDevice for Device {
         &self,
         create_info: &IndirectExecutionSetCreateInfoEXT,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<IndirectExecutionSetEXT, Error> {
+    ) -> Result<IndirectExecutionSetEXT> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()

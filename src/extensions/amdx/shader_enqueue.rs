@@ -16,13 +16,13 @@ pub trait ShaderEnqueueDevice {
     fn get_execution_graph_pipeline_scratch_size(
         &self,
         execution_graph: Pipeline,
-    ) -> Result<ExecutionGraphPipelineScratchSizeAMDX<'_>, Error>;
+    ) -> Result<ExecutionGraphPipelineScratchSizeAMDX<'_>>;
 
     fn get_execution_graph_pipeline_node_index(
         &self,
         execution_graph: Pipeline,
         node_info: &PipelineShaderStageNodeCreateInfoAMDX,
-    ) -> Result<u32, Error>;
+    ) -> Result<u32>;
 
     fn create_execution_graph_pipelines(
         &self,
@@ -30,7 +30,7 @@ pub trait ShaderEnqueueDevice {
         create_infos: &[ExecutionGraphPipelineCreateInfoAMDX],
         allocator: Option<&AllocationCallbacks>,
         pipelines: &mut [Pipeline],
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 }
 
 impl ShaderEnqueueDevice for Device {
@@ -39,7 +39,7 @@ impl ShaderEnqueueDevice for Device {
     fn get_execution_graph_pipeline_scratch_size(
         &self,
         execution_graph: Pipeline,
-    ) -> Result<ExecutionGraphPipelineScratchSizeAMDX<'_>, Error> {
+    ) -> Result<ExecutionGraphPipelineScratchSizeAMDX<'_>> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -57,7 +57,7 @@ impl ShaderEnqueueDevice for Device {
         &self,
         execution_graph: Pipeline,
         node_info: &PipelineShaderStageNodeCreateInfoAMDX,
-    ) -> Result<u32, Error> {
+    ) -> Result<u32> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -78,7 +78,7 @@ impl ShaderEnqueueDevice for Device {
         create_infos: &[ExecutionGraphPipelineCreateInfoAMDX],
         allocator: Option<&AllocationCallbacks>,
         pipelines: &mut [Pipeline],
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         assert_eq!(create_infos.len(), pipelines.len());
         let call = self
             .fns()

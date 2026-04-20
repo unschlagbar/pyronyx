@@ -17,7 +17,7 @@ pub trait XlibSurfaceInstance {
         &self,
         create_info: &XlibSurfaceCreateInfoKHR,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<SurfaceKHR, Error>;
+    ) -> Result<SurfaceKHR>;
 }
 
 impl XlibSurfaceInstance for Instance {
@@ -27,7 +27,7 @@ impl XlibSurfaceInstance for Instance {
         &self,
         create_info: &XlibSurfaceCreateInfoKHR,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<SurfaceKHR, Error> {
+    ) -> Result<SurfaceKHR> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()

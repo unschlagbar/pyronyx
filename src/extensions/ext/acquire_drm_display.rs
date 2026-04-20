@@ -12,15 +12,15 @@ pub const NAME: &CStr = c"VK_EXT_acquire_drm_display";
 pub const SPEC_VERSION: u32 = 1;
 
 pub trait AcquireDrmDisplayPhysicalDevice {
-    fn acquire_drm_display(&self, drm_fd: i32, display: DisplayKHR) -> Result<(), Error>;
+    fn acquire_drm_display(&self, drm_fd: i32, display: DisplayKHR) -> Result<()>;
 
-    fn get_drm_display(&self, drm_fd: i32, connector_id: u32) -> Result<DisplayKHR, Error>;
+    fn get_drm_display(&self, drm_fd: i32, connector_id: u32) -> Result<DisplayKHR>;
 }
 
 impl AcquireDrmDisplayPhysicalDevice for PhysicalDevice {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkAcquireDrmDisplayEXT.html>
     #[inline]
-    fn acquire_drm_display(&self, drm_fd: i32, display: DisplayKHR) -> Result<(), Error> {
+    fn acquire_drm_display(&self, drm_fd: i32, display: DisplayKHR) -> Result<()> {
         let call = self
             .fns()
             .ext_acquire_drm_display
@@ -33,7 +33,7 @@ impl AcquireDrmDisplayPhysicalDevice for PhysicalDevice {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetDrmDisplayEXT.html>
     #[inline]
-    fn get_drm_display(&self, drm_fd: i32, connector_id: u32) -> Result<DisplayKHR, Error> {
+    fn get_drm_display(&self, drm_fd: i32, connector_id: u32) -> Result<DisplayKHR> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()

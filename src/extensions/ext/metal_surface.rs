@@ -17,7 +17,7 @@ pub trait MetalSurfaceInstance {
         &self,
         create_info: &MetalSurfaceCreateInfoEXT,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<SurfaceKHR, Error>;
+    ) -> Result<SurfaceKHR>;
 }
 
 impl MetalSurfaceInstance for Instance {
@@ -27,7 +27,7 @@ impl MetalSurfaceInstance for Instance {
         &self,
         create_info: &MetalSurfaceCreateInfoEXT,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<SurfaceKHR, Error> {
+    ) -> Result<SurfaceKHR> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()

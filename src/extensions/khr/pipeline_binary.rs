@@ -18,7 +18,7 @@ pub trait PipelineBinaryDevice {
         &self,
         create_info: &PipelineBinaryCreateInfoKHR,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<PipelineBinaryHandlesInfoKHR<'_>, Error>;
+    ) -> Result<PipelineBinaryHandlesInfoKHR<'_>>;
 
     fn destroy_pipeline_binary(
         &self,
@@ -29,20 +29,20 @@ pub trait PipelineBinaryDevice {
     fn get_pipeline_key(
         &self,
         pipeline_create_info: Option<&PipelineCreateInfoKHR>,
-    ) -> Result<PipelineBinaryKeyKHR<'_>, Error>;
+    ) -> Result<PipelineBinaryKeyKHR<'_>>;
 
     fn get_pipeline_binary_data(
         &self,
         info: &PipelineBinaryDataInfoKHR,
         pipeline_binary_key: *mut PipelineBinaryKeyKHR,
         pipeline_binary_data: &mut [c_void],
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 
     fn release_captured_pipeline_data(
         &self,
         info: &ReleaseCapturedPipelineDataInfoKHR,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 }
 
 impl PipelineBinaryDevice for Device {
@@ -52,7 +52,7 @@ impl PipelineBinaryDevice for Device {
         &self,
         create_info: &PipelineBinaryCreateInfoKHR,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<PipelineBinaryHandlesInfoKHR<'_>, Error> {
+    ) -> Result<PipelineBinaryHandlesInfoKHR<'_>> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -100,7 +100,7 @@ impl PipelineBinaryDevice for Device {
     fn get_pipeline_key(
         &self,
         pipeline_create_info: Option<&PipelineCreateInfoKHR>,
-    ) -> Result<PipelineBinaryKeyKHR<'_>, Error> {
+    ) -> Result<PipelineBinaryKeyKHR<'_>> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -126,7 +126,7 @@ impl PipelineBinaryDevice for Device {
         info: &PipelineBinaryDataInfoKHR,
         pipeline_binary_key: *mut PipelineBinaryKeyKHR,
         pipeline_binary_data: &mut [c_void],
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .khr_pipeline_binary
@@ -152,7 +152,7 @@ impl PipelineBinaryDevice for Device {
         &self,
         info: &ReleaseCapturedPipelineDataInfoKHR,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .khr_pipeline_binary

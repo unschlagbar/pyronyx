@@ -38,7 +38,7 @@ pub trait ObjectRefreshPhysicalDevice {
     fn get_refreshable_object_types(
         &self,
         refreshable_object_types: &mut [ObjectType],
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 }
 
 impl ObjectRefreshPhysicalDevice for PhysicalDevice {
@@ -47,7 +47,7 @@ impl ObjectRefreshPhysicalDevice for PhysicalDevice {
     fn get_refreshable_object_types(
         &self,
         refreshable_object_types: &mut [ObjectType],
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .khr_object_refresh

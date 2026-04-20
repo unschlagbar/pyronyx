@@ -16,19 +16,19 @@ pub trait DescriptorHeapDevice {
         &self,
         samplers: &[SamplerCreateInfo],
         descriptors: &[HostAddressRangeEXT],
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 
     fn write_resource_descriptors(
         &self,
         resources: &[ResourceDescriptorInfoEXT],
         descriptors: &[HostAddressRangeEXT],
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 
     fn register_custom_border_color(
         &self,
         border_color: &SamplerCustomBorderColorCreateInfoEXT,
         request_index: bool,
-    ) -> Result<u32, Error>;
+    ) -> Result<u32>;
 
     fn unregister_custom_border_color(&self, index: u32);
 
@@ -36,13 +36,13 @@ pub trait DescriptorHeapDevice {
         &self,
         images: &[Image],
         datas: &mut [HostAddressRangeEXT],
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 
     fn get_tensor_opaque_capture_data(
         &self,
         tensors: &[TensorARM],
         datas: &mut [HostAddressRangeEXT],
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 }
 
 impl DescriptorHeapDevice for Device {
@@ -52,7 +52,7 @@ impl DescriptorHeapDevice for Device {
         &self,
         samplers: &[SamplerCreateInfo],
         descriptors: &[HostAddressRangeEXT],
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         assert_eq!(samplers.len(), descriptors.len());
         let call = self
             .fns()
@@ -78,7 +78,7 @@ impl DescriptorHeapDevice for Device {
         &self,
         resources: &[ResourceDescriptorInfoEXT],
         descriptors: &[HostAddressRangeEXT],
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         assert_eq!(resources.len(), descriptors.len());
         let call = self
             .fns()
@@ -104,7 +104,7 @@ impl DescriptorHeapDevice for Device {
         &self,
         border_color: &SamplerCustomBorderColorCreateInfoEXT,
         request_index: bool,
-    ) -> Result<u32, Error> {
+    ) -> Result<u32> {
         let mut out = MaybeUninit::uninit();
         let call = self
             .fns()
@@ -143,7 +143,7 @@ impl DescriptorHeapDevice for Device {
         &self,
         images: &[Image],
         datas: &mut [HostAddressRangeEXT],
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         assert_eq!(images.len(), datas.len());
         let call = self
             .fns()
@@ -169,7 +169,7 @@ impl DescriptorHeapDevice for Device {
         &self,
         tensors: &[TensorARM],
         datas: &mut [HostAddressRangeEXT],
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         assert_eq!(tensors.len(), datas.len());
         let call = self
             .fns()

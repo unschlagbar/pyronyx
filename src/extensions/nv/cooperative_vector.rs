@@ -14,7 +14,7 @@ pub trait CooperativeVectorPhysicalDevice {
     fn get_cooperative_vector_properties(
         &self,
         properties: &mut [CooperativeVectorPropertiesNV],
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 }
 
 impl CooperativeVectorPhysicalDevice for PhysicalDevice {
@@ -23,7 +23,7 @@ impl CooperativeVectorPhysicalDevice for PhysicalDevice {
     fn get_cooperative_vector_properties(
         &self,
         properties: &mut [CooperativeVectorPropertiesNV],
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .nv_cooperative_vector
@@ -46,7 +46,7 @@ pub trait CooperativeVectorDevice {
     fn convert_cooperative_vector_matrix(
         &self,
         info: &ConvertCooperativeVectorMatrixInfoNV,
-    ) -> Result<(), Error>;
+    ) -> Result<()>;
 }
 
 impl CooperativeVectorDevice for Device {
@@ -55,7 +55,7 @@ impl CooperativeVectorDevice for Device {
     fn convert_cooperative_vector_matrix(
         &self,
         info: &ConvertCooperativeVectorMatrixInfoNV,
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         let call = self
             .fns()
             .nv_cooperative_vector
