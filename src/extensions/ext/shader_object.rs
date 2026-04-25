@@ -6,7 +6,6 @@
 use crate::utils::read_into_vec_result;
 use crate::vk::*;
 use core::ffi::CStr;
-use core::ffi::c_void;
 use core::ptr::{from_ref, null};
 
 /// Type: `Device`
@@ -822,7 +821,7 @@ pub trait ShaderObjectDevice {
 
     fn destroy_shader(&self, shader: ShaderEXT, allocator: Option<&AllocationCallbacks>);
 
-    fn get_shader_binary_data(&self, shader: ShaderEXT) -> Result<Vec<c_void>>;
+    fn get_shader_binary_data(&self, shader: ShaderEXT) -> Result<Vec<u8>>;
 }
 
 impl ShaderObjectDevice for Device {
@@ -869,7 +868,7 @@ impl ShaderObjectDevice for Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetShaderBinaryDataEXT.html>
     #[inline]
-    fn get_shader_binary_data(&self, shader: ShaderEXT) -> Result<Vec<c_void>> {
+    fn get_shader_binary_data(&self, shader: ShaderEXT) -> Result<Vec<u8>> {
         let call = self
             .fns()
             .ext_shader_object
@@ -877,6 +876,8 @@ impl ShaderObjectDevice for Device {
             .expect(Self::EXT_LOAD_ERROR)
             .get_shader_binary_data_ext;
 
-        read_into_vec_result(|count, data| unsafe { (call)(self.handle, shader, count, data) })
+        read_into_vec_result(|count, data: *mut u8| unsafe {
+            (call)(self.handle, shader, count, data.cast())
+        })
     }
 }

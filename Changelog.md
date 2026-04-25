@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.2.4]
+
+### Added
+
+Default & null() to PhysicalDevice
+Implemented `From<Extent2D> for Rect2D`
+
+### Changes
+
+All method params that where `[c_void]` are now `[u8]`
+
 ## [0.2.3]
 
 ### Added

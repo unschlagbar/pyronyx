@@ -21,7 +21,7 @@ pub trait DescriptorBufferDevice {
         binding: u32,
     ) -> DeviceSize;
 
-    fn get_descriptor(&self, descriptor_info: &DescriptorGetInfoEXT, descriptor: &mut [c_void]);
+    fn get_descriptor(&self, descriptor_info: &DescriptorGetInfoEXT, descriptor: &mut [u8]);
 
     fn get_buffer_opaque_capture_descriptor_data(
         &self,
@@ -90,7 +90,7 @@ impl DescriptorBufferDevice for Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetDescriptorEXT.html>
     #[inline]
-    fn get_descriptor(&self, descriptor_info: &DescriptorGetInfoEXT, descriptor: &mut [c_void]) {
+    fn get_descriptor(&self, descriptor_info: &DescriptorGetInfoEXT, descriptor: &mut [u8]) {
         let call = self
             .fns()
             .ext_descriptor_buffer
@@ -103,7 +103,7 @@ impl DescriptorBufferDevice for Device {
                 self.handle,
                 descriptor_info,
                 descriptor.len() as usize,
-                descriptor.as_mut_ptr(),
+                descriptor.as_mut_ptr().cast(),
             )
         };
     }

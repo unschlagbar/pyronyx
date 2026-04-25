@@ -5,7 +5,6 @@
 
 use crate::vk::*;
 use core::ffi::CStr;
-use core::ffi::c_void;
 use core::mem::MaybeUninit;
 use core::ptr::{from_ref, null};
 
@@ -50,7 +49,7 @@ pub trait OpacityMicromapDevice {
         &self,
         micromaps: &[MicromapEXT],
         query_type: QueryType,
-        data: &mut [c_void],
+        data: &mut [u8],
         stride: usize,
     ) -> Result<()>;
 
@@ -188,7 +187,7 @@ impl OpacityMicromapDevice for Device {
         &self,
         micromaps: &[MicromapEXT],
         query_type: QueryType,
-        data: &mut [c_void],
+        data: &mut [u8],
         stride: usize,
     ) -> Result<()> {
         let call = self
@@ -205,7 +204,7 @@ impl OpacityMicromapDevice for Device {
                 micromaps.as_ptr(),
                 query_type,
                 data.len() as usize,
-                data.as_mut_ptr(),
+                data.as_mut_ptr().cast(),
                 stride,
             )
         }

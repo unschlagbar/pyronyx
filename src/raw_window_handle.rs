@@ -1,5 +1,5 @@
 use crate::khr::surface;
-use crate::vk::{self, Error, Instance};
+use crate::vk::{self, Error, Instance, Result};
 use core::ffi::c_char;
 use raw_window_handle::{RawDisplayHandle, RawWindowHandle};
 
@@ -40,7 +40,7 @@ pub fn create_surface(
     instance: &Instance,
     display_handle: RawDisplayHandle,
     window_handle: RawWindowHandle,
-) -> Result<vk::SurfaceKHR, Error> {
+) -> Result<vk::SurfaceKHR> {
     match (display_handle, window_handle) {
         #[cfg(target_os = "windows")]
         (RawDisplayHandle::Windows(_), RawWindowHandle::Win32(window)) => {
@@ -115,9 +115,7 @@ pub fn create_surface(
 /// extensions and creation of a compatible Vulkan instance prior to creating a window.
 ///
 /// The returned extensions will include all extension dependencies.
-pub fn get_required_extensions(
-    display_handle: RawDisplayHandle,
-) -> Result<[*const c_char; 2], Error> {
+pub fn get_required_extensions(display_handle: RawDisplayHandle) -> Result<[*const c_char; 2]> {
     let extensions = match display_handle {
         #[cfg(target_os = "windows")]
         RawDisplayHandle::Windows(_) => [surface::NAME.as_ptr(), win32_surface::NAME.as_ptr()],

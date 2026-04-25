@@ -584,7 +584,7 @@ impl CommandBuffer {
     /// Use outside `RenderPass`.
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
-    pub fn update_buffer(&self, dst_buffer: Buffer, dst_offset: DeviceSize, data: &[c_void]) {
+    pub fn update_buffer(&self, dst_buffer: Buffer, dst_offset: DeviceSize, data: &[u8]) {
         let call = self.fns().v1_0.update_buffer.expect(Self::CORE_LOAD_ERROR);
 
         unsafe {
@@ -593,7 +593,7 @@ impl CommandBuffer {
                 dst_buffer,
                 dst_offset,
                 data.len() as DeviceSize,
-                data.as_ptr(),
+                data.as_ptr().cast(),
             )
         };
     }
@@ -950,7 +950,7 @@ impl CommandBuffer {
         layout: PipelineLayout,
         stage_flags: ShaderStageFlags,
         offset: u32,
-        values: &[c_void],
+        values: &[u8],
     ) {
         let call = self.fns().v1_0.push_constants.expect(Self::CORE_LOAD_ERROR);
 
@@ -961,7 +961,7 @@ impl CommandBuffer {
                 stage_flags,
                 offset,
                 values.len() as u32,
-                values.as_ptr(),
+                values.as_ptr().cast(),
             )
         };
     }

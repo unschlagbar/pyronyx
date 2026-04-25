@@ -5,7 +5,6 @@
 
 use crate::vk::*;
 use core::ffi::CStr;
-use core::ffi::c_void;
 use core::mem::MaybeUninit;
 use core::ptr;
 
@@ -19,7 +18,7 @@ pub trait ShaderInfoDevice {
         pipeline: Pipeline,
         shader_stage: ShaderStageFlags,
         info_type: ShaderInfoTypeAMD,
-        info: &mut [c_void],
+        info: &mut [u8],
     ) -> Result<()>;
     fn get_shader_info_len(
         &self,
@@ -39,7 +38,7 @@ impl ShaderInfoDevice for Device {
         pipeline: Pipeline,
         shader_stage: ShaderStageFlags,
         info_type: ShaderInfoTypeAMD,
-        info: &mut [c_void],
+        info: &mut [u8],
     ) -> Result<()> {
         let call = self
             .fns()
@@ -55,7 +54,7 @@ impl ShaderInfoDevice for Device {
                 shader_stage,
                 info_type,
                 info.len() as *mut usize,
-                info.as_mut_ptr(),
+                info.as_mut_ptr().cast(),
             )
         }
         .result()

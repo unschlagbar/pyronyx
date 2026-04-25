@@ -6,7 +6,6 @@
 #![deprecated = "This extension is deprecated. Use `VK_KHR_ray_tracing_pipeline` instead."]
 use crate::vk::*;
 use core::ffi::CStr;
-use core::ffi::c_void;
 use core::mem::MaybeUninit;
 use core::ptr::{from_ref, null};
 
@@ -42,7 +41,7 @@ pub trait RayTracingDevice {
     fn get_acceleration_structure_handle(
         &self,
         acceleration_structure: AccelerationStructureNV,
-        data: &mut [c_void],
+        data: &mut [u8],
     ) -> Result<()>;
 
     fn create_ray_tracing_pipelines(
@@ -158,7 +157,7 @@ impl RayTracingDevice for Device {
     fn get_acceleration_structure_handle(
         &self,
         acceleration_structure: AccelerationStructureNV,
-        data: &mut [c_void],
+        data: &mut [u8],
     ) -> Result<()> {
         let call = self
             .fns()
@@ -172,7 +171,7 @@ impl RayTracingDevice for Device {
                 self.handle,
                 acceleration_structure,
                 data.len() as usize,
-                data.as_mut_ptr(),
+                data.as_mut_ptr().cast(),
             )
         }
         .result()

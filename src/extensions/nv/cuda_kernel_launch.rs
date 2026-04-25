@@ -6,7 +6,6 @@
 use crate::utils::read_into_vec_result;
 use crate::vk::*;
 use core::ffi::CStr;
-use core::ffi::c_void;
 use core::mem::MaybeUninit;
 use core::ptr::{from_ref, null};
 
@@ -21,7 +20,7 @@ pub trait CudaKernelLaunchDevice {
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<CudaModuleNV>;
 
-    fn get_cuda_module_cache(&self, module: CudaModuleNV) -> Result<Vec<c_void>>;
+    fn get_cuda_module_cache(&self, module: CudaModuleNV) -> Result<Vec<u8>>;
 
     fn create_cuda_function(
         &self,
@@ -67,7 +66,7 @@ impl CudaKernelLaunchDevice for Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetCudaModuleCacheNV.html>
     #[inline]
-    fn get_cuda_module_cache(&self, module: CudaModuleNV) -> Result<Vec<c_void>> {
+    fn get_cuda_module_cache(&self, module: CudaModuleNV) -> Result<Vec<u8>> {
         let call = self
             .fns()
             .nv_cuda_kernel_launch
@@ -75,7 +74,9 @@ impl CudaKernelLaunchDevice for Device {
             .expect(Self::EXT_LOAD_ERROR)
             .get_cuda_module_cache_nv;
 
-        read_into_vec_result(|count, data| unsafe { (call)(self.handle, module, count, data) })
+        read_into_vec_result(|count, data: *mut u8| unsafe {
+            (call)(self.handle, module, count, data.cast())
+        })
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCreateCudaFunctionNV.html>

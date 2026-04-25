@@ -439,7 +439,7 @@ impl Device {
         query_pool: QueryPool,
         first_query: u32,
         query_count: u32,
-        data: &mut [c_void],
+        data: &mut [u8],
         stride: DeviceSize,
         flags: QueryResultFlags,
     ) -> Result<()> {
@@ -456,7 +456,7 @@ impl Device {
                 first_query,
                 query_count,
                 data.len() as usize,
-                data.as_mut_ptr(),
+                data.as_mut_ptr().cast(),
                 stride,
                 flags,
             )
@@ -732,15 +732,15 @@ impl Device {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPipelineCacheData.html>
     #[inline]
-    pub fn get_pipeline_cache_data(&self, pipeline_cache: PipelineCache) -> Result<Vec<c_void>> {
+    pub fn get_pipeline_cache_data(&self, pipeline_cache: PipelineCache) -> Result<Vec<u8>> {
         let call = self
             .fns()
             .v1_0
             .get_pipeline_cache_data
             .expect(Self::CORE_LOAD_ERROR);
 
-        read_into_vec_result(|count, data| unsafe {
-            (call)(self.handle, pipeline_cache, count, data)
+        read_into_vec_result(|count, data: *mut u8| unsafe {
+            (call)(self.handle, pipeline_cache, count, data.cast())
         })
     }
 

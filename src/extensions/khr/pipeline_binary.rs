@@ -5,7 +5,6 @@
 
 use crate::vk::*;
 use core::ffi::CStr;
-use core::ffi::c_void;
 use core::mem::MaybeUninit;
 use core::ptr::{from_ref, null};
 
@@ -35,7 +34,7 @@ pub trait PipelineBinaryDevice {
         &self,
         info: &PipelineBinaryDataInfoKHR,
         pipeline_binary_key: *mut PipelineBinaryKeyKHR,
-        pipeline_binary_data: &mut [c_void],
+        pipeline_binary_data: &mut [u8],
     ) -> Result<()>;
 
     fn release_captured_pipeline_data(
@@ -125,7 +124,7 @@ impl PipelineBinaryDevice for Device {
         &self,
         info: &PipelineBinaryDataInfoKHR,
         pipeline_binary_key: *mut PipelineBinaryKeyKHR,
-        pipeline_binary_data: &mut [c_void],
+        pipeline_binary_data: &mut [u8],
     ) -> Result<()> {
         let call = self
             .fns()
@@ -140,7 +139,7 @@ impl PipelineBinaryDevice for Device {
                 info,
                 pipeline_binary_key,
                 pipeline_binary_data.len() as *mut usize,
-                pipeline_binary_data.as_mut_ptr(),
+                pipeline_binary_data.as_mut_ptr().cast(),
             )
         }
         .result()

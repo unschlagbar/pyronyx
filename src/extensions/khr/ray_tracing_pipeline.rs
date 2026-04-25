@@ -5,7 +5,6 @@
 
 use crate::vk::*;
 use core::ffi::CStr;
-use core::ffi::c_void;
 use core::ptr::{from_ref, null};
 
 /// Type: `Device`
@@ -134,7 +133,7 @@ pub trait RayTracingPipelineDevice {
         pipeline: Pipeline,
         first_group: u32,
         group_count: u32,
-        data: &mut [c_void],
+        data: &mut [u8],
     ) -> Result<()>;
 
     fn get_ray_tracing_capture_replay_shader_group_handles(
@@ -142,7 +141,7 @@ pub trait RayTracingPipelineDevice {
         pipeline: Pipeline,
         first_group: u32,
         group_count: u32,
-        data: &mut [c_void],
+        data: &mut [u8],
     ) -> Result<()>;
 
     fn create_ray_tracing_pipelines(
@@ -170,7 +169,7 @@ impl RayTracingPipelineDevice for Device {
         pipeline: Pipeline,
         first_group: u32,
         group_count: u32,
-        data: &mut [c_void],
+        data: &mut [u8],
     ) -> Result<()> {
         let call = self
             .fns()
@@ -186,7 +185,7 @@ impl RayTracingPipelineDevice for Device {
                 first_group,
                 group_count,
                 data.len() as usize,
-                data.as_mut_ptr(),
+                data.as_mut_ptr().cast(),
             )
         }
         .result()
@@ -199,7 +198,7 @@ impl RayTracingPipelineDevice for Device {
         pipeline: Pipeline,
         first_group: u32,
         group_count: u32,
-        data: &mut [c_void],
+        data: &mut [u8],
     ) -> Result<()> {
         let call = self
             .fns()
@@ -215,7 +214,7 @@ impl RayTracingPipelineDevice for Device {
                 first_group,
                 group_count,
                 data.len() as usize,
-                data.as_mut_ptr(),
+                data.as_mut_ptr().cast(),
             )
         }
         .result()

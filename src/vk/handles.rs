@@ -13,7 +13,7 @@
 //!   resolved at runtime so the crate works with any Vulkan loader / ICD.
 //! - **Idiomatic Rust API**: The generated `impl` blocks (see `codegen` module)
 //!   turn raw C signatures into nice Rust signatures (`&mut [T]`, `Vec<T>`,
-//!   `Result<_, Error>`, etc.).
+//!   `Result<_>`, etc.).
 //! - **Safety**: Most Vulkan calls are inherently unsafe. This wrapper makes
 //!   the *safe* parts as ergonomic as possible while clearly marking the
 //!   unsafe parts.
@@ -35,8 +35,8 @@
 use crate::{
     utils::{raw_option, read_into_vec_result, to_option},
     vk::{
-        self, AllocationCallbacks, CommandBufferAllocateInfo, DeviceCreateInfo, Error,
-        InstanceCreateInfo, get_instance_proc_addr, vkCommandBuffer, vkCreateInstance, vkDevice,
+        self, AllocationCallbacks, CommandBufferAllocateInfo, DeviceCreateInfo, InstanceCreateInfo,
+        Result, get_instance_proc_addr, vkCommandBuffer, vkCreateInstance, vkDevice,
         vkGetDeviceProcAddr, vkInstance, vkPhysicalDevice, vkQueue, vkResult,
     },
     vtables::{
@@ -183,10 +183,10 @@ impl Instance {
     /// // since the debug messenger itself doesn't exist yet at that point.
     /// #[cfg(debug_assertions)]
     /// let mut debug_create_info = vk::DebugUtilsMessengerCreateInfoEXT {
-    ///     message_severity: vk::DebugUtilsMessageSeverityFlagsEXT::WARNING
-    ///         | vk::DebugUtilsMessageSeverityFlagsEXT::ERROR,
-    ///     message_type: vk::DebugUtilsMessageTypeFlagsEXT::VALIDATION
-    ///         | vk::DebugUtilsMessageTypeFlagsEXT::PERFORMANCE,
+    ///     message_severity: vk::DebugUtilsMessageSeverityFlagsEXT::Warning
+    ///         | vk::DebugUtilsMessageSeverityFlagsEXT::Error,
+    ///     message_type: vk::DebugUtilsMessageTypeFlagsEXT::Validation
+    ///         | vk::DebugUtilsMessageTypeFlagsEXT::Performance,
     ///     pfn_user_callback: Some(debug_callback),
     ///     ..Default::default()
     /// };
@@ -200,7 +200,7 @@ impl Instance {
     pub unsafe fn create(
         create_info: &InstanceCreateInfo,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<Instance, Error> {
+    ) -> Result<Instance> {
         let pfn: vkCreateInstance = to_option(unsafe {
             transmute(get_instance_proc_addr(
                 vkInstance::null(),
@@ -260,7 +260,7 @@ impl Instance {
     /// To catch these bugs use `VK_LAYER_KHRONOS_validation` layer in [`InstanceCreateInfo`]
     /// together with the Vulkan SDK!
     #[inline]
-    pub unsafe fn enumerate_physical_devices(&self) -> Result<Vec<PhysicalDevice>, Error> {
+    pub unsafe fn enumerate_physical_devices(&self) -> Result<Vec<PhysicalDevice>> {
         self.enumerate_physical_devices_raw().map(|p| {
             p.into_iter()
                 .map(|d| unsafe { d.to_physical_device(self) })
@@ -273,7 +273,7 @@ impl Instance {
     ///
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkEnumeratePhysicalDevices.html>
     #[inline]
-    pub fn enumerate_physical_devices_raw(&self) -> Result<Vec<vkPhysicalDevice>, Error> {
+    pub fn enumerate_physical_devices_raw(&self) -> Result<Vec<vkPhysicalDevice>> {
         read_into_vec_result(|count, data| unsafe {
             (self
                 .fns()
@@ -290,10 +290,10 @@ impl Instance {
 ///
 /// Holds a **static** reference to the function table stored inside the parent
 /// `Instance`. Therefore it must not outlive the `Instance`.
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Default)]
 pub struct PhysicalDevice {
     pub(crate) handle: vkPhysicalDevice,
-    pub(crate) v_table: &'static PhysicalDeviceFn,
+    pub(crate) v_table: Option<&'static PhysicalDeviceFn>,
 }
 
 impl PhysicalDevice {
@@ -305,9 +305,17 @@ impl PhysicalDevice {
         self.handle
     }
 
+    pub const fn null() -> Self {
+        Self {
+            handle: vk::vkPhysicalDevice::null(),
+            v_table: None,
+        }
+    }
+
     /// Returns the function table for this [`PhysicalDevice`].
     pub const fn fns(&self) -> &PhysicalDeviceFn {
         self.v_table
+            .expect("No v-table use `self.handle().to_physical_Device(device)`")
     }
 
     /// Creates a logical device from this physical device.
@@ -326,14 +334,10 @@ impl PhysicalDevice {
         create_info: &DeviceCreateInfo,
         allocator: Option<&AllocationCallbacks>,
         instance: &Instance,
-    ) -> Result<Device, Error> {
+    ) -> Result<Device> {
         let mut handle = MaybeUninit::uninit();
         let result = unsafe {
-            (self
-                .v_table
-                .v1_0
-                .create_device
-                .expect(Self::CORE_LOAD_ERROR))(
+            (self.fns().v1_0.create_device.expect(Self::CORE_LOAD_ERROR))(
                 self.handle,
                 create_info,
                 raw_option(allocator),
@@ -520,7 +524,7 @@ impl Device {
         &self,
         allocate_info: &CommandBufferAllocateInfo,
         command_buffers: &mut [CommandBuffer],
-    ) -> Result<(), Error> {
+    ) -> Result<()> {
         assert_eq!(
             allocate_info.command_buffer_count as usize,
             command_buffers.len()
@@ -540,7 +544,7 @@ impl Device {
     pub fn allocate_command_buffers_raw(
         &self,
         allocate_info: &CommandBufferAllocateInfo,
-    ) -> Result<Vec<vkCommandBuffer>, Error> {
+    ) -> Result<Vec<vkCommandBuffer>> {
         let mut buffers = Vec::with_capacity(allocate_info.command_buffer_count as usize);
         unsafe {
             (self

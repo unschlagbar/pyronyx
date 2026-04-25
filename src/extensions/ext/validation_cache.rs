@@ -5,7 +5,6 @@
 
 use crate::vk::*;
 use core::ffi::CStr;
-use core::ffi::c_void;
 use core::mem::MaybeUninit;
 use core::ptr::{from_ref, null};
 
@@ -29,7 +28,7 @@ pub trait ValidationCacheDevice {
     fn get_validation_cache_data(
         &self,
         validation_cache: ValidationCacheEXT,
-        data: &mut [c_void],
+        data: &mut [u8],
     ) -> Result<()>;
 
     fn merge_validation_caches(
@@ -94,7 +93,7 @@ impl ValidationCacheDevice for Device {
     fn get_validation_cache_data(
         &self,
         validation_cache: ValidationCacheEXT,
-        data: &mut [c_void],
+        data: &mut [u8],
     ) -> Result<()> {
         let call = self
             .fns()
@@ -108,7 +107,7 @@ impl ValidationCacheDevice for Device {
                 self.handle,
                 validation_cache,
                 data.len() as *mut usize,
-                data.as_mut_ptr(),
+                data.as_mut_ptr().cast(),
             )
         }
         .result()

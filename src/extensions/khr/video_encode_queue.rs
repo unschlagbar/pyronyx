@@ -5,7 +5,6 @@
 
 use crate::vk::*;
 use core::ffi::CStr;
-use core::ffi::c_void;
 use core::mem::MaybeUninit;
 
 /// Type: `Device`
@@ -43,7 +42,7 @@ pub trait VideoEncodeQueueDevice {
         &self,
         video_session_parameters_info: &VideoEncodeSessionParametersGetInfoKHR,
         feedback_info: *mut VideoEncodeSessionParametersFeedbackInfoKHR,
-        data: &mut [c_void],
+        data: &mut [u8],
     ) -> Result<()>;
 }
 
@@ -54,7 +53,7 @@ impl VideoEncodeQueueDevice for Device {
         &self,
         video_session_parameters_info: &VideoEncodeSessionParametersGetInfoKHR,
         feedback_info: *mut VideoEncodeSessionParametersFeedbackInfoKHR,
-        data: &mut [c_void],
+        data: &mut [u8],
     ) -> Result<()> {
         let call = self
             .fns()
@@ -69,7 +68,7 @@ impl VideoEncodeQueueDevice for Device {
                 video_session_parameters_info,
                 feedback_info,
                 data.len() as *mut usize,
-                data.as_mut_ptr(),
+                data.as_mut_ptr().cast(),
             )
         }
         .result()

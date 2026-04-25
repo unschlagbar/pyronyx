@@ -5,7 +5,6 @@
 
 use crate::vk::*;
 use core::ffi::CStr;
-use core::ffi::c_void;
 use core::mem::MaybeUninit;
 use core::ptr::{from_ref, null};
 
@@ -42,7 +41,7 @@ pub trait AccelerationStructureDevice {
         &self,
         acceleration_structures: &[AccelerationStructureKHR],
         query_type: QueryType,
-        data: &mut [c_void],
+        data: &mut [u8],
         stride: usize,
     ) -> Result<()>;
 
@@ -158,7 +157,7 @@ impl AccelerationStructureDevice for Device {
         &self,
         acceleration_structures: &[AccelerationStructureKHR],
         query_type: QueryType,
-        data: &mut [c_void],
+        data: &mut [u8],
         stride: usize,
     ) -> Result<()> {
         let call = self
@@ -175,7 +174,7 @@ impl AccelerationStructureDevice for Device {
                 acceleration_structures.as_ptr(),
                 query_type,
                 data.len() as usize,
-                data.as_mut_ptr(),
+                data.as_mut_ptr().cast(),
                 stride,
             )
         }
