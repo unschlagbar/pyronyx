@@ -121,7 +121,7 @@ impl DeviceGeneratedCommandsDevice for Device {
         &self,
         info: &GeneratedCommandsMemoryRequirementsInfoNV,
     ) -> MemoryRequirements2<'_> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .nv_device_generated_commands
@@ -142,7 +142,7 @@ impl DeviceGeneratedCommandsDevice for Device {
         create_info: &IndirectCommandsLayoutCreateInfoNV,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<IndirectCommandsLayoutNV> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .nv_device_generated_commands

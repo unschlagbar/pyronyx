@@ -30,7 +30,7 @@ impl ExternalMemoryAndroidHardwareBufferDevice for Device {
         &self,
         buffer: &AHardwareBuffer,
     ) -> Result<AndroidHardwareBufferPropertiesANDROID<'_>> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .android_external_memory_android_hardware_buffer
@@ -47,7 +47,7 @@ impl ExternalMemoryAndroidHardwareBufferDevice for Device {
         &self,
         info: &MemoryGetAndroidHardwareBufferInfoANDROID,
     ) -> Result<*mut AHardwareBuffer> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .android_external_memory_android_hardware_buffer

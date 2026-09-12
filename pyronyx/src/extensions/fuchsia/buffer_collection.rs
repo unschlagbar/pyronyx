@@ -51,7 +51,7 @@ impl BufferCollectionDevice for Device {
         create_info: &BufferCollectionCreateInfoFUCHSIA,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<BufferCollectionFUCHSIA> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .fuchsia_buffer_collection
@@ -127,7 +127,7 @@ impl BufferCollectionDevice for Device {
         &self,
         collection: BufferCollectionFUCHSIA,
     ) -> Result<BufferCollectionPropertiesFUCHSIA<'_>> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .fuchsia_buffer_collection

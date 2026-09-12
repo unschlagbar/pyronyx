@@ -71,7 +71,7 @@ impl PerformanceQueryDevice for Device {
         &self,
         acquire_info: &PerformanceConfigurationAcquireInfoINTEL,
     ) -> Result<PerformanceConfigurationINTEL> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .intel_performance_query
@@ -104,7 +104,7 @@ impl PerformanceQueryDevice for Device {
         &self,
         parameter: PerformanceParameterTypeINTEL,
     ) -> Result<PerformanceValueINTEL> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .intel_performance_query

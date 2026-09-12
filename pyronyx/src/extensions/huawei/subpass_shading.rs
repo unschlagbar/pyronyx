@@ -19,7 +19,7 @@ impl SubpassShadingDevice for Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI.html>
     #[inline]
     fn get_subpass_shading_max_workgroup_size(&self, renderpass: RenderPass) -> Result<Extent2D> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .huawei_subpass_shading

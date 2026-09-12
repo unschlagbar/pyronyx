@@ -28,7 +28,7 @@ impl ImagepipeSurfaceInstance for Instance {
         create_info: &ImagePipeSurfaceCreateInfoFUCHSIA,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<SurfaceKHR> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .fuchsia_imagepipe_surface

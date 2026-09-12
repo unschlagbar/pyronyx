@@ -64,7 +64,7 @@ impl DisplayControlDevice for Device {
         device_event_info: &DeviceEventInfoEXT,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<Fence> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .ext_display_control
@@ -91,7 +91,7 @@ impl DisplayControlDevice for Device {
         display_event_info: &DisplayEventInfoEXT,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<Fence> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .ext_display_control
@@ -118,7 +118,7 @@ impl DisplayControlDevice for Device {
         swapchain: SwapchainKHR,
         counter: SurfaceCounterFlagsEXT,
     ) -> Result<u64> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .ext_display_control

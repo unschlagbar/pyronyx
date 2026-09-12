@@ -35,7 +35,7 @@ impl DeviceFaultDevice for Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetDeviceFaultDebugInfoKHR.html>
     #[inline]
     fn get_fault_debug_info(&self) -> Result<DeviceFaultDebugInfoKHR<'_>> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .khr_device_fault

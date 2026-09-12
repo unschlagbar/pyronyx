@@ -105,7 +105,7 @@ impl DescriptorHeapDevice for Device {
         border_color: &SamplerCustomBorderColorCreateInfoEXT,
         request_index: bool,
     ) -> Result<u32> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .ext_descriptor_heap

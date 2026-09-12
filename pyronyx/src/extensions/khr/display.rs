@@ -233,7 +233,7 @@ impl DisplayPhysicalDevice for PhysicalDevice {
         create_info: &DisplayModeCreateInfoKHR,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<DisplayModeKHR> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .khr_display
@@ -260,7 +260,7 @@ impl DisplayPhysicalDevice for PhysicalDevice {
         mode: DisplayModeKHR,
         plane_index: u32,
     ) -> Result<DisplayPlaneCapabilitiesKHR> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .khr_display
@@ -288,7 +288,7 @@ impl DisplayInstance for Instance {
         create_info: &DisplaySurfaceCreateInfoKHR,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<SurfaceKHR> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .khr_display

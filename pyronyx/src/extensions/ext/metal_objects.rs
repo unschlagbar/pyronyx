@@ -19,7 +19,7 @@ impl MetalObjectsDevice for Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkExportMetalObjectsEXT.html>
     #[inline]
     fn export_metal_objects(&self) -> ExportMetalObjectsInfoEXT<'_> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .ext_metal_objects

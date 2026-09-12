@@ -25,7 +25,7 @@ impl ClusterAccelerationStructureDevice for Device {
         &self,
         info: &ClusterAccelerationStructureInputInfoNV,
     ) -> AccelerationStructureBuildSizesInfoKHR<'_> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .nv_cluster_acceleration_structure

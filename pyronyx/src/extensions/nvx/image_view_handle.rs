@@ -61,7 +61,7 @@ impl ImageViewHandleDevice for Device {
         &self,
         image_view: ImageView,
     ) -> Result<ImageViewAddressPropertiesNVX<'_>> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .nvx_image_view_handle

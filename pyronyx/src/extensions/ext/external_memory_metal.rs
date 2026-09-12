@@ -32,7 +32,7 @@ impl ExternalMemoryMetalDevice for Device {
         &self,
         get_metal_handle_info: &MemoryGetMetalHandleInfoEXT,
     ) -> Result<*mut c_void> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .ext_external_memory_metal
@@ -50,7 +50,7 @@ impl ExternalMemoryMetalDevice for Device {
         handle_type: ExternalMemoryHandleTypeFlags,
         handle: &c_void,
     ) -> Result<MemoryMetalHandlePropertiesEXT<'_>> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .ext_external_memory_metal

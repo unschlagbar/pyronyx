@@ -30,7 +30,7 @@ impl DeviceGroupDevice for Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetDeviceGroupPresentCapabilitiesKHR.html>
     #[inline]
     fn get_group_present_capabilities(&self) -> Result<DeviceGroupPresentCapabilitiesKHR<'_>> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .khr_device_group
@@ -47,7 +47,7 @@ impl DeviceGroupDevice for Device {
         &self,
         surface: SurfaceKHR,
     ) -> Result<DeviceGroupPresentModeFlagsKHR> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .khr_device_group
@@ -64,7 +64,7 @@ impl DeviceGroupDevice for Device {
         &self,
         acquire_info: &AcquireNextImageInfoKHR,
     ) -> Result<Suboptimal<u32>> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .khr_device_group

@@ -28,7 +28,7 @@ impl ExternalMemoryWin32Device for Device {
         memory: DeviceMemory,
         handle_type: ExternalMemoryHandleTypeFlagsNV,
     ) -> Result<HANDLE> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .nv_external_memory_win32

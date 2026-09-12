@@ -25,7 +25,7 @@ impl ExternalMemoryRdmaDevice for Device {
         &self,
         memory_get_remote_address_info: &MemoryGetRemoteAddressInfoNV,
     ) -> Result<RemoteAddressNV> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .nv_external_memory_rdma

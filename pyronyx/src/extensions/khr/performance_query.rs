@@ -93,7 +93,7 @@ impl PerformanceQueryPhysicalDevice for PhysicalDevice {
         &self,
         performance_query_create_info: &QueryPoolPerformanceCreateInfoKHR,
     ) -> u32 {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .khr_performance_query

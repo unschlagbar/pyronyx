@@ -28,7 +28,7 @@ impl WaylandSurfaceInstance for Instance {
         create_info: &WaylandSurfaceCreateInfoKHR,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<SurfaceKHR> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .khr_wayland_surface

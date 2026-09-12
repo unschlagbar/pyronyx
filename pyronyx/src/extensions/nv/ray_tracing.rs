@@ -74,7 +74,7 @@ impl RayTracingDevice for Device {
         create_info: &AccelerationStructureCreateInfoNV,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<AccelerationStructureNV> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .nv_ray_tracing
@@ -122,7 +122,7 @@ impl RayTracingDevice for Device {
         &self,
         info: &AccelerationStructureMemoryRequirementsInfoNV,
     ) -> MemoryRequirements2<'_> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .nv_ray_tracing

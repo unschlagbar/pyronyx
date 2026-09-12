@@ -28,7 +28,7 @@ impl StreamDescriptorSurfaceInstance for Instance {
         create_info: &StreamDescriptorSurfaceCreateInfoGGP,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<SurfaceKHR> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .ggp_stream_descriptor_surface

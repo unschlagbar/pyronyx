@@ -62,7 +62,7 @@ impl DeviceGeneratedCommandsComputeDevice for Device {
         &self,
         create_info: &ComputePipelineCreateInfo,
     ) -> MemoryRequirements2<'_> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .nv_device_generated_commands_compute

@@ -25,7 +25,7 @@ impl ExternalMemoryScreenBufferDevice for Device {
         &self,
         buffer: &_screen_buffer,
     ) -> Result<ScreenBufferPropertiesQNX<'_>> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .qnx_external_memory_screen_buffer

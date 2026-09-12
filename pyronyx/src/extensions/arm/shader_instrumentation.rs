@@ -101,7 +101,7 @@ impl ShaderInstrumentationDevice for Device {
         create_info: &ShaderInstrumentationCreateInfoARM,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<ShaderInstrumentationARM> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .arm_shader_instrumentation

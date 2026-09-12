@@ -26,7 +26,7 @@ impl ExternalMemoryFdDevice for Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetMemoryFdKHR.html>
     #[inline]
     fn get_memory_fd(&self, get_fd_info: &MemoryGetFdInfoKHR) -> Result<c_int> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .khr_external_memory_fd
@@ -44,7 +44,7 @@ impl ExternalMemoryFdDevice for Device {
         handle_type: ExternalMemoryHandleTypeFlags,
         fd: c_int,
     ) -> Result<MemoryFdPropertiesKHR<'_>> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .khr_external_memory_fd

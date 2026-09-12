@@ -28,7 +28,7 @@ impl HeadlessSurfaceInstance for Instance {
         create_info: &HeadlessSurfaceCreateInfoEXT,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<SurfaceKHR> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .ext_headless_surface

@@ -30,7 +30,7 @@ impl ExternalSemaphoreDevice for Device {
         &self,
         get_zircon_handle_info: &SemaphoreGetZirconHandleInfoFUCHSIA,
     ) -> Result<zx_handle_t> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .fuchsia_external_semaphore

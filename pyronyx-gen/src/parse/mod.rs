@@ -6,6 +6,7 @@ pub mod types;
 
 pub fn c_to_rust(ty: &str) -> &str {
     match ty {
+        "void*" => "*const c_void",
         "void" => "c_void",
         "char" => "c_char",
         "float" => "f32",

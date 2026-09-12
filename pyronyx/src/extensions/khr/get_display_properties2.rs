@@ -166,7 +166,7 @@ impl GetDisplayProperties2PhysicalDevice for PhysicalDevice {
         &self,
         display_plane_info: &DisplayPlaneInfo2KHR,
     ) -> Result<DisplayPlaneCapabilities2KHR<'_>> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .khr_get_display_properties2

@@ -42,7 +42,7 @@ impl AcquireXlibDisplayPhysicalDevice for PhysicalDevice {
         dpy: *mut Display,
         rr_output: RROutput,
     ) -> Result<DisplayKHR> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .ext_acquire_xlib_display

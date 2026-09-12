@@ -31,7 +31,7 @@ impl ExternalMemoryWin32Device for Device {
         &self,
         get_win32_handle_info: &MemoryGetWin32HandleInfoKHR,
     ) -> Result<HANDLE> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .khr_external_memory_win32
@@ -49,7 +49,7 @@ impl ExternalMemoryWin32Device for Device {
         handle_type: ExternalMemoryHandleTypeFlags,
         handle: HANDLE,
     ) -> Result<MemoryWin32HandlePropertiesKHR<'_>> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .khr_external_memory_win32

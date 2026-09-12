@@ -57,7 +57,7 @@ impl FullScreenExclusiveDevice for Device {
         &self,
         surface_info: &PhysicalDeviceSurfaceInfo2KHR,
     ) -> Result<DeviceGroupPresentModeFlagsKHR> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .ext_full_screen_exclusive

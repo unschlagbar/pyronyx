@@ -28,7 +28,7 @@ impl MetalSurfaceInstance for Instance {
         create_info: &MetalSurfaceCreateInfoEXT,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<SurfaceKHR> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .ext_metal_surface

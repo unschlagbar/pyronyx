@@ -30,7 +30,7 @@ impl ExternalFenceWin32Device for Device {
         &self,
         get_win32_handle_info: &FenceGetWin32HandleInfoKHR,
     ) -> Result<HANDLE> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .khr_external_fence_win32

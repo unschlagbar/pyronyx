@@ -123,7 +123,7 @@ impl ExternalSciSync2Device for Device {
         create_info: &SemaphoreSciSyncPoolCreateInfoNV,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<SemaphoreSciSyncPoolNV> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .nv_external_sci_sync2

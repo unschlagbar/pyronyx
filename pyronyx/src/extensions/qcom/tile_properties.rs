@@ -82,7 +82,7 @@ impl TilePropertiesDevice for Device {
         &self,
         rendering_info: &RenderingInfo,
     ) -> Result<TilePropertiesQCOM<'_>> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .qcom_tile_properties

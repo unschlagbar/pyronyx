@@ -28,7 +28,7 @@ impl ViSurfaceInstance for Instance {
         create_info: &ViSurfaceCreateInfoNN,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<SurfaceKHR> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .nn_vi_surface

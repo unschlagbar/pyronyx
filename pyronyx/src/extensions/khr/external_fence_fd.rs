@@ -22,7 +22,7 @@ impl ExternalFenceFdDevice for Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetFenceFdKHR.html>
     #[inline]
     fn get_fence_fd(&self, get_fd_info: &FenceGetFdInfoKHR) -> Result<c_int> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .khr_external_fence_fd

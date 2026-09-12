@@ -25,7 +25,7 @@ impl ImageDrmFormatModifierDevice for Device {
         &self,
         image: Image,
     ) -> Result<ImageDrmFormatModifierPropertiesEXT<'_>> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .ext_image_drm_format_modifier

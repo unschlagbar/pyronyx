@@ -123,7 +123,7 @@ impl DeviceGeneratedCommandsDevice for Device {
         &self,
         info: &GeneratedCommandsMemoryRequirementsInfoEXT,
     ) -> MemoryRequirements2<'_> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .ext_device_generated_commands
@@ -144,7 +144,7 @@ impl DeviceGeneratedCommandsDevice for Device {
         create_info: &IndirectCommandsLayoutCreateInfoEXT,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<IndirectCommandsLayoutEXT> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .ext_device_generated_commands
@@ -193,7 +193,7 @@ impl DeviceGeneratedCommandsDevice for Device {
         create_info: &IndirectExecutionSetCreateInfoEXT,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<IndirectExecutionSetEXT> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .ext_device_generated_commands

@@ -25,7 +25,7 @@ impl PipelinePropertiesDevice for Device {
         &self,
         pipeline_info: &PipelineInfoKHR,
     ) -> Result<BaseOutStructure<'_>> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .ext_pipeline_properties

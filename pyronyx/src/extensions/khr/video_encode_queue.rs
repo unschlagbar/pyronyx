@@ -26,7 +26,7 @@ impl VideoEncodeQueuePhysicalDevice for PhysicalDevice {
         &self,
         quality_level_info: &PhysicalDeviceVideoEncodeQualityLevelInfoKHR,
     ) -> Result<VideoEncodeQualityLevelPropertiesKHR<'_>> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .khr_video_encode_queue

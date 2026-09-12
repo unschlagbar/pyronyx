@@ -47,7 +47,7 @@ impl DebugReportInstance for Instance {
         create_info: &DebugReportCallbackCreateInfoEXT,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<DebugReportCallbackEXT> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .ext_debug_report

@@ -30,7 +30,7 @@ impl ShaderModuleIdentifierDevice for Device {
         &self,
         shader_module: ShaderModule,
     ) -> ShaderModuleIdentifierEXT<'_> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .ext_shader_module_identifier
@@ -50,7 +50,7 @@ impl ShaderModuleIdentifierDevice for Device {
         &self,
         create_info: &ShaderModuleCreateInfo,
     ) -> ShaderModuleIdentifierEXT<'_> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .ext_shader_module_identifier

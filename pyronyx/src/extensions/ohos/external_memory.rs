@@ -30,7 +30,7 @@ impl ExternalMemoryDevice for Device {
         &self,
         buffer: &OH_NativeBuffer,
     ) -> Result<NativeBufferPropertiesOHOS<'_>> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .ohos_external_memory
@@ -47,7 +47,7 @@ impl ExternalMemoryDevice for Device {
         &self,
         info: &MemoryGetNativeBufferInfoOHOS,
     ) -> Result<*mut OH_NativeBuffer> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .ohos_external_memory

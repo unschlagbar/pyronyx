@@ -41,7 +41,7 @@ impl SwapchainDevice for Device {
         create_info: &SwapchainCreateInfoKHR,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<SwapchainKHR> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .khr_swapchain
@@ -95,7 +95,7 @@ impl SwapchainDevice for Device {
         semaphore: Semaphore,
         fence: Fence,
     ) -> Result<Suboptimal<u32>> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .khr_swapchain

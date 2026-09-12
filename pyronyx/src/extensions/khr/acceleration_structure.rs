@@ -187,7 +187,7 @@ impl AccelerationStructureDevice for Device {
         &self,
         version_info: &AccelerationStructureVersionInfoKHR,
     ) -> AccelerationStructureCompatibilityKHR {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .khr_acceleration_structure
@@ -208,7 +208,7 @@ impl AccelerationStructureDevice for Device {
         create_info: &AccelerationStructureCreateInfoKHR,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<AccelerationStructureKHR> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .khr_acceleration_structure
@@ -279,7 +279,7 @@ impl AccelerationStructureDevice for Device {
         build_info: &AccelerationStructureBuildGeometryInfoKHR,
         max_primitive_counts: Option<&u32>,
     ) -> AccelerationStructureBuildSizesInfoKHR<'_> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .khr_acceleration_structure

@@ -25,7 +25,7 @@ impl PartitionedAccelerationStructureDevice for Device {
         &self,
         info: &PartitionedAccelerationStructureInstancesInputNV,
     ) -> AccelerationStructureBuildSizesInfoKHR<'_> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .nv_partitioned_acceleration_structure

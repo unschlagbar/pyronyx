@@ -58,7 +58,7 @@ impl DescriptorBufferDevice for Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetDescriptorSetLayoutSizeEXT.html>
     #[inline]
     fn get_descriptor_set_layout_size(&self, layout: DescriptorSetLayout) -> DeviceSize {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .ext_descriptor_buffer
@@ -79,7 +79,7 @@ impl DescriptorBufferDevice for Device {
         layout: DescriptorSetLayout,
         binding: u32,
     ) -> DeviceSize {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .ext_descriptor_buffer

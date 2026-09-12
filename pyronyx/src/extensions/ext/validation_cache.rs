@@ -48,7 +48,7 @@ impl ValidationCacheDevice for Device {
         create_info: &ValidationCacheCreateInfoEXT,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<ValidationCacheEXT> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .ext_validation_cache

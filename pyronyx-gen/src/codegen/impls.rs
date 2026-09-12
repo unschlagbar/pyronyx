@@ -571,8 +571,12 @@ fn write_fn_body(
             }
         }
     }
-    if output_ty.is_some() && !vec {
-        w.ln("let mut out = MaybeUninit::uninit();");
+    if let Some(ty) = output_ty
+        && !vec
+    {
+        w.ln(&format!(
+            "let mut out = MaybeUninit::new(Default::default());"
+        ));
     }
 
     let mut convert_out = false;

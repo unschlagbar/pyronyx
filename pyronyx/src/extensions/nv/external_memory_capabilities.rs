@@ -36,7 +36,7 @@ impl ExternalMemoryCapabilitiesPhysicalDevice for PhysicalDevice {
         flags: ImageCreateFlags,
         external_handle_type: ExternalMemoryHandleTypeFlagsNV,
     ) -> Result<ExternalImageFormatPropertiesNV> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .nv_external_memory_capabilities

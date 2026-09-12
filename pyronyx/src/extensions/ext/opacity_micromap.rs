@@ -73,7 +73,7 @@ impl OpacityMicromapDevice for Device {
         create_info: &MicromapCreateInfoEXT,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<MicromapEXT> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .ext_opacity_micromap
@@ -217,7 +217,7 @@ impl OpacityMicromapDevice for Device {
         &self,
         version_info: &MicromapVersionInfoEXT,
     ) -> AccelerationStructureCompatibilityKHR {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .ext_opacity_micromap
@@ -238,7 +238,7 @@ impl OpacityMicromapDevice for Device {
         build_type: AccelerationStructureBuildTypeKHR,
         build_info: &MicromapBuildInfoEXT,
     ) -> MicromapBuildSizesInfoEXT<'_> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .ext_opacity_micromap

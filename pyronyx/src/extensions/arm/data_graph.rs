@@ -112,7 +112,7 @@ impl DataGraphDevice for Device {
         create_info: &DataGraphPipelineSessionCreateInfoARM,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<DataGraphPipelineSessionARM> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .arm_data_graph
@@ -189,7 +189,7 @@ impl DataGraphDevice for Device {
         &self,
         info: &DataGraphPipelineSessionMemoryRequirementsInfoARM,
     ) -> MemoryRequirements2<'_> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .arm_data_graph
@@ -418,7 +418,7 @@ impl DataGraphPhysicalDevice for PhysicalDevice {
         &self,
         queue_family_data_graph_processing_engine_info: &PhysicalDeviceQueueFamilyDataGraphProcessingEngineInfoARM,
     ) -> QueueFamilyDataGraphProcessingEnginePropertiesARM<'_> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .arm_data_graph

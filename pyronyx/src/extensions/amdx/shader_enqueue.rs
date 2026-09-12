@@ -40,7 +40,7 @@ impl ShaderEnqueueDevice for Device {
         &self,
         execution_graph: Pipeline,
     ) -> Result<ExecutionGraphPipelineScratchSizeAMDX<'_>> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .amdx_shader_enqueue
@@ -58,7 +58,7 @@ impl ShaderEnqueueDevice for Device {
         execution_graph: Pipeline,
         node_info: &PipelineShaderStageNodeCreateInfoAMDX,
     ) -> Result<u32> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .amdx_shader_enqueue

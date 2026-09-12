@@ -15,7 +15,7 @@ impl PhysicalDevice {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceProperties.html>
     #[inline]
     pub fn get_properties(&self) -> PhysicalDeviceProperties {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .v1_0
@@ -43,7 +43,7 @@ impl PhysicalDevice {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceMemoryProperties.html>
     #[inline]
     pub fn get_memory_properties(&self) -> PhysicalDeviceMemoryProperties {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .v1_0
@@ -59,7 +59,7 @@ impl PhysicalDevice {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceFeatures.html>
     #[inline]
     pub fn get_features(&self) -> PhysicalDeviceFeatures {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .v1_0
@@ -75,7 +75,7 @@ impl PhysicalDevice {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceFormatProperties.html>
     #[inline]
     pub fn get_format_properties(&self, format: Format) -> FormatProperties {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .v1_0
@@ -98,7 +98,7 @@ impl PhysicalDevice {
         usage: ImageUsageFlags,
         flags: ImageCreateFlags,
     ) -> Result<ImageFormatProperties> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .v1_0
@@ -177,7 +177,7 @@ impl PhysicalDevice {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceFeatures2.html>
     #[inline]
     pub fn get_features2(&self) -> PhysicalDeviceFeatures2<'_> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .v1_1
@@ -193,7 +193,7 @@ impl PhysicalDevice {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceProperties2.html>
     #[inline]
     pub fn get_properties2(&self) -> PhysicalDeviceProperties2<'_> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .v1_1
@@ -209,7 +209,7 @@ impl PhysicalDevice {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceFormatProperties2.html>
     #[inline]
     pub fn get_format_properties2(&self, format: Format) -> FormatProperties2<'_> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .v1_1
@@ -228,7 +228,7 @@ impl PhysicalDevice {
         &self,
         image_format_info: &PhysicalDeviceImageFormatInfo2,
     ) -> Result<ImageFormatProperties2<'_>> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .v1_1
@@ -281,7 +281,7 @@ impl PhysicalDevice {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceMemoryProperties2.html>
     #[inline]
     pub fn get_memory_properties2(&self) -> PhysicalDeviceMemoryProperties2<'_> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .v1_1
@@ -348,7 +348,7 @@ impl PhysicalDevice {
         &self,
         external_buffer_info: &PhysicalDeviceExternalBufferInfo,
     ) -> ExternalBufferProperties<'_> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .v1_1
@@ -367,7 +367,7 @@ impl PhysicalDevice {
         &self,
         external_semaphore_info: &PhysicalDeviceExternalSemaphoreInfo,
     ) -> ExternalSemaphoreProperties<'_> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .v1_1
@@ -386,7 +386,7 @@ impl PhysicalDevice {
         &self,
         external_fence_info: &PhysicalDeviceExternalFenceInfo,
     ) -> ExternalFenceProperties<'_> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .v1_1

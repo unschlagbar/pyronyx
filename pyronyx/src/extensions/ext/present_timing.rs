@@ -61,7 +61,7 @@ impl PresentTimingDevice for Device {
         swapchain: SwapchainKHR,
         swapchain_timing_properties: *mut SwapchainTimingPropertiesEXT,
     ) -> Result<u64> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .ext_present_timing
@@ -87,7 +87,7 @@ impl PresentTimingDevice for Device {
         swapchain: SwapchainKHR,
         swapchain_time_domain_properties: *mut SwapchainTimeDomainPropertiesEXT,
     ) -> Result<u64> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .ext_present_timing
@@ -112,7 +112,7 @@ impl PresentTimingDevice for Device {
         &self,
         past_presentation_timing_info: &PastPresentationTimingInfoEXT,
     ) -> Result<PastPresentationTimingPropertiesEXT<'_>> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .ext_present_timing

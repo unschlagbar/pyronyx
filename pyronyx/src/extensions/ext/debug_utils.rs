@@ -188,7 +188,7 @@ impl DebugUtilsInstance for Instance {
         create_info: &DebugUtilsMessengerCreateInfoEXT,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<DebugUtilsMessengerEXT> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .ext_debug_utils

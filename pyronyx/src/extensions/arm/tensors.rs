@@ -66,7 +66,7 @@ impl TensorsDevice for Device {
         create_info: &TensorCreateInfoARM,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<TensorARM> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .arm_tensors
@@ -105,7 +105,7 @@ impl TensorsDevice for Device {
         create_info: &TensorViewCreateInfoARM,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<TensorViewARM> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .arm_tensors
@@ -147,7 +147,7 @@ impl TensorsDevice for Device {
         &self,
         info: &TensorMemoryRequirementsInfoARM,
     ) -> MemoryRequirements2<'_> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .arm_tensors
@@ -180,7 +180,7 @@ impl TensorsDevice for Device {
         &self,
         info: &DeviceTensorMemoryRequirementsARM,
     ) -> MemoryRequirements2<'_> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .arm_tensors
@@ -267,7 +267,7 @@ impl TensorsPhysicalDevice for PhysicalDevice {
         &self,
         external_tensor_info: &PhysicalDeviceExternalTensorInfoARM,
     ) -> ExternalTensorPropertiesARM<'_> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .arm_tensors

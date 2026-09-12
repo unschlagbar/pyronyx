@@ -45,7 +45,7 @@ impl CudaKernelLaunchDevice for Device {
         create_info: &CudaModuleCreateInfoNV,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<CudaModuleNV> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .nv_cuda_kernel_launch
@@ -86,7 +86,7 @@ impl CudaKernelLaunchDevice for Device {
         create_info: &CudaFunctionCreateInfoNV,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<CudaFunctionNV> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .nv_cuda_kernel_launch

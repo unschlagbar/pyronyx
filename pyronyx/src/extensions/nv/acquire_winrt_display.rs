@@ -34,7 +34,7 @@ impl AcquireWinrtDisplayPhysicalDevice for PhysicalDevice {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetWinrtDisplayNV.html>
     #[inline]
     fn get_winrt_display(&self, device_relative_id: u32) -> Result<DisplayKHR> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .nv_acquire_winrt_display

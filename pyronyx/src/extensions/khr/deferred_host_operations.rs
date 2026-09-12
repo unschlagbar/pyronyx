@@ -38,7 +38,7 @@ impl DeferredHostOperationsDevice for Device {
         &self,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<DeferredOperationKHR> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .khr_deferred_host_operations

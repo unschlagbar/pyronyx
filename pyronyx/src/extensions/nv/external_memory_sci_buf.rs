@@ -19,7 +19,7 @@ impl ExternalMemorySciBufDevice for Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetMemorySciBufNV.html>
     #[inline]
     fn get_memory_sci_buf(&self, get_sci_buf_info: &MemoryGetSciBufInfoNV) -> Result<NvSciBufObj> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .nv_external_memory_sci_buf
@@ -49,7 +49,7 @@ impl ExternalMemorySciBufPhysicalDevice for PhysicalDevice {
         handle_type: ExternalMemoryHandleTypeFlags,
         handle: NvSciBufObj,
     ) -> Result<MemorySciBufPropertiesNV<'_>> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .nv_external_memory_sci_buf

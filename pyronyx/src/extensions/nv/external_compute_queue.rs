@@ -34,7 +34,7 @@ impl ExternalComputeQueueDevice for Device {
         create_info: &ExternalComputeQueueCreateInfoNV,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<ExternalComputeQueueNV> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .nv_external_compute_queue

@@ -28,7 +28,7 @@ impl ScreenSurfaceInstance for Instance {
         create_info: &ScreenSurfaceCreateInfoQNX,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<SurfaceKHR> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .qnx_screen_surface

@@ -32715,7 +32715,7 @@ impl Default for AccelerationStructureMotionInstanceNV {
     }
 }
 
-pub type RemoteAddressNV = c_void;
+pub type RemoteAddressNV = *const c_void;
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct MemoryGetRemoteAddressInfoNV<'a> {

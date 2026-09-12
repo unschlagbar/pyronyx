@@ -28,7 +28,7 @@ impl Win32SurfaceInstance for Instance {
         create_info: &Win32SurfaceCreateInfoKHR,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<SurfaceKHR> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .khr_win32_surface

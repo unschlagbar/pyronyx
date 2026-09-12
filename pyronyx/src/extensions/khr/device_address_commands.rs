@@ -595,7 +595,7 @@ impl DeviceAddressCommandsDevice for Device {
         create_info: &AccelerationStructureCreateInfo2KHR,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<AccelerationStructureKHR> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .khr_device_address_commands

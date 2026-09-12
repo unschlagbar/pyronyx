@@ -37,7 +37,7 @@ impl VideoQueuePhysicalDevice for PhysicalDevice {
         &self,
         video_profile: &VideoProfileInfoKHR,
     ) -> Result<VideoCapabilitiesKHR<'_>> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .khr_video_queue
@@ -157,7 +157,7 @@ impl VideoQueueDevice for Device {
         create_info: &VideoSessionCreateInfoKHR,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<VideoSessionKHR> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .khr_video_queue
@@ -206,7 +206,7 @@ impl VideoQueueDevice for Device {
         create_info: &VideoSessionParametersCreateInfoKHR,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<VideoSessionParametersKHR> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .khr_video_queue

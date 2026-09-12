@@ -38,7 +38,7 @@ impl BinaryImportDevice for Device {
         create_info: &CuModuleCreateInfoNVX,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<CuModuleNVX> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .nvx_binary_import
@@ -64,7 +64,7 @@ impl BinaryImportDevice for Device {
         create_info: &CuFunctionCreateInfoNVX,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<CuFunctionNVX> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .nvx_binary_import

@@ -25,7 +25,7 @@ impl ExternalSemaphoreFdDevice for Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetSemaphoreFdKHR.html>
     #[inline]
     fn get_semaphore_fd(&self, get_fd_info: &SemaphoreGetFdInfoKHR) -> Result<c_int> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .khr_external_semaphore_fd

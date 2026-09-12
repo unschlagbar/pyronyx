@@ -85,7 +85,7 @@ impl LowLatency2Device for Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetLatencyTimingsNV.html>
     #[inline]
     fn get_latency_timings(&self, swapchain: SwapchainKHR) -> GetLatencyMarkerInfoNV<'_> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .nv_low_latency2

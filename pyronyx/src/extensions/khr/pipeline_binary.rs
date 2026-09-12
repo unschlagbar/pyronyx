@@ -58,7 +58,7 @@ impl PipelineBinaryDevice for Device {
         create_info: &PipelineBinaryCreateInfoKHR,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<PipelineBinaryHandlesInfoKHR<'_>> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .khr_pipeline_binary
@@ -106,7 +106,7 @@ impl PipelineBinaryDevice for Device {
         &self,
         pipeline_create_info: Option<&PipelineCreateInfoKHR>,
     ) -> Result<PipelineBinaryKeyKHR<'_>> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .khr_pipeline_binary

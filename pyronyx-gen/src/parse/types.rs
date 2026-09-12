@@ -164,12 +164,18 @@ pub fn parse_into(types_node: &Node, reg: &mut Registry, lifetimes: &mut HashSet
 
         let kind = match category {
             "basetype" => {
-                let inner = node
+                let mut inner = node
                     .children()
                     .find(|n| n.has_tag_name("type"))
                     .and_then(|n| n.text())
                     .unwrap_or("u32")
                     .to_string();
+
+                if inner == "void" {
+                    // HACK: this can only happen if the actual type is void*
+                    inner.push('*');
+                }
+
                 TypeKind::BaseType { inner }
             }
 

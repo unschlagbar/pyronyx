@@ -46,7 +46,7 @@ impl SurfacePhysicalDevice for PhysicalDevice {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceSurfaceSupportKHR.html>
     #[inline]
     fn get_surface_support(&self, queue_family_index: u32, surface: SurfaceKHR) -> Result<bool> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .khr_surface
@@ -62,7 +62,7 @@ impl SurfacePhysicalDevice for PhysicalDevice {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceSurfaceCapabilitiesKHR.html>
     #[inline]
     fn get_surface_capabilities(&self, surface: SurfaceKHR) -> Result<SurfaceCapabilitiesKHR> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .khr_surface

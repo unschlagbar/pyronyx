@@ -34,7 +34,7 @@ impl AcquireDrmDisplayPhysicalDevice for PhysicalDevice {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetDrmDisplayEXT.html>
     #[inline]
     fn get_drm_display(&self, drm_fd: i32, connector_id: u32) -> Result<DisplayKHR> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .ext_acquire_drm_display

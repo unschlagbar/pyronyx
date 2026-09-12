@@ -28,7 +28,7 @@ impl SurfaceInstance for Instance {
         create_info: &SurfaceCreateInfoOHOS,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<SurfaceKHR> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .ohos_surface

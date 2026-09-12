@@ -25,7 +25,7 @@ impl DeviceFaultDevice for Device {
         &self,
         fault_counts: *mut DeviceFaultCountsEXT,
     ) -> Result<DeviceFaultInfoEXT<'_>> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .ext_device_fault

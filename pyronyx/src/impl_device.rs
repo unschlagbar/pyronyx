@@ -39,7 +39,7 @@ impl Device {
         allocate_info: &MemoryAllocateInfo,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<DeviceMemory> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .v1_0
@@ -74,7 +74,7 @@ impl Device {
         size: DeviceSize,
         flags: MemoryMapFlags,
     ) -> Result<*mut c_void> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self.fns().v1_0.map_memory.expect(Self::CORE_LOAD_ERROR);
 
         unsafe { (call)(self.handle, memory, offset, size, flags, out.as_mut_ptr()) }
@@ -133,7 +133,7 @@ impl Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetDeviceMemoryCommitment.html>
     #[inline]
     pub fn get_device_memory_commitment(&self, memory: DeviceMemory) -> DeviceSize {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .v1_0
@@ -149,7 +149,7 @@ impl Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetBufferMemoryRequirements.html>
     #[inline]
     pub fn get_buffer_memory_requirements(&self, buffer: Buffer) -> MemoryRequirements {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .v1_0
@@ -182,7 +182,7 @@ impl Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetImageMemoryRequirements.html>
     #[inline]
     pub fn get_image_memory_requirements(&self, image: Image) -> MemoryRequirements {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .v1_0
@@ -234,7 +234,7 @@ impl Device {
         create_info: &FenceCreateInfo,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<Fence> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self.fns().v1_0.create_fence.expect(Self::CORE_LOAD_ERROR);
 
         unsafe {
@@ -304,7 +304,7 @@ impl Device {
         create_info: &SemaphoreCreateInfo,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<Semaphore> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .v1_0
@@ -341,7 +341,7 @@ impl Device {
         create_info: &EventCreateInfo,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<Event> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self.fns().v1_0.create_event.expect(Self::CORE_LOAD_ERROR);
 
         unsafe {
@@ -398,7 +398,7 @@ impl Device {
         create_info: &QueryPoolCreateInfo,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<QueryPool> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .v1_0
@@ -483,7 +483,7 @@ impl Device {
         create_info: &BufferCreateInfo,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<Buffer> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self.fns().v1_0.create_buffer.expect(Self::CORE_LOAD_ERROR);
 
         unsafe {
@@ -512,7 +512,7 @@ impl Device {
         create_info: &BufferViewCreateInfo,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<BufferView> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .v1_0
@@ -553,7 +553,7 @@ impl Device {
         create_info: &ImageCreateInfo,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<Image> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self.fns().v1_0.create_image.expect(Self::CORE_LOAD_ERROR);
 
         unsafe {
@@ -582,7 +582,7 @@ impl Device {
         image: Image,
         subresource: &ImageSubresource,
     ) -> SubresourceLayout {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .v1_0
@@ -602,7 +602,7 @@ impl Device {
         create_info: &ImageViewCreateInfo,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<ImageView> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .v1_0
@@ -643,7 +643,7 @@ impl Device {
         create_info: &ShaderModuleCreateInfo,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<ShaderModule> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .v1_0
@@ -690,7 +690,7 @@ impl Device {
         create_info: &PipelineCacheCreateInfo,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<PipelineCache> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .v1_0
@@ -845,7 +845,7 @@ impl Device {
         create_info: &PipelineLayoutCreateInfo,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<PipelineLayout> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .v1_0
@@ -892,7 +892,7 @@ impl Device {
         create_info: &SamplerCreateInfo,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<Sampler> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self.fns().v1_0.create_sampler.expect(Self::CORE_LOAD_ERROR);
 
         unsafe {
@@ -925,7 +925,7 @@ impl Device {
         create_info: &DescriptorSetLayoutCreateInfo,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<DescriptorSetLayout> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .v1_0
@@ -972,7 +972,7 @@ impl Device {
         create_info: &DescriptorPoolCreateInfo,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<DescriptorPool> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .v1_0
@@ -1103,7 +1103,7 @@ impl Device {
         create_info: &FramebufferCreateInfo,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<Framebuffer> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .v1_0
@@ -1144,7 +1144,7 @@ impl Device {
         create_info: &RenderPassCreateInfo,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<RenderPass> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .v1_0
@@ -1181,7 +1181,7 @@ impl Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetRenderAreaGranularity.html>
     #[inline]
     pub fn get_render_area_granularity(&self, render_pass: RenderPass) -> Extent2D {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .v1_0
@@ -1200,7 +1200,7 @@ impl Device {
         &self,
         rendering_area_info: &RenderingAreaInfo,
     ) -> Extent2D {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .v1_4
@@ -1220,7 +1220,7 @@ impl Device {
         create_info: &CommandPoolCreateInfo,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<CommandPool> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .v1_0
@@ -1319,7 +1319,7 @@ impl Device {
         local_device_index: u32,
         remote_device_index: u32,
     ) -> PeerMemoryFeatureFlags {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .v1_1
@@ -1369,7 +1369,7 @@ impl Device {
         create_info: &DescriptorUpdateTemplateCreateInfo,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<DescriptorUpdateTemplate> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .v1_1
@@ -1439,7 +1439,7 @@ impl Device {
         &self,
         info: &BufferMemoryRequirementsInfo2,
     ) -> MemoryRequirements2<'_> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .v1_1
@@ -1458,7 +1458,7 @@ impl Device {
         &self,
         info: &ImageMemoryRequirementsInfo2,
     ) -> MemoryRequirements2<'_> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .v1_1
@@ -1525,7 +1525,7 @@ impl Device {
         &self,
         info: &DeviceBufferMemoryRequirements,
     ) -> MemoryRequirements2<'_> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .v1_3
@@ -1544,7 +1544,7 @@ impl Device {
         &self,
         info: &DeviceImageMemoryRequirements,
     ) -> MemoryRequirements2<'_> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .v1_3
@@ -1612,7 +1612,7 @@ impl Device {
         create_info: &SamplerYcbcrConversionCreateInfo,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<SamplerYcbcrConversion> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .v1_1
@@ -1658,7 +1658,7 @@ impl Device {
         &self,
         create_info: &DescriptorSetLayoutCreateInfo,
     ) -> DescriptorSetLayoutSupport<'_> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .v1_1
@@ -1678,7 +1678,7 @@ impl Device {
         create_info: &RenderPassCreateInfo2,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<RenderPass> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .v1_2
@@ -1699,7 +1699,7 @@ impl Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetSemaphoreCounterValue.html>
     #[inline]
     pub fn get_semaphore_counter_value(&self, semaphore: Semaphore) -> Result<u64> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .v1_2
@@ -1825,7 +1825,7 @@ impl Device {
         create_info: &PrivateDataSlotCreateInfo,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<PrivateDataSlot> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .v1_3
@@ -1900,7 +1900,7 @@ impl Device {
         object_handle: u64,
         private_data_slot: PrivateDataSlot,
     ) -> u64 {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .v1_3
@@ -1986,7 +1986,7 @@ impl Device {
         command_pool: CommandPool,
         command_buffer: vkCommandBuffer,
     ) -> CommandPoolMemoryConsumption<'_> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .v1_0
@@ -2006,7 +2006,7 @@ impl Device {
         image: Image,
         subresource: &ImageSubresource2,
     ) -> SubresourceLayout2<'_> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .v1_4
@@ -2025,7 +2025,7 @@ impl Device {
         &self,
         info: &DeviceImageSubresourceInfo,
     ) -> SubresourceLayout2<'_> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .v1_4
@@ -2041,7 +2041,7 @@ impl Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkMapMemory2.html>
     #[inline]
     pub fn map_memory2(&self, memory_map_info: &MemoryMapInfo) -> Result<*mut c_void> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self.fns().v1_4.map_memory2.expect(Self::CORE_LOAD_ERROR);
 
         unsafe { (call)(self.handle, memory_map_info, out.as_mut_ptr()) }.init_on_success(out)

@@ -31,7 +31,7 @@ impl ExternalMemoryDevice for Device {
         &self,
         get_zircon_handle_info: &MemoryGetZirconHandleInfoFUCHSIA,
     ) -> Result<zx_handle_t> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .fuchsia_external_memory
@@ -50,7 +50,7 @@ impl ExternalMemoryDevice for Device {
         handle_type: ExternalMemoryHandleTypeFlags,
         zircon_handle: zx_handle_t,
     ) -> Result<MemoryZirconHandlePropertiesFUCHSIA<'_>> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .fuchsia_external_memory

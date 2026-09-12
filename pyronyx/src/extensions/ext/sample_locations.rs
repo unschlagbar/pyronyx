@@ -47,7 +47,7 @@ impl SampleLocationsPhysicalDevice for PhysicalDevice {
         &self,
         samples: SampleCountFlags,
     ) -> MultisamplePropertiesEXT<'_> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .ext_sample_locations

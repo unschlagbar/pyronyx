@@ -23,7 +23,7 @@ impl DisplaySurfaceCounterPhysicalDevice for PhysicalDevice {
         &self,
         surface: SurfaceKHR,
     ) -> Result<SurfaceCapabilities2EXT<'_>> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .ext_display_surface_counter

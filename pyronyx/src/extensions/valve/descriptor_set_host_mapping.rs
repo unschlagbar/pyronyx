@@ -28,7 +28,7 @@ impl DescriptorSetHostMappingDevice for Device {
         &self,
         binding_reference: &DescriptorSetBindingReferenceVALVE,
     ) -> DescriptorSetLayoutHostMappingInfoVALVE<'_> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .valve_descriptor_set_host_mapping
@@ -45,7 +45,7 @@ impl DescriptorSetHostMappingDevice for Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetDescriptorSetHostMappingVALVE.html>
     #[inline]
     fn get_descriptor_set_host_mapping(&self, descriptor_set: DescriptorSet) -> *mut c_void {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .valve_descriptor_set_host_mapping

@@ -28,7 +28,7 @@ impl XlibSurfaceInstance for Instance {
         create_info: &XlibSurfaceCreateInfoKHR,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<SurfaceKHR> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .khr_xlib_surface

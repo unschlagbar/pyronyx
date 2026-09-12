@@ -35,7 +35,7 @@ impl DataGraphOpticalFlowPhysicalDevice for PhysicalDevice {
         queue_family_index: u32,
         queue_family_data_graph_properties: &QueueFamilyDataGraphPropertiesARM,
     ) -> Result<BaseOutStructure<'_>> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .arm_data_graph_optical_flow

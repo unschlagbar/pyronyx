@@ -79,7 +79,7 @@ impl CalibratedTimestampsDevice for Device {
         timestamps: &mut [u64],
     ) -> Result<u64> {
         assert_eq!(timestamp_infos.len(), timestamps.len());
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .khr_calibrated_timestamps

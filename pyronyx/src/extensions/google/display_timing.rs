@@ -33,7 +33,7 @@ impl DisplayTimingDevice for Device {
         &self,
         swapchain: SwapchainKHR,
     ) -> Result<RefreshCycleDurationGOOGLE> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .google_display_timing

@@ -28,7 +28,7 @@ impl ExternalMemoryHostDevice for Device {
         handle_type: ExternalMemoryHandleTypeFlags,
         host_pointer: &c_void,
     ) -> Result<MemoryHostPointerPropertiesEXT<'_>> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .ext_external_memory_host

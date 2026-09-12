@@ -55,7 +55,7 @@ impl GpaInterfaceDevice for Device {
         create_info: &GpaSessionCreateInfoAMD,
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<GpaSessionAMD> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .amd_gpa_interface
@@ -94,7 +94,7 @@ impl GpaInterfaceDevice for Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkSetGpaDeviceClockModeAMD.html>
     #[inline]
     fn set_gpa_clock_mode(&self) -> Result<GpaDeviceClockModeInfoAMD<'_>> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .amd_gpa_interface
@@ -108,7 +108,7 @@ impl GpaInterfaceDevice for Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetGpaDeviceClockInfoAMD.html>
     #[inline]
     fn get_gpa_clock_info(&self) -> Result<GpaDeviceGetClockInfoAMD<'_>> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .amd_gpa_interface
@@ -266,7 +266,7 @@ impl GpaInterfaceCommandBuffer for CommandBuffer {
         gpa_session: GpaSessionAMD,
         gpa_sample_begin_info: &GpaSampleBeginInfoAMD,
     ) -> Result<u32> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .amd_gpa_interface

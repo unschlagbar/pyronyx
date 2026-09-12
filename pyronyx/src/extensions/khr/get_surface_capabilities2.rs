@@ -36,7 +36,7 @@ impl GetSurfaceCapabilities2PhysicalDevice for PhysicalDevice {
         &self,
         surface_info: &PhysicalDeviceSurfaceInfo2KHR,
     ) -> Result<SurfaceCapabilities2KHR<'_>> {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .khr_get_surface_capabilities2

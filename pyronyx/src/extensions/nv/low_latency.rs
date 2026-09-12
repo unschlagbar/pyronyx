@@ -100,7 +100,7 @@ impl LowLatencyDevice for Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetSleepStatusLegacyNV.html>
     #[inline]
     fn get_sleep_status_legacy(&self) -> bool {
-        let mut out = MaybeUninit::uninit();
+        let mut out = MaybeUninit::new(Default::default());
         let call = self
             .fns()
             .nv_low_latency
