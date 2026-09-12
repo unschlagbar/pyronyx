@@ -571,9 +571,7 @@ fn write_fn_body(
             }
         }
     }
-    if let Some(ty) = output_ty
-        && !vec
-    {
+    if output_ty.is_some() && !vec {
         w.ln(&format!(
             "let mut out = MaybeUninit::new(Default::default());"
         ));
