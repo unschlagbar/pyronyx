@@ -10,6 +10,8 @@ use core::mem::MaybeUninit;
 use core::ptr;
 
 /// Type: `Device`
+///
+/// Requires: [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1
 pub const NAME: &CStr = c"VK_NV_device_diagnostic_checkpoints";
 pub const SPEC_VERSION: u32 = 2;
 
@@ -29,9 +31,8 @@ impl DeviceDiagnosticCheckpointsCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .nv_device_diagnostic_checkpoints
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_checkpoint_nv;
+            .set_checkpoint_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, checkpoint_marker) };
     }
@@ -55,9 +56,8 @@ impl DeviceDiagnosticCheckpointsQueue for Queue {
         let call = self
             .fns()
             .nv_device_diagnostic_checkpoints
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_queue_checkpoint_data_nv;
+            .get_queue_checkpoint_data_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -76,10 +76,11 @@ impl DeviceDiagnosticCheckpointsQueue for Queue {
             (self
                 .fns()
                 .nv_device_diagnostic_checkpoints
-                .as_ref()
-                .expect(Self::EXT_LOAD_ERROR)
-                .get_queue_checkpoint_data_nv)(
-                self.handle, out.as_mut_ptr(), ptr::null_mut()
+                .get_queue_checkpoint_data_nv
+                .unwrap_or_else(|| Self::ext_load_error()))(
+                self.handle,
+                out.as_mut_ptr(),
+                ptr::null_mut(),
             );
             out.assume_init() as usize
         }
@@ -94,9 +95,8 @@ impl DeviceDiagnosticCheckpointsQueue for Queue {
         let call = self
             .fns()
             .nv_device_diagnostic_checkpoints
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_queue_checkpoint_data2_nv;
+            .get_queue_checkpoint_data2_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -115,10 +115,11 @@ impl DeviceDiagnosticCheckpointsQueue for Queue {
             (self
                 .fns()
                 .nv_device_diagnostic_checkpoints
-                .as_ref()
-                .expect(Self::EXT_LOAD_ERROR)
-                .get_queue_checkpoint_data2_nv)(
-                self.handle, out.as_mut_ptr(), ptr::null_mut()
+                .get_queue_checkpoint_data2_nv
+                .unwrap_or_else(|| Self::ext_load_error()))(
+                self.handle,
+                out.as_mut_ptr(),
+                ptr::null_mut(),
             );
             out.assume_init() as usize
         }

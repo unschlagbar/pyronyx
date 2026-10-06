@@ -130,6 +130,9 @@ impl vkResult {
         }
     }
 
+    /// # Safety
+    /// On success, the first `len` elements of `v` must be initialized (e.g. written by
+    /// the Vulkan call) and `len <= v.capacity()`.
     #[inline]
     pub unsafe fn set_len_on_success<T>(self, mut v: Vec<T>, len: usize) -> Result<Vec<T>> {
         match self {
@@ -144,8 +147,8 @@ impl vkResult {
 
 impl vkPhysicalDevice {
     /// # Safety
-    /// The returned [`PhysicalDevice`] borrows their function table from this
-    /// `Instance`. Dropping the `Instance` while any [`PhysicalDevice`] is still
+    /// The returned [`PhysicalDevice`] borrows its function table from `instance`.
+    /// Dropping that `Instance` while any [`PhysicalDevice`] is still
     /// in use is undefined behaviour.
     ///
     /// Calling **any** fn on [`PhysicalDevice`] with invalid non [null()](core::ptr::null()) pointer in the function parameter
@@ -160,18 +163,18 @@ impl vkPhysicalDevice {
 
         PhysicalDevice {
             handle: self,
-            v_table: Some(v_table),
+            v_table,
         }
     }
 }
 
 impl vkCommandBuffer {
     /// # Safety
-    /// The returned [`CommandBuffer`] borrows their function table from this
-    /// `Device`. Dropping the `Device` while any [`CommandBuffer`] is still
+    /// The returned [`CommandBuffer`] borrows its function table from `device`.
+    /// Dropping that `Device` while any [`CommandBuffer`] is still
     /// in use is undefined behaviour.
     ///
-    /// Calling **any** fn on [`Queue`] with invalid non [null()](core::ptr::null()) pointer in the function parameter
+    /// Calling **any** fn on [`CommandBuffer`] with invalid non [null()](core::ptr::null()) pointer in the function parameter
     /// or in a parameter struct will result in undefined behavior!
     ///
     /// To catch these bugs use `VK_LAYER_KHRONOS_validation` layer in [`InstanceCreateInfo`]
@@ -183,15 +186,15 @@ impl vkCommandBuffer {
 
         CommandBuffer {
             handle: self,
-            v_table: Some(v_table),
+            v_table,
         }
     }
 }
 
 impl vkQueue {
     /// # Safety
-    /// The returned [`Queue`] borrows their function table from this
-    /// `Device`. Dropping the `Device` while any [`Queue`] is still
+    /// The returned [`Queue`] borrows its function table from `device`.
+    /// Dropping that `Device` while any [`Queue`] is still
     /// in use is undefined behaviour.
     ///
     /// Calling **any** fn on [`Queue`] with invalid non [null()](core::ptr::null()) pointer in the function parameter

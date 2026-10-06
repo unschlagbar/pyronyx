@@ -9,6 +9,8 @@ use core::ffi::c_void;
 use core::mem::MaybeUninit;
 
 /// Type: `Device`
+///
+/// Requires: [`VK_KHR_external_memory`](crate::khr::external_memory) or Vulkan 1.1
 pub const NAME: &CStr = c"VK_EXT_external_memory_metal";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -22,7 +24,8 @@ pub trait ExternalMemoryMetalDevice {
         &self,
         handle_type: ExternalMemoryHandleTypeFlags,
         handle: &c_void,
-    ) -> Result<MemoryMetalHandlePropertiesEXT<'_>>;
+        memory_metal_handle_properties: &mut MemoryMetalHandlePropertiesEXT<'_>,
+    ) -> Result<()>;
 }
 
 impl ExternalMemoryMetalDevice for Device {
@@ -36,9 +39,8 @@ impl ExternalMemoryMetalDevice for Device {
         let call = self
             .fns()
             .ext_external_memory_metal
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_memory_metal_handle_ext;
+            .get_memory_metal_handle_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, get_metal_handle_info, out.as_mut_ptr()) }.init_on_success(out)
     }
@@ -49,15 +51,22 @@ impl ExternalMemoryMetalDevice for Device {
         &self,
         handle_type: ExternalMemoryHandleTypeFlags,
         handle: &c_void,
-    ) -> Result<MemoryMetalHandlePropertiesEXT<'_>> {
-        let mut out = MaybeUninit::uninit();
+        memory_metal_handle_properties: &mut MemoryMetalHandlePropertiesEXT<'_>,
+    ) -> Result<()> {
         let call = self
             .fns()
             .ext_external_memory_metal
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_memory_metal_handle_properties_ext;
+            .get_memory_metal_handle_properties_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
-        unsafe { (call)(self.handle, handle_type, handle, out.as_mut_ptr()) }.init_on_success(out)
+        unsafe {
+            (call)(
+                self.handle,
+                handle_type,
+                handle,
+                memory_metal_handle_properties,
+            )
+        }
+        .result()
     }
 }

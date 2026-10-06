@@ -9,6 +9,8 @@ use core::mem::MaybeUninit;
 use core::ptr;
 
 /// Type: `Device`
+///
+/// Requires: [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1
 pub const NAME: &CStr = c"VK_KHR_calibrated_timestamps";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -27,9 +29,8 @@ impl CalibratedTimestampsPhysicalDevice for PhysicalDevice {
         let call = self
             .fns()
             .khr_calibrated_timestamps
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_physical_device_calibrateable_time_domains_khr;
+            .get_physical_device_calibrateable_time_domains_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -49,9 +50,8 @@ impl CalibratedTimestampsPhysicalDevice for PhysicalDevice {
             (self
                 .fns()
                 .khr_calibrated_timestamps
-                .as_ref()
-                .expect(Self::EXT_LOAD_ERROR)
-                .get_physical_device_calibrateable_time_domains_khr)(
+                .get_physical_device_calibrateable_time_domains_khr
+                .unwrap_or_else(|| Self::ext_load_error()))(
                 self.handle,
                 out.as_mut_ptr(),
                 ptr::null_mut(),
@@ -83,9 +83,8 @@ impl CalibratedTimestampsDevice for Device {
         let call = self
             .fns()
             .khr_calibrated_timestamps
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_calibrated_timestamps_khr;
+            .get_calibrated_timestamps_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(

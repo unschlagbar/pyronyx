@@ -1212,17 +1212,21 @@ impl AccessFlags2 {
     pub const HostWrite: Self = Self(0b100_0000_0000_0000);
     pub const MemoryRead: Self = Self(0b1000_0000_0000_0000);
     pub const MemoryWrite: Self = Self(0b1_0000_0000_0000_0000);
-    pub const ShaderSampledRead: Self = Self(0);
-    pub const ShaderStorageRead: Self = Self(0);
-    pub const ShaderStorageWrite: Self = Self(0);
-    pub const VideoDecodeReadKHR: Self = Self(0);
-    pub const VideoDecodeWriteKHR: Self = Self(0);
-    pub const SamplerHeapReadEXT: Self = Self(0);
-    pub const ResourceHeapReadEXT: Self = Self(0);
-    pub const VideoEncodeReadKHR: Self = Self(0);
-    pub const VideoEncodeWriteKHR: Self = Self(0);
-    pub const ShaderTileAttachmentReadQCOM: Self = Self(0);
-    pub const ShaderTileAttachmentWriteQCOM: Self = Self(0);
+    pub const ShaderSampledRead: Self = Self(0b1_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const ShaderStorageRead: Self = Self(0b10_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const ShaderStorageWrite: Self = Self(0b100_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const VideoDecodeReadKHR: Self = Self(0b1000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const VideoDecodeWriteKHR: Self = Self(0b1_0000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const SamplerHeapReadEXT: Self =
+        Self(0b10_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const ResourceHeapReadEXT: Self =
+        Self(0b100_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const VideoEncodeReadKHR: Self = Self(0b10_0000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const VideoEncodeWriteKHR: Self = Self(0b100_0000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const ShaderTileAttachmentReadQCOM: Self =
+        Self(0b1000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const ShaderTileAttachmentWriteQCOM: Self =
+        Self(0b1_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000);
     pub const TransformFeedbackWriteEXT: Self = Self(0b10_0000_0000_0000_0000_0000_0000);
     pub const TransformFeedbackCounterReadEXT: Self = Self(0b100_0000_0000_0000_0000_0000_0000);
     pub const TransformFeedbackCounterWriteEXT: Self = Self(0b1000_0000_0000_0000_0000_0000_0000);
@@ -1235,17 +1239,28 @@ impl AccessFlags2 {
     pub const AccelerationStructureWriteKHR: Self = Self(0b100_0000_0000_0000_0000_0000);
     pub const FragmentDensityMapReadEXT: Self = Self(0b1_0000_0000_0000_0000_0000_0000);
     pub const ColorAttachmentReadNoncoherentEXT: Self = Self(0b1000_0000_0000_0000_0000);
-    pub const DescriptorBufferReadEXT: Self = Self(0);
-    pub const InvocationMaskReadHUAWEI: Self = Self(0);
-    pub const ShaderBindingTableReadKHR: Self = Self(0);
-    pub const MicromapReadEXT: Self = Self(0);
-    pub const MicromapWriteEXT: Self = Self(0);
-    pub const OpticalFlowReadNV: Self = Self(0);
-    pub const OpticalFlowWriteNV: Self = Self(0);
-    pub const DataGraphReadARM: Self = Self(0);
-    pub const DataGraphWriteARM: Self = Self(0);
-    pub const MemoryDecompressionReadEXT: Self = Self(0);
-    pub const MemoryDecompressionWriteEXT: Self = Self(0);
+    pub const DescriptorBufferReadEXT: Self =
+        Self(0b10_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const InvocationMaskReadHUAWEI: Self =
+        Self(0b1000_0000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const ShaderBindingTableReadKHR: Self =
+        Self(0b1_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const MicromapReadEXT: Self =
+        Self(0b1_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const MicromapWriteEXT: Self =
+        Self(0b10_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const OpticalFlowReadNV: Self =
+        Self(0b100_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const OpticalFlowWriteNV: Self =
+        Self(0b1000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const DataGraphReadARM: Self =
+        Self(0b1000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const DataGraphWriteARM: Self =
+        Self(0b1_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const MemoryDecompressionReadEXT: Self =
+        Self(0b1000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const MemoryDecompressionWriteEXT: Self =
+        Self(0b1_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000);
 }
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPipelineStageFlagBits2.html>
@@ -1273,13 +1288,14 @@ impl PipelineStageFlags2 {
     pub const Host: Self = Self(0b100_0000_0000_0000);
     pub const AllGraphics: Self = Self(0b1000_0000_0000_0000);
     pub const AllCommands: Self = Self(0b1_0000_0000_0000_0000);
-    pub const Copy: Self = Self(0);
-    pub const Resolve: Self = Self(0);
-    pub const Blit: Self = Self(0);
-    pub const Clear: Self = Self(0);
-    pub const IndexInput: Self = Self(0);
-    pub const VertexAttributeInput: Self = Self(0);
-    pub const PreRasterizationShaders: Self = Self(0);
+    pub const Copy: Self = Self(0b1_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const Resolve: Self = Self(0b10_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const Blit: Self = Self(0b100_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const Clear: Self = Self(0b1000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const IndexInput: Self = Self(0b1_0000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const VertexAttributeInput: Self = Self(0b10_0000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const PreRasterizationShaders: Self =
+        Self(0b100_0000_0000_0000_0000_0000_0000_0000_0000_0000);
     pub const VideoDecodeKHR: Self = Self(0b100_0000_0000_0000_0000_0000_0000);
     pub const VideoEncodeKHR: Self = Self(0b1000_0000_0000_0000_0000_0000_0000);
     pub const TransformFeedbackEXT: Self = Self(0b1_0000_0000_0000_0000_0000_0000);
@@ -1292,16 +1308,21 @@ impl PipelineStageFlags2 {
     pub const FragmentDensityProcessEXT: Self = Self(0b1000_0000_0000_0000_0000_0000);
     pub const TaskShaderEXT: Self = Self(0b1000_0000_0000_0000_0000);
     pub const MeshShaderEXT: Self = Self(0b1_0000_0000_0000_0000_0000);
-    pub const SubpassShaderHUAWEI: Self = Self(0);
-    pub const InvocationMaskHUAWEI: Self = Self(0);
+    pub const SubpassShaderHUAWEI: Self = Self(0b1000_0000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const InvocationMaskHUAWEI: Self =
+        Self(0b1_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000);
     pub const AccelerationStructureCopyKHR: Self = Self(0b1_0000_0000_0000_0000_0000_0000_0000);
     pub const MicromapBuildEXT: Self = Self(0b100_0000_0000_0000_0000_0000_0000_0000);
-    pub const ClusterCullingShaderHUAWEI: Self = Self(0);
+    pub const ClusterCullingShaderHUAWEI: Self =
+        Self(0b10_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000);
     pub const OpticalFlowNV: Self = Self(0b10_0000_0000_0000_0000_0000_0000_0000);
-    pub const ConvertCooperativeVectorMatrixNV: Self = Self(0);
-    pub const DataGraphARM: Self = Self(0);
-    pub const CopyIndirectKHR: Self = Self(0);
-    pub const MemoryDecompressionEXT: Self = Self(0);
+    pub const ConvertCooperativeVectorMatrixNV: Self =
+        Self(0b1_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const DataGraphARM: Self = Self(0b100_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const CopyIndirectKHR: Self =
+        Self(0b100_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const MemoryDecompressionEXT: Self =
+        Self(0b10_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000);
 }
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkAccelerationStructureMotionInfoFlagsNV.html>
@@ -1344,11 +1365,13 @@ impl FormatFeatureFlags2 {
     pub const Disjoint: Self = Self(0b100_0000_0000_0000_0000_0000);
     pub const CositedChromaSamples: Self = Self(0b1000_0000_0000_0000_0000_0000);
     pub const StorageReadWithoutFormat: Self = Self(0b1000_0000_0000_0000_0000_0000_0000_0000);
-    pub const StorageWriteWithoutFormat: Self = Self(0);
-    pub const SampledImageDepthComparison: Self = Self(0);
+    pub const StorageWriteWithoutFormat: Self = Self(0b1_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const SampledImageDepthComparison: Self =
+        Self(0b10_0000_0000_0000_0000_0000_0000_0000_0000);
     /// This is an interaction with EXT_filter_cubic, though not tagged that way
     pub const SampledImageFilterCubic: Self = Self(0b10_0000_0000_0000);
-    pub const HostImageTransfer: Self = Self(0);
+    pub const HostImageTransfer: Self =
+        Self(0b100_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000);
     pub const VideoDecodeOutputKHR: Self = Self(0b10_0000_0000_0000_0000_0000_0000);
     pub const VideoDecodeDpbKHR: Self = Self(0b100_0000_0000_0000_0000_0000_0000);
     pub const AccelerationStructureVertexBufferKHR: Self =
@@ -1358,31 +1381,50 @@ impl FormatFeatureFlags2 {
         Self(0b100_0000_0000_0000_0000_0000_0000_0000);
     pub const VideoEncodeInputKHR: Self = Self(0b1000_0000_0000_0000_0000_0000_0000);
     pub const VideoEncodeDpbKHR: Self = Self(0b1_0000_0000_0000_0000_0000_0000_0000);
-    pub const BlockMatchingSxdQCOM: Self = Self(0);
-    pub const AccelerationStructureRadiusBufferNV: Self = Self(0);
+    pub const BlockMatchingSxdQCOM: Self =
+        Self(0b1_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const AccelerationStructureRadiusBufferNV: Self =
+        Self(0b1000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000);
     /// Format support linear image as render target, it cannot be mixed with non linear attachment
-    pub const LinearColorAttachmentNV: Self = Self(0);
-    pub const WeightImageQCOM: Self = Self(0);
-    pub const WeightSampledImageQCOM: Self = Self(0);
-    pub const BlockMatchingQCOM: Self = Self(0);
-    pub const BoxFilterSampledQCOM: Self = Self(0);
-    pub const TensorShaderARM: Self = Self(0);
-    pub const TensorImageAliasingARM: Self = Self(0);
-    pub const OpticalFlowImageNV: Self = Self(0);
-    pub const OpticalFlowVectorNV: Self = Self(0);
-    pub const OpticalFlowCostNV: Self = Self(0);
-    pub const TensorDataGraphARM: Self = Self(0);
-    pub const CopyImageIndirectDstKHR: Self = Self(0);
-    pub const VideoEncodeQuantizationDeltaMapKHR: Self = Self(0);
-    pub const VideoEncodeEmphasisMapKHR: Self = Self(0);
-    pub const SampledImageFilterLinear2DIMG: Self = Self(0);
-    pub const DepthCopyOnComputeQueueKHR: Self = Self(0);
-    pub const DepthCopyOnTransferQueueKHR: Self = Self(0);
-    pub const StencilCopyOnComputeQueueKHR: Self = Self(0);
-    pub const StencilCopyOnTransferQueueKHR: Self = Self(0);
-    pub const DataGraphOpticalFlowImageARM: Self = Self(0);
-    pub const DataGraphOpticalFlowVectorARM: Self = Self(0);
-    pub const DataGraphOpticalFlowCostARM: Self = Self(0);
+    pub const LinearColorAttachmentNV: Self =
+        Self(0b100_0000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const WeightImageQCOM: Self = Self(0b100_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const WeightSampledImageQCOM: Self = Self(0b1000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const BlockMatchingQCOM: Self = Self(0b1_0000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const BoxFilterSampledQCOM: Self = Self(0b10_0000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const TensorShaderARM: Self = Self(0b1000_0000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const TensorImageAliasingARM: Self =
+        Self(0b1000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const OpticalFlowImageNV: Self =
+        Self(0b1_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const OpticalFlowVectorNV: Self =
+        Self(0b10_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const OpticalFlowCostNV: Self =
+        Self(0b100_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const TensorDataGraphARM: Self =
+        Self(0b1_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const CopyImageIndirectDstKHR: Self =
+        Self(0b1000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const VideoEncodeQuantizationDeltaMapKHR: Self =
+        Self(0b10_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const VideoEncodeEmphasisMapKHR: Self =
+        Self(0b100_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const SampledImageFilterLinear2DIMG: Self =
+        Self(0b10_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const DepthCopyOnComputeQueueKHR: Self =
+        Self(0b1_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const DepthCopyOnTransferQueueKHR: Self =
+        Self(0b10_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const StencilCopyOnComputeQueueKHR: Self =
+        Self(0b100_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const StencilCopyOnTransferQueueKHR: Self =
+        Self(0b1000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const DataGraphOpticalFlowImageARM: Self =
+        Self(0b1_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const DataGraphOpticalFlowVectorARM: Self =
+        Self(0b10_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const DataGraphOpticalFlowCostARM: Self =
+        Self(0b100_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000);
 }
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkFormatFeatureFlagBits4KHR.html>
@@ -1498,10 +1540,11 @@ impl PipelineCreateFlags2 {
     pub const EarlyReturnOnFailure: Self = Self(0b10_0000_0000);
     pub const NoProtectedAccess: Self = Self(0b1000_0000_0000_0000_0000_0000_0000);
     pub const ProtectedAccessOnly: Self = Self(0b100_0000_0000_0000_0000_0000_0000_0000);
-    pub const ExecutionGraphAMDX: Self = Self(0);
-    pub const DescriptorHeapEXT: Self = Self(0);
-    pub const RayTracingAllowSpheresAndLinearSweptSpheresNV: Self = Self(0);
-    pub const EnableLegacyDitheringEXT: Self = Self(0);
+    pub const ExecutionGraphAMDX: Self = Self(0b1_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const DescriptorHeapEXT: Self = Self(0b1_0000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const RayTracingAllowSpheresAndLinearSweptSpheresNV: Self =
+        Self(0b10_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const EnableLegacyDitheringEXT: Self = Self(0b100_0000_0000_0000_0000_0000_0000_0000_0000);
     pub const DeferCompileNV: Self = Self(0b10_0000);
     pub const CaptureStatisticsKHR: Self = Self(0b100_0000);
     pub const CaptureInternalRepresentationsKHR: Self = Self(0b1000_0000);
@@ -1524,14 +1567,19 @@ impl PipelineCreateFlags2 {
         Self(0b100_0000_0000_0000_0000_0000_0000);
     pub const RayTracingDisplacementMicromapNV: Self = Self(0b1_0000_0000_0000_0000_0000_0000_0000);
     pub const DescriptorBufferEXT: Self = Self(0b10_0000_0000_0000_0000_0000_0000_0000);
-    pub const DisallowOpacityMicromapARM: Self = Self(0);
-    pub const InstrumentShadersARM: Self = Self(0);
+    pub const DisallowOpacityMicromapARM: Self =
+        Self(0b10_0000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const InstrumentShadersARM: Self =
+        Self(0b1000_0000_0000_0000_0000_0000_0000_0000_0000_0000);
     pub const CaptureDataKHR: Self = Self(0b1000_0000_0000_0000_0000_0000_0000_0000);
-    pub const IndirectBindableEXT: Self = Self(0);
-    pub const PerLayerFragmentDensityVALVE: Self = Self(0);
+    pub const IndirectBindableEXT: Self = Self(0b100_0000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const PerLayerFragmentDensityVALVE: Self =
+        Self(0b1_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000);
     pub const RayTracingOpacityMicromapKHR: Self = Self(0b1_0000_0000_0000_0000_0000_0000);
-    pub const OpacityMicromapDisallowMixedSpecialIndexKHR: Self = Self(0);
-    pub const Type64BitIndexingEXT: Self = Self(0);
+    pub const OpacityMicromapDisallowMixedSpecialIndexKHR: Self =
+        Self(0b10_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000);
+    pub const Type64BitIndexingEXT: Self =
+        Self(0b1000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000);
 }
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkBufferUsageFlagBits2.html>
@@ -1568,10 +1616,10 @@ impl BufferUsageFlags2 {
     pub const SamplerDescriptorBufferEXT: Self = Self(0b10_0000_0000_0000_0000_0000);
     pub const ResourceDescriptorBufferEXT: Self = Self(0b100_0000_0000_0000_0000_0000);
     pub const PushDescriptorsDescriptorBufferEXT: Self = Self(0b100_0000_0000_0000_0000_0000_0000);
-    pub const CompressedDataDgf1AMDX: Self = Self(0);
+    pub const CompressedDataDgf1AMDX: Self = Self(0b10_0000_0000_0000_0000_0000_0000_0000_0000);
     pub const DataGraphForeignDescriptorARM: Self = Self(0b10_0000_0000_0000_0000_0000_0000_0000);
     pub const TileMemoryQCOM: Self = Self(0b1000_0000_0000_0000_0000_0000_0000);
-    pub const MemoryDecompressionEXT: Self = Self(0);
+    pub const MemoryDecompressionEXT: Self = Self(0b1_0000_0000_0000_0000_0000_0000_0000_0000);
     pub const PreprocessBufferEXT: Self = Self(0b1000_0000_0000_0000_0000_0000_0000_0000);
 }
 

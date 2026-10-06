@@ -44,9 +44,8 @@ impl LowLatencyDevice for Device {
         let call = self
             .fns()
             .nv_low_latency
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_latency_sleep_mode_legacy_nv;
+            .set_latency_sleep_mode_legacy_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -64,9 +63,8 @@ impl LowLatencyDevice for Device {
         let call = self
             .fns()
             .nv_low_latency
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .latency_sleep_legacy_nv;
+            .latency_sleep_legacy_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, signal_semaphore, value) };
     }
@@ -77,9 +75,8 @@ impl LowLatencyDevice for Device {
         let call = self
             .fns()
             .nv_low_latency
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_latency_marker_legacy_nv;
+            .set_latency_marker_legacy_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, frame_id, marker) };
     }
@@ -90,9 +87,8 @@ impl LowLatencyDevice for Device {
         let call = self
             .fns()
             .nv_low_latency
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_latency_timings_legacy_nv;
+            .get_latency_timings_legacy_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, timings) };
     }
@@ -104,9 +100,8 @@ impl LowLatencyDevice for Device {
         let call = self
             .fns()
             .nv_low_latency
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_sleep_status_legacy_nv;
+            .get_sleep_status_legacy_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(self.handle, out.as_mut_ptr());
@@ -120,9 +115,8 @@ impl LowLatencyDevice for Device {
         let call = self
             .fns()
             .nv_low_latency
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .shutdown_latency_device_legacy_nv;
+            .shutdown_latency_device_legacy_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle) };
     }
@@ -139,9 +133,8 @@ impl LowLatencyQueue for Queue {
         let call = self
             .fns()
             .nv_low_latency
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .queue_notify_out_of_band_legacy_nv;
+            .queue_notify_out_of_band_legacy_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, queue_type) };
     }

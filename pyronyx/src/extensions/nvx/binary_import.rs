@@ -42,9 +42,8 @@ impl BinaryImportDevice for Device {
         let call = self
             .fns()
             .nvx_binary_import
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .create_cu_module_nvx;
+            .create_cu_module_nvx
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -68,9 +67,8 @@ impl BinaryImportDevice for Device {
         let call = self
             .fns()
             .nvx_binary_import
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .create_cu_function_nvx;
+            .create_cu_function_nvx
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -89,9 +87,8 @@ impl BinaryImportDevice for Device {
         let call = self
             .fns()
             .nvx_binary_import
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .destroy_cu_module_nvx;
+            .destroy_cu_module_nvx
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, module, allocator.map_or(null(), from_ref)) };
     }
@@ -106,9 +103,8 @@ impl BinaryImportDevice for Device {
         let call = self
             .fns()
             .nvx_binary_import
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .destroy_cu_function_nvx;
+            .destroy_cu_function_nvx
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, function, allocator.map_or(null(), from_ref)) };
     }
@@ -130,9 +126,8 @@ impl BinaryImportCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .nvx_binary_import
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .cu_launch_kernel_nvx;
+            .cu_launch_kernel_nvx
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, launch_info) };
     }

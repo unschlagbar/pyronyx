@@ -8,6 +8,8 @@ use core::ffi::CStr;
 use core::mem::MaybeUninit;
 
 /// Type: `Device`
+///
+/// Requires: (([`VK_KHR_extended_flags`](crate::khr::extended_flags) or [`VK_KHR_maintenance5`](crate::khr::maintenance5)) + ([`VK_KHR_buffer_device_address`](crate::khr::buffer_device_address) or Vulkan 1.2) or Vulkan 1.4)
 pub const NAME: &CStr = c"VK_EXT_descriptor_heap";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -57,9 +59,8 @@ impl DescriptorHeapDevice for Device {
         let call = self
             .fns()
             .ext_descriptor_heap
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .write_sampler_descriptors_ext;
+            .write_sampler_descriptors_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -83,9 +84,8 @@ impl DescriptorHeapDevice for Device {
         let call = self
             .fns()
             .ext_descriptor_heap
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .write_resource_descriptors_ext;
+            .write_resource_descriptors_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -109,9 +109,8 @@ impl DescriptorHeapDevice for Device {
         let call = self
             .fns()
             .ext_descriptor_heap
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .register_custom_border_color_ext;
+            .register_custom_border_color_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -130,9 +129,8 @@ impl DescriptorHeapDevice for Device {
         let call = self
             .fns()
             .ext_descriptor_heap
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .unregister_custom_border_color_ext;
+            .unregister_custom_border_color_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, index) };
     }
@@ -148,9 +146,8 @@ impl DescriptorHeapDevice for Device {
         let call = self
             .fns()
             .ext_descriptor_heap
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_image_opaque_capture_data_ext;
+            .get_image_opaque_capture_data_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -174,9 +171,8 @@ impl DescriptorHeapDevice for Device {
         let call = self
             .fns()
             .ext_descriptor_heap
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_tensor_opaque_capture_data_arm;
+            .get_tensor_opaque_capture_data_arm
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -210,9 +206,8 @@ impl DescriptorHeapCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_descriptor_heap
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .bind_sampler_heap_ext;
+            .bind_sampler_heap_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, bind_info) };
     }
@@ -228,9 +223,8 @@ impl DescriptorHeapCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_descriptor_heap
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .bind_resource_heap_ext;
+            .bind_resource_heap_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, bind_info) };
     }
@@ -246,9 +240,8 @@ impl DescriptorHeapCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_descriptor_heap
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .push_data_ext;
+            .push_data_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, push_data_info) };
     }
@@ -265,9 +258,8 @@ impl DescriptorHeapPhysicalDevice for PhysicalDevice {
         let call = self
             .fns()
             .ext_descriptor_heap
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_physical_device_descriptor_size_ext;
+            .get_physical_device_descriptor_size_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, descriptor_type) }
     }

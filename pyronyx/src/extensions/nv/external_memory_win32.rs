@@ -9,6 +9,8 @@ use core::ffi::CStr;
 use core::mem::MaybeUninit;
 
 /// Type: `Device`
+///
+/// Requires: [`VK_NV_external_memory`](crate::nv::external_memory)
 pub const NAME: &CStr = c"VK_NV_external_memory_win32";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -32,9 +34,8 @@ impl ExternalMemoryWin32Device for Device {
         let call = self
             .fns()
             .nv_external_memory_win32
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_memory_win32_handle_nv;
+            .get_memory_win32_handle_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, memory, handle_type, out.as_mut_ptr()) }.init_on_success(out)
     }

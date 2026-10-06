@@ -33,6 +33,21 @@ macro_rules! vk_bitflags_wrapped {
             pub const fn intersects(self, other: Self) -> bool {
                 (self.0 & other.0) != 0
             }
+            /// `self | other`, usable in `const`.
+            #[inline]
+            pub const fn union(self, other: Self) -> Self {
+                Self(self.0 | other.0)
+            }
+            /// `self & other`, usable in `const`.
+            #[inline]
+            pub const fn intersection(self, other: Self) -> Self {
+                Self(self.0 & other.0)
+            }
+            /// `self & !other`, usable in `const`.
+            #[inline]
+            pub const fn difference(self, other: Self) -> Self {
+                Self(self.0 & !other.0)
+            }
         }
 
         impl core::ops::BitOr for $name {

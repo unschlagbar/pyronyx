@@ -7,6 +7,10 @@ use crate::vk::*;
 use core::ffi::CStr;
 
 /// Type: `Device`
+///
+/// Promoted to core in Vulkan 1.4
+///
+/// Requires: Vulkan 1.1
 pub const NAME: &CStr = c"VK_KHR_maintenance6";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -37,9 +41,8 @@ impl Maintenance6CommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .khr_maintenance6
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_descriptor_buffer_offsets2_ext;
+            .set_descriptor_buffer_offsets2_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, set_descriptor_buffer_offsets_info) };
     }
@@ -58,9 +61,8 @@ impl Maintenance6CommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .khr_maintenance6
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .bind_descriptor_buffer_embedded_samplers2_ext;
+            .bind_descriptor_buffer_embedded_samplers2_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, bind_descriptor_buffer_embedded_samplers_info) };
     }

@@ -8,6 +8,8 @@ use core::ffi::CStr;
 use core::mem::MaybeUninit;
 
 /// Type: `Device`
+///
+/// Requires: [`VK_KHR_external_memory`](crate::khr::external_memory) or Vulkan 1.1
 pub const NAME: &CStr = c"VK_NV_external_memory_rdma";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -29,9 +31,8 @@ impl ExternalMemoryRdmaDevice for Device {
         let call = self
             .fns()
             .nv_external_memory_rdma
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_memory_remote_address_nv;
+            .get_memory_remote_address_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(

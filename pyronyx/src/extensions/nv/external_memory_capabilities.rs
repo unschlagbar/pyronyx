@@ -40,9 +40,8 @@ impl ExternalMemoryCapabilitiesPhysicalDevice for PhysicalDevice {
         let call = self
             .fns()
             .nv_external_memory_capabilities
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_physical_device_external_image_format_properties_nv;
+            .get_physical_device_external_image_format_properties_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(

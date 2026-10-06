@@ -9,6 +9,8 @@ use core::ffi::CStr;
 use core::ffi::c_void;
 
 /// Type: `Device`
+///
+/// Requires: Vulkan 1.1
 pub const NAME: &CStr = c"VK_NV_external_sci_sync";
 pub const SPEC_VERSION: u32 = 2;
 
@@ -36,9 +38,8 @@ impl ExternalSciSyncDevice for Device {
         let call = self
             .fns()
             .nv_external_sci_sync
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_semaphore_sci_sync_obj_nv;
+            .get_semaphore_sci_sync_obj_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, get_sci_sync_info, handle) }.result()
     }
@@ -52,9 +53,8 @@ impl ExternalSciSyncDevice for Device {
         let call = self
             .fns()
             .nv_external_sci_sync
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .import_semaphore_sci_sync_obj_nv;
+            .import_semaphore_sci_sync_obj_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, import_semaphore_sci_sync_info) }.result()
     }

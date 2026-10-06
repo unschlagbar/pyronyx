@@ -44,9 +44,8 @@ impl ShaderInfoDevice for Device {
         let call = self
             .fns()
             .amd_shader_info
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_shader_info_amd;
+            .get_shader_info_amd
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -74,9 +73,8 @@ impl ShaderInfoDevice for Device {
             (self
                 .fns()
                 .amd_shader_info
-                .as_ref()
-                .expect(Self::EXT_LOAD_ERROR)
-                .get_shader_info_amd)(
+                .get_shader_info_amd
+                .unwrap_or_else(|| Self::ext_load_error()))(
                 self.handle,
                 pipeline,
                 shader_stage,

@@ -38,9 +38,8 @@ impl ExternalComputeQueueDevice for Device {
         let call = self
             .fns()
             .nv_external_compute_queue
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .create_external_compute_queue_nv;
+            .create_external_compute_queue_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -63,9 +62,8 @@ impl ExternalComputeQueueDevice for Device {
         let call = self
             .fns()
             .nv_external_compute_queue
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .destroy_external_compute_queue_nv;
+            .destroy_external_compute_queue_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(

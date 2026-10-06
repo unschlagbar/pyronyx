@@ -5,9 +5,10 @@
 
 use crate::vk::*;
 use core::ffi::CStr;
-use core::mem::MaybeUninit;
 
 /// Type: `Device`
+///
+/// Requires: [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1
 pub const NAME: &CStr = c"VK_EXT_pipeline_properties";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -15,7 +16,8 @@ pub trait PipelinePropertiesDevice {
     fn get_pipeline_properties(
         &self,
         pipeline_info: &PipelineInfoKHR,
-    ) -> Result<BaseOutStructure<'_>>;
+        pipeline_properties: &mut BaseOutStructure<'_>,
+    ) -> Result<()>;
 }
 
 impl PipelinePropertiesDevice for Device {
@@ -24,15 +26,14 @@ impl PipelinePropertiesDevice for Device {
     fn get_pipeline_properties(
         &self,
         pipeline_info: &PipelineInfoKHR,
-    ) -> Result<BaseOutStructure<'_>> {
-        let mut out = MaybeUninit::uninit();
+        pipeline_properties: &mut BaseOutStructure<'_>,
+    ) -> Result<()> {
         let call = self
             .fns()
             .ext_pipeline_properties
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_pipeline_properties_ext;
+            .get_pipeline_properties_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
-        unsafe { (call)(self.handle, pipeline_info, out.as_mut_ptr()) }.init_on_success(out)
+        unsafe { (call)(self.handle, pipeline_info, pipeline_properties) }.result()
     }
 }

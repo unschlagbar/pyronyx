@@ -7,6 +7,8 @@ use crate::vk::*;
 use core::ffi::CStr;
 
 /// Type: `Device`
+///
+/// Requires: [`VK_KHR_acceleration_structure`](crate::khr::acceleration_structure)
 pub const NAME: &CStr = c"VK_KHR_ray_tracing_maintenance1";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -26,9 +28,8 @@ impl RayTracingMaintenance1CommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .khr_ray_tracing_maintenance1
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .trace_rays_indirect2_khr;
+            .trace_rays_indirect2_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, indirect_device_address) };
     }

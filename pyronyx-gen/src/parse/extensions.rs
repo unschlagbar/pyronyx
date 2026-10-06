@@ -49,6 +49,8 @@ pub fn parse_extension(node: Node, registry: &mut Registry) {
         .unwrap_or(1);
 
     let deprecated_by = node.attribute("deprecatedby").map(str::to_string);
+    let promoted_to = node.attribute("promotedto").map(str::to_string);
+    let depends = node.attribute("depends").map(str::to_string);
     let typ = node.attribute("type").unwrap_or("").to_string();
 
     let mut spec_version: u32 = 0;
@@ -76,6 +78,8 @@ pub fn parse_extension(node: Node, registry: &mut Registry) {
             .unwrap_or_default(),
         require_blocks: vec![],
         deprecated_by,
+        promoted_to,
+        depends,
         disabled: node.attribute("supported") == Some("disabled"),
         typ,
     };

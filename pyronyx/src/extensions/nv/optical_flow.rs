@@ -10,6 +10,8 @@ use core::ptr;
 use core::ptr::{from_ref, null};
 
 /// Type: `Device`
+///
+/// Requires: (([`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1) + [`VK_KHR_format_feature_flags2`](crate::khr::format_feature_flags2) + [`VK_KHR_synchronization2`](crate::khr::synchronization2)) or Vulkan 1.3
 pub const NAME: &CStr = c"VK_NV_optical_flow";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -39,9 +41,8 @@ impl OpticalFlowPhysicalDevice for PhysicalDevice {
         let call = self
             .fns()
             .nv_optical_flow
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_physical_device_optical_flow_image_formats_nv;
+            .get_physical_device_optical_flow_image_formats_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -65,9 +66,8 @@ impl OpticalFlowPhysicalDevice for PhysicalDevice {
             (self
                 .fns()
                 .nv_optical_flow
-                .as_ref()
-                .expect(Self::EXT_LOAD_ERROR)
-                .get_physical_device_optical_flow_image_formats_nv)(
+                .get_physical_device_optical_flow_image_formats_nv
+                .unwrap_or_else(|| Self::ext_load_error()))(
                 self.handle,
                 optical_flow_image_format_info,
                 out.as_mut_ptr(),
@@ -113,9 +113,8 @@ impl OpticalFlowDevice for Device {
         let call = self
             .fns()
             .nv_optical_flow
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .create_optical_flow_session_nv;
+            .create_optical_flow_session_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -138,9 +137,8 @@ impl OpticalFlowDevice for Device {
         let call = self
             .fns()
             .nv_optical_flow
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .destroy_optical_flow_session_nv;
+            .destroy_optical_flow_session_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, session, allocator.map_or(null(), from_ref)) };
     }
@@ -157,9 +155,8 @@ impl OpticalFlowDevice for Device {
         let call = self
             .fns()
             .nv_optical_flow
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .bind_optical_flow_session_image_nv;
+            .bind_optical_flow_session_image_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, session, binding_point, view, layout) }.result()
     }
@@ -189,9 +186,8 @@ impl OpticalFlowCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .nv_optical_flow
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .optical_flow_execute_nv;
+            .optical_flow_execute_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, session, execute_info) };
     }

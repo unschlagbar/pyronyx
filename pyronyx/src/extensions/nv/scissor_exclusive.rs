@@ -7,6 +7,8 @@ use crate::vk::*;
 use core::ffi::CStr;
 
 /// Type: `Device`
+///
+/// Requires: [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1
 pub const NAME: &CStr = c"VK_NV_scissor_exclusive";
 pub const SPEC_VERSION: u32 = 2;
 
@@ -32,9 +34,8 @@ impl ScissorExclusiveCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .nv_scissor_exclusive
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_exclusive_scissor_nv;
+            .set_exclusive_scissor_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -61,9 +62,8 @@ impl ScissorExclusiveCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .nv_scissor_exclusive
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_exclusive_scissor_enable_nv;
+            .set_exclusive_scissor_enable_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(

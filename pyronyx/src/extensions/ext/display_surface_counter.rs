@@ -5,15 +5,19 @@
 
 use crate::vk::*;
 use core::ffi::CStr;
-use core::mem::MaybeUninit;
 
 /// Type: `Instance`
+///
+/// Requires: [`VK_KHR_display`](crate::khr::display)
 pub const NAME: &CStr = c"VK_EXT_display_surface_counter";
 pub const SPEC_VERSION: u32 = 1;
 
 pub trait DisplaySurfaceCounterPhysicalDevice {
-    fn get_surface_capabilities2(&self, surface: SurfaceKHR)
-    -> Result<SurfaceCapabilities2EXT<'_>>;
+    fn get_surface_capabilities2(
+        &self,
+        surface: SurfaceKHR,
+        surface_capabilities: &mut SurfaceCapabilities2EXT<'_>,
+    ) -> Result<()>;
 }
 
 impl DisplaySurfaceCounterPhysicalDevice for PhysicalDevice {
@@ -22,15 +26,14 @@ impl DisplaySurfaceCounterPhysicalDevice for PhysicalDevice {
     fn get_surface_capabilities2(
         &self,
         surface: SurfaceKHR,
-    ) -> Result<SurfaceCapabilities2EXT<'_>> {
-        let mut out = MaybeUninit::uninit();
+        surface_capabilities: &mut SurfaceCapabilities2EXT<'_>,
+    ) -> Result<()> {
         let call = self
             .fns()
             .ext_display_surface_counter
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_physical_device_surface_capabilities2_ext;
+            .get_physical_device_surface_capabilities2_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
-        unsafe { (call)(self.handle, surface, out.as_mut_ptr()) }.init_on_success(out)
+        unsafe { (call)(self.handle, surface, surface_capabilities) }.result()
     }
 }

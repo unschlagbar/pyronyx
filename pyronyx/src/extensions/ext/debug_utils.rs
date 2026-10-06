@@ -25,9 +25,8 @@ impl DebugUtilsDevice for Device {
         let call = self
             .fns()
             .ext_debug_utils
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_debug_utils_object_name_ext;
+            .set_debug_utils_object_name_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, name_info) }.result()
     }
@@ -38,9 +37,8 @@ impl DebugUtilsDevice for Device {
         let call = self
             .fns()
             .ext_debug_utils
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_debug_utils_object_tag_ext;
+            .set_debug_utils_object_tag_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, tag_info) }.result()
     }
@@ -61,9 +59,8 @@ impl DebugUtilsQueue for Queue {
         let call = self
             .fns()
             .ext_debug_utils
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .queue_begin_debug_utils_label_ext;
+            .queue_begin_debug_utils_label_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, label_info) };
     }
@@ -74,9 +71,8 @@ impl DebugUtilsQueue for Queue {
         let call = self
             .fns()
             .ext_debug_utils
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .queue_end_debug_utils_label_ext;
+            .queue_end_debug_utils_label_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle) };
     }
@@ -87,9 +83,8 @@ impl DebugUtilsQueue for Queue {
         let call = self
             .fns()
             .ext_debug_utils
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .queue_insert_debug_utils_label_ext;
+            .queue_insert_debug_utils_label_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, label_info) };
     }
@@ -115,9 +110,8 @@ impl DebugUtilsCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_debug_utils
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .begin_debug_utils_label_ext;
+            .begin_debug_utils_label_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, label_info) };
     }
@@ -133,9 +127,8 @@ impl DebugUtilsCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_debug_utils
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .end_debug_utils_label_ext;
+            .end_debug_utils_label_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle) };
     }
@@ -151,9 +144,8 @@ impl DebugUtilsCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_debug_utils
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .insert_debug_utils_label_ext;
+            .insert_debug_utils_label_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, label_info) };
     }
@@ -192,9 +184,8 @@ impl DebugUtilsInstance for Instance {
         let call = self
             .fns()
             .ext_debug_utils
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .create_debug_utils_messenger_ext;
+            .create_debug_utils_messenger_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -217,9 +208,8 @@ impl DebugUtilsInstance for Instance {
         let call = self
             .fns()
             .ext_debug_utils
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .destroy_debug_utils_messenger_ext;
+            .destroy_debug_utils_messenger_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, messenger, allocator.map_or(null(), from_ref)) };
     }
@@ -235,9 +225,8 @@ impl DebugUtilsInstance for Instance {
         let call = self
             .fns()
             .ext_debug_utils
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .submit_debug_utils_message_ext;
+            .submit_debug_utils_message_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, message_severity, message_types, callback_data) };
     }

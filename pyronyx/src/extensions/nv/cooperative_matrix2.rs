@@ -9,6 +9,8 @@ use core::mem::MaybeUninit;
 use core::ptr;
 
 /// Type: `Device`
+///
+/// Requires: [`VK_KHR_cooperative_matrix`](crate::khr::cooperative_matrix)
 pub const NAME: &CStr = c"VK_NV_cooperative_matrix2";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -33,9 +35,8 @@ impl CooperativeMatrix2PhysicalDevice for PhysicalDevice {
         let call = self
             .fns()
             .nv_cooperative_matrix2
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_physical_device_cooperative_matrix_flexible_dimensions_properties_nv;
+            .get_physical_device_cooperative_matrix_flexible_dimensions_properties_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, &mut property_count, properties.as_mut_ptr()) }.result()
     }
@@ -48,9 +49,8 @@ impl CooperativeMatrix2PhysicalDevice for PhysicalDevice {
             (self
                 .fns()
                 .nv_cooperative_matrix2
-                .as_ref()
-                .expect(Self::EXT_LOAD_ERROR)
-                .get_physical_device_cooperative_matrix_flexible_dimensions_properties_nv)(
+                .get_physical_device_cooperative_matrix_flexible_dimensions_properties_nv
+                .unwrap_or_else(|| Self::ext_load_error()))(
                 self.handle,
                 out.as_mut_ptr(),
                 ptr::null_mut(),

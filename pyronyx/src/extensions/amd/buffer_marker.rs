@@ -46,9 +46,8 @@ impl BufferMarkerCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .amd_buffer_marker
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .write_buffer_marker_amd;
+            .write_buffer_marker_amd
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, pipeline_stage, dst_buffer, dst_offset, marker) };
     }
@@ -70,9 +69,8 @@ impl BufferMarkerCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .amd_buffer_marker
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .write_buffer_marker2_amd;
+            .write_buffer_marker2_amd
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, stage, dst_buffer, dst_offset, marker) };
     }

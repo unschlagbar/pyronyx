@@ -51,9 +51,8 @@ impl DebugReportInstance for Instance {
         let call = self
             .fns()
             .ext_debug_report
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .create_debug_report_callback_ext;
+            .create_debug_report_callback_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -76,9 +75,8 @@ impl DebugReportInstance for Instance {
         let call = self
             .fns()
             .ext_debug_report
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .destroy_debug_report_callback_ext;
+            .destroy_debug_report_callback_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, callback, allocator.map_or(null(), from_ref)) };
     }
@@ -98,9 +96,8 @@ impl DebugReportInstance for Instance {
         let call = self
             .fns()
             .ext_debug_report
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .debug_report_message_ext;
+            .debug_report_message_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(

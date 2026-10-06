@@ -9,6 +9,8 @@ use core::mem::MaybeUninit;
 use core::ptr::{from_ref, null};
 
 /// Type: `Instance`
+///
+/// Requires: [`VK_KHR_surface`](crate::khr::surface)
 pub const NAME: &CStr = c"VK_GGP_stream_descriptor_surface";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -32,9 +34,8 @@ impl StreamDescriptorSurfaceInstance for Instance {
         let call = self
             .fns()
             .ggp_stream_descriptor_surface
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .create_stream_descriptor_surface_ggp;
+            .create_stream_descriptor_surface_ggp
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(

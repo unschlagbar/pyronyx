@@ -5,9 +5,10 @@
 
 use crate::vk::*;
 use core::ffi::CStr;
-use core::mem::MaybeUninit;
 
 /// Type: `Device`
+///
+/// Requires: [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1
 pub const NAME: &CStr = c"VK_EXT_sample_locations";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -27,17 +28,19 @@ impl SampleLocationsCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_sample_locations
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_sample_locations_ext;
+            .set_sample_locations_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, sample_locations_info) };
     }
 }
 
 pub trait SampleLocationsPhysicalDevice {
-    fn get_multisample_properties(&self, samples: SampleCountFlags)
-    -> MultisamplePropertiesEXT<'_>;
+    fn get_multisample_properties(
+        &self,
+        samples: SampleCountFlags,
+        multisample_properties: &mut MultisamplePropertiesEXT<'_>,
+    );
 }
 
 impl SampleLocationsPhysicalDevice for PhysicalDevice {
@@ -46,18 +49,14 @@ impl SampleLocationsPhysicalDevice for PhysicalDevice {
     fn get_multisample_properties(
         &self,
         samples: SampleCountFlags,
-    ) -> MultisamplePropertiesEXT<'_> {
-        let mut out = MaybeUninit::uninit();
+        multisample_properties: &mut MultisamplePropertiesEXT<'_>,
+    ) {
         let call = self
             .fns()
             .ext_sample_locations
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_physical_device_multisample_properties_ext;
+            .get_physical_device_multisample_properties_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
-        unsafe {
-            (call)(self.handle, samples, out.as_mut_ptr());
-            out.assume_init()
-        }
+        unsafe { (call)(self.handle, samples, multisample_properties) };
     }
 }

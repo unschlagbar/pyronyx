@@ -7,6 +7,10 @@ use crate::vk::*;
 use core::ffi::CStr;
 
 /// Type: `Device`
+///
+/// Promoted to [`VK_EXT_debug_utils`](crate::ext::debug_utils)
+///
+/// Requires: [`VK_EXT_debug_report`](crate::ext::debug_report)
 pub const NAME: &CStr = c"VK_EXT_debug_marker";
 pub const SPEC_VERSION: u32 = 4;
 
@@ -23,9 +27,8 @@ impl DebugMarkerDevice for Device {
         let call = self
             .fns()
             .ext_debug_marker
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .debug_marker_set_object_name_ext;
+            .debug_marker_set_object_name_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, name_info) }.result()
     }
@@ -36,9 +39,8 @@ impl DebugMarkerDevice for Device {
         let call = self
             .fns()
             .ext_debug_marker
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .debug_marker_set_object_tag_ext;
+            .debug_marker_set_object_tag_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, tag_info) }.result()
     }
@@ -64,9 +66,8 @@ impl DebugMarkerCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_debug_marker
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .debug_marker_begin_ext;
+            .debug_marker_begin_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, marker_info) };
     }
@@ -82,9 +83,8 @@ impl DebugMarkerCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_debug_marker
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .debug_marker_end_ext;
+            .debug_marker_end_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle) };
     }
@@ -100,9 +100,8 @@ impl DebugMarkerCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_debug_marker
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .debug_marker_insert_ext;
+            .debug_marker_insert_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, marker_info) };
     }

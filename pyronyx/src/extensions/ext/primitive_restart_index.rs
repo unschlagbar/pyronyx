@@ -7,6 +7,8 @@ use crate::vk::*;
 use core::ffi::CStr;
 
 /// Type: `Device`
+///
+/// Requires: [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1
 pub const NAME: &CStr = c"VK_EXT_primitive_restart_index";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -26,9 +28,8 @@ impl PrimitiveRestartIndexCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_primitive_restart_index
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_primitive_restart_index_ext;
+            .set_primitive_restart_index_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, primitive_restart_index) };
     }

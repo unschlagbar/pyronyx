@@ -10,6 +10,8 @@ use core::ptr;
 use core::ptr::{from_ref, null};
 
 /// Type: `Device`
+///
+/// Requires: (Vulkan 1.1 + [`VK_KHR_synchronization2`](crate::khr::synchronization2)) or Vulkan 1.3
 pub const NAME: &CStr = c"VK_KHR_video_queue";
 pub const SPEC_VERSION: u32 = 8;
 
@@ -17,7 +19,8 @@ pub trait VideoQueuePhysicalDevice {
     fn get_video_capabilities(
         &self,
         video_profile: &VideoProfileInfoKHR,
-    ) -> Result<VideoCapabilitiesKHR<'_>>;
+        capabilities: &mut VideoCapabilitiesKHR<'_>,
+    ) -> Result<()>;
 
     fn get_video_format_properties(
         &self,
@@ -36,16 +39,15 @@ impl VideoQueuePhysicalDevice for PhysicalDevice {
     fn get_video_capabilities(
         &self,
         video_profile: &VideoProfileInfoKHR,
-    ) -> Result<VideoCapabilitiesKHR<'_>> {
-        let mut out = MaybeUninit::uninit();
+        capabilities: &mut VideoCapabilitiesKHR<'_>,
+    ) -> Result<()> {
         let call = self
             .fns()
             .khr_video_queue
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_physical_device_video_capabilities_khr;
+            .get_physical_device_video_capabilities_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
-        unsafe { (call)(self.handle, video_profile, out.as_mut_ptr()) }.init_on_success(out)
+        unsafe { (call)(self.handle, video_profile, capabilities) }.result()
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceVideoFormatPropertiesKHR.html>
@@ -61,9 +63,8 @@ impl VideoQueuePhysicalDevice for PhysicalDevice {
         let call = self
             .fns()
             .khr_video_queue
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_physical_device_video_format_properties_khr;
+            .get_physical_device_video_format_properties_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -87,9 +88,8 @@ impl VideoQueuePhysicalDevice for PhysicalDevice {
             (self
                 .fns()
                 .khr_video_queue
-                .as_ref()
-                .expect(Self::EXT_LOAD_ERROR)
-                .get_physical_device_video_format_properties_khr)(
+                .get_physical_device_video_format_properties_khr
+                .unwrap_or_else(|| Self::ext_load_error()))(
                 self.handle,
                 video_format_info,
                 out.as_mut_ptr(),
@@ -161,9 +161,8 @@ impl VideoQueueDevice for Device {
         let call = self
             .fns()
             .khr_video_queue
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .create_video_session_khr;
+            .create_video_session_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -186,9 +185,8 @@ impl VideoQueueDevice for Device {
         let call = self
             .fns()
             .khr_video_queue
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .destroy_video_session_khr;
+            .destroy_video_session_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -210,9 +208,8 @@ impl VideoQueueDevice for Device {
         let call = self
             .fns()
             .khr_video_queue
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .create_video_session_parameters_khr;
+            .create_video_session_parameters_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -235,9 +232,8 @@ impl VideoQueueDevice for Device {
         let call = self
             .fns()
             .khr_video_queue
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .update_video_session_parameters_khr;
+            .update_video_session_parameters_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, video_session_parameters, update_info) }.result()
     }
@@ -252,9 +248,8 @@ impl VideoQueueDevice for Device {
         let call = self
             .fns()
             .khr_video_queue
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .destroy_video_session_parameters_khr;
+            .destroy_video_session_parameters_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -278,9 +273,8 @@ impl VideoQueueDevice for Device {
         let call = self
             .fns()
             .khr_video_queue
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_video_session_memory_requirements_khr;
+            .get_video_session_memory_requirements_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -304,9 +298,8 @@ impl VideoQueueDevice for Device {
             (self
                 .fns()
                 .khr_video_queue
-                .as_ref()
-                .expect(Self::EXT_LOAD_ERROR)
-                .get_video_session_memory_requirements_khr)(
+                .get_video_session_memory_requirements_khr
+                .unwrap_or_else(|| Self::ext_load_error()))(
                 self.handle,
                 video_session,
                 out.as_mut_ptr(),
@@ -327,9 +320,8 @@ impl VideoQueueDevice for Device {
         let call = self
             .fns()
             .khr_video_queue
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .bind_video_session_memory_khr;
+            .bind_video_session_memory_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -363,9 +355,8 @@ impl VideoQueueCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .khr_video_queue
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .begin_video_coding_khr;
+            .begin_video_coding_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, begin_info) };
     }
@@ -381,9 +372,8 @@ impl VideoQueueCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .khr_video_queue
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .control_video_coding_khr;
+            .control_video_coding_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, coding_control_info) };
     }
@@ -399,9 +389,8 @@ impl VideoQueueCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .khr_video_queue
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .end_video_coding_khr;
+            .end_video_coding_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, end_coding_info) };
     }

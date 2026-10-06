@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.5.0]
+
+### Breaking
+
+- `vtables`: extension tables are no longer `Option`, alias fields removed
+- Out-structs with `s_type` are `&mut` params instead of return values (`get_properties2`, `get_features2`, …), so they can be chained
+- `get_acceleration_structure_build_sizes`: `max_primitive_counts` is `&[u32]`
+
+### Fix
+
+- `debug_utils` fns on device, queue and command buffer never loaded
+- Device extension fns on `PhysicalDevice` never loaded
+- Null `application_info` crashed `Instance::create`
+- Out-structs with `s_type` were passed to the driver uninitialized
+- 64-bit flags with bit ≥ 32 were `0` (e.g. `AccessFlags2::ShaderStorageWrite`, `PipelineStageFlags2::Copy`)
+
+### Changes
+
+- Fns fall back to their KHR/EXT alias when only that extension is enabled
+- Flags: `const fn` `union`, `intersection`, `difference`
+
 ## [0.4.0]
 
 ### Updated to Vulkan 1.4.357.1

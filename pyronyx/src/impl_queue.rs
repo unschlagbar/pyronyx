@@ -9,7 +9,11 @@ impl Queue {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkQueueSubmit.html>
     #[inline]
     pub fn submit(&self, submits: &[SubmitInfo], fence: Fence) -> Result<()> {
-        let call = self.fns().v1_0.queue_submit.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_0
+            .queue_submit
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, submits.len() as u32, submits.as_ptr(), fence) }.result()
     }
@@ -21,7 +25,7 @@ impl Queue {
             .fns()
             .v1_0
             .queue_wait_idle
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle) }.result()
     }
@@ -33,7 +37,7 @@ impl Queue {
             .fns()
             .v1_0
             .queue_bind_sparse
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -49,7 +53,11 @@ impl Queue {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkQueueSubmit2.html>
     #[inline]
     pub fn submit2(&self, submits: &[SubmitInfo2], fence: Fence) -> Result<()> {
-        let call = self.fns().v1_3.queue_submit2.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_3
+            .queue_submit2
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, submits.len() as u32, submits.as_ptr(), fence) }.result()
     }

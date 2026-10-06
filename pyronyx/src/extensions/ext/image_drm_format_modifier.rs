@@ -5,9 +5,10 @@
 
 use crate::vk::*;
 use core::ffi::CStr;
-use core::mem::MaybeUninit;
 
 /// Type: `Device`
+///
+/// Requires: ((([`VK_KHR_bind_memory2`](crate::khr::bind_memory2) + [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) + [`VK_KHR_sampler_ycbcr_conversion`](crate::khr::sampler_ycbcr_conversion)) or Vulkan 1.1) + [`VK_KHR_image_format_list`](crate::khr::image_format_list)) or Vulkan 1.2
 pub const NAME: &CStr = c"VK_EXT_image_drm_format_modifier";
 pub const SPEC_VERSION: u32 = 2;
 
@@ -15,7 +16,8 @@ pub trait ImageDrmFormatModifierDevice {
     fn get_image_drm_format_modifier_properties(
         &self,
         image: Image,
-    ) -> Result<ImageDrmFormatModifierPropertiesEXT<'_>>;
+        properties: &mut ImageDrmFormatModifierPropertiesEXT<'_>,
+    ) -> Result<()>;
 }
 
 impl ImageDrmFormatModifierDevice for Device {
@@ -24,15 +26,14 @@ impl ImageDrmFormatModifierDevice for Device {
     fn get_image_drm_format_modifier_properties(
         &self,
         image: Image,
-    ) -> Result<ImageDrmFormatModifierPropertiesEXT<'_>> {
-        let mut out = MaybeUninit::uninit();
+        properties: &mut ImageDrmFormatModifierPropertiesEXT<'_>,
+    ) -> Result<()> {
         let call = self
             .fns()
             .ext_image_drm_format_modifier
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_image_drm_format_modifier_properties_ext;
+            .get_image_drm_format_modifier_properties_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
-        unsafe { (call)(self.handle, image, out.as_mut_ptr()) }.init_on_success(out)
+        unsafe { (call)(self.handle, image, properties) }.result()
     }
 }

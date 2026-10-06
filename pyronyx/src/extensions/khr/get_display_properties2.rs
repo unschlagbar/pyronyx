@@ -9,6 +9,8 @@ use core::mem::MaybeUninit;
 use core::ptr;
 
 /// Type: `Instance`
+///
+/// Requires: [`VK_KHR_display`](crate::khr::display)
 pub const NAME: &CStr = c"VK_KHR_get_display_properties2";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -32,7 +34,8 @@ pub trait GetDisplayProperties2PhysicalDevice {
     fn get_display_plane_capabilities2(
         &self,
         display_plane_info: &DisplayPlaneInfo2KHR,
-    ) -> Result<DisplayPlaneCapabilities2KHR<'_>>;
+        capabilities: &mut DisplayPlaneCapabilities2KHR<'_>,
+    ) -> Result<()>;
 }
 
 impl GetDisplayProperties2PhysicalDevice for PhysicalDevice {
@@ -45,9 +48,8 @@ impl GetDisplayProperties2PhysicalDevice for PhysicalDevice {
         let call = self
             .fns()
             .khr_get_display_properties2
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_physical_device_display_properties2_khr;
+            .get_physical_device_display_properties2_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, &mut property_count, properties.as_mut_ptr()) }.result()
     }
@@ -60,9 +62,8 @@ impl GetDisplayProperties2PhysicalDevice for PhysicalDevice {
             (self
                 .fns()
                 .khr_get_display_properties2
-                .as_ref()
-                .expect(Self::EXT_LOAD_ERROR)
-                .get_physical_device_display_properties2_khr)(
+                .get_physical_device_display_properties2_khr
+                .unwrap_or_else(|| Self::ext_load_error()))(
                 self.handle,
                 out.as_mut_ptr(),
                 ptr::null_mut(),
@@ -84,9 +85,8 @@ impl GetDisplayProperties2PhysicalDevice for PhysicalDevice {
         let call = self
             .fns()
             .khr_get_display_properties2
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_physical_device_display_plane_properties2_khr;
+            .get_physical_device_display_plane_properties2_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, &mut property_count, properties.as_mut_ptr()) }.result()
     }
@@ -99,9 +99,8 @@ impl GetDisplayProperties2PhysicalDevice for PhysicalDevice {
             (self
                 .fns()
                 .khr_get_display_properties2
-                .as_ref()
-                .expect(Self::EXT_LOAD_ERROR)
-                .get_physical_device_display_plane_properties2_khr)(
+                .get_physical_device_display_plane_properties2_khr
+                .unwrap_or_else(|| Self::ext_load_error()))(
                 self.handle,
                 out.as_mut_ptr(),
                 ptr::null_mut(),
@@ -124,9 +123,8 @@ impl GetDisplayProperties2PhysicalDevice for PhysicalDevice {
         let call = self
             .fns()
             .khr_get_display_properties2
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_display_mode_properties2_khr;
+            .get_display_mode_properties2_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -147,9 +145,8 @@ impl GetDisplayProperties2PhysicalDevice for PhysicalDevice {
             (self
                 .fns()
                 .khr_get_display_properties2
-                .as_ref()
-                .expect(Self::EXT_LOAD_ERROR)
-                .get_display_mode_properties2_khr)(
+                .get_display_mode_properties2_khr
+                .unwrap_or_else(|| Self::ext_load_error()))(
                 self.handle,
                 display,
                 out.as_mut_ptr(),
@@ -165,15 +162,14 @@ impl GetDisplayProperties2PhysicalDevice for PhysicalDevice {
     fn get_display_plane_capabilities2(
         &self,
         display_plane_info: &DisplayPlaneInfo2KHR,
-    ) -> Result<DisplayPlaneCapabilities2KHR<'_>> {
-        let mut out = MaybeUninit::uninit();
+        capabilities: &mut DisplayPlaneCapabilities2KHR<'_>,
+    ) -> Result<()> {
         let call = self
             .fns()
             .khr_get_display_properties2
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_display_plane_capabilities2_khr;
+            .get_display_plane_capabilities2_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
-        unsafe { (call)(self.handle, display_plane_info, out.as_mut_ptr()) }.init_on_success(out)
+        unsafe { (call)(self.handle, display_plane_info, capabilities) }.result()
     }
 }

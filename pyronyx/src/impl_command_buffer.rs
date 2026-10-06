@@ -14,7 +14,7 @@ impl CommandBuffer {
             .fns()
             .v1_0
             .begin_command_buffer
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, begin_info) }.result()
     }
@@ -26,7 +26,7 @@ impl CommandBuffer {
             .fns()
             .v1_0
             .end_command_buffer
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle) }.result()
     }
@@ -38,7 +38,7 @@ impl CommandBuffer {
             .fns()
             .v1_0
             .reset_command_buffer
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, flags) }.result()
     }
@@ -51,7 +51,11 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn bind_pipeline(&self, pipeline_bind_point: PipelineBindPoint, pipeline: Pipeline) {
-        let call = self.fns().v1_0.bind_pipeline.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_0
+            .bind_pipeline
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, pipeline_bind_point, pipeline) };
     }
@@ -64,7 +68,11 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_viewport(&self, first_viewport: u32, viewports: &[Viewport]) {
-        let call = self.fns().v1_0.set_viewport.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_0
+            .set_viewport
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -84,7 +92,11 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_scissor(&self, first_scissor: u32, scissors: &[Rect2D]) {
-        let call = self.fns().v1_0.set_scissor.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_0
+            .set_scissor
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -104,7 +116,11 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_line_width(&self, line_width: f32) {
-        let call = self.fns().v1_0.set_line_width.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_0
+            .set_line_width
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, line_width) };
     }
@@ -122,7 +138,11 @@ impl CommandBuffer {
         depth_bias_clamp: f32,
         depth_bias_slope_factor: f32,
     ) {
-        let call = self.fns().v1_0.set_depth_bias.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_0
+            .set_depth_bias
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -146,7 +166,7 @@ impl CommandBuffer {
             .fns()
             .v1_0
             .set_blend_constants
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, blend_constants) };
     }
@@ -163,7 +183,7 @@ impl CommandBuffer {
             .fns()
             .v1_0
             .set_depth_bounds
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, min_depth_bounds, max_depth_bounds) };
     }
@@ -180,7 +200,7 @@ impl CommandBuffer {
             .fns()
             .v1_0
             .set_stencil_compare_mask
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, face_mask, compare_mask) };
     }
@@ -197,7 +217,7 @@ impl CommandBuffer {
             .fns()
             .v1_0
             .set_stencil_write_mask
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, face_mask, write_mask) };
     }
@@ -214,7 +234,7 @@ impl CommandBuffer {
             .fns()
             .v1_0
             .set_stencil_reference
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, face_mask, reference) };
     }
@@ -238,7 +258,7 @@ impl CommandBuffer {
             .fns()
             .v1_0
             .bind_descriptor_sets
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -266,7 +286,7 @@ impl CommandBuffer {
             .fns()
             .v1_0
             .bind_index_buffer
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, buffer, offset, index_type) };
     }
@@ -289,7 +309,7 @@ impl CommandBuffer {
             .fns()
             .v1_0
             .bind_vertex_buffers
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -317,7 +337,11 @@ impl CommandBuffer {
         first_vertex: u32,
         first_instance: u32,
     ) {
-        let call = self.fns().v1_0.draw.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_0
+            .draw
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -346,7 +370,11 @@ impl CommandBuffer {
         vertex_offset: i32,
         first_instance: u32,
     ) {
-        let call = self.fns().v1_0.draw_indexed.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_0
+            .draw_indexed
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -369,7 +397,11 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn draw_indirect(&self, buffer: Buffer, offset: DeviceSize, draw_count: u32, stride: u32) {
-        let call = self.fns().v1_0.draw_indirect.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_0
+            .draw_indirect
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, buffer, offset, draw_count, stride) };
     }
@@ -393,7 +425,7 @@ impl CommandBuffer {
             .fns()
             .v1_0
             .draw_indexed_indirect
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, buffer, offset, draw_count, stride) };
     }
@@ -407,7 +439,11 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn dispatch(&self, group_count_x: u32, group_count_y: u32, group_count_z: u32) {
-        let call = self.fns().v1_0.dispatch.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_0
+            .dispatch
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, group_count_x, group_count_y, group_count_z) };
     }
@@ -425,7 +461,7 @@ impl CommandBuffer {
             .fns()
             .v1_0
             .dispatch_indirect
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, buffer, offset) };
     }
@@ -438,7 +474,11 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn copy_buffer(&self, src_buffer: Buffer, dst_buffer: Buffer, regions: &[BufferCopy]) {
-        let call = self.fns().v1_0.copy_buffer.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_0
+            .copy_buffer
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -466,7 +506,11 @@ impl CommandBuffer {
         dst_image_layout: ImageLayout,
         regions: &[ImageCopy],
     ) {
-        let call = self.fns().v1_0.copy_image.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_0
+            .copy_image
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -497,7 +541,11 @@ impl CommandBuffer {
         regions: &[ImageBlit],
         filter: Filter,
     ) {
-        let call = self.fns().v1_0.blit_image.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_0
+            .blit_image
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -531,7 +579,7 @@ impl CommandBuffer {
             .fns()
             .v1_0
             .copy_buffer_to_image
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -563,7 +611,7 @@ impl CommandBuffer {
             .fns()
             .v1_0
             .copy_image_to_buffer
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -585,7 +633,11 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn update_buffer(&self, dst_buffer: Buffer, dst_offset: DeviceSize, data: &[u8]) {
-        let call = self.fns().v1_0.update_buffer.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_0
+            .update_buffer
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -612,7 +664,11 @@ impl CommandBuffer {
         size: DeviceSize,
         data: u32,
     ) {
-        let call = self.fns().v1_0.fill_buffer.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_0
+            .fill_buffer
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, dst_buffer, dst_offset, size, data) };
     }
@@ -635,7 +691,7 @@ impl CommandBuffer {
             .fns()
             .v1_0
             .clear_color_image
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -667,7 +723,7 @@ impl CommandBuffer {
             .fns()
             .v1_0
             .clear_depth_stencil_image
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -694,7 +750,7 @@ impl CommandBuffer {
             .fns()
             .v1_0
             .clear_attachments
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -722,7 +778,11 @@ impl CommandBuffer {
         dst_image_layout: ImageLayout,
         regions: &[ImageResolve],
     ) {
-        let call = self.fns().v1_0.resolve_image.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_0
+            .resolve_image
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -745,7 +805,11 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_event(&self, event: Event, stage_mask: PipelineStageFlags) {
-        let call = self.fns().v1_0.set_event.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_0
+            .set_event
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, event, stage_mask) };
     }
@@ -758,7 +822,11 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn reset_event(&self, event: Event, stage_mask: PipelineStageFlags) {
-        let call = self.fns().v1_0.reset_event.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_0
+            .reset_event
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, event, stage_mask) };
     }
@@ -779,7 +847,11 @@ impl CommandBuffer {
         buffer_memory_barriers: &[BufferMemoryBarrier],
         image_memory_barriers: &[ImageMemoryBarrier],
     ) {
-        let call = self.fns().v1_0.wait_events.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_0
+            .wait_events
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -818,7 +890,7 @@ impl CommandBuffer {
             .fns()
             .v1_0
             .pipeline_barrier
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -844,7 +916,11 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn begin_query(&self, query_pool: QueryPool, query: u32, flags: QueryControlFlags) {
-        let call = self.fns().v1_0.begin_query.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_0
+            .begin_query
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, query_pool, query, flags) };
     }
@@ -857,7 +933,11 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn end_query(&self, query_pool: QueryPool, query: u32) {
-        let call = self.fns().v1_0.end_query.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_0
+            .end_query
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, query_pool, query) };
     }
@@ -874,7 +954,7 @@ impl CommandBuffer {
             .fns()
             .v1_0
             .reset_query_pool
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, query_pool, first_query, query_count) };
     }
@@ -896,7 +976,7 @@ impl CommandBuffer {
             .fns()
             .v1_0
             .write_timestamp
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, pipeline_stage, query_pool, query) };
     }
@@ -922,7 +1002,7 @@ impl CommandBuffer {
             .fns()
             .v1_0
             .copy_query_pool_results
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -952,7 +1032,11 @@ impl CommandBuffer {
         offset: u32,
         values: &[u8],
     ) {
-        let call = self.fns().v1_0.push_constants.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_0
+            .push_constants
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -982,7 +1066,7 @@ impl CommandBuffer {
             .fns()
             .v1_0
             .begin_render_pass
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, render_pass_begin, contents) };
     }
@@ -995,7 +1079,11 @@ impl CommandBuffer {
     /// Command buffer level: `primary`.
     #[inline]
     pub fn next_subpass(&self, contents: SubpassContents) {
-        let call = self.fns().v1_0.next_subpass.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_0
+            .next_subpass
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, contents) };
     }
@@ -1012,7 +1100,7 @@ impl CommandBuffer {
             .fns()
             .v1_0
             .end_render_pass
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle) };
     }
@@ -1029,7 +1117,7 @@ impl CommandBuffer {
             .fns()
             .v1_0
             .execute_commands
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -1058,7 +1146,7 @@ impl CommandBuffer {
             .fns()
             .v1_4
             .push_descriptor_set
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -1084,7 +1172,7 @@ impl CommandBuffer {
             .fns()
             .v1_1
             .set_device_mask
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, device_mask) };
     }
@@ -1106,7 +1194,11 @@ impl CommandBuffer {
         group_count_y: u32,
         group_count_z: u32,
     ) {
-        let call = self.fns().v1_1.dispatch_base.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_1
+            .dispatch_base
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -1139,7 +1231,7 @@ impl CommandBuffer {
             .fns()
             .v1_4
             .push_descriptor_set_with_template
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, descriptor_update_template, layout, set, data) };
     }
@@ -1160,7 +1252,7 @@ impl CommandBuffer {
             .fns()
             .v1_2
             .begin_render_pass2
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, render_pass_begin, subpass_begin_info) };
     }
@@ -1177,7 +1269,11 @@ impl CommandBuffer {
         subpass_begin_info: &SubpassBeginInfo,
         subpass_end_info: &SubpassEndInfo,
     ) {
-        let call = self.fns().v1_2.next_subpass2.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_2
+            .next_subpass2
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, subpass_begin_info, subpass_end_info) };
     }
@@ -1194,7 +1290,7 @@ impl CommandBuffer {
             .fns()
             .v1_2
             .end_render_pass2
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, subpass_end_info) };
     }
@@ -1220,7 +1316,7 @@ impl CommandBuffer {
             .fns()
             .v1_2
             .draw_indirect_count
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -1256,7 +1352,7 @@ impl CommandBuffer {
             .fns()
             .v1_2
             .draw_indexed_indirect_count
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -1283,7 +1379,7 @@ impl CommandBuffer {
             .fns()
             .v1_4
             .set_line_stipple
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, line_stipple_factor, line_stipple_pattern) };
     }
@@ -1296,7 +1392,11 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_cull_mode(&self, cull_mode: CullModeFlags) {
-        let call = self.fns().v1_3.set_cull_mode.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_3
+            .set_cull_mode
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, cull_mode) };
     }
@@ -1309,7 +1409,11 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_front_face(&self, front_face: FrontFace) {
-        let call = self.fns().v1_3.set_front_face.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_3
+            .set_front_face
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, front_face) };
     }
@@ -1326,7 +1430,7 @@ impl CommandBuffer {
             .fns()
             .v1_3
             .set_primitive_topology
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, primitive_topology) };
     }
@@ -1343,7 +1447,7 @@ impl CommandBuffer {
             .fns()
             .v1_3
             .set_viewport_with_count
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, viewports.len() as u32, viewports.as_ptr()) };
     }
@@ -1360,7 +1464,7 @@ impl CommandBuffer {
             .fns()
             .v1_3
             .set_scissor_with_count
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, scissors.len() as u32, scissors.as_ptr()) };
     }
@@ -1383,7 +1487,7 @@ impl CommandBuffer {
             .fns()
             .v1_4
             .bind_index_buffer2
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, buffer, offset, size, index_type) };
     }
@@ -1410,7 +1514,7 @@ impl CommandBuffer {
             .fns()
             .v1_3
             .bind_vertex_buffers2
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -1437,7 +1541,7 @@ impl CommandBuffer {
             .fns()
             .v1_3
             .set_depth_test_enable
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, depth_test_enable as _) };
     }
@@ -1454,7 +1558,7 @@ impl CommandBuffer {
             .fns()
             .v1_3
             .set_depth_write_enable
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, depth_write_enable as _) };
     }
@@ -1471,7 +1575,7 @@ impl CommandBuffer {
             .fns()
             .v1_3
             .set_depth_compare_op
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, depth_compare_op) };
     }
@@ -1488,7 +1592,7 @@ impl CommandBuffer {
             .fns()
             .v1_3
             .set_depth_bounds_test_enable
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, depth_bounds_test_enable as _) };
     }
@@ -1505,7 +1609,7 @@ impl CommandBuffer {
             .fns()
             .v1_3
             .set_stencil_test_enable
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, stencil_test_enable as _) };
     }
@@ -1525,7 +1629,11 @@ impl CommandBuffer {
         depth_fail_op: StencilOp,
         compare_op: CompareOp,
     ) {
-        let call = self.fns().v1_3.set_stencil_op.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_3
+            .set_stencil_op
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -1551,7 +1659,7 @@ impl CommandBuffer {
             .fns()
             .v1_3
             .set_rasterizer_discard_enable
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, rasterizer_discard_enable as _) };
     }
@@ -1568,7 +1676,7 @@ impl CommandBuffer {
             .fns()
             .v1_3
             .set_depth_bias_enable
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, depth_bias_enable as _) };
     }
@@ -1585,7 +1693,7 @@ impl CommandBuffer {
             .fns()
             .v1_3
             .set_primitive_restart_enable
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, primitive_restart_enable as _) };
     }
@@ -1598,7 +1706,11 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn copy_buffer2(&self, copy_buffer_info: &CopyBufferInfo2) {
-        let call = self.fns().v1_3.copy_buffer2.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_3
+            .copy_buffer2
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, copy_buffer_info) };
     }
@@ -1611,7 +1723,11 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn copy_image2(&self, copy_image_info: &CopyImageInfo2) {
-        let call = self.fns().v1_3.copy_image2.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_3
+            .copy_image2
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, copy_image_info) };
     }
@@ -1624,7 +1740,11 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn blit_image2(&self, blit_image_info: &BlitImageInfo2) {
-        let call = self.fns().v1_3.blit_image2.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_3
+            .blit_image2
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, blit_image_info) };
     }
@@ -1641,7 +1761,7 @@ impl CommandBuffer {
             .fns()
             .v1_3
             .copy_buffer_to_image2
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, copy_buffer_to_image_info) };
     }
@@ -1658,7 +1778,7 @@ impl CommandBuffer {
             .fns()
             .v1_3
             .copy_image_to_buffer2
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, copy_image_to_buffer_info) };
     }
@@ -1671,7 +1791,11 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn resolve_image2(&self, resolve_image_info: &ResolveImageInfo2) {
-        let call = self.fns().v1_3.resolve_image2.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_3
+            .resolve_image2
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, resolve_image_info) };
     }
@@ -1684,7 +1808,11 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn set_event2(&self, event: Event, dependency_info: &DependencyInfo) {
-        let call = self.fns().v1_3.set_event2.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_3
+            .set_event2
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, event, dependency_info) };
     }
@@ -1697,7 +1825,11 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn reset_event2(&self, event: Event, stage_mask: PipelineStageFlags2) {
-        let call = self.fns().v1_3.reset_event2.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_3
+            .reset_event2
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, event, stage_mask) };
     }
@@ -1711,7 +1843,11 @@ impl CommandBuffer {
     #[inline]
     pub fn wait_events2(&self, events: &[Event], dependency_infos: &[DependencyInfo]) {
         assert_eq!(events.len(), dependency_infos.len());
-        let call = self.fns().v1_3.wait_events2.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_3
+            .wait_events2
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -1735,7 +1871,7 @@ impl CommandBuffer {
             .fns()
             .v1_3
             .pipeline_barrier2
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, dependency_info) };
     }
@@ -1752,7 +1888,7 @@ impl CommandBuffer {
             .fns()
             .v1_3
             .write_timestamp2
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, stage, query_pool, query) };
     }
@@ -1769,7 +1905,7 @@ impl CommandBuffer {
             .fns()
             .v1_3
             .begin_rendering
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, rendering_info) };
     }
@@ -1782,7 +1918,11 @@ impl CommandBuffer {
     /// Command buffer level: `primary`, `secondary`.
     #[inline]
     pub fn end_rendering(&self) {
-        let call = self.fns().v1_3.end_rendering.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_3
+            .end_rendering
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle) };
     }
@@ -1799,7 +1939,7 @@ impl CommandBuffer {
             .fns()
             .v1_4
             .bind_descriptor_sets2
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, bind_descriptor_sets_info) };
     }
@@ -1816,7 +1956,7 @@ impl CommandBuffer {
             .fns()
             .v1_4
             .push_constants2
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, push_constants_info) };
     }
@@ -1833,7 +1973,7 @@ impl CommandBuffer {
             .fns()
             .v1_4
             .push_descriptor_set2
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, push_descriptor_set_info) };
     }
@@ -1853,7 +1993,7 @@ impl CommandBuffer {
             .fns()
             .v1_4
             .push_descriptor_set_with_template2
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, push_descriptor_set_with_template_info) };
     }
@@ -1873,7 +2013,7 @@ impl CommandBuffer {
             .fns()
             .v1_4
             .set_rendering_attachment_locations
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, location_info) };
     }
@@ -1893,7 +2033,7 @@ impl CommandBuffer {
             .fns()
             .v1_4
             .set_rendering_input_attachment_indices
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, input_attachment_index_info) };
     }

@@ -8,6 +8,8 @@ use core::ffi::CStr;
 use core::mem::MaybeUninit;
 
 /// Type: `Instance`
+///
+/// Requires: [`VK_EXT_direct_mode_display`](crate::ext::direct_mode_display)
 pub const NAME: &CStr = c"VK_EXT_acquire_xlib_display";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -28,9 +30,8 @@ impl AcquireXlibDisplayPhysicalDevice for PhysicalDevice {
         let call = self
             .fns()
             .ext_acquire_xlib_display
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .acquire_xlib_display_ext;
+            .acquire_xlib_display_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, dpy, display) }.result()
     }
@@ -46,9 +47,8 @@ impl AcquireXlibDisplayPhysicalDevice for PhysicalDevice {
         let call = self
             .fns()
             .ext_acquire_xlib_display
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_rand_r_output_display_ext;
+            .get_rand_r_output_display_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, dpy, rr_output, out.as_mut_ptr()) }.init_on_success(out)
     }

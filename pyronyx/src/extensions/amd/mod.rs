@@ -30,6 +30,8 @@ pub mod draw_indirect_count {
     use core::ffi::CStr;
 
     /// Type: `Device`
+    ///
+    /// Promoted to [`VK_KHR_draw_indirect_count`](crate::khr::draw_indirect_count)
     pub const NAME: &CStr = c"VK_AMD_draw_indirect_count";
     pub const SPEC_VERSION: u32 = 2;
 }
@@ -59,6 +61,8 @@ pub mod texture_gather_bias_lod {
     use core::ffi::CStr;
 
     /// Type: `Device`
+    ///
+    /// Requires: [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1
     pub const NAME: &CStr = c"VK_AMD_texture_gather_bias_lod";
     pub const SPEC_VERSION: u32 = 1;
 }
@@ -105,6 +109,8 @@ pub mod shader_core_properties {
     use core::ffi::CStr;
 
     /// Type: `Device`
+    ///
+    /// Requires: [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1
     pub const NAME: &CStr = c"VK_AMD_shader_core_properties";
     pub const SPEC_VERSION: u32 = 2;
 }
@@ -120,6 +126,8 @@ pub mod shader_core_properties2 {
     use core::ffi::CStr;
 
     /// Type: `Device`
+    ///
+    /// Requires: [`VK_AMD_shader_core_properties`](crate::amd::shader_core_properties)
     pub const NAME: &CStr = c"VK_AMD_shader_core_properties2";
     pub const SPEC_VERSION: u32 = 1;
 }
@@ -127,6 +135,8 @@ pub mod device_coherent_memory {
     use core::ffi::CStr;
 
     /// Type: `Device`
+    ///
+    /// Requires: [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1
     pub const NAME: &CStr = c"VK_AMD_device_coherent_memory";
     pub const SPEC_VERSION: u32 = 1;
 }
@@ -134,6 +144,8 @@ pub mod shader_early_and_late_fragment_tests {
     use core::ffi::CStr;
 
     /// Type: `Device`
+    ///
+    /// Requires: [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1
     pub const NAME: &CStr = c"VK_AMD_shader_early_and_late_fragment_tests";
     pub const SPEC_VERSION: u32 = 1;
 }

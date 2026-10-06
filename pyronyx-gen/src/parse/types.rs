@@ -243,7 +243,7 @@ pub fn parse_into(types_node: &Node, reg: &mut Registry, lifetimes: &mut HashSet
                 let params = node
                     .children()
                     .filter(|n| n.has_tag_name("param"))
-                    .filter_map(|p| parse_param(p, &mut other_params))
+                    .filter_map(|p| parse_param(p, &mut other_params, &reg.stypes))
                     .collect();
 
                 TypeKind::FuncPointer {

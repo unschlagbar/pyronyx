@@ -9,6 +9,8 @@ use core::mem::MaybeUninit;
 use core::ptr::{from_ref, null};
 
 /// Type: `Device`
+///
+/// Requires: (([`VK_KHR_buffer_device_address`](crate::khr::buffer_device_address) or Vulkan 1.2) + ([`VK_KHR_extended_flags`](crate::khr::extended_flags) or [`VK_KHR_maintenance5`](crate::khr::maintenance5))) or Vulkan 1.3
 pub const NAME: &CStr = c"VK_EXT_device_generated_commands";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -43,9 +45,8 @@ impl DeviceGeneratedCommandsCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_device_generated_commands
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .execute_generated_commands_ext;
+            .execute_generated_commands_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, is_preprocessed as _, generated_commands_info) };
     }
@@ -65,9 +66,8 @@ impl DeviceGeneratedCommandsCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_device_generated_commands
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .preprocess_generated_commands_ext;
+            .preprocess_generated_commands_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, generated_commands_info, state_command_buffer) };
     }
@@ -77,7 +77,8 @@ pub trait DeviceGeneratedCommandsDevice {
     fn get_generated_commands_memory_requirements(
         &self,
         info: &GeneratedCommandsMemoryRequirementsInfoEXT,
-    ) -> MemoryRequirements2<'_>;
+        memory_requirements: &mut MemoryRequirements2<'_>,
+    );
 
     fn create_indirect_commands_layout(
         &self,
@@ -122,19 +123,15 @@ impl DeviceGeneratedCommandsDevice for Device {
     fn get_generated_commands_memory_requirements(
         &self,
         info: &GeneratedCommandsMemoryRequirementsInfoEXT,
-    ) -> MemoryRequirements2<'_> {
-        let mut out = MaybeUninit::uninit();
+        memory_requirements: &mut MemoryRequirements2<'_>,
+    ) {
         let call = self
             .fns()
             .ext_device_generated_commands
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_generated_commands_memory_requirements_ext;
+            .get_generated_commands_memory_requirements_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
-        unsafe {
-            (call)(self.handle, info, out.as_mut_ptr());
-            out.assume_init()
-        }
+        unsafe { (call)(self.handle, info, memory_requirements) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCreateIndirectCommandsLayoutEXT.html>
@@ -148,9 +145,8 @@ impl DeviceGeneratedCommandsDevice for Device {
         let call = self
             .fns()
             .ext_device_generated_commands
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .create_indirect_commands_layout_ext;
+            .create_indirect_commands_layout_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -173,9 +169,8 @@ impl DeviceGeneratedCommandsDevice for Device {
         let call = self
             .fns()
             .ext_device_generated_commands
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .destroy_indirect_commands_layout_ext;
+            .destroy_indirect_commands_layout_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -197,9 +192,8 @@ impl DeviceGeneratedCommandsDevice for Device {
         let call = self
             .fns()
             .ext_device_generated_commands
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .create_indirect_execution_set_ext;
+            .create_indirect_execution_set_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -222,9 +216,8 @@ impl DeviceGeneratedCommandsDevice for Device {
         let call = self
             .fns()
             .ext_device_generated_commands
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .destroy_indirect_execution_set_ext;
+            .destroy_indirect_execution_set_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -245,9 +238,8 @@ impl DeviceGeneratedCommandsDevice for Device {
         let call = self
             .fns()
             .ext_device_generated_commands
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .update_indirect_execution_set_pipeline_ext;
+            .update_indirect_execution_set_pipeline_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -269,9 +261,8 @@ impl DeviceGeneratedCommandsDevice for Device {
         let call = self
             .fns()
             .ext_device_generated_commands
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .update_indirect_execution_set_shader_ext;
+            .update_indirect_execution_set_shader_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(

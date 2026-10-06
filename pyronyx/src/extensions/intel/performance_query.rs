@@ -45,9 +45,8 @@ impl PerformanceQueryDevice for Device {
         let call = self
             .fns()
             .intel_performance_query
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .initialize_performance_api_intel;
+            .initialize_performance_api_intel
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, initialize_info) }.result()
     }
@@ -58,9 +57,8 @@ impl PerformanceQueryDevice for Device {
         let call = self
             .fns()
             .intel_performance_query
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .uninitialize_performance_api_intel;
+            .uninitialize_performance_api_intel
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle) };
     }
@@ -75,9 +73,8 @@ impl PerformanceQueryDevice for Device {
         let call = self
             .fns()
             .intel_performance_query
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .acquire_performance_configuration_intel;
+            .acquire_performance_configuration_intel
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, acquire_info, out.as_mut_ptr()) }.init_on_success(out)
     }
@@ -91,9 +88,8 @@ impl PerformanceQueryDevice for Device {
         let call = self
             .fns()
             .intel_performance_query
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .release_performance_configuration_intel;
+            .release_performance_configuration_intel
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, configuration) }.result()
     }
@@ -108,9 +104,8 @@ impl PerformanceQueryDevice for Device {
         let call = self
             .fns()
             .intel_performance_query
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_performance_parameter_intel;
+            .get_performance_parameter_intel
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, parameter, out.as_mut_ptr()) }.init_on_success(out)
     }
@@ -139,9 +134,8 @@ impl PerformanceQueryCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .intel_performance_query
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_performance_marker_intel;
+            .set_performance_marker_intel
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, marker_info) }.result()
     }
@@ -160,9 +154,8 @@ impl PerformanceQueryCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .intel_performance_query
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_performance_stream_marker_intel;
+            .set_performance_stream_marker_intel
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, marker_info) }.result()
     }
@@ -178,9 +171,8 @@ impl PerformanceQueryCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .intel_performance_query
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_performance_override_intel;
+            .set_performance_override_intel
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, override_info) }.result()
     }
@@ -203,9 +195,8 @@ impl PerformanceQueryQueue for Queue {
         let call = self
             .fns()
             .intel_performance_query
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .queue_set_performance_configuration_intel;
+            .queue_set_performance_configuration_intel
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, configuration) }.result()
     }

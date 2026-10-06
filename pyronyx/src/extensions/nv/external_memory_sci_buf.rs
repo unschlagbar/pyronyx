@@ -8,6 +8,8 @@ use core::ffi::CStr;
 use core::mem::MaybeUninit;
 
 /// Type: `Device`
+///
+/// Requires: Vulkan 1.1
 pub const NAME: &CStr = c"VK_NV_external_memory_sci_buf";
 pub const SPEC_VERSION: u32 = 2;
 
@@ -23,9 +25,8 @@ impl ExternalMemorySciBufDevice for Device {
         let call = self
             .fns()
             .nv_external_memory_sci_buf
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_memory_sci_buf_nv;
+            .get_memory_sci_buf_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, get_sci_buf_info, out.as_mut_ptr()) }.init_on_success(out)
     }
@@ -36,7 +37,8 @@ pub trait ExternalMemorySciBufPhysicalDevice {
         &self,
         handle_type: ExternalMemoryHandleTypeFlags,
         handle: NvSciBufObj,
-    ) -> Result<MemorySciBufPropertiesNV<'_>>;
+        memory_sci_buf_properties: &mut MemorySciBufPropertiesNV<'_>,
+    ) -> Result<()>;
 
     fn get_sci_buf_attributes(&self, attributes: NvSciBufAttrList) -> Result<()>;
 }
@@ -48,16 +50,15 @@ impl ExternalMemorySciBufPhysicalDevice for PhysicalDevice {
         &self,
         handle_type: ExternalMemoryHandleTypeFlags,
         handle: NvSciBufObj,
-    ) -> Result<MemorySciBufPropertiesNV<'_>> {
-        let mut out = MaybeUninit::uninit();
+        memory_sci_buf_properties: &mut MemorySciBufPropertiesNV<'_>,
+    ) -> Result<()> {
         let call = self
             .fns()
             .nv_external_memory_sci_buf
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_physical_device_external_memory_sci_buf_properties_nv;
+            .get_physical_device_external_memory_sci_buf_properties_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
-        unsafe { (call)(self.handle, handle_type, handle, out.as_mut_ptr()) }.init_on_success(out)
+        unsafe { (call)(self.handle, handle_type, handle, memory_sci_buf_properties) }.result()
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceSciBufAttributesNV.html>
@@ -66,9 +67,8 @@ impl ExternalMemorySciBufPhysicalDevice for PhysicalDevice {
         let call = self
             .fns()
             .nv_external_memory_sci_buf
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_physical_device_sci_buf_attributes_nv;
+            .get_physical_device_sci_buf_attributes_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, attributes) }.result()
     }

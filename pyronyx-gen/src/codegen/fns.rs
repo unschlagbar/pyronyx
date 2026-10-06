@@ -1,5 +1,6 @@
 use std::collections::{HashMap, HashSet};
 
+use heck::ToSnakeCase;
 use indexmap::IndexSet;
 
 use crate::{
@@ -19,6 +20,9 @@ pub enum CleanParam {
         elem_ty: String,    // "VkSubmitInfo"
         count_name: String, // "submit_count"
         mutable: bool,
+        /// Length taken from another parameter's field, checked with `assert_eq!`
+        /// (e.g. `allocate_info.descriptor_set_count`).
+        len_assert: Option<String>,
     },
     CountForSlice {
         name: String,
@@ -104,6 +108,7 @@ pub fn analyze_params(
                     elem_ty,
                     count_name: simple_rust_member(count_name),
                     mutable,
+                    len_assert: None,
                 });
 
                 if mutable {
@@ -112,17 +117,23 @@ pub fn analyze_params(
                 continue;
             }
 
-            // `len` points to a struct field (not a direct param), e.g.
-            // "pAllocateInfo->descriptorSetCount".  If this function is listed in
-            // MUT_SLICE_ASSERT_FNS the mutable output pointer is still a Slice —
-            // the assert is emitted at call-site by write_fn_body.
-            if find_assert_fn(&cmd.name).is_some() && !param.is_const && param.pointer_depth > 0 {
+            // `len` is a field of another parameter, e.g. "pAllocateInfo->descriptorSetCount":
+            // a slice whose length is asserted against that field.
+            if let Some((owner, field)) = count_name.split_once("->")
+                && params.iter().any(|p| p.name == owner)
+                && param.pointer_depth > 0
+            {
                 let elem_ty = slice_rust_like(extract_pointer(&param.ty)).to_string();
                 result.push(CleanParam::Slice {
                     slice_name: rust_member(&param.name, &mut ps),
                     elem_ty,
                     count_name: String::new(),
-                    mutable: true,
+                    mutable: !param.is_const,
+                    len_assert: Some(format!(
+                        "{}.{}",
+                        simple_rust_member(owner),
+                        field.to_snake_case()
+                    )),
                 });
                 continue;
             }
@@ -135,6 +146,7 @@ pub fn analyze_params(
                 elem_ty,
                 count_name: String::new(),
                 mutable: true,
+                len_assert: None,
             });
             continue;
         }
@@ -152,6 +164,7 @@ pub fn analyze_params(
                 elem_ty: "u8".to_string(),
                 count_name: String::new(),
                 mutable: true,
+                len_assert: None,
             });
             continue;
         }
@@ -162,6 +175,19 @@ pub fn analyze_params(
             && (cmd.return_type == "vkResult" || cmd.return_type == "c_void")
         {
             let (ty, convert) = rust_like(extract_pointer(&param.ty), imports);
+
+            // The driver reads `sType` and walks `pNext` of an extensible out-struct, so the
+            // caller passes an initialised (and possibly chained) one instead of getting
+            // uninitialised memory filled.
+            if param.extensible {
+                result.push(CleanParam::Single {
+                    name: rust_member(&param.name, &mut ps),
+                    ty: format!("&mut {}", result_ty(ty, lifetimes)),
+                    convert: false,
+                });
+                continue;
+            }
+
             result.push(CleanParam::Output {
                 ty: result_ty(ty, lifetimes),
                 convert,

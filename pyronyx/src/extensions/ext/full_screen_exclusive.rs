@@ -9,6 +9,8 @@ use core::ffi::CStr;
 use core::mem::MaybeUninit;
 
 /// Type: `Device`
+///
+/// Requires: ([`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1) + [`VK_KHR_surface`](crate::khr::surface) + [`VK_KHR_get_surface_capabilities2`](crate::khr::get_surface_capabilities2) + [`VK_KHR_swapchain`](crate::khr::swapchain)
 pub const NAME: &CStr = c"VK_EXT_full_screen_exclusive";
 pub const SPEC_VERSION: u32 = 4;
 
@@ -29,9 +31,8 @@ impl FullScreenExclusivePhysicalDevice for PhysicalDevice {
         let call = self
             .fns()
             .ext_full_screen_exclusive
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_physical_device_surface_present_modes2_ext;
+            .get_physical_device_surface_present_modes2_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         read_into_vec_result(|count, data| unsafe {
             (call)(self.handle, surface_info, count, data)
@@ -61,9 +62,8 @@ impl FullScreenExclusiveDevice for Device {
         let call = self
             .fns()
             .ext_full_screen_exclusive
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_device_group_surface_present_modes2_ext;
+            .get_device_group_surface_present_modes2_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, surface_info, out.as_mut_ptr()) }.init_on_success(out)
     }
@@ -74,9 +74,8 @@ impl FullScreenExclusiveDevice for Device {
         let call = self
             .fns()
             .ext_full_screen_exclusive
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .acquire_full_screen_exclusive_mode_ext;
+            .acquire_full_screen_exclusive_mode_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, swapchain) }.result()
     }
@@ -87,9 +86,8 @@ impl FullScreenExclusiveDevice for Device {
         let call = self
             .fns()
             .ext_full_screen_exclusive
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .release_full_screen_exclusive_mode_ext;
+            .release_full_screen_exclusive_mode_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, swapchain) }.result()
     }

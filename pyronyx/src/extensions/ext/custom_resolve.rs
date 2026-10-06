@@ -8,6 +8,8 @@ use core::ffi::CStr;
 use core::ptr::{from_ref, null};
 
 /// Type: `Device`
+///
+/// Requires: [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1
 pub const NAME: &CStr = c"VK_EXT_custom_resolve";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -28,9 +30,8 @@ impl CustomResolveCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_custom_resolve
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .begin_custom_resolve_ext;
+            .begin_custom_resolve_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(

@@ -1,3 +1,11 @@
+// Wrappers mirror the Vulkan API: they pass caller pointers straight to the driver,
+// take as many arguments as the C function, and `Default` is always generated as an impl.
+#![allow(
+    clippy::not_unsafe_ptr_arg_deref,
+    clippy::too_many_arguments,
+    clippy::derivable_impls
+)]
+
 mod extensions;
 pub mod impl_command_buffer;
 pub mod impl_device;

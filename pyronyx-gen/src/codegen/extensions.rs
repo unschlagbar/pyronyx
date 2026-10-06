@@ -6,7 +6,10 @@ use crate::{
         HAND_WRITTEN_FNS, const_name,
         impls::{ImplTarget, write_command_signature, write_command_wrapper},
     },
-    parse::{self, registry::Registry},
+    parse::{
+        self,
+        registry::{Extension, Registry},
+    },
 };
 use heck::ToPascalCase;
 use indexmap::{IndexMap, IndexSet};
@@ -118,23 +121,13 @@ pub fn generate_impl(
             mod_rs.ln(&format!("pub mod {orig_name}{{"));
             mod_rs.ln("use core::ffi::CStr;\n
             ");
-
-            if !ext.typ.is_empty() {
-                mod_rs.ln(&format!("/// Type: `{}`", ext.typ.to_pascal_case()));
-            }
-            mod_rs.ln(&format!("pub const NAME: &CStr = c\"{}\";", extension));
-            mod_rs.ln(&format!(
-                "pub const SPEC_VERSION: u32 = {};",
-                ext.spec_version
-            ));
+            write_ext_consts(mod_rs, ext, registry);
             mod_rs.ln("}");
         }
         return;
     } else {
         if let Some(ext) = registry.extensions.iter().find(|e| e.name == extension) {
-            if !ext.typ.is_empty() {
-                inner_w.ln(&format!("/// Type: `{}`", ext.typ.to_pascal_case()));
-            }
+            write_ext_consts(&mut inner_w, ext, registry);
 
             if let Some(deprecated) = &ext.deprecated_by {
                 w.ln(&format!(
@@ -142,11 +135,6 @@ pub fn generate_impl(
                     deprecated
                 ));
             }
-            inner_w.ln(&format!("pub const NAME: &CStr = c\"{}\";", extension));
-            inner_w.ln(&format!(
-                "pub const SPEC_VERSION: u32 = {};",
-                ext.spec_version
-            ));
         }
     };
 
@@ -209,4 +197,86 @@ fn move_digits_to_end(s: &str) -> String {
             }
         })
         .unwrap_or(s.to_string())
+}
+
+/// `NAME` and `SPEC_VERSION`, documented with the extension's type and promotion.
+fn write_ext_consts(w: &mut Writer, ext: &Extension, registry: &Registry) {
+    if !ext.typ.is_empty() {
+        w.ln(&format!("/// Type: `{}`", ext.typ.to_pascal_case()));
+    }
+    if let Some(promoted) = &ext.promoted_to {
+        w.ln("///");
+        match promoted.strip_prefix("VK_VERSION_") {
+            Some(version) => w.ln(&format!(
+                "/// Promoted to core in Vulkan {}",
+                version.replace('_', ".")
+            )),
+            None => w.ln(&format!("/// Promoted to {}", ext_link(promoted, registry))),
+        }
+    }
+    if let Some(depends) = &ext.depends {
+        w.ln("///");
+        w.ln(&format!("/// Requires: {}", depends_doc(depends, registry)));
+    }
+    w.ln(&format!("pub const NAME: &CStr = c\"{}\";", ext.name));
+    w.ln(&format!(
+        "pub const SPEC_VERSION: u32 = {};",
+        ext.spec_version
+    ));
+}
+
+/// `VK_KHR_swapchain+(VK_KHR_get_physical_device_properties2,VK_VERSION_1_1)` →
+/// `` [`VK_KHR_swapchain`](…) + ([`VK_KHR_get_physical_device_properties2`](…) or Vulkan 1.1) ``
+fn depends_doc(depends: &str, registry: &Registry) -> String {
+    let mut out = String::new();
+    let mut name = String::new();
+    let flush = |name: &mut String, out: &mut String| {
+        if name.is_empty() {
+            return;
+        }
+        match name.strip_prefix("VK_VERSION_") {
+            Some(version) => out.push_str(&format!("Vulkan {}", version.replace('_', "."))),
+            None => out.push_str(&ext_link(name, registry)),
+        }
+        name.clear();
+    };
+    for c in depends.chars() {
+        match c {
+            '+' | ',' | '(' | ')' => {
+                flush(&mut name, &mut out);
+                out.push_str(match c {
+                    '+' => " + ",
+                    ',' => " or ",
+                    '(' => "(",
+                    _ => ")",
+                });
+            }
+            _ => name.push(c),
+        }
+    }
+    flush(&mut name, &mut out);
+    out
+}
+
+/// Doc link to an extension's module, or plain code when it has none (e.g. disabled ones).
+fn ext_link(name: &str, registry: &Registry) -> String {
+    if registry
+        .extensions
+        .iter()
+        .any(|e| e.name == name && !e.disabled)
+    {
+        format!("[`{name}`]({})", module_path(name))
+    } else {
+        format!("`{name}`")
+    }
+}
+
+/// `VK_KHR_get_physical_device_properties2` → `crate::khr::get_physical_device_properties2`
+fn module_path(name: &str) -> String {
+    let (vendor, name) = const_name(name).split_once('_').unwrap();
+    format!(
+        "crate::{}::{}",
+        vendor.to_lowercase(),
+        move_digits_to_end(name)
+    )
 }

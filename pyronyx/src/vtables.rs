@@ -5,35 +5,60 @@
 
 use super::vk::*;
 use crate::utils::to_option;
-use crate::utils::to_panic;
 use core::ffi::{CStr, c_char, c_void};
 #[derive(Clone)]
 pub struct InstanceFn {
     pub v1_0: InstanceFnv1_0,
     pub v1_1: InstanceFnv1_1,
-    pub ext_debug_report: Option<InstanceFnExtDebugReport>,
-    pub ext_debug_utils: Option<InstanceFnExtDebugUtils>,
-    pub ext_directfb_surface: Option<InstanceFnExtDirectfbSurface>,
-    pub ext_headless_surface: Option<InstanceFnExtHeadlessSurface>,
-    pub ext_metal_surface: Option<InstanceFnExtMetalSurface>,
-    pub fuchsia_imagepipe_surface: Option<InstanceFnFuchsiaImagepipeSurface>,
-    pub ggp_stream_descriptor_surface: Option<InstanceFnGgpStreamDescriptorSurface>,
-    pub khr_android_surface: Option<InstanceFnKhrAndroidSurface>,
-    pub khr_display: Option<InstanceFnKhrDisplay>,
-    pub khr_surface: Option<InstanceFnKhrSurface>,
-    pub khr_wayland_surface: Option<InstanceFnKhrWaylandSurface>,
-    pub khr_win32_surface: Option<InstanceFnKhrWin32Surface>,
-    pub khr_xcb_surface: Option<InstanceFnKhrXcbSurface>,
-    pub khr_xlib_surface: Option<InstanceFnKhrXlibSurface>,
-    pub mvk_ios_surface: Option<InstanceFnMvkIosSurface>,
-    pub mvk_macos_surface: Option<InstanceFnMvkMacosSurface>,
-    pub nn_vi_surface: Option<InstanceFnNnViSurface>,
-    pub ohos_surface: Option<InstanceFnOhosSurface>,
-    pub qnx_screen_surface: Option<InstanceFnQnxScreenSurface>,
-    pub sec_ubm_surface: Option<InstanceFnSecUbmSurface>,
+    pub ext_debug_report: InstanceFnExtDebugReport,
+    pub ext_debug_utils: InstanceFnExtDebugUtils,
+    pub ext_directfb_surface: InstanceFnExtDirectfbSurface,
+    pub ext_headless_surface: InstanceFnExtHeadlessSurface,
+    pub ext_metal_surface: InstanceFnExtMetalSurface,
+    pub fuchsia_imagepipe_surface: InstanceFnFuchsiaImagepipeSurface,
+    pub ggp_stream_descriptor_surface: InstanceFnGgpStreamDescriptorSurface,
+    pub khr_android_surface: InstanceFnKhrAndroidSurface,
+    pub khr_display: InstanceFnKhrDisplay,
+    pub khr_surface: InstanceFnKhrSurface,
+    pub khr_wayland_surface: InstanceFnKhrWaylandSurface,
+    pub khr_win32_surface: InstanceFnKhrWin32Surface,
+    pub khr_xcb_surface: InstanceFnKhrXcbSurface,
+    pub khr_xlib_surface: InstanceFnKhrXlibSurface,
+    pub mvk_ios_surface: InstanceFnMvkIosSurface,
+    pub mvk_macos_surface: InstanceFnMvkMacosSurface,
+    pub nn_vi_surface: InstanceFnNnViSurface,
+    pub ohos_surface: InstanceFnOhosSurface,
+    pub qnx_screen_surface: InstanceFnQnxScreenSurface,
+    pub sec_ubm_surface: InstanceFnSecUbmSurface,
 }
 
 impl InstanceFn {
+    /// A table with no functions loaded; every call through it panics.
+    pub const EMPTY: Self = Self {
+        v1_0: InstanceFnv1_0::EMPTY,
+        v1_1: InstanceFnv1_1::EMPTY,
+        ext_debug_report: InstanceFnExtDebugReport::EMPTY,
+        ext_debug_utils: InstanceFnExtDebugUtils::EMPTY,
+        ext_directfb_surface: InstanceFnExtDirectfbSurface::EMPTY,
+        ext_headless_surface: InstanceFnExtHeadlessSurface::EMPTY,
+        ext_metal_surface: InstanceFnExtMetalSurface::EMPTY,
+        fuchsia_imagepipe_surface: InstanceFnFuchsiaImagepipeSurface::EMPTY,
+        ggp_stream_descriptor_surface: InstanceFnGgpStreamDescriptorSurface::EMPTY,
+        khr_android_surface: InstanceFnKhrAndroidSurface::EMPTY,
+        khr_display: InstanceFnKhrDisplay::EMPTY,
+        khr_surface: InstanceFnKhrSurface::EMPTY,
+        khr_wayland_surface: InstanceFnKhrWaylandSurface::EMPTY,
+        khr_win32_surface: InstanceFnKhrWin32Surface::EMPTY,
+        khr_xcb_surface: InstanceFnKhrXcbSurface::EMPTY,
+        khr_xlib_surface: InstanceFnKhrXlibSurface::EMPTY,
+        mvk_ios_surface: InstanceFnMvkIosSurface::EMPTY,
+        mvk_macos_surface: InstanceFnMvkMacosSurface::EMPTY,
+        nn_vi_surface: InstanceFnNnViSurface::EMPTY,
+        ohos_surface: InstanceFnOhosSurface::EMPTY,
+        qnx_screen_surface: InstanceFnQnxScreenSurface::EMPTY,
+        sec_ubm_surface: InstanceFnSecUbmSurface::EMPTY,
+    };
+
     pub fn load<F: FnMut(&CStr) -> *const c_void>(
         mut loader: F,
         api_version: u32,
@@ -44,93 +69,125 @@ impl InstanceFn {
             v1_1: if api_version >= API_VERSION_1_1 {
                 InstanceFnv1_1::load(&mut loader)
             } else {
-                InstanceFnv1_1::default()
+                InstanceFnv1_1::EMPTY
             },
-            ext_debug_report: None,
-            ext_debug_utils: None,
-            ext_directfb_surface: None,
-            ext_headless_surface: None,
-            ext_metal_surface: None,
-            fuchsia_imagepipe_surface: None,
-            ggp_stream_descriptor_surface: None,
-            khr_android_surface: None,
-            khr_display: None,
-            khr_surface: None,
-            khr_wayland_surface: None,
-            khr_win32_surface: None,
-            khr_xcb_surface: None,
-            khr_xlib_surface: None,
-            mvk_ios_surface: None,
-            mvk_macos_surface: None,
-            nn_vi_surface: None,
-            ohos_surface: None,
-            qnx_screen_surface: None,
-            sec_ubm_surface: None,
+            ext_debug_report: InstanceFnExtDebugReport::EMPTY,
+            ext_debug_utils: InstanceFnExtDebugUtils::EMPTY,
+            ext_directfb_surface: InstanceFnExtDirectfbSurface::EMPTY,
+            ext_headless_surface: InstanceFnExtHeadlessSurface::EMPTY,
+            ext_metal_surface: InstanceFnExtMetalSurface::EMPTY,
+            fuchsia_imagepipe_surface: InstanceFnFuchsiaImagepipeSurface::EMPTY,
+            ggp_stream_descriptor_surface: InstanceFnGgpStreamDescriptorSurface::EMPTY,
+            khr_android_surface: InstanceFnKhrAndroidSurface::EMPTY,
+            khr_display: InstanceFnKhrDisplay::EMPTY,
+            khr_surface: InstanceFnKhrSurface::EMPTY,
+            khr_wayland_surface: InstanceFnKhrWaylandSurface::EMPTY,
+            khr_win32_surface: InstanceFnKhrWin32Surface::EMPTY,
+            khr_xcb_surface: InstanceFnKhrXcbSurface::EMPTY,
+            khr_xlib_surface: InstanceFnKhrXlibSurface::EMPTY,
+            mvk_ios_surface: InstanceFnMvkIosSurface::EMPTY,
+            mvk_macos_surface: InstanceFnMvkMacosSurface::EMPTY,
+            nn_vi_surface: InstanceFnNnViSurface::EMPTY,
+            ohos_surface: InstanceFnOhosSurface::EMPTY,
+            qnx_screen_surface: InstanceFnQnxScreenSurface::EMPTY,
+            sec_ubm_surface: InstanceFnSecUbmSurface::EMPTY,
         };
         for &ext in extensions {
-            let ext = unsafe { CStr::from_ptr(ext).to_bytes() };
-            match ext {
-                b"VK_EXT_debug_report" => {
-                    out.ext_debug_report = Some(InstanceFnExtDebugReport::load(&mut loader))
-                }
-                b"VK_EXT_debug_utils" => {
-                    out.ext_debug_utils = Some(InstanceFnExtDebugUtils::load(&mut loader))
-                }
-                b"VK_EXT_directfb_surface" => {
-                    out.ext_directfb_surface = Some(InstanceFnExtDirectfbSurface::load(&mut loader))
-                }
-                b"VK_EXT_headless_surface" => {
-                    out.ext_headless_surface = Some(InstanceFnExtHeadlessSurface::load(&mut loader))
-                }
-                b"VK_EXT_metal_surface" => {
-                    out.ext_metal_surface = Some(InstanceFnExtMetalSurface::load(&mut loader))
-                }
-                b"VK_FUCHSIA_imagepipe_surface" => {
-                    out.fuchsia_imagepipe_surface =
-                        Some(InstanceFnFuchsiaImagepipeSurface::load(&mut loader))
-                }
-                b"VK_GGP_stream_descriptor_surface" => {
-                    out.ggp_stream_descriptor_surface =
-                        Some(InstanceFnGgpStreamDescriptorSurface::load(&mut loader))
-                }
-                b"VK_KHR_android_surface" => {
-                    out.khr_android_surface = Some(InstanceFnKhrAndroidSurface::load(&mut loader))
+            match unsafe { CStr::from_ptr(ext) }.to_bytes() {
+                b"VK_KHR_surface" => {
+                    out.khr_surface.destroy_surface_khr = to_option(loader(c"vkDestroySurfaceKHR"));
                 }
                 b"VK_KHR_display" => {
-                    out.khr_display = Some(InstanceFnKhrDisplay::load(&mut loader))
-                }
-                b"VK_KHR_surface" => {
-                    out.khr_surface = Some(InstanceFnKhrSurface::load(&mut loader))
-                }
-                b"VK_KHR_wayland_surface" => {
-                    out.khr_wayland_surface = Some(InstanceFnKhrWaylandSurface::load(&mut loader))
-                }
-                b"VK_KHR_win32_surface" => {
-                    out.khr_win32_surface = Some(InstanceFnKhrWin32Surface::load(&mut loader))
-                }
-                b"VK_KHR_xcb_surface" => {
-                    out.khr_xcb_surface = Some(InstanceFnKhrXcbSurface::load(&mut loader))
+                    out.khr_display.create_display_plane_surface_khr =
+                        to_option(loader(c"vkCreateDisplayPlaneSurfaceKHR"));
                 }
                 b"VK_KHR_xlib_surface" => {
-                    out.khr_xlib_surface = Some(InstanceFnKhrXlibSurface::load(&mut loader))
+                    out.khr_xlib_surface.create_xlib_surface_khr =
+                        to_option(loader(c"vkCreateXlibSurfaceKHR"));
                 }
-                b"VK_MVK_ios_surface" => {
-                    out.mvk_ios_surface = Some(InstanceFnMvkIosSurface::load(&mut loader))
+                b"VK_KHR_xcb_surface" => {
+                    out.khr_xcb_surface.create_xcb_surface_khr =
+                        to_option(loader(c"vkCreateXcbSurfaceKHR"));
                 }
-                b"VK_MVK_macos_surface" => {
-                    out.mvk_macos_surface = Some(InstanceFnMvkMacosSurface::load(&mut loader))
+                b"VK_KHR_wayland_surface" => {
+                    out.khr_wayland_surface.create_wayland_surface_khr =
+                        to_option(loader(c"vkCreateWaylandSurfaceKHR"));
+                }
+                b"VK_KHR_android_surface" => {
+                    out.khr_android_surface.create_android_surface_khr =
+                        to_option(loader(c"vkCreateAndroidSurfaceKHR"));
+                }
+                b"VK_KHR_win32_surface" => {
+                    out.khr_win32_surface.create_win32_surface_khr =
+                        to_option(loader(c"vkCreateWin32SurfaceKHR"));
+                }
+                b"VK_EXT_debug_report" => {
+                    out.ext_debug_report.create_debug_report_callback_ext =
+                        to_option(loader(c"vkCreateDebugReportCallbackEXT"));
+                    out.ext_debug_report.destroy_debug_report_callback_ext =
+                        to_option(loader(c"vkDestroyDebugReportCallbackEXT"));
+                    out.ext_debug_report.debug_report_message_ext =
+                        to_option(loader(c"vkDebugReportMessageEXT"));
+                }
+                b"VK_GGP_stream_descriptor_surface" => {
+                    out.ggp_stream_descriptor_surface
+                        .create_stream_descriptor_surface_ggp =
+                        to_option(loader(c"vkCreateStreamDescriptorSurfaceGGP"));
                 }
                 b"VK_NN_vi_surface" => {
-                    out.nn_vi_surface = Some(InstanceFnNnViSurface::load(&mut loader))
+                    out.nn_vi_surface.create_vi_surface_nn =
+                        to_option(loader(c"vkCreateViSurfaceNN"));
                 }
-                b"VK_OHOS_surface" => {
-                    out.ohos_surface = Some(InstanceFnOhosSurface::load(&mut loader))
+                b"VK_KHR_device_group_creation" => {
+                    if out.v1_1.enumerate_physical_device_groups.is_none() {
+                        out.v1_1.enumerate_physical_device_groups =
+                            to_option(loader(c"vkEnumeratePhysicalDeviceGroupsKHR"));
+                    }
+                }
+                b"VK_MVK_ios_surface" => {
+                    out.mvk_ios_surface.create_ios_surface_mvk =
+                        to_option(loader(c"vkCreateIOSSurfaceMVK"));
+                }
+                b"VK_MVK_macos_surface" => {
+                    out.mvk_macos_surface.create_mac_os_surface_mvk =
+                        to_option(loader(c"vkCreateMacOSSurfaceMVK"));
+                }
+                b"VK_EXT_debug_utils" => {
+                    out.ext_debug_utils.create_debug_utils_messenger_ext =
+                        to_option(loader(c"vkCreateDebugUtilsMessengerEXT"));
+                    out.ext_debug_utils.destroy_debug_utils_messenger_ext =
+                        to_option(loader(c"vkDestroyDebugUtilsMessengerEXT"));
+                    out.ext_debug_utils.submit_debug_utils_message_ext =
+                        to_option(loader(c"vkSubmitDebugUtilsMessageEXT"));
+                }
+                b"VK_FUCHSIA_imagepipe_surface" => {
+                    out.fuchsia_imagepipe_surface
+                        .create_image_pipe_surface_fuchsia =
+                        to_option(loader(c"vkCreateImagePipeSurfaceFUCHSIA"));
+                }
+                b"VK_EXT_metal_surface" => {
+                    out.ext_metal_surface.create_metal_surface_ext =
+                        to_option(loader(c"vkCreateMetalSurfaceEXT"));
+                }
+                b"VK_EXT_headless_surface" => {
+                    out.ext_headless_surface.create_headless_surface_ext =
+                        to_option(loader(c"vkCreateHeadlessSurfaceEXT"));
+                }
+                b"VK_EXT_directfb_surface" => {
+                    out.ext_directfb_surface.create_direct_fb_surface_ext =
+                        to_option(loader(c"vkCreateDirectFBSurfaceEXT"));
                 }
                 b"VK_QNX_screen_surface" => {
-                    out.qnx_screen_surface = Some(InstanceFnQnxScreenSurface::load(&mut loader))
+                    out.qnx_screen_surface.create_screen_surface_qnx =
+                        to_option(loader(c"vkCreateScreenSurfaceQNX"));
+                }
+                b"VK_OHOS_surface" => {
+                    out.ohos_surface.create_surface_ohos =
+                        to_option(loader(c"vkCreateSurfaceOHOS"));
                 }
                 b"VK_SEC_ubm_surface" => {
-                    out.sec_ubm_surface = Some(InstanceFnSecUbmSurface::load(&mut loader))
+                    out.sec_ubm_surface.create_ubm_surface_sec =
+                        to_option(loader(c"vkCreateUbmSurfaceSEC"));
                 }
                 _ => (),
             }
@@ -146,6 +203,11 @@ pub struct InstanceFnv1_0 {
 }
 
 impl InstanceFnv1_0 {
+    pub const EMPTY: Self = Self {
+        destroy_instance: None,
+        enumerate_physical_devices: None,
+    };
+
     pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
         Self {
             destroy_instance: to_option(loader(c"vkDestroyInstance")),
@@ -157,288 +219,246 @@ impl InstanceFnv1_0 {
 #[derive(Clone, Default)]
 pub struct InstanceFnv1_1 {
     pub enumerate_physical_device_groups: Option<vkEnumeratePhysicalDeviceGroups>,
-    pub enumerate_physical_device_groups_khr: Option<vkEnumeratePhysicalDeviceGroupsKHR>,
 }
 
 impl InstanceFnv1_1 {
+    pub const EMPTY: Self = Self {
+        enumerate_physical_device_groups: None,
+    };
+
     pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
         Self {
             enumerate_physical_device_groups: to_option(loader(c"vkEnumeratePhysicalDeviceGroups")),
-            enumerate_physical_device_groups_khr: to_option(loader(
-                c"vkEnumeratePhysicalDeviceGroupsKHR",
-            )),
         }
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct InstanceFnExtDebugReport {
-    pub create_debug_report_callback_ext: vkCreateDebugReportCallbackEXT,
-    pub destroy_debug_report_callback_ext: vkDestroyDebugReportCallbackEXT,
-    pub debug_report_message_ext: vkDebugReportMessageEXT,
+    pub create_debug_report_callback_ext: Option<vkCreateDebugReportCallbackEXT>,
+    pub destroy_debug_report_callback_ext: Option<vkDestroyDebugReportCallbackEXT>,
+    pub debug_report_message_ext: Option<vkDebugReportMessageEXT>,
 }
 
 impl InstanceFnExtDebugReport {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            create_debug_report_callback_ext: to_panic(loader(c"vkCreateDebugReportCallbackEXT")),
-            destroy_debug_report_callback_ext: to_panic(loader(c"vkDestroyDebugReportCallbackEXT")),
-            debug_report_message_ext: to_panic(loader(c"vkDebugReportMessageEXT")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        create_debug_report_callback_ext: None,
+        destroy_debug_report_callback_ext: None,
+        debug_report_message_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct InstanceFnExtDebugUtils {
-    pub create_debug_utils_messenger_ext: vkCreateDebugUtilsMessengerEXT,
-    pub destroy_debug_utils_messenger_ext: vkDestroyDebugUtilsMessengerEXT,
-    pub submit_debug_utils_message_ext: vkSubmitDebugUtilsMessageEXT,
+    pub create_debug_utils_messenger_ext: Option<vkCreateDebugUtilsMessengerEXT>,
+    pub destroy_debug_utils_messenger_ext: Option<vkDestroyDebugUtilsMessengerEXT>,
+    pub submit_debug_utils_message_ext: Option<vkSubmitDebugUtilsMessageEXT>,
 }
 
 impl InstanceFnExtDebugUtils {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            create_debug_utils_messenger_ext: to_panic(loader(c"vkCreateDebugUtilsMessengerEXT")),
-            destroy_debug_utils_messenger_ext: to_panic(loader(c"vkDestroyDebugUtilsMessengerEXT")),
-            submit_debug_utils_message_ext: to_panic(loader(c"vkSubmitDebugUtilsMessageEXT")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        create_debug_utils_messenger_ext: None,
+        destroy_debug_utils_messenger_ext: None,
+        submit_debug_utils_message_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct InstanceFnExtDirectfbSurface {
-    pub create_direct_fb_surface_ext: vkCreateDirectFBSurfaceEXT,
+    pub create_direct_fb_surface_ext: Option<vkCreateDirectFBSurfaceEXT>,
 }
 
 impl InstanceFnExtDirectfbSurface {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            create_direct_fb_surface_ext: to_panic(loader(c"vkCreateDirectFBSurfaceEXT")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        create_direct_fb_surface_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct InstanceFnExtHeadlessSurface {
-    pub create_headless_surface_ext: vkCreateHeadlessSurfaceEXT,
+    pub create_headless_surface_ext: Option<vkCreateHeadlessSurfaceEXT>,
 }
 
 impl InstanceFnExtHeadlessSurface {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            create_headless_surface_ext: to_panic(loader(c"vkCreateHeadlessSurfaceEXT")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        create_headless_surface_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct InstanceFnExtMetalSurface {
-    pub create_metal_surface_ext: vkCreateMetalSurfaceEXT,
+    pub create_metal_surface_ext: Option<vkCreateMetalSurfaceEXT>,
 }
 
 impl InstanceFnExtMetalSurface {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            create_metal_surface_ext: to_panic(loader(c"vkCreateMetalSurfaceEXT")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        create_metal_surface_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct InstanceFnFuchsiaImagepipeSurface {
-    pub create_image_pipe_surface_fuchsia: vkCreateImagePipeSurfaceFUCHSIA,
+    pub create_image_pipe_surface_fuchsia: Option<vkCreateImagePipeSurfaceFUCHSIA>,
 }
 
 impl InstanceFnFuchsiaImagepipeSurface {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            create_image_pipe_surface_fuchsia: to_panic(loader(c"vkCreateImagePipeSurfaceFUCHSIA")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        create_image_pipe_surface_fuchsia: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct InstanceFnGgpStreamDescriptorSurface {
-    pub create_stream_descriptor_surface_ggp: vkCreateStreamDescriptorSurfaceGGP,
+    pub create_stream_descriptor_surface_ggp: Option<vkCreateStreamDescriptorSurfaceGGP>,
 }
 
 impl InstanceFnGgpStreamDescriptorSurface {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            create_stream_descriptor_surface_ggp: to_panic(loader(
-                c"vkCreateStreamDescriptorSurfaceGGP",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        create_stream_descriptor_surface_ggp: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct InstanceFnKhrAndroidSurface {
-    pub create_android_surface_khr: vkCreateAndroidSurfaceKHR,
+    pub create_android_surface_khr: Option<vkCreateAndroidSurfaceKHR>,
 }
 
 impl InstanceFnKhrAndroidSurface {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            create_android_surface_khr: to_panic(loader(c"vkCreateAndroidSurfaceKHR")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        create_android_surface_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct InstanceFnKhrDisplay {
-    pub create_display_plane_surface_khr: vkCreateDisplayPlaneSurfaceKHR,
+    pub create_display_plane_surface_khr: Option<vkCreateDisplayPlaneSurfaceKHR>,
 }
 
 impl InstanceFnKhrDisplay {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            create_display_plane_surface_khr: to_panic(loader(c"vkCreateDisplayPlaneSurfaceKHR")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        create_display_plane_surface_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct InstanceFnKhrSurface {
-    pub destroy_surface_khr: vkDestroySurfaceKHR,
+    pub destroy_surface_khr: Option<vkDestroySurfaceKHR>,
 }
 
 impl InstanceFnKhrSurface {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            destroy_surface_khr: to_panic(loader(c"vkDestroySurfaceKHR")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        destroy_surface_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct InstanceFnKhrWaylandSurface {
-    pub create_wayland_surface_khr: vkCreateWaylandSurfaceKHR,
+    pub create_wayland_surface_khr: Option<vkCreateWaylandSurfaceKHR>,
 }
 
 impl InstanceFnKhrWaylandSurface {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            create_wayland_surface_khr: to_panic(loader(c"vkCreateWaylandSurfaceKHR")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        create_wayland_surface_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct InstanceFnKhrWin32Surface {
-    pub create_win32_surface_khr: vkCreateWin32SurfaceKHR,
+    pub create_win32_surface_khr: Option<vkCreateWin32SurfaceKHR>,
 }
 
 impl InstanceFnKhrWin32Surface {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            create_win32_surface_khr: to_panic(loader(c"vkCreateWin32SurfaceKHR")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        create_win32_surface_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct InstanceFnKhrXcbSurface {
-    pub create_xcb_surface_khr: vkCreateXcbSurfaceKHR,
+    pub create_xcb_surface_khr: Option<vkCreateXcbSurfaceKHR>,
 }
 
 impl InstanceFnKhrXcbSurface {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            create_xcb_surface_khr: to_panic(loader(c"vkCreateXcbSurfaceKHR")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        create_xcb_surface_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct InstanceFnKhrXlibSurface {
-    pub create_xlib_surface_khr: vkCreateXlibSurfaceKHR,
+    pub create_xlib_surface_khr: Option<vkCreateXlibSurfaceKHR>,
 }
 
 impl InstanceFnKhrXlibSurface {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            create_xlib_surface_khr: to_panic(loader(c"vkCreateXlibSurfaceKHR")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        create_xlib_surface_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct InstanceFnMvkIosSurface {
-    pub create_ios_surface_mvk: vkCreateIOSSurfaceMVK,
+    pub create_ios_surface_mvk: Option<vkCreateIOSSurfaceMVK>,
 }
 
 impl InstanceFnMvkIosSurface {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            create_ios_surface_mvk: to_panic(loader(c"vkCreateIOSSurfaceMVK")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        create_ios_surface_mvk: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct InstanceFnMvkMacosSurface {
-    pub create_mac_os_surface_mvk: vkCreateMacOSSurfaceMVK,
+    pub create_mac_os_surface_mvk: Option<vkCreateMacOSSurfaceMVK>,
 }
 
 impl InstanceFnMvkMacosSurface {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            create_mac_os_surface_mvk: to_panic(loader(c"vkCreateMacOSSurfaceMVK")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        create_mac_os_surface_mvk: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct InstanceFnNnViSurface {
-    pub create_vi_surface_nn: vkCreateViSurfaceNN,
+    pub create_vi_surface_nn: Option<vkCreateViSurfaceNN>,
 }
 
 impl InstanceFnNnViSurface {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            create_vi_surface_nn: to_panic(loader(c"vkCreateViSurfaceNN")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        create_vi_surface_nn: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct InstanceFnOhosSurface {
-    pub create_surface_ohos: vkCreateSurfaceOHOS,
+    pub create_surface_ohos: Option<vkCreateSurfaceOHOS>,
 }
 
 impl InstanceFnOhosSurface {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            create_surface_ohos: to_panic(loader(c"vkCreateSurfaceOHOS")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        create_surface_ohos: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct InstanceFnQnxScreenSurface {
-    pub create_screen_surface_qnx: vkCreateScreenSurfaceQNX,
+    pub create_screen_surface_qnx: Option<vkCreateScreenSurfaceQNX>,
 }
 
 impl InstanceFnQnxScreenSurface {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            create_screen_surface_qnx: to_panic(loader(c"vkCreateScreenSurfaceQNX")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        create_screen_surface_qnx: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct InstanceFnSecUbmSurface {
-    pub create_ubm_surface_sec: vkCreateUbmSurfaceSEC,
+    pub create_ubm_surface_sec: Option<vkCreateUbmSurfaceSEC>,
 }
 
 impl InstanceFnSecUbmSurface {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            create_ubm_surface_sec: to_panic(loader(c"vkCreateUbmSurfaceSEC")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        create_ubm_surface_sec: None,
+    };
 }
 
 #[derive(Clone)]
@@ -446,49 +466,96 @@ pub struct PhysicalDeviceFn {
     pub v1_0: PhysicalDeviceFnv1_0,
     pub v1_1: PhysicalDeviceFnv1_1,
     pub v1_3: PhysicalDeviceFnv1_3,
-    pub arm_data_graph: Option<PhysicalDeviceFnArmDataGraph>,
-    pub arm_data_graph_optical_flow: Option<PhysicalDeviceFnArmDataGraphOpticalFlow>,
-    pub arm_performance_counters_by_region: Option<PhysicalDeviceFnArmPerformanceCountersByRegion>,
-    pub arm_shader_instrumentation: Option<PhysicalDeviceFnArmShaderInstrumentation>,
-    pub arm_tensors: Option<PhysicalDeviceFnArmTensors>,
-    pub ext_acquire_drm_display: Option<PhysicalDeviceFnExtAcquireDrmDisplay>,
-    pub ext_acquire_xlib_display: Option<PhysicalDeviceFnExtAcquireXlibDisplay>,
-    pub ext_descriptor_heap: Option<PhysicalDeviceFnExtDescriptorHeap>,
-    pub ext_direct_mode_display: Option<PhysicalDeviceFnExtDirectModeDisplay>,
-    pub ext_directfb_surface: Option<PhysicalDeviceFnExtDirectfbSurface>,
-    pub ext_display_surface_counter: Option<PhysicalDeviceFnExtDisplaySurfaceCounter>,
-    pub ext_full_screen_exclusive: Option<PhysicalDeviceFnExtFullScreenExclusive>,
-    pub ext_sample_locations: Option<PhysicalDeviceFnExtSampleLocations>,
-    pub khr_calibrated_timestamps: Option<PhysicalDeviceFnKhrCalibratedTimestamps>,
-    pub khr_cooperative_matrix: Option<PhysicalDeviceFnKhrCooperativeMatrix>,
-    pub khr_device_group: Option<PhysicalDeviceFnKhrDeviceGroup>,
-    pub khr_display: Option<PhysicalDeviceFnKhrDisplay>,
-    pub khr_fragment_shading_rate: Option<PhysicalDeviceFnKhrFragmentShadingRate>,
-    pub khr_get_display_properties2: Option<PhysicalDeviceFnKhrGetDisplayProperties2>,
-    pub khr_get_surface_capabilities2: Option<PhysicalDeviceFnKhrGetSurfaceCapabilities2>,
-    pub khr_object_refresh: Option<PhysicalDeviceFnKhrObjectRefresh>,
-    pub khr_performance_query: Option<PhysicalDeviceFnKhrPerformanceQuery>,
-    pub khr_surface: Option<PhysicalDeviceFnKhrSurface>,
-    pub khr_video_encode_queue: Option<PhysicalDeviceFnKhrVideoEncodeQueue>,
-    pub khr_video_queue: Option<PhysicalDeviceFnKhrVideoQueue>,
-    pub khr_wayland_surface: Option<PhysicalDeviceFnKhrWaylandSurface>,
-    pub khr_win32_surface: Option<PhysicalDeviceFnKhrWin32Surface>,
-    pub khr_xcb_surface: Option<PhysicalDeviceFnKhrXcbSurface>,
-    pub khr_xlib_surface: Option<PhysicalDeviceFnKhrXlibSurface>,
-    pub nv_acquire_winrt_display: Option<PhysicalDeviceFnNvAcquireWinrtDisplay>,
-    pub nv_cooperative_matrix: Option<PhysicalDeviceFnNvCooperativeMatrix>,
-    pub nv_cooperative_matrix2: Option<PhysicalDeviceFnNvCooperativeMatrix2>,
-    pub nv_cooperative_vector: Option<PhysicalDeviceFnNvCooperativeVector>,
-    pub nv_coverage_reduction_mode: Option<PhysicalDeviceFnNvCoverageReductionMode>,
-    pub nv_external_memory_capabilities: Option<PhysicalDeviceFnNvExternalMemoryCapabilities>,
-    pub nv_external_memory_sci_buf: Option<PhysicalDeviceFnNvExternalMemorySciBuf>,
-    pub nv_external_sci_sync2: Option<PhysicalDeviceFnNvExternalSciSync2>,
-    pub nv_optical_flow: Option<PhysicalDeviceFnNvOpticalFlow>,
-    pub qnx_screen_surface: Option<PhysicalDeviceFnQnxScreenSurface>,
-    pub sec_ubm_surface: Option<PhysicalDeviceFnSecUbmSurface>,
+    pub arm_data_graph: PhysicalDeviceFnArmDataGraph,
+    pub arm_data_graph_optical_flow: PhysicalDeviceFnArmDataGraphOpticalFlow,
+    pub arm_performance_counters_by_region: PhysicalDeviceFnArmPerformanceCountersByRegion,
+    pub arm_shader_instrumentation: PhysicalDeviceFnArmShaderInstrumentation,
+    pub arm_tensors: PhysicalDeviceFnArmTensors,
+    pub ext_acquire_drm_display: PhysicalDeviceFnExtAcquireDrmDisplay,
+    pub ext_acquire_xlib_display: PhysicalDeviceFnExtAcquireXlibDisplay,
+    pub ext_descriptor_heap: PhysicalDeviceFnExtDescriptorHeap,
+    pub ext_direct_mode_display: PhysicalDeviceFnExtDirectModeDisplay,
+    pub ext_directfb_surface: PhysicalDeviceFnExtDirectfbSurface,
+    pub ext_display_surface_counter: PhysicalDeviceFnExtDisplaySurfaceCounter,
+    pub ext_full_screen_exclusive: PhysicalDeviceFnExtFullScreenExclusive,
+    pub ext_sample_locations: PhysicalDeviceFnExtSampleLocations,
+    pub khr_calibrated_timestamps: PhysicalDeviceFnKhrCalibratedTimestamps,
+    pub khr_cooperative_matrix: PhysicalDeviceFnKhrCooperativeMatrix,
+    pub khr_device_group: PhysicalDeviceFnKhrDeviceGroup,
+    pub khr_display: PhysicalDeviceFnKhrDisplay,
+    pub khr_fragment_shading_rate: PhysicalDeviceFnKhrFragmentShadingRate,
+    pub khr_get_display_properties2: PhysicalDeviceFnKhrGetDisplayProperties2,
+    pub khr_get_surface_capabilities2: PhysicalDeviceFnKhrGetSurfaceCapabilities2,
+    pub khr_object_refresh: PhysicalDeviceFnKhrObjectRefresh,
+    pub khr_performance_query: PhysicalDeviceFnKhrPerformanceQuery,
+    pub khr_surface: PhysicalDeviceFnKhrSurface,
+    pub khr_video_encode_queue: PhysicalDeviceFnKhrVideoEncodeQueue,
+    pub khr_video_queue: PhysicalDeviceFnKhrVideoQueue,
+    pub khr_wayland_surface: PhysicalDeviceFnKhrWaylandSurface,
+    pub khr_win32_surface: PhysicalDeviceFnKhrWin32Surface,
+    pub khr_xcb_surface: PhysicalDeviceFnKhrXcbSurface,
+    pub khr_xlib_surface: PhysicalDeviceFnKhrXlibSurface,
+    pub nv_acquire_winrt_display: PhysicalDeviceFnNvAcquireWinrtDisplay,
+    pub nv_cooperative_matrix: PhysicalDeviceFnNvCooperativeMatrix,
+    pub nv_cooperative_matrix2: PhysicalDeviceFnNvCooperativeMatrix2,
+    pub nv_cooperative_vector: PhysicalDeviceFnNvCooperativeVector,
+    pub nv_coverage_reduction_mode: PhysicalDeviceFnNvCoverageReductionMode,
+    pub nv_external_memory_capabilities: PhysicalDeviceFnNvExternalMemoryCapabilities,
+    pub nv_external_memory_sci_buf: PhysicalDeviceFnNvExternalMemorySciBuf,
+    pub nv_external_sci_sync2: PhysicalDeviceFnNvExternalSciSync2,
+    pub nv_optical_flow: PhysicalDeviceFnNvOpticalFlow,
+    pub qnx_screen_surface: PhysicalDeviceFnQnxScreenSurface,
+    pub sec_ubm_surface: PhysicalDeviceFnSecUbmSurface,
 }
 
 impl PhysicalDeviceFn {
+    /// A table with no functions loaded; every call through it panics.
+    pub const EMPTY: Self = Self {
+        v1_0: PhysicalDeviceFnv1_0::EMPTY,
+        v1_1: PhysicalDeviceFnv1_1::EMPTY,
+        v1_3: PhysicalDeviceFnv1_3::EMPTY,
+        arm_data_graph: PhysicalDeviceFnArmDataGraph::EMPTY,
+        arm_data_graph_optical_flow: PhysicalDeviceFnArmDataGraphOpticalFlow::EMPTY,
+        arm_performance_counters_by_region: PhysicalDeviceFnArmPerformanceCountersByRegion::EMPTY,
+        arm_shader_instrumentation: PhysicalDeviceFnArmShaderInstrumentation::EMPTY,
+        arm_tensors: PhysicalDeviceFnArmTensors::EMPTY,
+        ext_acquire_drm_display: PhysicalDeviceFnExtAcquireDrmDisplay::EMPTY,
+        ext_acquire_xlib_display: PhysicalDeviceFnExtAcquireXlibDisplay::EMPTY,
+        ext_descriptor_heap: PhysicalDeviceFnExtDescriptorHeap::EMPTY,
+        ext_direct_mode_display: PhysicalDeviceFnExtDirectModeDisplay::EMPTY,
+        ext_directfb_surface: PhysicalDeviceFnExtDirectfbSurface::EMPTY,
+        ext_display_surface_counter: PhysicalDeviceFnExtDisplaySurfaceCounter::EMPTY,
+        ext_full_screen_exclusive: PhysicalDeviceFnExtFullScreenExclusive::EMPTY,
+        ext_sample_locations: PhysicalDeviceFnExtSampleLocations::EMPTY,
+        khr_calibrated_timestamps: PhysicalDeviceFnKhrCalibratedTimestamps::EMPTY,
+        khr_cooperative_matrix: PhysicalDeviceFnKhrCooperativeMatrix::EMPTY,
+        khr_device_group: PhysicalDeviceFnKhrDeviceGroup::EMPTY,
+        khr_display: PhysicalDeviceFnKhrDisplay::EMPTY,
+        khr_fragment_shading_rate: PhysicalDeviceFnKhrFragmentShadingRate::EMPTY,
+        khr_get_display_properties2: PhysicalDeviceFnKhrGetDisplayProperties2::EMPTY,
+        khr_get_surface_capabilities2: PhysicalDeviceFnKhrGetSurfaceCapabilities2::EMPTY,
+        khr_object_refresh: PhysicalDeviceFnKhrObjectRefresh::EMPTY,
+        khr_performance_query: PhysicalDeviceFnKhrPerformanceQuery::EMPTY,
+        khr_surface: PhysicalDeviceFnKhrSurface::EMPTY,
+        khr_video_encode_queue: PhysicalDeviceFnKhrVideoEncodeQueue::EMPTY,
+        khr_video_queue: PhysicalDeviceFnKhrVideoQueue::EMPTY,
+        khr_wayland_surface: PhysicalDeviceFnKhrWaylandSurface::EMPTY,
+        khr_win32_surface: PhysicalDeviceFnKhrWin32Surface::EMPTY,
+        khr_xcb_surface: PhysicalDeviceFnKhrXcbSurface::EMPTY,
+        khr_xlib_surface: PhysicalDeviceFnKhrXlibSurface::EMPTY,
+        nv_acquire_winrt_display: PhysicalDeviceFnNvAcquireWinrtDisplay::EMPTY,
+        nv_cooperative_matrix: PhysicalDeviceFnNvCooperativeMatrix::EMPTY,
+        nv_cooperative_matrix2: PhysicalDeviceFnNvCooperativeMatrix2::EMPTY,
+        nv_cooperative_vector: PhysicalDeviceFnNvCooperativeVector::EMPTY,
+        nv_coverage_reduction_mode: PhysicalDeviceFnNvCoverageReductionMode::EMPTY,
+        nv_external_memory_capabilities: PhysicalDeviceFnNvExternalMemoryCapabilities::EMPTY,
+        nv_external_memory_sci_buf: PhysicalDeviceFnNvExternalMemorySciBuf::EMPTY,
+        nv_external_sci_sync2: PhysicalDeviceFnNvExternalSciSync2::EMPTY,
+        nv_optical_flow: PhysicalDeviceFnNvOpticalFlow::EMPTY,
+        qnx_screen_surface: PhysicalDeviceFnQnxScreenSurface::EMPTY,
+        sec_ubm_surface: PhysicalDeviceFnSecUbmSurface::EMPTY,
+    };
+
     pub fn load<F: FnMut(&CStr) -> *const c_void>(
         mut loader: F,
         api_version: u32,
@@ -499,208 +566,407 @@ impl PhysicalDeviceFn {
             v1_1: if api_version >= API_VERSION_1_1 {
                 PhysicalDeviceFnv1_1::load(&mut loader)
             } else {
-                PhysicalDeviceFnv1_1::default()
+                PhysicalDeviceFnv1_1::EMPTY
             },
             v1_3: if api_version >= API_VERSION_1_3 {
                 PhysicalDeviceFnv1_3::load(&mut loader)
             } else {
-                PhysicalDeviceFnv1_3::default()
+                PhysicalDeviceFnv1_3::EMPTY
             },
-            arm_data_graph: None,
-            arm_data_graph_optical_flow: None,
-            arm_performance_counters_by_region: None,
-            arm_shader_instrumentation: None,
-            arm_tensors: None,
-            ext_acquire_drm_display: None,
-            ext_acquire_xlib_display: None,
-            ext_descriptor_heap: None,
-            ext_direct_mode_display: None,
-            ext_directfb_surface: None,
-            ext_display_surface_counter: None,
-            ext_full_screen_exclusive: None,
-            ext_sample_locations: None,
-            khr_calibrated_timestamps: None,
-            khr_cooperative_matrix: None,
-            khr_device_group: None,
-            khr_display: None,
-            khr_fragment_shading_rate: None,
-            khr_get_display_properties2: None,
-            khr_get_surface_capabilities2: None,
-            khr_object_refresh: None,
-            khr_performance_query: None,
-            khr_surface: None,
-            khr_video_encode_queue: None,
-            khr_video_queue: None,
-            khr_wayland_surface: None,
-            khr_win32_surface: None,
-            khr_xcb_surface: None,
-            khr_xlib_surface: None,
-            nv_acquire_winrt_display: None,
-            nv_cooperative_matrix: None,
-            nv_cooperative_matrix2: None,
-            nv_cooperative_vector: None,
-            nv_coverage_reduction_mode: None,
-            nv_external_memory_capabilities: None,
-            nv_external_memory_sci_buf: None,
-            nv_external_sci_sync2: None,
-            nv_optical_flow: None,
-            qnx_screen_surface: None,
-            sec_ubm_surface: None,
+            arm_data_graph: PhysicalDeviceFnArmDataGraph::EMPTY,
+            arm_data_graph_optical_flow: PhysicalDeviceFnArmDataGraphOpticalFlow::EMPTY,
+            arm_performance_counters_by_region:
+                PhysicalDeviceFnArmPerformanceCountersByRegion::EMPTY,
+            arm_shader_instrumentation: PhysicalDeviceFnArmShaderInstrumentation::EMPTY,
+            arm_tensors: PhysicalDeviceFnArmTensors::EMPTY,
+            ext_acquire_drm_display: PhysicalDeviceFnExtAcquireDrmDisplay::EMPTY,
+            ext_acquire_xlib_display: PhysicalDeviceFnExtAcquireXlibDisplay::EMPTY,
+            ext_descriptor_heap: PhysicalDeviceFnExtDescriptorHeap::EMPTY,
+            ext_direct_mode_display: PhysicalDeviceFnExtDirectModeDisplay::EMPTY,
+            ext_directfb_surface: PhysicalDeviceFnExtDirectfbSurface::EMPTY,
+            ext_display_surface_counter: PhysicalDeviceFnExtDisplaySurfaceCounter::EMPTY,
+            ext_full_screen_exclusive: PhysicalDeviceFnExtFullScreenExclusive::EMPTY,
+            ext_sample_locations: PhysicalDeviceFnExtSampleLocations::EMPTY,
+            khr_calibrated_timestamps: PhysicalDeviceFnKhrCalibratedTimestamps::EMPTY,
+            khr_cooperative_matrix: PhysicalDeviceFnKhrCooperativeMatrix::EMPTY,
+            khr_device_group: PhysicalDeviceFnKhrDeviceGroup::EMPTY,
+            khr_display: PhysicalDeviceFnKhrDisplay::EMPTY,
+            khr_fragment_shading_rate: PhysicalDeviceFnKhrFragmentShadingRate::EMPTY,
+            khr_get_display_properties2: PhysicalDeviceFnKhrGetDisplayProperties2::EMPTY,
+            khr_get_surface_capabilities2: PhysicalDeviceFnKhrGetSurfaceCapabilities2::EMPTY,
+            khr_object_refresh: PhysicalDeviceFnKhrObjectRefresh::EMPTY,
+            khr_performance_query: PhysicalDeviceFnKhrPerformanceQuery::EMPTY,
+            khr_surface: PhysicalDeviceFnKhrSurface::EMPTY,
+            khr_video_encode_queue: PhysicalDeviceFnKhrVideoEncodeQueue::EMPTY,
+            khr_video_queue: PhysicalDeviceFnKhrVideoQueue::EMPTY,
+            khr_wayland_surface: PhysicalDeviceFnKhrWaylandSurface::EMPTY,
+            khr_win32_surface: PhysicalDeviceFnKhrWin32Surface::EMPTY,
+            khr_xcb_surface: PhysicalDeviceFnKhrXcbSurface::EMPTY,
+            khr_xlib_surface: PhysicalDeviceFnKhrXlibSurface::EMPTY,
+            nv_acquire_winrt_display: PhysicalDeviceFnNvAcquireWinrtDisplay::EMPTY,
+            nv_cooperative_matrix: PhysicalDeviceFnNvCooperativeMatrix::EMPTY,
+            nv_cooperative_matrix2: PhysicalDeviceFnNvCooperativeMatrix2::EMPTY,
+            nv_cooperative_vector: PhysicalDeviceFnNvCooperativeVector::EMPTY,
+            nv_coverage_reduction_mode: PhysicalDeviceFnNvCoverageReductionMode::EMPTY,
+            nv_external_memory_capabilities: PhysicalDeviceFnNvExternalMemoryCapabilities::EMPTY,
+            nv_external_memory_sci_buf: PhysicalDeviceFnNvExternalMemorySciBuf::EMPTY,
+            nv_external_sci_sync2: PhysicalDeviceFnNvExternalSciSync2::EMPTY,
+            nv_optical_flow: PhysicalDeviceFnNvOpticalFlow::EMPTY,
+            qnx_screen_surface: PhysicalDeviceFnQnxScreenSurface::EMPTY,
+            sec_ubm_surface: PhysicalDeviceFnSecUbmSurface::EMPTY,
         };
+        if out
+            .khr_device_group
+            .get_physical_device_present_rectangles_khr
+            .is_none()
+        {
+            out.khr_device_group
+                .get_physical_device_present_rectangles_khr =
+                to_option(loader(c"vkGetPhysicalDevicePresentRectanglesKHR"));
+        }
+        out.khr_video_queue
+            .get_physical_device_video_capabilities_khr =
+            to_option(loader(c"vkGetPhysicalDeviceVideoCapabilitiesKHR"));
+        out.khr_video_queue
+            .get_physical_device_video_format_properties_khr =
+            to_option(loader(c"vkGetPhysicalDeviceVideoFormatPropertiesKHR"));
+        if out
+            .khr_device_group
+            .get_physical_device_present_rectangles_khr
+            .is_none()
+        {
+            out.khr_device_group
+                .get_physical_device_present_rectangles_khr =
+                to_option(loader(c"vkGetPhysicalDevicePresentRectanglesKHR"));
+        }
+        out.khr_performance_query
+            .enumerate_physical_device_queue_family_performance_query_counters_khr = to_option(
+            loader(c"vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR"),
+        );
+        out.khr_performance_query
+            .get_physical_device_queue_family_performance_query_passes_khr = to_option(loader(
+            c"vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR",
+        ));
+        out.ext_descriptor_heap
+            .get_physical_device_descriptor_size_ext =
+            to_option(loader(c"vkGetPhysicalDeviceDescriptorSizeEXT"));
+        out.ext_sample_locations
+            .get_physical_device_multisample_properties_ext =
+            to_option(loader(c"vkGetPhysicalDeviceMultisamplePropertiesEXT"));
+        if out
+            .khr_calibrated_timestamps
+            .get_physical_device_calibrateable_time_domains_khr
+            .is_none()
+        {
+            out.khr_calibrated_timestamps
+                .get_physical_device_calibrateable_time_domains_khr =
+                to_option(loader(c"vkGetPhysicalDeviceCalibrateableTimeDomainsEXT"));
+        }
+        out.khr_fragment_shading_rate
+            .get_physical_device_fragment_shading_rates_khr =
+            to_option(loader(c"vkGetPhysicalDeviceFragmentShadingRatesKHR"));
+        if out.v1_3.get_physical_device_tool_properties.is_none() {
+            out.v1_3.get_physical_device_tool_properties =
+                to_option(loader(c"vkGetPhysicalDeviceToolPropertiesEXT"));
+        }
+        out.nv_cooperative_matrix
+            .get_physical_device_cooperative_matrix_properties_nv =
+            to_option(loader(c"vkGetPhysicalDeviceCooperativeMatrixPropertiesNV"));
+        out.nv_coverage_reduction_mode
+            .get_physical_device_supported_framebuffer_mixed_samples_combinations_nv = to_option(
+            loader(c"vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV"),
+        );
+        out.ext_full_screen_exclusive
+            .get_physical_device_surface_present_modes2_ext =
+            to_option(loader(c"vkGetPhysicalDeviceSurfacePresentModes2EXT"));
+        out.khr_video_encode_queue
+            .get_physical_device_video_encode_quality_level_properties_khr = to_option(loader(
+            c"vkGetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR",
+        ));
+        out.khr_object_refresh
+            .get_physical_device_refreshable_object_types_khr =
+            to_option(loader(c"vkGetPhysicalDeviceRefreshableObjectTypesKHR"));
+        out.nv_acquire_winrt_display.acquire_winrt_display_nv =
+            to_option(loader(c"vkAcquireWinrtDisplayNV"));
+        out.nv_acquire_winrt_display.get_winrt_display_nv =
+            to_option(loader(c"vkGetWinrtDisplayNV"));
+        if out
+            .nv_external_sci_sync2
+            .get_physical_device_sci_sync_attributes_nv
+            .is_none()
+        {
+            out.nv_external_sci_sync2
+                .get_physical_device_sci_sync_attributes_nv =
+                to_option(loader(c"vkGetPhysicalDeviceSciSyncAttributesNV"));
+        }
+        out.nv_external_memory_sci_buf
+            .get_physical_device_external_memory_sci_buf_properties_nv = to_option(loader(
+            c"vkGetPhysicalDeviceExternalMemorySciBufPropertiesNV",
+        ));
+        out.nv_external_memory_sci_buf
+            .get_physical_device_sci_buf_attributes_nv =
+            to_option(loader(c"vkGetPhysicalDeviceSciBufAttributesNV"));
+        out.arm_tensors
+            .get_physical_device_external_tensor_properties_arm =
+            to_option(loader(c"vkGetPhysicalDeviceExternalTensorPropertiesARM"));
+        out.nv_optical_flow
+            .get_physical_device_optical_flow_image_formats_nv =
+            to_option(loader(c"vkGetPhysicalDeviceOpticalFlowImageFormatsNV"));
+        if out
+            .nv_external_sci_sync2
+            .get_physical_device_sci_sync_attributes_nv
+            .is_none()
+        {
+            out.nv_external_sci_sync2
+                .get_physical_device_sci_sync_attributes_nv =
+                to_option(loader(c"vkGetPhysicalDeviceSciSyncAttributesNV"));
+        }
+        out.nv_cooperative_vector
+            .get_physical_device_cooperative_vector_properties_nv =
+            to_option(loader(c"vkGetPhysicalDeviceCooperativeVectorPropertiesNV"));
+        out.khr_cooperative_matrix
+            .get_physical_device_cooperative_matrix_properties_khr =
+            to_option(loader(c"vkGetPhysicalDeviceCooperativeMatrixPropertiesKHR"));
+        out.arm_data_graph
+            .get_physical_device_queue_family_data_graph_properties_arm = to_option(loader(
+            c"vkGetPhysicalDeviceQueueFamilyDataGraphPropertiesARM",
+        ));
+        out.arm_data_graph
+            .get_physical_device_queue_family_data_graph_processing_engine_properties_arm =
+            to_option(loader(
+                c"vkGetPhysicalDeviceQueueFamilyDataGraphProcessingEnginePropertiesARM",
+            ));
+        if out
+            .arm_data_graph_optical_flow
+            .get_physical_device_queue_family_data_graph_engine_operation_properties_arm
+            .is_none()
+        {
+            out.arm_data_graph_optical_flow
+                .get_physical_device_queue_family_data_graph_engine_operation_properties_arm =
+                to_option(loader(
+                    c"vkGetPhysicalDeviceQueueFamilyDataGraphEngineOperationPropertiesARM",
+                ));
+        }
+        if out
+            .khr_calibrated_timestamps
+            .get_physical_device_calibrateable_time_domains_khr
+            .is_none()
+        {
+            out.khr_calibrated_timestamps
+                .get_physical_device_calibrateable_time_domains_khr =
+                to_option(loader(c"vkGetPhysicalDeviceCalibrateableTimeDomainsKHR"));
+        }
+        out.nv_cooperative_matrix2
+            .get_physical_device_cooperative_matrix_flexible_dimensions_properties_nv = to_option(
+            loader(c"vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV"),
+        );
+        out.arm_performance_counters_by_region
+            .enumerate_physical_device_queue_family_performance_counters_by_region_arm = to_option(
+            loader(c"vkEnumeratePhysicalDeviceQueueFamilyPerformanceCountersByRegionARM"),
+        );
+        out.arm_shader_instrumentation
+            .enumerate_physical_device_shader_instrumentation_metrics_arm = to_option(loader(
+            c"vkEnumeratePhysicalDeviceShaderInstrumentationMetricsARM",
+        ));
+        out.arm_data_graph_optical_flow
+            .get_physical_device_queue_family_data_graph_optical_flow_image_formats_arm = to_option(
+            loader(c"vkGetPhysicalDeviceQueueFamilyDataGraphOpticalFlowImageFormatsARM"),
+        );
+        if out
+            .arm_data_graph_optical_flow
+            .get_physical_device_queue_family_data_graph_engine_operation_properties_arm
+            .is_none()
+        {
+            out.arm_data_graph_optical_flow
+                .get_physical_device_queue_family_data_graph_engine_operation_properties_arm =
+                to_option(loader(
+                    c"vkGetPhysicalDeviceQueueFamilyDataGraphEngineOperationPropertiesARM",
+                ));
+        }
         for &ext in extensions {
-            let ext = unsafe { CStr::from_ptr(ext).to_bytes() };
-            match ext {
-                b"VK_ARM_data_graph" => {
-                    out.arm_data_graph = Some(PhysicalDeviceFnArmDataGraph::load(&mut loader))
-                }
-                b"VK_ARM_data_graph_optical_flow" => {
-                    out.arm_data_graph_optical_flow =
-                        Some(PhysicalDeviceFnArmDataGraphOpticalFlow::load(&mut loader))
-                }
-                b"VK_ARM_performance_counters_by_region" => {
-                    out.arm_performance_counters_by_region = Some(
-                        PhysicalDeviceFnArmPerformanceCountersByRegion::load(&mut loader),
-                    )
-                }
-                b"VK_ARM_shader_instrumentation" => {
-                    out.arm_shader_instrumentation =
-                        Some(PhysicalDeviceFnArmShaderInstrumentation::load(&mut loader))
-                }
-                b"VK_ARM_tensors" => {
-                    out.arm_tensors = Some(PhysicalDeviceFnArmTensors::load(&mut loader))
-                }
-                b"VK_EXT_acquire_drm_display" => {
-                    out.ext_acquire_drm_display =
-                        Some(PhysicalDeviceFnExtAcquireDrmDisplay::load(&mut loader))
-                }
-                b"VK_EXT_acquire_xlib_display" => {
-                    out.ext_acquire_xlib_display =
-                        Some(PhysicalDeviceFnExtAcquireXlibDisplay::load(&mut loader))
-                }
-                b"VK_EXT_descriptor_heap" => {
-                    out.ext_descriptor_heap =
-                        Some(PhysicalDeviceFnExtDescriptorHeap::load(&mut loader))
-                }
-                b"VK_EXT_direct_mode_display" => {
-                    out.ext_direct_mode_display =
-                        Some(PhysicalDeviceFnExtDirectModeDisplay::load(&mut loader))
-                }
-                b"VK_EXT_directfb_surface" => {
-                    out.ext_directfb_surface =
-                        Some(PhysicalDeviceFnExtDirectfbSurface::load(&mut loader))
-                }
-                b"VK_EXT_display_surface_counter" => {
-                    out.ext_display_surface_counter =
-                        Some(PhysicalDeviceFnExtDisplaySurfaceCounter::load(&mut loader))
-                }
-                b"VK_EXT_full_screen_exclusive" => {
-                    out.ext_full_screen_exclusive =
-                        Some(PhysicalDeviceFnExtFullScreenExclusive::load(&mut loader))
-                }
-                b"VK_EXT_sample_locations" => {
-                    out.ext_sample_locations =
-                        Some(PhysicalDeviceFnExtSampleLocations::load(&mut loader))
-                }
-                b"VK_KHR_calibrated_timestamps" => {
-                    out.khr_calibrated_timestamps =
-                        Some(PhysicalDeviceFnKhrCalibratedTimestamps::load(&mut loader))
-                }
-                b"VK_KHR_cooperative_matrix" => {
-                    out.khr_cooperative_matrix =
-                        Some(PhysicalDeviceFnKhrCooperativeMatrix::load(&mut loader))
-                }
-                b"VK_KHR_device_group" => {
-                    out.khr_device_group = Some(PhysicalDeviceFnKhrDeviceGroup::load(&mut loader))
+            match unsafe { CStr::from_ptr(ext) }.to_bytes() {
+                b"VK_KHR_surface" => {
+                    out.khr_surface.get_physical_device_surface_support_khr =
+                        to_option(loader(c"vkGetPhysicalDeviceSurfaceSupportKHR"));
+                    out.khr_surface.get_physical_device_surface_capabilities_khr =
+                        to_option(loader(c"vkGetPhysicalDeviceSurfaceCapabilitiesKHR"));
+                    out.khr_surface.get_physical_device_surface_formats_khr =
+                        to_option(loader(c"vkGetPhysicalDeviceSurfaceFormatsKHR"));
+                    out.khr_surface
+                        .get_physical_device_surface_present_modes_khr =
+                        to_option(loader(c"vkGetPhysicalDeviceSurfacePresentModesKHR"));
                 }
                 b"VK_KHR_display" => {
-                    out.khr_display = Some(PhysicalDeviceFnKhrDisplay::load(&mut loader))
-                }
-                b"VK_KHR_fragment_shading_rate" => {
-                    out.khr_fragment_shading_rate =
-                        Some(PhysicalDeviceFnKhrFragmentShadingRate::load(&mut loader))
-                }
-                b"VK_KHR_get_display_properties2" => {
-                    out.khr_get_display_properties2 =
-                        Some(PhysicalDeviceFnKhrGetDisplayProperties2::load(&mut loader))
-                }
-                b"VK_KHR_get_surface_capabilities2" => {
-                    out.khr_get_surface_capabilities2 = Some(
-                        PhysicalDeviceFnKhrGetSurfaceCapabilities2::load(&mut loader),
-                    )
-                }
-                b"VK_KHR_object_refresh" => {
-                    out.khr_object_refresh =
-                        Some(PhysicalDeviceFnKhrObjectRefresh::load(&mut loader))
-                }
-                b"VK_KHR_performance_query" => {
-                    out.khr_performance_query =
-                        Some(PhysicalDeviceFnKhrPerformanceQuery::load(&mut loader))
-                }
-                b"VK_KHR_surface" => {
-                    out.khr_surface = Some(PhysicalDeviceFnKhrSurface::load(&mut loader))
-                }
-                b"VK_KHR_video_encode_queue" => {
-                    out.khr_video_encode_queue =
-                        Some(PhysicalDeviceFnKhrVideoEncodeQueue::load(&mut loader))
-                }
-                b"VK_KHR_video_queue" => {
-                    out.khr_video_queue = Some(PhysicalDeviceFnKhrVideoQueue::load(&mut loader))
-                }
-                b"VK_KHR_wayland_surface" => {
-                    out.khr_wayland_surface =
-                        Some(PhysicalDeviceFnKhrWaylandSurface::load(&mut loader))
-                }
-                b"VK_KHR_win32_surface" => {
-                    out.khr_win32_surface = Some(PhysicalDeviceFnKhrWin32Surface::load(&mut loader))
-                }
-                b"VK_KHR_xcb_surface" => {
-                    out.khr_xcb_surface = Some(PhysicalDeviceFnKhrXcbSurface::load(&mut loader))
+                    out.khr_display.get_physical_device_display_properties_khr =
+                        to_option(loader(c"vkGetPhysicalDeviceDisplayPropertiesKHR"));
+                    out.khr_display
+                        .get_physical_device_display_plane_properties_khr =
+                        to_option(loader(c"vkGetPhysicalDeviceDisplayPlanePropertiesKHR"));
+                    out.khr_display.get_display_plane_supported_displays_khr =
+                        to_option(loader(c"vkGetDisplayPlaneSupportedDisplaysKHR"));
+                    out.khr_display.get_display_mode_properties_khr =
+                        to_option(loader(c"vkGetDisplayModePropertiesKHR"));
+                    out.khr_display.create_display_mode_khr =
+                        to_option(loader(c"vkCreateDisplayModeKHR"));
+                    out.khr_display.get_display_plane_capabilities_khr =
+                        to_option(loader(c"vkGetDisplayPlaneCapabilitiesKHR"));
                 }
                 b"VK_KHR_xlib_surface" => {
-                    out.khr_xlib_surface = Some(PhysicalDeviceFnKhrXlibSurface::load(&mut loader))
+                    out.khr_xlib_surface
+                        .get_physical_device_xlib_presentation_support_khr =
+                        to_option(loader(c"vkGetPhysicalDeviceXlibPresentationSupportKHR"));
                 }
-                b"VK_NV_acquire_winrt_display" => {
-                    out.nv_acquire_winrt_display =
-                        Some(PhysicalDeviceFnNvAcquireWinrtDisplay::load(&mut loader))
+                b"VK_KHR_xcb_surface" => {
+                    out.khr_xcb_surface
+                        .get_physical_device_xcb_presentation_support_khr =
+                        to_option(loader(c"vkGetPhysicalDeviceXcbPresentationSupportKHR"));
                 }
-                b"VK_NV_cooperative_matrix" => {
-                    out.nv_cooperative_matrix =
-                        Some(PhysicalDeviceFnNvCooperativeMatrix::load(&mut loader))
+                b"VK_KHR_wayland_surface" => {
+                    out.khr_wayland_surface
+                        .get_physical_device_wayland_presentation_support_khr =
+                        to_option(loader(c"vkGetPhysicalDeviceWaylandPresentationSupportKHR"));
                 }
-                b"VK_NV_cooperative_matrix2" => {
-                    out.nv_cooperative_matrix2 =
-                        Some(PhysicalDeviceFnNvCooperativeMatrix2::load(&mut loader))
-                }
-                b"VK_NV_cooperative_vector" => {
-                    out.nv_cooperative_vector =
-                        Some(PhysicalDeviceFnNvCooperativeVector::load(&mut loader))
-                }
-                b"VK_NV_coverage_reduction_mode" => {
-                    out.nv_coverage_reduction_mode =
-                        Some(PhysicalDeviceFnNvCoverageReductionMode::load(&mut loader))
+                b"VK_KHR_win32_surface" => {
+                    out.khr_win32_surface
+                        .get_physical_device_win32_presentation_support_khr =
+                        to_option(loader(c"vkGetPhysicalDeviceWin32PresentationSupportKHR"));
                 }
                 b"VK_NV_external_memory_capabilities" => {
-                    out.nv_external_memory_capabilities = Some(
-                        PhysicalDeviceFnNvExternalMemoryCapabilities::load(&mut loader),
-                    )
+                    out.nv_external_memory_capabilities
+                        .get_physical_device_external_image_format_properties_nv = to_option(
+                        loader(c"vkGetPhysicalDeviceExternalImageFormatPropertiesNV"),
+                    );
                 }
-                b"VK_NV_external_memory_sci_buf" => {
-                    out.nv_external_memory_sci_buf =
-                        Some(PhysicalDeviceFnNvExternalMemorySciBuf::load(&mut loader))
+                b"VK_KHR_get_physical_device_properties2" => {
+                    if out.v1_1.get_physical_device_features2.is_none() {
+                        out.v1_1.get_physical_device_features2 =
+                            to_option(loader(c"vkGetPhysicalDeviceFeatures2KHR"));
+                    }
+                    if out.v1_1.get_physical_device_properties2.is_none() {
+                        out.v1_1.get_physical_device_properties2 =
+                            to_option(loader(c"vkGetPhysicalDeviceProperties2KHR"));
+                    }
+                    if out.v1_1.get_physical_device_format_properties2.is_none() {
+                        out.v1_1.get_physical_device_format_properties2 =
+                            to_option(loader(c"vkGetPhysicalDeviceFormatProperties2KHR"));
+                    }
+                    if out
+                        .v1_1
+                        .get_physical_device_image_format_properties2
+                        .is_none()
+                    {
+                        out.v1_1.get_physical_device_image_format_properties2 =
+                            to_option(loader(c"vkGetPhysicalDeviceImageFormatProperties2KHR"));
+                    }
+                    if out
+                        .v1_1
+                        .get_physical_device_queue_family_properties2
+                        .is_none()
+                    {
+                        out.v1_1.get_physical_device_queue_family_properties2 =
+                            to_option(loader(c"vkGetPhysicalDeviceQueueFamilyProperties2KHR"));
+                    }
+                    if out.v1_1.get_physical_device_memory_properties2.is_none() {
+                        out.v1_1.get_physical_device_memory_properties2 =
+                            to_option(loader(c"vkGetPhysicalDeviceMemoryProperties2KHR"));
+                    }
+                    if out
+                        .v1_1
+                        .get_physical_device_sparse_image_format_properties2
+                        .is_none()
+                    {
+                        out.v1_1.get_physical_device_sparse_image_format_properties2 = to_option(
+                            loader(c"vkGetPhysicalDeviceSparseImageFormatProperties2KHR"),
+                        );
+                    }
                 }
-                b"VK_NV_external_sci_sync2" => {
-                    out.nv_external_sci_sync2 =
-                        Some(PhysicalDeviceFnNvExternalSciSync2::load(&mut loader))
+                b"VK_KHR_external_memory_capabilities" => {
+                    if out
+                        .v1_1
+                        .get_physical_device_external_buffer_properties
+                        .is_none()
+                    {
+                        out.v1_1.get_physical_device_external_buffer_properties =
+                            to_option(loader(c"vkGetPhysicalDeviceExternalBufferPropertiesKHR"));
+                    }
                 }
-                b"VK_NV_optical_flow" => {
-                    out.nv_optical_flow = Some(PhysicalDeviceFnNvOpticalFlow::load(&mut loader))
+                b"VK_KHR_external_semaphore_capabilities" => {
+                    if out
+                        .v1_1
+                        .get_physical_device_external_semaphore_properties
+                        .is_none()
+                    {
+                        out.v1_1.get_physical_device_external_semaphore_properties =
+                            to_option(loader(c"vkGetPhysicalDeviceExternalSemaphorePropertiesKHR"));
+                    }
+                }
+                b"VK_EXT_direct_mode_display" => {
+                    out.ext_direct_mode_display.release_display_ext =
+                        to_option(loader(c"vkReleaseDisplayEXT"));
+                }
+                b"VK_EXT_acquire_xlib_display" => {
+                    out.ext_acquire_xlib_display.acquire_xlib_display_ext =
+                        to_option(loader(c"vkAcquireXlibDisplayEXT"));
+                    out.ext_acquire_xlib_display.get_rand_r_output_display_ext =
+                        to_option(loader(c"vkGetRandROutputDisplayEXT"));
+                }
+                b"VK_EXT_display_surface_counter" => {
+                    out.ext_display_surface_counter
+                        .get_physical_device_surface_capabilities2_ext =
+                        to_option(loader(c"vkGetPhysicalDeviceSurfaceCapabilities2EXT"));
+                }
+                b"VK_KHR_external_fence_capabilities" => {
+                    if out
+                        .v1_1
+                        .get_physical_device_external_fence_properties
+                        .is_none()
+                    {
+                        out.v1_1.get_physical_device_external_fence_properties =
+                            to_option(loader(c"vkGetPhysicalDeviceExternalFencePropertiesKHR"));
+                    }
+                }
+                b"VK_KHR_get_surface_capabilities2" => {
+                    out.khr_get_surface_capabilities2
+                        .get_physical_device_surface_capabilities2_khr =
+                        to_option(loader(c"vkGetPhysicalDeviceSurfaceCapabilities2KHR"));
+                    out.khr_get_surface_capabilities2
+                        .get_physical_device_surface_formats2_khr =
+                        to_option(loader(c"vkGetPhysicalDeviceSurfaceFormats2KHR"));
+                }
+                b"VK_KHR_get_display_properties2" => {
+                    out.khr_get_display_properties2
+                        .get_physical_device_display_properties2_khr =
+                        to_option(loader(c"vkGetPhysicalDeviceDisplayProperties2KHR"));
+                    out.khr_get_display_properties2
+                        .get_physical_device_display_plane_properties2_khr =
+                        to_option(loader(c"vkGetPhysicalDeviceDisplayPlaneProperties2KHR"));
+                    out.khr_get_display_properties2
+                        .get_display_mode_properties2_khr =
+                        to_option(loader(c"vkGetDisplayModeProperties2KHR"));
+                    out.khr_get_display_properties2
+                        .get_display_plane_capabilities2_khr =
+                        to_option(loader(c"vkGetDisplayPlaneCapabilities2KHR"));
+                }
+                b"VK_EXT_acquire_drm_display" => {
+                    out.ext_acquire_drm_display.acquire_drm_display_ext =
+                        to_option(loader(c"vkAcquireDrmDisplayEXT"));
+                    out.ext_acquire_drm_display.get_drm_display_ext =
+                        to_option(loader(c"vkGetDrmDisplayEXT"));
+                }
+                b"VK_EXT_directfb_surface" => {
+                    out.ext_directfb_surface
+                        .get_physical_device_direct_fb_presentation_support_ext =
+                        to_option(loader(c"vkGetPhysicalDeviceDirectFBPresentationSupportEXT"));
                 }
                 b"VK_QNX_screen_surface" => {
-                    out.qnx_screen_surface =
-                        Some(PhysicalDeviceFnQnxScreenSurface::load(&mut loader))
+                    out.qnx_screen_surface
+                        .get_physical_device_screen_presentation_support_qnx =
+                        to_option(loader(c"vkGetPhysicalDeviceScreenPresentationSupportQNX"));
                 }
                 b"VK_SEC_ubm_surface" => {
-                    out.sec_ubm_surface = Some(PhysicalDeviceFnSecUbmSurface::load(&mut loader))
+                    out.sec_ubm_surface
+                        .get_physical_device_ubm_presentation_support_sec =
+                        to_option(loader(c"vkGetPhysicalDeviceUbmPresentationSupportSEC"));
                 }
                 _ => (),
             }
@@ -727,6 +993,19 @@ pub struct PhysicalDeviceFnv1_0 {
 }
 
 impl PhysicalDeviceFnv1_0 {
+    pub const EMPTY: Self = Self {
+        get_physical_device_properties: None,
+        get_physical_device_queue_family_properties: None,
+        get_physical_device_memory_properties: None,
+        get_physical_device_features: None,
+        get_physical_device_format_properties: None,
+        get_physical_device_image_format_properties: None,
+        create_device: None,
+        enumerate_device_layer_properties: None,
+        enumerate_device_extension_properties: None,
+        get_physical_device_sparse_image_format_properties: None,
+    };
+
     pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
         Self {
             get_physical_device_properties: to_option(loader(c"vkGetPhysicalDeviceProperties")),
@@ -760,97 +1039,64 @@ impl PhysicalDeviceFnv1_0 {
 #[derive(Clone, Default)]
 pub struct PhysicalDeviceFnv1_1 {
     pub get_physical_device_features2: Option<vkGetPhysicalDeviceFeatures2>,
-    pub get_physical_device_features2_khr: Option<vkGetPhysicalDeviceFeatures2KHR>,
     pub get_physical_device_properties2: Option<vkGetPhysicalDeviceProperties2>,
-    pub get_physical_device_properties2_khr: Option<vkGetPhysicalDeviceProperties2KHR>,
     pub get_physical_device_format_properties2: Option<vkGetPhysicalDeviceFormatProperties2>,
-    pub get_physical_device_format_properties2_khr: Option<vkGetPhysicalDeviceFormatProperties2KHR>,
     pub get_physical_device_image_format_properties2:
         Option<vkGetPhysicalDeviceImageFormatProperties2>,
-    pub get_physical_device_image_format_properties2_khr:
-        Option<vkGetPhysicalDeviceImageFormatProperties2KHR>,
     pub get_physical_device_queue_family_properties2:
         Option<vkGetPhysicalDeviceQueueFamilyProperties2>,
-    pub get_physical_device_queue_family_properties2_khr:
-        Option<vkGetPhysicalDeviceQueueFamilyProperties2KHR>,
     pub get_physical_device_memory_properties2: Option<vkGetPhysicalDeviceMemoryProperties2>,
-    pub get_physical_device_memory_properties2_khr: Option<vkGetPhysicalDeviceMemoryProperties2KHR>,
     pub get_physical_device_sparse_image_format_properties2:
         Option<vkGetPhysicalDeviceSparseImageFormatProperties2>,
-    pub get_physical_device_sparse_image_format_properties2_khr:
-        Option<vkGetPhysicalDeviceSparseImageFormatProperties2KHR>,
     pub get_physical_device_external_buffer_properties:
         Option<vkGetPhysicalDeviceExternalBufferProperties>,
-    pub get_physical_device_external_buffer_properties_khr:
-        Option<vkGetPhysicalDeviceExternalBufferPropertiesKHR>,
     pub get_physical_device_external_semaphore_properties:
         Option<vkGetPhysicalDeviceExternalSemaphoreProperties>,
-    pub get_physical_device_external_semaphore_properties_khr:
-        Option<vkGetPhysicalDeviceExternalSemaphorePropertiesKHR>,
     pub get_physical_device_external_fence_properties:
         Option<vkGetPhysicalDeviceExternalFenceProperties>,
-    pub get_physical_device_external_fence_properties_khr:
-        Option<vkGetPhysicalDeviceExternalFencePropertiesKHR>,
 }
 
 impl PhysicalDeviceFnv1_1 {
+    pub const EMPTY: Self = Self {
+        get_physical_device_features2: None,
+        get_physical_device_properties2: None,
+        get_physical_device_format_properties2: None,
+        get_physical_device_image_format_properties2: None,
+        get_physical_device_queue_family_properties2: None,
+        get_physical_device_memory_properties2: None,
+        get_physical_device_sparse_image_format_properties2: None,
+        get_physical_device_external_buffer_properties: None,
+        get_physical_device_external_semaphore_properties: None,
+        get_physical_device_external_fence_properties: None,
+    };
+
     pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
         Self {
             get_physical_device_features2: to_option(loader(c"vkGetPhysicalDeviceFeatures2")),
-            get_physical_device_features2_khr: to_option(loader(
-                c"vkGetPhysicalDeviceFeatures2KHR",
-            )),
             get_physical_device_properties2: to_option(loader(c"vkGetPhysicalDeviceProperties2")),
-            get_physical_device_properties2_khr: to_option(loader(
-                c"vkGetPhysicalDeviceProperties2KHR",
-            )),
             get_physical_device_format_properties2: to_option(loader(
                 c"vkGetPhysicalDeviceFormatProperties2",
-            )),
-            get_physical_device_format_properties2_khr: to_option(loader(
-                c"vkGetPhysicalDeviceFormatProperties2KHR",
             )),
             get_physical_device_image_format_properties2: to_option(loader(
                 c"vkGetPhysicalDeviceImageFormatProperties2",
             )),
-            get_physical_device_image_format_properties2_khr: to_option(loader(
-                c"vkGetPhysicalDeviceImageFormatProperties2KHR",
-            )),
             get_physical_device_queue_family_properties2: to_option(loader(
                 c"vkGetPhysicalDeviceQueueFamilyProperties2",
-            )),
-            get_physical_device_queue_family_properties2_khr: to_option(loader(
-                c"vkGetPhysicalDeviceQueueFamilyProperties2KHR",
             )),
             get_physical_device_memory_properties2: to_option(loader(
                 c"vkGetPhysicalDeviceMemoryProperties2",
             )),
-            get_physical_device_memory_properties2_khr: to_option(loader(
-                c"vkGetPhysicalDeviceMemoryProperties2KHR",
-            )),
             get_physical_device_sparse_image_format_properties2: to_option(loader(
                 c"vkGetPhysicalDeviceSparseImageFormatProperties2",
-            )),
-            get_physical_device_sparse_image_format_properties2_khr: to_option(loader(
-                c"vkGetPhysicalDeviceSparseImageFormatProperties2KHR",
             )),
             get_physical_device_external_buffer_properties: to_option(loader(
                 c"vkGetPhysicalDeviceExternalBufferProperties",
             )),
-            get_physical_device_external_buffer_properties_khr: to_option(loader(
-                c"vkGetPhysicalDeviceExternalBufferPropertiesKHR",
-            )),
             get_physical_device_external_semaphore_properties: to_option(loader(
                 c"vkGetPhysicalDeviceExternalSemaphoreProperties",
             )),
-            get_physical_device_external_semaphore_properties_khr: to_option(loader(
-                c"vkGetPhysicalDeviceExternalSemaphorePropertiesKHR",
-            )),
             get_physical_device_external_fence_properties: to_option(loader(
                 c"vkGetPhysicalDeviceExternalFenceProperties",
-            )),
-            get_physical_device_external_fence_properties_khr: to_option(loader(
-                c"vkGetPhysicalDeviceExternalFencePropertiesKHR",
             )),
         }
     }
@@ -859,715 +1105,538 @@ impl PhysicalDeviceFnv1_1 {
 #[derive(Clone, Default)]
 pub struct PhysicalDeviceFnv1_3 {
     pub get_physical_device_tool_properties: Option<vkGetPhysicalDeviceToolProperties>,
-    pub get_physical_device_tool_properties_ext: Option<vkGetPhysicalDeviceToolPropertiesEXT>,
 }
 
 impl PhysicalDeviceFnv1_3 {
+    pub const EMPTY: Self = Self {
+        get_physical_device_tool_properties: None,
+    };
+
     pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
         Self {
             get_physical_device_tool_properties: to_option(loader(
                 c"vkGetPhysicalDeviceToolProperties",
             )),
-            get_physical_device_tool_properties_ext: to_option(loader(
-                c"vkGetPhysicalDeviceToolPropertiesEXT",
-            )),
         }
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct PhysicalDeviceFnArmDataGraph {
     pub get_physical_device_queue_family_data_graph_properties_arm:
-        vkGetPhysicalDeviceQueueFamilyDataGraphPropertiesARM,
+        Option<vkGetPhysicalDeviceQueueFamilyDataGraphPropertiesARM>,
     pub get_physical_device_queue_family_data_graph_processing_engine_properties_arm:
-        vkGetPhysicalDeviceQueueFamilyDataGraphProcessingEnginePropertiesARM,
+        Option<vkGetPhysicalDeviceQueueFamilyDataGraphProcessingEnginePropertiesARM>,
 }
 
 impl PhysicalDeviceFnArmDataGraph {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_physical_device_queue_family_data_graph_properties_arm: to_panic(loader(
-                c"vkGetPhysicalDeviceQueueFamilyDataGraphPropertiesARM",
-            )),
-            get_physical_device_queue_family_data_graph_processing_engine_properties_arm: to_panic(
-                loader(c"vkGetPhysicalDeviceQueueFamilyDataGraphProcessingEnginePropertiesARM"),
-            ),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_physical_device_queue_family_data_graph_properties_arm: None,
+        get_physical_device_queue_family_data_graph_processing_engine_properties_arm: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct PhysicalDeviceFnArmDataGraphOpticalFlow {
     pub get_physical_device_queue_family_data_graph_engine_operation_properties_arm:
-        vkGetPhysicalDeviceQueueFamilyDataGraphEngineOperationPropertiesARM,
+        Option<vkGetPhysicalDeviceQueueFamilyDataGraphEngineOperationPropertiesARM>,
     pub get_physical_device_queue_family_data_graph_optical_flow_image_formats_arm:
-        vkGetPhysicalDeviceQueueFamilyDataGraphOpticalFlowImageFormatsARM,
+        Option<vkGetPhysicalDeviceQueueFamilyDataGraphOpticalFlowImageFormatsARM>,
 }
 
 impl PhysicalDeviceFnArmDataGraphOpticalFlow {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_physical_device_queue_family_data_graph_engine_operation_properties_arm: to_panic(
-                loader(c"vkGetPhysicalDeviceQueueFamilyDataGraphEngineOperationPropertiesARM"),
-            ),
-            get_physical_device_queue_family_data_graph_optical_flow_image_formats_arm: to_panic(
-                loader(c"vkGetPhysicalDeviceQueueFamilyDataGraphOpticalFlowImageFormatsARM"),
-            ),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_physical_device_queue_family_data_graph_engine_operation_properties_arm: None,
+        get_physical_device_queue_family_data_graph_optical_flow_image_formats_arm: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct PhysicalDeviceFnArmPerformanceCountersByRegion {
     pub enumerate_physical_device_queue_family_performance_counters_by_region_arm:
-        vkEnumeratePhysicalDeviceQueueFamilyPerformanceCountersByRegionARM,
+        Option<vkEnumeratePhysicalDeviceQueueFamilyPerformanceCountersByRegionARM>,
 }
 
 impl PhysicalDeviceFnArmPerformanceCountersByRegion {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            enumerate_physical_device_queue_family_performance_counters_by_region_arm: to_panic(
-                loader(c"vkEnumeratePhysicalDeviceQueueFamilyPerformanceCountersByRegionARM"),
-            ),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        enumerate_physical_device_queue_family_performance_counters_by_region_arm: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct PhysicalDeviceFnArmShaderInstrumentation {
     pub enumerate_physical_device_shader_instrumentation_metrics_arm:
-        vkEnumeratePhysicalDeviceShaderInstrumentationMetricsARM,
+        Option<vkEnumeratePhysicalDeviceShaderInstrumentationMetricsARM>,
 }
 
 impl PhysicalDeviceFnArmShaderInstrumentation {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            enumerate_physical_device_shader_instrumentation_metrics_arm: to_panic(loader(
-                c"vkEnumeratePhysicalDeviceShaderInstrumentationMetricsARM",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        enumerate_physical_device_shader_instrumentation_metrics_arm: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct PhysicalDeviceFnArmTensors {
     pub get_physical_device_external_tensor_properties_arm:
-        vkGetPhysicalDeviceExternalTensorPropertiesARM,
+        Option<vkGetPhysicalDeviceExternalTensorPropertiesARM>,
 }
 
 impl PhysicalDeviceFnArmTensors {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_physical_device_external_tensor_properties_arm: to_panic(loader(
-                c"vkGetPhysicalDeviceExternalTensorPropertiesARM",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_physical_device_external_tensor_properties_arm: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct PhysicalDeviceFnExtAcquireDrmDisplay {
-    pub acquire_drm_display_ext: vkAcquireDrmDisplayEXT,
-    pub get_drm_display_ext: vkGetDrmDisplayEXT,
+    pub acquire_drm_display_ext: Option<vkAcquireDrmDisplayEXT>,
+    pub get_drm_display_ext: Option<vkGetDrmDisplayEXT>,
 }
 
 impl PhysicalDeviceFnExtAcquireDrmDisplay {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            acquire_drm_display_ext: to_panic(loader(c"vkAcquireDrmDisplayEXT")),
-            get_drm_display_ext: to_panic(loader(c"vkGetDrmDisplayEXT")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        acquire_drm_display_ext: None,
+        get_drm_display_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct PhysicalDeviceFnExtAcquireXlibDisplay {
-    pub acquire_xlib_display_ext: vkAcquireXlibDisplayEXT,
-    pub get_rand_r_output_display_ext: vkGetRandROutputDisplayEXT,
+    pub acquire_xlib_display_ext: Option<vkAcquireXlibDisplayEXT>,
+    pub get_rand_r_output_display_ext: Option<vkGetRandROutputDisplayEXT>,
 }
 
 impl PhysicalDeviceFnExtAcquireXlibDisplay {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            acquire_xlib_display_ext: to_panic(loader(c"vkAcquireXlibDisplayEXT")),
-            get_rand_r_output_display_ext: to_panic(loader(c"vkGetRandROutputDisplayEXT")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        acquire_xlib_display_ext: None,
+        get_rand_r_output_display_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct PhysicalDeviceFnExtDescriptorHeap {
-    pub get_physical_device_descriptor_size_ext: vkGetPhysicalDeviceDescriptorSizeEXT,
+    pub get_physical_device_descriptor_size_ext: Option<vkGetPhysicalDeviceDescriptorSizeEXT>,
 }
 
 impl PhysicalDeviceFnExtDescriptorHeap {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_physical_device_descriptor_size_ext: to_panic(loader(
-                c"vkGetPhysicalDeviceDescriptorSizeEXT",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_physical_device_descriptor_size_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct PhysicalDeviceFnExtDirectModeDisplay {
-    pub release_display_ext: vkReleaseDisplayEXT,
+    pub release_display_ext: Option<vkReleaseDisplayEXT>,
 }
 
 impl PhysicalDeviceFnExtDirectModeDisplay {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            release_display_ext: to_panic(loader(c"vkReleaseDisplayEXT")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        release_display_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct PhysicalDeviceFnExtDirectfbSurface {
     pub get_physical_device_direct_fb_presentation_support_ext:
-        vkGetPhysicalDeviceDirectFBPresentationSupportEXT,
+        Option<vkGetPhysicalDeviceDirectFBPresentationSupportEXT>,
 }
 
 impl PhysicalDeviceFnExtDirectfbSurface {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_physical_device_direct_fb_presentation_support_ext: to_panic(loader(
-                c"vkGetPhysicalDeviceDirectFBPresentationSupportEXT",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_physical_device_direct_fb_presentation_support_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct PhysicalDeviceFnExtDisplaySurfaceCounter {
-    pub get_physical_device_surface_capabilities2_ext: vkGetPhysicalDeviceSurfaceCapabilities2EXT,
+    pub get_physical_device_surface_capabilities2_ext:
+        Option<vkGetPhysicalDeviceSurfaceCapabilities2EXT>,
 }
 
 impl PhysicalDeviceFnExtDisplaySurfaceCounter {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_physical_device_surface_capabilities2_ext: to_panic(loader(
-                c"vkGetPhysicalDeviceSurfaceCapabilities2EXT",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_physical_device_surface_capabilities2_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct PhysicalDeviceFnExtFullScreenExclusive {
-    pub get_physical_device_surface_present_modes2_ext: vkGetPhysicalDeviceSurfacePresentModes2EXT,
+    pub get_physical_device_surface_present_modes2_ext:
+        Option<vkGetPhysicalDeviceSurfacePresentModes2EXT>,
 }
 
 impl PhysicalDeviceFnExtFullScreenExclusive {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_physical_device_surface_present_modes2_ext: to_panic(loader(
-                c"vkGetPhysicalDeviceSurfacePresentModes2EXT",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_physical_device_surface_present_modes2_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct PhysicalDeviceFnExtSampleLocations {
-    pub get_physical_device_multisample_properties_ext: vkGetPhysicalDeviceMultisamplePropertiesEXT,
+    pub get_physical_device_multisample_properties_ext:
+        Option<vkGetPhysicalDeviceMultisamplePropertiesEXT>,
 }
 
 impl PhysicalDeviceFnExtSampleLocations {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_physical_device_multisample_properties_ext: to_panic(loader(
-                c"vkGetPhysicalDeviceMultisamplePropertiesEXT",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_physical_device_multisample_properties_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct PhysicalDeviceFnKhrCalibratedTimestamps {
     pub get_physical_device_calibrateable_time_domains_khr:
-        vkGetPhysicalDeviceCalibrateableTimeDomainsKHR,
-    pub get_physical_device_calibrateable_time_domains_ext:
-        vkGetPhysicalDeviceCalibrateableTimeDomainsEXT,
+        Option<vkGetPhysicalDeviceCalibrateableTimeDomainsKHR>,
 }
 
 impl PhysicalDeviceFnKhrCalibratedTimestamps {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_physical_device_calibrateable_time_domains_khr: to_panic(loader(
-                c"vkGetPhysicalDeviceCalibrateableTimeDomainsKHR",
-            )),
-            get_physical_device_calibrateable_time_domains_ext: to_panic(loader(
-                c"vkGetPhysicalDeviceCalibrateableTimeDomainsEXT",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_physical_device_calibrateable_time_domains_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct PhysicalDeviceFnKhrCooperativeMatrix {
     pub get_physical_device_cooperative_matrix_properties_khr:
-        vkGetPhysicalDeviceCooperativeMatrixPropertiesKHR,
+        Option<vkGetPhysicalDeviceCooperativeMatrixPropertiesKHR>,
 }
 
 impl PhysicalDeviceFnKhrCooperativeMatrix {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_physical_device_cooperative_matrix_properties_khr: to_panic(loader(
-                c"vkGetPhysicalDeviceCooperativeMatrixPropertiesKHR",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_physical_device_cooperative_matrix_properties_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct PhysicalDeviceFnKhrDeviceGroup {
-    pub get_physical_device_present_rectangles_khr: vkGetPhysicalDevicePresentRectanglesKHR,
+    pub get_physical_device_present_rectangles_khr: Option<vkGetPhysicalDevicePresentRectanglesKHR>,
 }
 
 impl PhysicalDeviceFnKhrDeviceGroup {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_physical_device_present_rectangles_khr: to_panic(loader(
-                c"vkGetPhysicalDevicePresentRectanglesKHR",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_physical_device_present_rectangles_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct PhysicalDeviceFnKhrDisplay {
-    pub get_physical_device_display_properties_khr: vkGetPhysicalDeviceDisplayPropertiesKHR,
+    pub get_physical_device_display_properties_khr: Option<vkGetPhysicalDeviceDisplayPropertiesKHR>,
     pub get_physical_device_display_plane_properties_khr:
-        vkGetPhysicalDeviceDisplayPlanePropertiesKHR,
-    pub get_display_plane_supported_displays_khr: vkGetDisplayPlaneSupportedDisplaysKHR,
-    pub get_display_mode_properties_khr: vkGetDisplayModePropertiesKHR,
-    pub create_display_mode_khr: vkCreateDisplayModeKHR,
-    pub get_display_plane_capabilities_khr: vkGetDisplayPlaneCapabilitiesKHR,
+        Option<vkGetPhysicalDeviceDisplayPlanePropertiesKHR>,
+    pub get_display_plane_supported_displays_khr: Option<vkGetDisplayPlaneSupportedDisplaysKHR>,
+    pub get_display_mode_properties_khr: Option<vkGetDisplayModePropertiesKHR>,
+    pub create_display_mode_khr: Option<vkCreateDisplayModeKHR>,
+    pub get_display_plane_capabilities_khr: Option<vkGetDisplayPlaneCapabilitiesKHR>,
 }
 
 impl PhysicalDeviceFnKhrDisplay {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_physical_device_display_properties_khr: to_panic(loader(
-                c"vkGetPhysicalDeviceDisplayPropertiesKHR",
-            )),
-            get_physical_device_display_plane_properties_khr: to_panic(loader(
-                c"vkGetPhysicalDeviceDisplayPlanePropertiesKHR",
-            )),
-            get_display_plane_supported_displays_khr: to_panic(loader(
-                c"vkGetDisplayPlaneSupportedDisplaysKHR",
-            )),
-            get_display_mode_properties_khr: to_panic(loader(c"vkGetDisplayModePropertiesKHR")),
-            create_display_mode_khr: to_panic(loader(c"vkCreateDisplayModeKHR")),
-            get_display_plane_capabilities_khr: to_panic(loader(
-                c"vkGetDisplayPlaneCapabilitiesKHR",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_physical_device_display_properties_khr: None,
+        get_physical_device_display_plane_properties_khr: None,
+        get_display_plane_supported_displays_khr: None,
+        get_display_mode_properties_khr: None,
+        create_display_mode_khr: None,
+        get_display_plane_capabilities_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct PhysicalDeviceFnKhrFragmentShadingRate {
-    pub get_physical_device_fragment_shading_rates_khr: vkGetPhysicalDeviceFragmentShadingRatesKHR,
+    pub get_physical_device_fragment_shading_rates_khr:
+        Option<vkGetPhysicalDeviceFragmentShadingRatesKHR>,
 }
 
 impl PhysicalDeviceFnKhrFragmentShadingRate {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_physical_device_fragment_shading_rates_khr: to_panic(loader(
-                c"vkGetPhysicalDeviceFragmentShadingRatesKHR",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_physical_device_fragment_shading_rates_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct PhysicalDeviceFnKhrGetDisplayProperties2 {
-    pub get_physical_device_display_properties2_khr: vkGetPhysicalDeviceDisplayProperties2KHR,
+    pub get_physical_device_display_properties2_khr:
+        Option<vkGetPhysicalDeviceDisplayProperties2KHR>,
     pub get_physical_device_display_plane_properties2_khr:
-        vkGetPhysicalDeviceDisplayPlaneProperties2KHR,
-    pub get_display_mode_properties2_khr: vkGetDisplayModeProperties2KHR,
-    pub get_display_plane_capabilities2_khr: vkGetDisplayPlaneCapabilities2KHR,
+        Option<vkGetPhysicalDeviceDisplayPlaneProperties2KHR>,
+    pub get_display_mode_properties2_khr: Option<vkGetDisplayModeProperties2KHR>,
+    pub get_display_plane_capabilities2_khr: Option<vkGetDisplayPlaneCapabilities2KHR>,
 }
 
 impl PhysicalDeviceFnKhrGetDisplayProperties2 {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_physical_device_display_properties2_khr: to_panic(loader(
-                c"vkGetPhysicalDeviceDisplayProperties2KHR",
-            )),
-            get_physical_device_display_plane_properties2_khr: to_panic(loader(
-                c"vkGetPhysicalDeviceDisplayPlaneProperties2KHR",
-            )),
-            get_display_mode_properties2_khr: to_panic(loader(c"vkGetDisplayModeProperties2KHR")),
-            get_display_plane_capabilities2_khr: to_panic(loader(
-                c"vkGetDisplayPlaneCapabilities2KHR",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_physical_device_display_properties2_khr: None,
+        get_physical_device_display_plane_properties2_khr: None,
+        get_display_mode_properties2_khr: None,
+        get_display_plane_capabilities2_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct PhysicalDeviceFnKhrGetSurfaceCapabilities2 {
-    pub get_physical_device_surface_capabilities2_khr: vkGetPhysicalDeviceSurfaceCapabilities2KHR,
-    pub get_physical_device_surface_formats2_khr: vkGetPhysicalDeviceSurfaceFormats2KHR,
+    pub get_physical_device_surface_capabilities2_khr:
+        Option<vkGetPhysicalDeviceSurfaceCapabilities2KHR>,
+    pub get_physical_device_surface_formats2_khr: Option<vkGetPhysicalDeviceSurfaceFormats2KHR>,
 }
 
 impl PhysicalDeviceFnKhrGetSurfaceCapabilities2 {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_physical_device_surface_capabilities2_khr: to_panic(loader(
-                c"vkGetPhysicalDeviceSurfaceCapabilities2KHR",
-            )),
-            get_physical_device_surface_formats2_khr: to_panic(loader(
-                c"vkGetPhysicalDeviceSurfaceFormats2KHR",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_physical_device_surface_capabilities2_khr: None,
+        get_physical_device_surface_formats2_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct PhysicalDeviceFnKhrObjectRefresh {
     pub get_physical_device_refreshable_object_types_khr:
-        vkGetPhysicalDeviceRefreshableObjectTypesKHR,
+        Option<vkGetPhysicalDeviceRefreshableObjectTypesKHR>,
 }
 
 impl PhysicalDeviceFnKhrObjectRefresh {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_physical_device_refreshable_object_types_khr: to_panic(loader(
-                c"vkGetPhysicalDeviceRefreshableObjectTypesKHR",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_physical_device_refreshable_object_types_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct PhysicalDeviceFnKhrPerformanceQuery {
     pub enumerate_physical_device_queue_family_performance_query_counters_khr:
-        vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR,
+        Option<vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR>,
     pub get_physical_device_queue_family_performance_query_passes_khr:
-        vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR,
+        Option<vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR>,
 }
 
 impl PhysicalDeviceFnKhrPerformanceQuery {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            enumerate_physical_device_queue_family_performance_query_counters_khr: to_panic(
-                loader(c"vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR"),
-            ),
-            get_physical_device_queue_family_performance_query_passes_khr: to_panic(loader(
-                c"vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        enumerate_physical_device_queue_family_performance_query_counters_khr: None,
+        get_physical_device_queue_family_performance_query_passes_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct PhysicalDeviceFnKhrSurface {
-    pub get_physical_device_surface_support_khr: vkGetPhysicalDeviceSurfaceSupportKHR,
-    pub get_physical_device_surface_capabilities_khr: vkGetPhysicalDeviceSurfaceCapabilitiesKHR,
-    pub get_physical_device_surface_formats_khr: vkGetPhysicalDeviceSurfaceFormatsKHR,
-    pub get_physical_device_surface_present_modes_khr: vkGetPhysicalDeviceSurfacePresentModesKHR,
+    pub get_physical_device_surface_support_khr: Option<vkGetPhysicalDeviceSurfaceSupportKHR>,
+    pub get_physical_device_surface_capabilities_khr:
+        Option<vkGetPhysicalDeviceSurfaceCapabilitiesKHR>,
+    pub get_physical_device_surface_formats_khr: Option<vkGetPhysicalDeviceSurfaceFormatsKHR>,
+    pub get_physical_device_surface_present_modes_khr:
+        Option<vkGetPhysicalDeviceSurfacePresentModesKHR>,
 }
 
 impl PhysicalDeviceFnKhrSurface {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_physical_device_surface_support_khr: to_panic(loader(
-                c"vkGetPhysicalDeviceSurfaceSupportKHR",
-            )),
-            get_physical_device_surface_capabilities_khr: to_panic(loader(
-                c"vkGetPhysicalDeviceSurfaceCapabilitiesKHR",
-            )),
-            get_physical_device_surface_formats_khr: to_panic(loader(
-                c"vkGetPhysicalDeviceSurfaceFormatsKHR",
-            )),
-            get_physical_device_surface_present_modes_khr: to_panic(loader(
-                c"vkGetPhysicalDeviceSurfacePresentModesKHR",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_physical_device_surface_support_khr: None,
+        get_physical_device_surface_capabilities_khr: None,
+        get_physical_device_surface_formats_khr: None,
+        get_physical_device_surface_present_modes_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct PhysicalDeviceFnKhrVideoEncodeQueue {
     pub get_physical_device_video_encode_quality_level_properties_khr:
-        vkGetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR,
+        Option<vkGetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR>,
 }
 
 impl PhysicalDeviceFnKhrVideoEncodeQueue {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_physical_device_video_encode_quality_level_properties_khr: to_panic(loader(
-                c"vkGetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_physical_device_video_encode_quality_level_properties_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct PhysicalDeviceFnKhrVideoQueue {
-    pub get_physical_device_video_capabilities_khr: vkGetPhysicalDeviceVideoCapabilitiesKHR,
+    pub get_physical_device_video_capabilities_khr: Option<vkGetPhysicalDeviceVideoCapabilitiesKHR>,
     pub get_physical_device_video_format_properties_khr:
-        vkGetPhysicalDeviceVideoFormatPropertiesKHR,
+        Option<vkGetPhysicalDeviceVideoFormatPropertiesKHR>,
 }
 
 impl PhysicalDeviceFnKhrVideoQueue {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_physical_device_video_capabilities_khr: to_panic(loader(
-                c"vkGetPhysicalDeviceVideoCapabilitiesKHR",
-            )),
-            get_physical_device_video_format_properties_khr: to_panic(loader(
-                c"vkGetPhysicalDeviceVideoFormatPropertiesKHR",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_physical_device_video_capabilities_khr: None,
+        get_physical_device_video_format_properties_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct PhysicalDeviceFnKhrWaylandSurface {
     pub get_physical_device_wayland_presentation_support_khr:
-        vkGetPhysicalDeviceWaylandPresentationSupportKHR,
+        Option<vkGetPhysicalDeviceWaylandPresentationSupportKHR>,
 }
 
 impl PhysicalDeviceFnKhrWaylandSurface {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_physical_device_wayland_presentation_support_khr: to_panic(loader(
-                c"vkGetPhysicalDeviceWaylandPresentationSupportKHR",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_physical_device_wayland_presentation_support_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct PhysicalDeviceFnKhrWin32Surface {
     pub get_physical_device_win32_presentation_support_khr:
-        vkGetPhysicalDeviceWin32PresentationSupportKHR,
+        Option<vkGetPhysicalDeviceWin32PresentationSupportKHR>,
 }
 
 impl PhysicalDeviceFnKhrWin32Surface {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_physical_device_win32_presentation_support_khr: to_panic(loader(
-                c"vkGetPhysicalDeviceWin32PresentationSupportKHR",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_physical_device_win32_presentation_support_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct PhysicalDeviceFnKhrXcbSurface {
     pub get_physical_device_xcb_presentation_support_khr:
-        vkGetPhysicalDeviceXcbPresentationSupportKHR,
+        Option<vkGetPhysicalDeviceXcbPresentationSupportKHR>,
 }
 
 impl PhysicalDeviceFnKhrXcbSurface {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_physical_device_xcb_presentation_support_khr: to_panic(loader(
-                c"vkGetPhysicalDeviceXcbPresentationSupportKHR",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_physical_device_xcb_presentation_support_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct PhysicalDeviceFnKhrXlibSurface {
     pub get_physical_device_xlib_presentation_support_khr:
-        vkGetPhysicalDeviceXlibPresentationSupportKHR,
+        Option<vkGetPhysicalDeviceXlibPresentationSupportKHR>,
 }
 
 impl PhysicalDeviceFnKhrXlibSurface {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_physical_device_xlib_presentation_support_khr: to_panic(loader(
-                c"vkGetPhysicalDeviceXlibPresentationSupportKHR",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_physical_device_xlib_presentation_support_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct PhysicalDeviceFnNvAcquireWinrtDisplay {
-    pub acquire_winrt_display_nv: vkAcquireWinrtDisplayNV,
-    pub get_winrt_display_nv: vkGetWinrtDisplayNV,
+    pub acquire_winrt_display_nv: Option<vkAcquireWinrtDisplayNV>,
+    pub get_winrt_display_nv: Option<vkGetWinrtDisplayNV>,
 }
 
 impl PhysicalDeviceFnNvAcquireWinrtDisplay {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            acquire_winrt_display_nv: to_panic(loader(c"vkAcquireWinrtDisplayNV")),
-            get_winrt_display_nv: to_panic(loader(c"vkGetWinrtDisplayNV")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        acquire_winrt_display_nv: None,
+        get_winrt_display_nv: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct PhysicalDeviceFnNvCooperativeMatrix {
     pub get_physical_device_cooperative_matrix_properties_nv:
-        vkGetPhysicalDeviceCooperativeMatrixPropertiesNV,
+        Option<vkGetPhysicalDeviceCooperativeMatrixPropertiesNV>,
 }
 
 impl PhysicalDeviceFnNvCooperativeMatrix {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_physical_device_cooperative_matrix_properties_nv: to_panic(loader(
-                c"vkGetPhysicalDeviceCooperativeMatrixPropertiesNV",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_physical_device_cooperative_matrix_properties_nv: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct PhysicalDeviceFnNvCooperativeMatrix2 {
     pub get_physical_device_cooperative_matrix_flexible_dimensions_properties_nv:
-        vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV,
+        Option<vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV>,
 }
 
 impl PhysicalDeviceFnNvCooperativeMatrix2 {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_physical_device_cooperative_matrix_flexible_dimensions_properties_nv: to_panic(
-                loader(c"vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV"),
-            ),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_physical_device_cooperative_matrix_flexible_dimensions_properties_nv: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct PhysicalDeviceFnNvCooperativeVector {
     pub get_physical_device_cooperative_vector_properties_nv:
-        vkGetPhysicalDeviceCooperativeVectorPropertiesNV,
+        Option<vkGetPhysicalDeviceCooperativeVectorPropertiesNV>,
 }
 
 impl PhysicalDeviceFnNvCooperativeVector {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_physical_device_cooperative_vector_properties_nv: to_panic(loader(
-                c"vkGetPhysicalDeviceCooperativeVectorPropertiesNV",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_physical_device_cooperative_vector_properties_nv: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct PhysicalDeviceFnNvCoverageReductionMode {
     pub get_physical_device_supported_framebuffer_mixed_samples_combinations_nv:
-        vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV,
+        Option<vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV>,
 }
 
 impl PhysicalDeviceFnNvCoverageReductionMode {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_physical_device_supported_framebuffer_mixed_samples_combinations_nv: to_panic(
-                loader(c"vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV"),
-            ),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_physical_device_supported_framebuffer_mixed_samples_combinations_nv: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct PhysicalDeviceFnNvExternalMemoryCapabilities {
     pub get_physical_device_external_image_format_properties_nv:
-        vkGetPhysicalDeviceExternalImageFormatPropertiesNV,
+        Option<vkGetPhysicalDeviceExternalImageFormatPropertiesNV>,
 }
 
 impl PhysicalDeviceFnNvExternalMemoryCapabilities {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_physical_device_external_image_format_properties_nv: to_panic(loader(
-                c"vkGetPhysicalDeviceExternalImageFormatPropertiesNV",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_physical_device_external_image_format_properties_nv: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct PhysicalDeviceFnNvExternalMemorySciBuf {
     pub get_physical_device_external_memory_sci_buf_properties_nv:
-        vkGetPhysicalDeviceExternalMemorySciBufPropertiesNV,
-    pub get_physical_device_sci_buf_attributes_nv: vkGetPhysicalDeviceSciBufAttributesNV,
+        Option<vkGetPhysicalDeviceExternalMemorySciBufPropertiesNV>,
+    pub get_physical_device_sci_buf_attributes_nv: Option<vkGetPhysicalDeviceSciBufAttributesNV>,
 }
 
 impl PhysicalDeviceFnNvExternalMemorySciBuf {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_physical_device_external_memory_sci_buf_properties_nv: to_panic(loader(
-                c"vkGetPhysicalDeviceExternalMemorySciBufPropertiesNV",
-            )),
-            get_physical_device_sci_buf_attributes_nv: to_panic(loader(
-                c"vkGetPhysicalDeviceSciBufAttributesNV",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_physical_device_external_memory_sci_buf_properties_nv: None,
+        get_physical_device_sci_buf_attributes_nv: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct PhysicalDeviceFnNvExternalSciSync2 {
-    pub get_physical_device_sci_sync_attributes_nv: vkGetPhysicalDeviceSciSyncAttributesNV,
+    pub get_physical_device_sci_sync_attributes_nv: Option<vkGetPhysicalDeviceSciSyncAttributesNV>,
 }
 
 impl PhysicalDeviceFnNvExternalSciSync2 {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_physical_device_sci_sync_attributes_nv: to_panic(loader(
-                c"vkGetPhysicalDeviceSciSyncAttributesNV",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_physical_device_sci_sync_attributes_nv: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct PhysicalDeviceFnNvOpticalFlow {
     pub get_physical_device_optical_flow_image_formats_nv:
-        vkGetPhysicalDeviceOpticalFlowImageFormatsNV,
+        Option<vkGetPhysicalDeviceOpticalFlowImageFormatsNV>,
 }
 
 impl PhysicalDeviceFnNvOpticalFlow {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_physical_device_optical_flow_image_formats_nv: to_panic(loader(
-                c"vkGetPhysicalDeviceOpticalFlowImageFormatsNV",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_physical_device_optical_flow_image_formats_nv: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct PhysicalDeviceFnQnxScreenSurface {
     pub get_physical_device_screen_presentation_support_qnx:
-        vkGetPhysicalDeviceScreenPresentationSupportQNX,
+        Option<vkGetPhysicalDeviceScreenPresentationSupportQNX>,
 }
 
 impl PhysicalDeviceFnQnxScreenSurface {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_physical_device_screen_presentation_support_qnx: to_panic(loader(
-                c"vkGetPhysicalDeviceScreenPresentationSupportQNX",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_physical_device_screen_presentation_support_qnx: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct PhysicalDeviceFnSecUbmSurface {
     pub get_physical_device_ubm_presentation_support_sec:
-        vkGetPhysicalDeviceUbmPresentationSupportSEC,
+        Option<vkGetPhysicalDeviceUbmPresentationSupportSEC>,
 }
 
 impl PhysicalDeviceFnSecUbmSurface {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_physical_device_ubm_presentation_support_sec: to_panic(loader(
-                c"vkGetPhysicalDeviceUbmPresentationSupportSEC",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_physical_device_ubm_presentation_support_sec: None,
+    };
 }
 
 #[derive(Clone)]
@@ -1577,91 +1646,182 @@ pub struct DeviceFn {
     pub v1_2: DeviceFnv1_2,
     pub v1_3: DeviceFnv1_3,
     pub v1_4: DeviceFnv1_4,
-    pub amd_anti_lag: Option<DeviceFnAmdAntiLag>,
-    pub amd_display_native_hdr: Option<DeviceFnAmdDisplayNativeHdr>,
-    pub amd_gpa_interface: Option<DeviceFnAmdGpaInterface>,
-    pub amd_shader_info: Option<DeviceFnAmdShaderInfo>,
-    pub amdx_shader_enqueue: Option<DeviceFnAmdxShaderEnqueue>,
+    pub amd_anti_lag: DeviceFnAmdAntiLag,
+    pub amd_display_native_hdr: DeviceFnAmdDisplayNativeHdr,
+    pub amd_gpa_interface: DeviceFnAmdGpaInterface,
+    pub amd_shader_info: DeviceFnAmdShaderInfo,
+    pub amdx_shader_enqueue: DeviceFnAmdxShaderEnqueue,
     pub android_external_memory_android_hardware_buffer:
-        Option<DeviceFnAndroidExternalMemoryAndroidHardwareBuffer>,
-    pub arm_data_graph: Option<DeviceFnArmDataGraph>,
-    pub arm_shader_instrumentation: Option<DeviceFnArmShaderInstrumentation>,
-    pub arm_tensors: Option<DeviceFnArmTensors>,
-    pub ext_debug_marker: Option<DeviceFnExtDebugMarker>,
-    pub ext_debug_utils: Option<DeviceFnExtDebugUtils>,
-    pub ext_descriptor_buffer: Option<DeviceFnExtDescriptorBuffer>,
-    pub ext_descriptor_heap: Option<DeviceFnExtDescriptorHeap>,
-    pub ext_device_fault: Option<DeviceFnExtDeviceFault>,
-    pub ext_device_generated_commands: Option<DeviceFnExtDeviceGeneratedCommands>,
-    pub ext_display_control: Option<DeviceFnExtDisplayControl>,
-    pub ext_external_memory_host: Option<DeviceFnExtExternalMemoryHost>,
-    pub ext_external_memory_metal: Option<DeviceFnExtExternalMemoryMetal>,
-    pub ext_full_screen_exclusive: Option<DeviceFnExtFullScreenExclusive>,
-    pub ext_hdr_metadata: Option<DeviceFnExtHdrMetadata>,
-    pub ext_image_drm_format_modifier: Option<DeviceFnExtImageDrmFormatModifier>,
-    pub ext_metal_objects: Option<DeviceFnExtMetalObjects>,
-    pub ext_opacity_micromap: Option<DeviceFnExtOpacityMicromap>,
-    pub ext_pageable_device_local_memory: Option<DeviceFnExtPageableDeviceLocalMemory>,
-    pub ext_pipeline_properties: Option<DeviceFnExtPipelineProperties>,
-    pub ext_present_timing: Option<DeviceFnExtPresentTiming>,
-    pub ext_shader_module_identifier: Option<DeviceFnExtShaderModuleIdentifier>,
-    pub ext_shader_object: Option<DeviceFnExtShaderObject>,
-    pub ext_validation_cache: Option<DeviceFnExtValidationCache>,
-    pub fuchsia_buffer_collection: Option<DeviceFnFuchsiaBufferCollection>,
-    pub fuchsia_external_memory: Option<DeviceFnFuchsiaExternalMemory>,
-    pub fuchsia_external_semaphore: Option<DeviceFnFuchsiaExternalSemaphore>,
-    pub google_display_timing: Option<DeviceFnGoogleDisplayTiming>,
-    pub huawei_subpass_shading: Option<DeviceFnHuaweiSubpassShading>,
-    pub intel_performance_query: Option<DeviceFnIntelPerformanceQuery>,
-    pub khr_acceleration_structure: Option<DeviceFnKhrAccelerationStructure>,
-    pub khr_calibrated_timestamps: Option<DeviceFnKhrCalibratedTimestamps>,
-    pub khr_deferred_host_operations: Option<DeviceFnKhrDeferredHostOperations>,
-    pub khr_device_address_commands: Option<DeviceFnKhrDeviceAddressCommands>,
-    pub khr_device_fault: Option<DeviceFnKhrDeviceFault>,
-    pub khr_device_group: Option<DeviceFnKhrDeviceGroup>,
-    pub khr_display_swapchain: Option<DeviceFnKhrDisplaySwapchain>,
-    pub khr_external_fence_fd: Option<DeviceFnKhrExternalFenceFd>,
-    pub khr_external_fence_win32: Option<DeviceFnKhrExternalFenceWin32>,
-    pub khr_external_memory_fd: Option<DeviceFnKhrExternalMemoryFd>,
-    pub khr_external_memory_win32: Option<DeviceFnKhrExternalMemoryWin32>,
-    pub khr_external_semaphore_fd: Option<DeviceFnKhrExternalSemaphoreFd>,
-    pub khr_external_semaphore_win32: Option<DeviceFnKhrExternalSemaphoreWin32>,
-    pub khr_performance_query: Option<DeviceFnKhrPerformanceQuery>,
-    pub khr_pipeline_binary: Option<DeviceFnKhrPipelineBinary>,
-    pub khr_pipeline_executable_properties: Option<DeviceFnKhrPipelineExecutableProperties>,
-    pub khr_present_wait: Option<DeviceFnKhrPresentWait>,
-    pub khr_present_wait2: Option<DeviceFnKhrPresentWait2>,
-    pub khr_ray_tracing_pipeline: Option<DeviceFnKhrRayTracingPipeline>,
-    pub khr_shared_presentable_image: Option<DeviceFnKhrSharedPresentableImage>,
-    pub khr_swapchain: Option<DeviceFnKhrSwapchain>,
-    pub khr_swapchain_maintenance1: Option<DeviceFnKhrSwapchainMaintenance1>,
-    pub khr_video_encode_queue: Option<DeviceFnKhrVideoEncodeQueue>,
-    pub khr_video_queue: Option<DeviceFnKhrVideoQueue>,
-    pub nv_cluster_acceleration_structure: Option<DeviceFnNvClusterAccelerationStructure>,
-    pub nv_cooperative_vector: Option<DeviceFnNvCooperativeVector>,
-    pub nv_cuda_kernel_launch: Option<DeviceFnNvCudaKernelLaunch>,
-    pub nv_device_generated_commands: Option<DeviceFnNvDeviceGeneratedCommands>,
-    pub nv_device_generated_commands_compute: Option<DeviceFnNvDeviceGeneratedCommandsCompute>,
-    pub nv_external_compute_queue: Option<DeviceFnNvExternalComputeQueue>,
-    pub nv_external_memory_rdma: Option<DeviceFnNvExternalMemoryRdma>,
-    pub nv_external_memory_sci_buf: Option<DeviceFnNvExternalMemorySciBuf>,
-    pub nv_external_memory_win32: Option<DeviceFnNvExternalMemoryWin32>,
-    pub nv_external_sci_sync: Option<DeviceFnNvExternalSciSync>,
-    pub nv_external_sci_sync2: Option<DeviceFnNvExternalSciSync2>,
-    pub nv_low_latency: Option<DeviceFnNvLowLatency>,
-    pub nv_low_latency2: Option<DeviceFnNvLowLatency2>,
-    pub nv_optical_flow: Option<DeviceFnNvOpticalFlow>,
-    pub nv_partitioned_acceleration_structure: Option<DeviceFnNvPartitionedAccelerationStructure>,
-    pub nv_ray_tracing: Option<DeviceFnNvRayTracing>,
-    pub nvx_binary_import: Option<DeviceFnNvxBinaryImport>,
-    pub nvx_image_view_handle: Option<DeviceFnNvxImageViewHandle>,
-    pub ohos_external_memory: Option<DeviceFnOhosExternalMemory>,
-    pub qcom_tile_properties: Option<DeviceFnQcomTileProperties>,
-    pub qnx_external_memory_screen_buffer: Option<DeviceFnQnxExternalMemoryScreenBuffer>,
-    pub valve_descriptor_set_host_mapping: Option<DeviceFnValveDescriptorSetHostMapping>,
+        DeviceFnAndroidExternalMemoryAndroidHardwareBuffer,
+    pub arm_data_graph: DeviceFnArmDataGraph,
+    pub arm_shader_instrumentation: DeviceFnArmShaderInstrumentation,
+    pub arm_tensors: DeviceFnArmTensors,
+    pub ext_debug_marker: DeviceFnExtDebugMarker,
+    pub ext_debug_utils: DeviceFnExtDebugUtils,
+    pub ext_descriptor_buffer: DeviceFnExtDescriptorBuffer,
+    pub ext_descriptor_heap: DeviceFnExtDescriptorHeap,
+    pub ext_device_fault: DeviceFnExtDeviceFault,
+    pub ext_device_generated_commands: DeviceFnExtDeviceGeneratedCommands,
+    pub ext_display_control: DeviceFnExtDisplayControl,
+    pub ext_external_memory_host: DeviceFnExtExternalMemoryHost,
+    pub ext_external_memory_metal: DeviceFnExtExternalMemoryMetal,
+    pub ext_full_screen_exclusive: DeviceFnExtFullScreenExclusive,
+    pub ext_hdr_metadata: DeviceFnExtHdrMetadata,
+    pub ext_image_drm_format_modifier: DeviceFnExtImageDrmFormatModifier,
+    pub ext_metal_objects: DeviceFnExtMetalObjects,
+    pub ext_opacity_micromap: DeviceFnExtOpacityMicromap,
+    pub ext_pageable_device_local_memory: DeviceFnExtPageableDeviceLocalMemory,
+    pub ext_pipeline_properties: DeviceFnExtPipelineProperties,
+    pub ext_present_timing: DeviceFnExtPresentTiming,
+    pub ext_shader_module_identifier: DeviceFnExtShaderModuleIdentifier,
+    pub ext_shader_object: DeviceFnExtShaderObject,
+    pub ext_validation_cache: DeviceFnExtValidationCache,
+    pub fuchsia_buffer_collection: DeviceFnFuchsiaBufferCollection,
+    pub fuchsia_external_memory: DeviceFnFuchsiaExternalMemory,
+    pub fuchsia_external_semaphore: DeviceFnFuchsiaExternalSemaphore,
+    pub google_display_timing: DeviceFnGoogleDisplayTiming,
+    pub huawei_subpass_shading: DeviceFnHuaweiSubpassShading,
+    pub intel_performance_query: DeviceFnIntelPerformanceQuery,
+    pub khr_acceleration_structure: DeviceFnKhrAccelerationStructure,
+    pub khr_calibrated_timestamps: DeviceFnKhrCalibratedTimestamps,
+    pub khr_deferred_host_operations: DeviceFnKhrDeferredHostOperations,
+    pub khr_device_address_commands: DeviceFnKhrDeviceAddressCommands,
+    pub khr_device_fault: DeviceFnKhrDeviceFault,
+    pub khr_device_group: DeviceFnKhrDeviceGroup,
+    pub khr_display_swapchain: DeviceFnKhrDisplaySwapchain,
+    pub khr_external_fence_fd: DeviceFnKhrExternalFenceFd,
+    pub khr_external_fence_win32: DeviceFnKhrExternalFenceWin32,
+    pub khr_external_memory_fd: DeviceFnKhrExternalMemoryFd,
+    pub khr_external_memory_win32: DeviceFnKhrExternalMemoryWin32,
+    pub khr_external_semaphore_fd: DeviceFnKhrExternalSemaphoreFd,
+    pub khr_external_semaphore_win32: DeviceFnKhrExternalSemaphoreWin32,
+    pub khr_performance_query: DeviceFnKhrPerformanceQuery,
+    pub khr_pipeline_binary: DeviceFnKhrPipelineBinary,
+    pub khr_pipeline_executable_properties: DeviceFnKhrPipelineExecutableProperties,
+    pub khr_present_wait: DeviceFnKhrPresentWait,
+    pub khr_present_wait2: DeviceFnKhrPresentWait2,
+    pub khr_ray_tracing_pipeline: DeviceFnKhrRayTracingPipeline,
+    pub khr_shared_presentable_image: DeviceFnKhrSharedPresentableImage,
+    pub khr_swapchain: DeviceFnKhrSwapchain,
+    pub khr_swapchain_maintenance1: DeviceFnKhrSwapchainMaintenance1,
+    pub khr_video_encode_queue: DeviceFnKhrVideoEncodeQueue,
+    pub khr_video_queue: DeviceFnKhrVideoQueue,
+    pub nv_cluster_acceleration_structure: DeviceFnNvClusterAccelerationStructure,
+    pub nv_cooperative_vector: DeviceFnNvCooperativeVector,
+    pub nv_cuda_kernel_launch: DeviceFnNvCudaKernelLaunch,
+    pub nv_device_generated_commands: DeviceFnNvDeviceGeneratedCommands,
+    pub nv_device_generated_commands_compute: DeviceFnNvDeviceGeneratedCommandsCompute,
+    pub nv_external_compute_queue: DeviceFnNvExternalComputeQueue,
+    pub nv_external_memory_rdma: DeviceFnNvExternalMemoryRdma,
+    pub nv_external_memory_sci_buf: DeviceFnNvExternalMemorySciBuf,
+    pub nv_external_memory_win32: DeviceFnNvExternalMemoryWin32,
+    pub nv_external_sci_sync: DeviceFnNvExternalSciSync,
+    pub nv_external_sci_sync2: DeviceFnNvExternalSciSync2,
+    pub nv_low_latency: DeviceFnNvLowLatency,
+    pub nv_low_latency2: DeviceFnNvLowLatency2,
+    pub nv_optical_flow: DeviceFnNvOpticalFlow,
+    pub nv_partitioned_acceleration_structure: DeviceFnNvPartitionedAccelerationStructure,
+    pub nv_ray_tracing: DeviceFnNvRayTracing,
+    pub nvx_binary_import: DeviceFnNvxBinaryImport,
+    pub nvx_image_view_handle: DeviceFnNvxImageViewHandle,
+    pub ohos_external_memory: DeviceFnOhosExternalMemory,
+    pub qcom_tile_properties: DeviceFnQcomTileProperties,
+    pub qnx_external_memory_screen_buffer: DeviceFnQnxExternalMemoryScreenBuffer,
+    pub valve_descriptor_set_host_mapping: DeviceFnValveDescriptorSetHostMapping,
 }
 
 impl DeviceFn {
+    /// A table with no functions loaded; every call through it panics.
+    pub const EMPTY: Self = Self {
+        v1_0: DeviceFnv1_0::EMPTY,
+        v1_1: DeviceFnv1_1::EMPTY,
+        v1_2: DeviceFnv1_2::EMPTY,
+        v1_3: DeviceFnv1_3::EMPTY,
+        v1_4: DeviceFnv1_4::EMPTY,
+        amd_anti_lag: DeviceFnAmdAntiLag::EMPTY,
+        amd_display_native_hdr: DeviceFnAmdDisplayNativeHdr::EMPTY,
+        amd_gpa_interface: DeviceFnAmdGpaInterface::EMPTY,
+        amd_shader_info: DeviceFnAmdShaderInfo::EMPTY,
+        amdx_shader_enqueue: DeviceFnAmdxShaderEnqueue::EMPTY,
+        android_external_memory_android_hardware_buffer:
+            DeviceFnAndroidExternalMemoryAndroidHardwareBuffer::EMPTY,
+        arm_data_graph: DeviceFnArmDataGraph::EMPTY,
+        arm_shader_instrumentation: DeviceFnArmShaderInstrumentation::EMPTY,
+        arm_tensors: DeviceFnArmTensors::EMPTY,
+        ext_debug_marker: DeviceFnExtDebugMarker::EMPTY,
+        ext_debug_utils: DeviceFnExtDebugUtils::EMPTY,
+        ext_descriptor_buffer: DeviceFnExtDescriptorBuffer::EMPTY,
+        ext_descriptor_heap: DeviceFnExtDescriptorHeap::EMPTY,
+        ext_device_fault: DeviceFnExtDeviceFault::EMPTY,
+        ext_device_generated_commands: DeviceFnExtDeviceGeneratedCommands::EMPTY,
+        ext_display_control: DeviceFnExtDisplayControl::EMPTY,
+        ext_external_memory_host: DeviceFnExtExternalMemoryHost::EMPTY,
+        ext_external_memory_metal: DeviceFnExtExternalMemoryMetal::EMPTY,
+        ext_full_screen_exclusive: DeviceFnExtFullScreenExclusive::EMPTY,
+        ext_hdr_metadata: DeviceFnExtHdrMetadata::EMPTY,
+        ext_image_drm_format_modifier: DeviceFnExtImageDrmFormatModifier::EMPTY,
+        ext_metal_objects: DeviceFnExtMetalObjects::EMPTY,
+        ext_opacity_micromap: DeviceFnExtOpacityMicromap::EMPTY,
+        ext_pageable_device_local_memory: DeviceFnExtPageableDeviceLocalMemory::EMPTY,
+        ext_pipeline_properties: DeviceFnExtPipelineProperties::EMPTY,
+        ext_present_timing: DeviceFnExtPresentTiming::EMPTY,
+        ext_shader_module_identifier: DeviceFnExtShaderModuleIdentifier::EMPTY,
+        ext_shader_object: DeviceFnExtShaderObject::EMPTY,
+        ext_validation_cache: DeviceFnExtValidationCache::EMPTY,
+        fuchsia_buffer_collection: DeviceFnFuchsiaBufferCollection::EMPTY,
+        fuchsia_external_memory: DeviceFnFuchsiaExternalMemory::EMPTY,
+        fuchsia_external_semaphore: DeviceFnFuchsiaExternalSemaphore::EMPTY,
+        google_display_timing: DeviceFnGoogleDisplayTiming::EMPTY,
+        huawei_subpass_shading: DeviceFnHuaweiSubpassShading::EMPTY,
+        intel_performance_query: DeviceFnIntelPerformanceQuery::EMPTY,
+        khr_acceleration_structure: DeviceFnKhrAccelerationStructure::EMPTY,
+        khr_calibrated_timestamps: DeviceFnKhrCalibratedTimestamps::EMPTY,
+        khr_deferred_host_operations: DeviceFnKhrDeferredHostOperations::EMPTY,
+        khr_device_address_commands: DeviceFnKhrDeviceAddressCommands::EMPTY,
+        khr_device_fault: DeviceFnKhrDeviceFault::EMPTY,
+        khr_device_group: DeviceFnKhrDeviceGroup::EMPTY,
+        khr_display_swapchain: DeviceFnKhrDisplaySwapchain::EMPTY,
+        khr_external_fence_fd: DeviceFnKhrExternalFenceFd::EMPTY,
+        khr_external_fence_win32: DeviceFnKhrExternalFenceWin32::EMPTY,
+        khr_external_memory_fd: DeviceFnKhrExternalMemoryFd::EMPTY,
+        khr_external_memory_win32: DeviceFnKhrExternalMemoryWin32::EMPTY,
+        khr_external_semaphore_fd: DeviceFnKhrExternalSemaphoreFd::EMPTY,
+        khr_external_semaphore_win32: DeviceFnKhrExternalSemaphoreWin32::EMPTY,
+        khr_performance_query: DeviceFnKhrPerformanceQuery::EMPTY,
+        khr_pipeline_binary: DeviceFnKhrPipelineBinary::EMPTY,
+        khr_pipeline_executable_properties: DeviceFnKhrPipelineExecutableProperties::EMPTY,
+        khr_present_wait: DeviceFnKhrPresentWait::EMPTY,
+        khr_present_wait2: DeviceFnKhrPresentWait2::EMPTY,
+        khr_ray_tracing_pipeline: DeviceFnKhrRayTracingPipeline::EMPTY,
+        khr_shared_presentable_image: DeviceFnKhrSharedPresentableImage::EMPTY,
+        khr_swapchain: DeviceFnKhrSwapchain::EMPTY,
+        khr_swapchain_maintenance1: DeviceFnKhrSwapchainMaintenance1::EMPTY,
+        khr_video_encode_queue: DeviceFnKhrVideoEncodeQueue::EMPTY,
+        khr_video_queue: DeviceFnKhrVideoQueue::EMPTY,
+        nv_cluster_acceleration_structure: DeviceFnNvClusterAccelerationStructure::EMPTY,
+        nv_cooperative_vector: DeviceFnNvCooperativeVector::EMPTY,
+        nv_cuda_kernel_launch: DeviceFnNvCudaKernelLaunch::EMPTY,
+        nv_device_generated_commands: DeviceFnNvDeviceGeneratedCommands::EMPTY,
+        nv_device_generated_commands_compute: DeviceFnNvDeviceGeneratedCommandsCompute::EMPTY,
+        nv_external_compute_queue: DeviceFnNvExternalComputeQueue::EMPTY,
+        nv_external_memory_rdma: DeviceFnNvExternalMemoryRdma::EMPTY,
+        nv_external_memory_sci_buf: DeviceFnNvExternalMemorySciBuf::EMPTY,
+        nv_external_memory_win32: DeviceFnNvExternalMemoryWin32::EMPTY,
+        nv_external_sci_sync: DeviceFnNvExternalSciSync::EMPTY,
+        nv_external_sci_sync2: DeviceFnNvExternalSciSync2::EMPTY,
+        nv_low_latency: DeviceFnNvLowLatency::EMPTY,
+        nv_low_latency2: DeviceFnNvLowLatency2::EMPTY,
+        nv_optical_flow: DeviceFnNvOpticalFlow::EMPTY,
+        nv_partitioned_acceleration_structure: DeviceFnNvPartitionedAccelerationStructure::EMPTY,
+        nv_ray_tracing: DeviceFnNvRayTracing::EMPTY,
+        nvx_binary_import: DeviceFnNvxBinaryImport::EMPTY,
+        nvx_image_view_handle: DeviceFnNvxImageViewHandle::EMPTY,
+        ohos_external_memory: DeviceFnOhosExternalMemory::EMPTY,
+        qcom_tile_properties: DeviceFnQcomTileProperties::EMPTY,
+        qnx_external_memory_screen_buffer: DeviceFnQnxExternalMemoryScreenBuffer::EMPTY,
+        valve_descriptor_set_host_mapping: DeviceFnValveDescriptorSetHostMapping::EMPTY,
+    };
+
     pub fn load<F: FnMut(&CStr) -> *const c_void>(
         mut loader: F,
         api_version: u32,
@@ -1672,390 +1832,1176 @@ impl DeviceFn {
             v1_1: if api_version >= API_VERSION_1_1 {
                 DeviceFnv1_1::load(&mut loader)
             } else {
-                DeviceFnv1_1::default()
+                DeviceFnv1_1::EMPTY
             },
             v1_2: if api_version >= API_VERSION_1_2 {
                 DeviceFnv1_2::load(&mut loader)
             } else {
-                DeviceFnv1_2::default()
+                DeviceFnv1_2::EMPTY
             },
             v1_3: if api_version >= API_VERSION_1_3 {
                 DeviceFnv1_3::load(&mut loader)
             } else {
-                DeviceFnv1_3::default()
+                DeviceFnv1_3::EMPTY
             },
             v1_4: if api_version >= API_VERSION_1_4 {
                 DeviceFnv1_4::load(&mut loader)
             } else {
-                DeviceFnv1_4::default()
+                DeviceFnv1_4::EMPTY
             },
-            amd_anti_lag: None,
-            amd_display_native_hdr: None,
-            amd_gpa_interface: None,
-            amd_shader_info: None,
-            amdx_shader_enqueue: None,
-            android_external_memory_android_hardware_buffer: None,
-            arm_data_graph: None,
-            arm_shader_instrumentation: None,
-            arm_tensors: None,
-            ext_debug_marker: None,
-            ext_debug_utils: None,
-            ext_descriptor_buffer: None,
-            ext_descriptor_heap: None,
-            ext_device_fault: None,
-            ext_device_generated_commands: None,
-            ext_display_control: None,
-            ext_external_memory_host: None,
-            ext_external_memory_metal: None,
-            ext_full_screen_exclusive: None,
-            ext_hdr_metadata: None,
-            ext_image_drm_format_modifier: None,
-            ext_metal_objects: None,
-            ext_opacity_micromap: None,
-            ext_pageable_device_local_memory: None,
-            ext_pipeline_properties: None,
-            ext_present_timing: None,
-            ext_shader_module_identifier: None,
-            ext_shader_object: None,
-            ext_validation_cache: None,
-            fuchsia_buffer_collection: None,
-            fuchsia_external_memory: None,
-            fuchsia_external_semaphore: None,
-            google_display_timing: None,
-            huawei_subpass_shading: None,
-            intel_performance_query: None,
-            khr_acceleration_structure: None,
-            khr_calibrated_timestamps: None,
-            khr_deferred_host_operations: None,
-            khr_device_address_commands: None,
-            khr_device_fault: None,
-            khr_device_group: None,
-            khr_display_swapchain: None,
-            khr_external_fence_fd: None,
-            khr_external_fence_win32: None,
-            khr_external_memory_fd: None,
-            khr_external_memory_win32: None,
-            khr_external_semaphore_fd: None,
-            khr_external_semaphore_win32: None,
-            khr_performance_query: None,
-            khr_pipeline_binary: None,
-            khr_pipeline_executable_properties: None,
-            khr_present_wait: None,
-            khr_present_wait2: None,
-            khr_ray_tracing_pipeline: None,
-            khr_shared_presentable_image: None,
-            khr_swapchain: None,
-            khr_swapchain_maintenance1: None,
-            khr_video_encode_queue: None,
-            khr_video_queue: None,
-            nv_cluster_acceleration_structure: None,
-            nv_cooperative_vector: None,
-            nv_cuda_kernel_launch: None,
-            nv_device_generated_commands: None,
-            nv_device_generated_commands_compute: None,
-            nv_external_compute_queue: None,
-            nv_external_memory_rdma: None,
-            nv_external_memory_sci_buf: None,
-            nv_external_memory_win32: None,
-            nv_external_sci_sync: None,
-            nv_external_sci_sync2: None,
-            nv_low_latency: None,
-            nv_low_latency2: None,
-            nv_optical_flow: None,
-            nv_partitioned_acceleration_structure: None,
-            nv_ray_tracing: None,
-            nvx_binary_import: None,
-            nvx_image_view_handle: None,
-            ohos_external_memory: None,
-            qcom_tile_properties: None,
-            qnx_external_memory_screen_buffer: None,
-            valve_descriptor_set_host_mapping: None,
+            amd_anti_lag: DeviceFnAmdAntiLag::EMPTY,
+            amd_display_native_hdr: DeviceFnAmdDisplayNativeHdr::EMPTY,
+            amd_gpa_interface: DeviceFnAmdGpaInterface::EMPTY,
+            amd_shader_info: DeviceFnAmdShaderInfo::EMPTY,
+            amdx_shader_enqueue: DeviceFnAmdxShaderEnqueue::EMPTY,
+            android_external_memory_android_hardware_buffer:
+                DeviceFnAndroidExternalMemoryAndroidHardwareBuffer::EMPTY,
+            arm_data_graph: DeviceFnArmDataGraph::EMPTY,
+            arm_shader_instrumentation: DeviceFnArmShaderInstrumentation::EMPTY,
+            arm_tensors: DeviceFnArmTensors::EMPTY,
+            ext_debug_marker: DeviceFnExtDebugMarker::EMPTY,
+            ext_debug_utils: DeviceFnExtDebugUtils::EMPTY,
+            ext_descriptor_buffer: DeviceFnExtDescriptorBuffer::EMPTY,
+            ext_descriptor_heap: DeviceFnExtDescriptorHeap::EMPTY,
+            ext_device_fault: DeviceFnExtDeviceFault::EMPTY,
+            ext_device_generated_commands: DeviceFnExtDeviceGeneratedCommands::EMPTY,
+            ext_display_control: DeviceFnExtDisplayControl::EMPTY,
+            ext_external_memory_host: DeviceFnExtExternalMemoryHost::EMPTY,
+            ext_external_memory_metal: DeviceFnExtExternalMemoryMetal::EMPTY,
+            ext_full_screen_exclusive: DeviceFnExtFullScreenExclusive::EMPTY,
+            ext_hdr_metadata: DeviceFnExtHdrMetadata::EMPTY,
+            ext_image_drm_format_modifier: DeviceFnExtImageDrmFormatModifier::EMPTY,
+            ext_metal_objects: DeviceFnExtMetalObjects::EMPTY,
+            ext_opacity_micromap: DeviceFnExtOpacityMicromap::EMPTY,
+            ext_pageable_device_local_memory: DeviceFnExtPageableDeviceLocalMemory::EMPTY,
+            ext_pipeline_properties: DeviceFnExtPipelineProperties::EMPTY,
+            ext_present_timing: DeviceFnExtPresentTiming::EMPTY,
+            ext_shader_module_identifier: DeviceFnExtShaderModuleIdentifier::EMPTY,
+            ext_shader_object: DeviceFnExtShaderObject::EMPTY,
+            ext_validation_cache: DeviceFnExtValidationCache::EMPTY,
+            fuchsia_buffer_collection: DeviceFnFuchsiaBufferCollection::EMPTY,
+            fuchsia_external_memory: DeviceFnFuchsiaExternalMemory::EMPTY,
+            fuchsia_external_semaphore: DeviceFnFuchsiaExternalSemaphore::EMPTY,
+            google_display_timing: DeviceFnGoogleDisplayTiming::EMPTY,
+            huawei_subpass_shading: DeviceFnHuaweiSubpassShading::EMPTY,
+            intel_performance_query: DeviceFnIntelPerformanceQuery::EMPTY,
+            khr_acceleration_structure: DeviceFnKhrAccelerationStructure::EMPTY,
+            khr_calibrated_timestamps: DeviceFnKhrCalibratedTimestamps::EMPTY,
+            khr_deferred_host_operations: DeviceFnKhrDeferredHostOperations::EMPTY,
+            khr_device_address_commands: DeviceFnKhrDeviceAddressCommands::EMPTY,
+            khr_device_fault: DeviceFnKhrDeviceFault::EMPTY,
+            khr_device_group: DeviceFnKhrDeviceGroup::EMPTY,
+            khr_display_swapchain: DeviceFnKhrDisplaySwapchain::EMPTY,
+            khr_external_fence_fd: DeviceFnKhrExternalFenceFd::EMPTY,
+            khr_external_fence_win32: DeviceFnKhrExternalFenceWin32::EMPTY,
+            khr_external_memory_fd: DeviceFnKhrExternalMemoryFd::EMPTY,
+            khr_external_memory_win32: DeviceFnKhrExternalMemoryWin32::EMPTY,
+            khr_external_semaphore_fd: DeviceFnKhrExternalSemaphoreFd::EMPTY,
+            khr_external_semaphore_win32: DeviceFnKhrExternalSemaphoreWin32::EMPTY,
+            khr_performance_query: DeviceFnKhrPerformanceQuery::EMPTY,
+            khr_pipeline_binary: DeviceFnKhrPipelineBinary::EMPTY,
+            khr_pipeline_executable_properties: DeviceFnKhrPipelineExecutableProperties::EMPTY,
+            khr_present_wait: DeviceFnKhrPresentWait::EMPTY,
+            khr_present_wait2: DeviceFnKhrPresentWait2::EMPTY,
+            khr_ray_tracing_pipeline: DeviceFnKhrRayTracingPipeline::EMPTY,
+            khr_shared_presentable_image: DeviceFnKhrSharedPresentableImage::EMPTY,
+            khr_swapchain: DeviceFnKhrSwapchain::EMPTY,
+            khr_swapchain_maintenance1: DeviceFnKhrSwapchainMaintenance1::EMPTY,
+            khr_video_encode_queue: DeviceFnKhrVideoEncodeQueue::EMPTY,
+            khr_video_queue: DeviceFnKhrVideoQueue::EMPTY,
+            nv_cluster_acceleration_structure: DeviceFnNvClusterAccelerationStructure::EMPTY,
+            nv_cooperative_vector: DeviceFnNvCooperativeVector::EMPTY,
+            nv_cuda_kernel_launch: DeviceFnNvCudaKernelLaunch::EMPTY,
+            nv_device_generated_commands: DeviceFnNvDeviceGeneratedCommands::EMPTY,
+            nv_device_generated_commands_compute: DeviceFnNvDeviceGeneratedCommandsCompute::EMPTY,
+            nv_external_compute_queue: DeviceFnNvExternalComputeQueue::EMPTY,
+            nv_external_memory_rdma: DeviceFnNvExternalMemoryRdma::EMPTY,
+            nv_external_memory_sci_buf: DeviceFnNvExternalMemorySciBuf::EMPTY,
+            nv_external_memory_win32: DeviceFnNvExternalMemoryWin32::EMPTY,
+            nv_external_sci_sync: DeviceFnNvExternalSciSync::EMPTY,
+            nv_external_sci_sync2: DeviceFnNvExternalSciSync2::EMPTY,
+            nv_low_latency: DeviceFnNvLowLatency::EMPTY,
+            nv_low_latency2: DeviceFnNvLowLatency2::EMPTY,
+            nv_optical_flow: DeviceFnNvOpticalFlow::EMPTY,
+            nv_partitioned_acceleration_structure:
+                DeviceFnNvPartitionedAccelerationStructure::EMPTY,
+            nv_ray_tracing: DeviceFnNvRayTracing::EMPTY,
+            nvx_binary_import: DeviceFnNvxBinaryImport::EMPTY,
+            nvx_image_view_handle: DeviceFnNvxImageViewHandle::EMPTY,
+            ohos_external_memory: DeviceFnOhosExternalMemory::EMPTY,
+            qcom_tile_properties: DeviceFnQcomTileProperties::EMPTY,
+            qnx_external_memory_screen_buffer: DeviceFnQnxExternalMemoryScreenBuffer::EMPTY,
+            valve_descriptor_set_host_mapping: DeviceFnValveDescriptorSetHostMapping::EMPTY,
         };
+        out.ext_debug_utils.set_debug_utils_object_name_ext =
+            to_option(loader(c"vkSetDebugUtilsObjectNameEXT"));
+        out.ext_debug_utils.set_debug_utils_object_tag_ext =
+            to_option(loader(c"vkSetDebugUtilsObjectTagEXT"));
         for &ext in extensions {
-            let ext = unsafe { CStr::from_ptr(ext).to_bytes() };
-            match ext {
-                b"VK_AMD_anti_lag" => {
-                    out.amd_anti_lag = Some(DeviceFnAmdAntiLag::load(&mut loader))
-                }
-                b"VK_AMD_display_native_hdr" => {
-                    out.amd_display_native_hdr =
-                        Some(DeviceFnAmdDisplayNativeHdr::load(&mut loader))
-                }
-                b"VK_AMD_gpa_interface" => {
-                    out.amd_gpa_interface = Some(DeviceFnAmdGpaInterface::load(&mut loader))
-                }
-                b"VK_AMD_shader_info" => {
-                    out.amd_shader_info = Some(DeviceFnAmdShaderInfo::load(&mut loader))
-                }
-                b"VK_AMDX_shader_enqueue" => {
-                    out.amdx_shader_enqueue = Some(DeviceFnAmdxShaderEnqueue::load(&mut loader))
-                }
-                b"VK_ANDROID_external_memory_android_hardware_buffer" => {
-                    out.android_external_memory_android_hardware_buffer = Some(
-                        DeviceFnAndroidExternalMemoryAndroidHardwareBuffer::load(&mut loader),
-                    )
-                }
-                b"VK_ARM_data_graph" => {
-                    out.arm_data_graph = Some(DeviceFnArmDataGraph::load(&mut loader))
-                }
-                b"VK_ARM_shader_instrumentation" => {
-                    out.arm_shader_instrumentation =
-                        Some(DeviceFnArmShaderInstrumentation::load(&mut loader))
-                }
-                b"VK_ARM_tensors" => out.arm_tensors = Some(DeviceFnArmTensors::load(&mut loader)),
-                b"VK_EXT_debug_marker" => {
-                    out.ext_debug_marker = Some(DeviceFnExtDebugMarker::load(&mut loader))
-                }
-                b"VK_EXT_debug_utils" => {
-                    out.ext_debug_utils = Some(DeviceFnExtDebugUtils::load(&mut loader))
-                }
-                b"VK_EXT_descriptor_buffer" => {
-                    out.ext_descriptor_buffer = Some(DeviceFnExtDescriptorBuffer::load(&mut loader))
-                }
-                b"VK_EXT_descriptor_heap" => {
-                    out.ext_descriptor_heap = Some(DeviceFnExtDescriptorHeap::load(&mut loader))
-                }
-                b"VK_EXT_device_fault" => {
-                    out.ext_device_fault = Some(DeviceFnExtDeviceFault::load(&mut loader))
-                }
-                b"VK_EXT_device_generated_commands" => {
-                    out.ext_device_generated_commands =
-                        Some(DeviceFnExtDeviceGeneratedCommands::load(&mut loader))
-                }
-                b"VK_EXT_display_control" => {
-                    out.ext_display_control = Some(DeviceFnExtDisplayControl::load(&mut loader))
-                }
-                b"VK_EXT_external_memory_host" => {
-                    out.ext_external_memory_host =
-                        Some(DeviceFnExtExternalMemoryHost::load(&mut loader))
-                }
-                b"VK_EXT_external_memory_metal" => {
-                    out.ext_external_memory_metal =
-                        Some(DeviceFnExtExternalMemoryMetal::load(&mut loader))
-                }
-                b"VK_EXT_full_screen_exclusive" => {
-                    out.ext_full_screen_exclusive =
-                        Some(DeviceFnExtFullScreenExclusive::load(&mut loader))
-                }
-                b"VK_EXT_hdr_metadata" => {
-                    out.ext_hdr_metadata = Some(DeviceFnExtHdrMetadata::load(&mut loader))
-                }
-                b"VK_EXT_image_drm_format_modifier" => {
-                    out.ext_image_drm_format_modifier =
-                        Some(DeviceFnExtImageDrmFormatModifier::load(&mut loader))
-                }
-                b"VK_EXT_metal_objects" => {
-                    out.ext_metal_objects = Some(DeviceFnExtMetalObjects::load(&mut loader))
-                }
-                b"VK_EXT_opacity_micromap" => {
-                    out.ext_opacity_micromap = Some(DeviceFnExtOpacityMicromap::load(&mut loader))
-                }
-                b"VK_EXT_pageable_device_local_memory" => {
-                    out.ext_pageable_device_local_memory =
-                        Some(DeviceFnExtPageableDeviceLocalMemory::load(&mut loader))
-                }
-                b"VK_EXT_pipeline_properties" => {
-                    out.ext_pipeline_properties =
-                        Some(DeviceFnExtPipelineProperties::load(&mut loader))
-                }
-                b"VK_EXT_present_timing" => {
-                    out.ext_present_timing = Some(DeviceFnExtPresentTiming::load(&mut loader))
-                }
-                b"VK_EXT_shader_module_identifier" => {
-                    out.ext_shader_module_identifier =
-                        Some(DeviceFnExtShaderModuleIdentifier::load(&mut loader))
-                }
-                b"VK_EXT_shader_object" => {
-                    out.ext_shader_object = Some(DeviceFnExtShaderObject::load(&mut loader))
-                }
-                b"VK_EXT_validation_cache" => {
-                    out.ext_validation_cache = Some(DeviceFnExtValidationCache::load(&mut loader))
-                }
-                b"VK_FUCHSIA_buffer_collection" => {
-                    out.fuchsia_buffer_collection =
-                        Some(DeviceFnFuchsiaBufferCollection::load(&mut loader))
-                }
-                b"VK_FUCHSIA_external_memory" => {
-                    out.fuchsia_external_memory =
-                        Some(DeviceFnFuchsiaExternalMemory::load(&mut loader))
-                }
-                b"VK_FUCHSIA_external_semaphore" => {
-                    out.fuchsia_external_semaphore =
-                        Some(DeviceFnFuchsiaExternalSemaphore::load(&mut loader))
-                }
-                b"VK_GOOGLE_display_timing" => {
-                    out.google_display_timing = Some(DeviceFnGoogleDisplayTiming::load(&mut loader))
-                }
-                b"VK_HUAWEI_subpass_shading" => {
-                    out.huawei_subpass_shading =
-                        Some(DeviceFnHuaweiSubpassShading::load(&mut loader))
-                }
-                b"VK_INTEL_performance_query" => {
-                    out.intel_performance_query =
-                        Some(DeviceFnIntelPerformanceQuery::load(&mut loader))
-                }
-                b"VK_KHR_acceleration_structure" => {
-                    out.khr_acceleration_structure =
-                        Some(DeviceFnKhrAccelerationStructure::load(&mut loader))
-                }
-                b"VK_KHR_calibrated_timestamps" => {
-                    out.khr_calibrated_timestamps =
-                        Some(DeviceFnKhrCalibratedTimestamps::load(&mut loader))
-                }
-                b"VK_KHR_deferred_host_operations" => {
-                    out.khr_deferred_host_operations =
-                        Some(DeviceFnKhrDeferredHostOperations::load(&mut loader))
-                }
-                b"VK_KHR_device_address_commands" => {
-                    out.khr_device_address_commands =
-                        Some(DeviceFnKhrDeviceAddressCommands::load(&mut loader))
-                }
-                b"VK_KHR_device_fault" => {
-                    out.khr_device_fault = Some(DeviceFnKhrDeviceFault::load(&mut loader))
-                }
-                b"VK_KHR_device_group" => {
-                    out.khr_device_group = Some(DeviceFnKhrDeviceGroup::load(&mut loader))
+            match unsafe { CStr::from_ptr(ext) }.to_bytes() {
+                b"VK_KHR_swapchain" => {
+                    out.khr_swapchain.create_swapchain_khr =
+                        to_option(loader(c"vkCreateSwapchainKHR"));
+                    out.khr_swapchain.destroy_swapchain_khr =
+                        to_option(loader(c"vkDestroySwapchainKHR"));
+                    out.khr_swapchain.get_swapchain_images_khr =
+                        to_option(loader(c"vkGetSwapchainImagesKHR"));
+                    out.khr_swapchain.acquire_next_image_khr =
+                        to_option(loader(c"vkAcquireNextImageKHR"));
+                    if out
+                        .khr_device_group
+                        .get_device_group_present_capabilities_khr
+                        .is_none()
+                    {
+                        out.khr_device_group
+                            .get_device_group_present_capabilities_khr =
+                            to_option(loader(c"vkGetDeviceGroupPresentCapabilitiesKHR"));
+                    }
+                    if out
+                        .khr_device_group
+                        .get_device_group_surface_present_modes_khr
+                        .is_none()
+                    {
+                        out.khr_device_group
+                            .get_device_group_surface_present_modes_khr =
+                            to_option(loader(c"vkGetDeviceGroupSurfacePresentModesKHR"));
+                    }
+                    if out.khr_device_group.acquire_next_image2_khr.is_none() {
+                        out.khr_device_group.acquire_next_image2_khr =
+                            to_option(loader(c"vkAcquireNextImage2KHR"));
+                    }
                 }
                 b"VK_KHR_display_swapchain" => {
-                    out.khr_display_swapchain = Some(DeviceFnKhrDisplaySwapchain::load(&mut loader))
+                    out.khr_display_swapchain.create_shared_swapchains_khr =
+                        to_option(loader(c"vkCreateSharedSwapchainsKHR"));
                 }
-                b"VK_KHR_external_fence_fd" => {
-                    out.khr_external_fence_fd = Some(DeviceFnKhrExternalFenceFd::load(&mut loader))
-                }
-                b"VK_KHR_external_fence_win32" => {
-                    out.khr_external_fence_win32 =
-                        Some(DeviceFnKhrExternalFenceWin32::load(&mut loader))
-                }
-                b"VK_KHR_external_memory_fd" => {
-                    out.khr_external_memory_fd =
-                        Some(DeviceFnKhrExternalMemoryFd::load(&mut loader))
-                }
-                b"VK_KHR_external_memory_win32" => {
-                    out.khr_external_memory_win32 =
-                        Some(DeviceFnKhrExternalMemoryWin32::load(&mut loader))
-                }
-                b"VK_KHR_external_semaphore_fd" => {
-                    out.khr_external_semaphore_fd =
-                        Some(DeviceFnKhrExternalSemaphoreFd::load(&mut loader))
-                }
-                b"VK_KHR_external_semaphore_win32" => {
-                    out.khr_external_semaphore_win32 =
-                        Some(DeviceFnKhrExternalSemaphoreWin32::load(&mut loader))
-                }
-                b"VK_KHR_performance_query" => {
-                    out.khr_performance_query = Some(DeviceFnKhrPerformanceQuery::load(&mut loader))
-                }
-                b"VK_KHR_pipeline_binary" => {
-                    out.khr_pipeline_binary = Some(DeviceFnKhrPipelineBinary::load(&mut loader))
-                }
-                b"VK_KHR_pipeline_executable_properties" => {
-                    out.khr_pipeline_executable_properties =
-                        Some(DeviceFnKhrPipelineExecutableProperties::load(&mut loader))
-                }
-                b"VK_KHR_present_wait" => {
-                    out.khr_present_wait = Some(DeviceFnKhrPresentWait::load(&mut loader))
-                }
-                b"VK_KHR_present_wait2" => {
-                    out.khr_present_wait2 = Some(DeviceFnKhrPresentWait2::load(&mut loader))
-                }
-                b"VK_KHR_ray_tracing_pipeline" => {
-                    out.khr_ray_tracing_pipeline =
-                        Some(DeviceFnKhrRayTracingPipeline::load(&mut loader))
-                }
-                b"VK_KHR_shared_presentable_image" => {
-                    out.khr_shared_presentable_image =
-                        Some(DeviceFnKhrSharedPresentableImage::load(&mut loader))
-                }
-                b"VK_KHR_swapchain" => {
-                    out.khr_swapchain = Some(DeviceFnKhrSwapchain::load(&mut loader))
-                }
-                b"VK_KHR_swapchain_maintenance1" => {
-                    out.khr_swapchain_maintenance1 =
-                        Some(DeviceFnKhrSwapchainMaintenance1::load(&mut loader))
-                }
-                b"VK_KHR_video_encode_queue" => {
-                    out.khr_video_encode_queue =
-                        Some(DeviceFnKhrVideoEncodeQueue::load(&mut loader))
+                b"VK_EXT_debug_marker" => {
+                    out.ext_debug_marker.debug_marker_set_object_tag_ext =
+                        to_option(loader(c"vkDebugMarkerSetObjectTagEXT"));
+                    out.ext_debug_marker.debug_marker_set_object_name_ext =
+                        to_option(loader(c"vkDebugMarkerSetObjectNameEXT"));
                 }
                 b"VK_KHR_video_queue" => {
-                    out.khr_video_queue = Some(DeviceFnKhrVideoQueue::load(&mut loader))
-                }
-                b"VK_NV_cluster_acceleration_structure" => {
-                    out.nv_cluster_acceleration_structure =
-                        Some(DeviceFnNvClusterAccelerationStructure::load(&mut loader))
-                }
-                b"VK_NV_cooperative_vector" => {
-                    out.nv_cooperative_vector = Some(DeviceFnNvCooperativeVector::load(&mut loader))
-                }
-                b"VK_NV_cuda_kernel_launch" => {
-                    out.nv_cuda_kernel_launch = Some(DeviceFnNvCudaKernelLaunch::load(&mut loader))
-                }
-                b"VK_NV_device_generated_commands" => {
-                    out.nv_device_generated_commands =
-                        Some(DeviceFnNvDeviceGeneratedCommands::load(&mut loader))
-                }
-                b"VK_NV_device_generated_commands_compute" => {
-                    out.nv_device_generated_commands_compute =
-                        Some(DeviceFnNvDeviceGeneratedCommandsCompute::load(&mut loader))
-                }
-                b"VK_NV_external_compute_queue" => {
-                    out.nv_external_compute_queue =
-                        Some(DeviceFnNvExternalComputeQueue::load(&mut loader))
-                }
-                b"VK_NV_external_memory_rdma" => {
-                    out.nv_external_memory_rdma =
-                        Some(DeviceFnNvExternalMemoryRdma::load(&mut loader))
-                }
-                b"VK_NV_external_memory_sci_buf" => {
-                    out.nv_external_memory_sci_buf =
-                        Some(DeviceFnNvExternalMemorySciBuf::load(&mut loader))
-                }
-                b"VK_NV_external_memory_win32" => {
-                    out.nv_external_memory_win32 =
-                        Some(DeviceFnNvExternalMemoryWin32::load(&mut loader))
-                }
-                b"VK_NV_external_sci_sync" => {
-                    out.nv_external_sci_sync = Some(DeviceFnNvExternalSciSync::load(&mut loader))
-                }
-                b"VK_NV_external_sci_sync2" => {
-                    out.nv_external_sci_sync2 = Some(DeviceFnNvExternalSciSync2::load(&mut loader))
-                }
-                b"VK_NV_low_latency" => {
-                    out.nv_low_latency = Some(DeviceFnNvLowLatency::load(&mut loader))
-                }
-                b"VK_NV_low_latency2" => {
-                    out.nv_low_latency2 = Some(DeviceFnNvLowLatency2::load(&mut loader))
-                }
-                b"VK_NV_optical_flow" => {
-                    out.nv_optical_flow = Some(DeviceFnNvOpticalFlow::load(&mut loader))
-                }
-                b"VK_NV_partitioned_acceleration_structure" => {
-                    out.nv_partitioned_acceleration_structure = Some(
-                        DeviceFnNvPartitionedAccelerationStructure::load(&mut loader),
-                    )
-                }
-                b"VK_NV_ray_tracing" => {
-                    out.nv_ray_tracing = Some(DeviceFnNvRayTracing::load(&mut loader))
+                    out.khr_video_queue.create_video_session_khr =
+                        to_option(loader(c"vkCreateVideoSessionKHR"));
+                    out.khr_video_queue.destroy_video_session_khr =
+                        to_option(loader(c"vkDestroyVideoSessionKHR"));
+                    out.khr_video_queue
+                        .get_video_session_memory_requirements_khr =
+                        to_option(loader(c"vkGetVideoSessionMemoryRequirementsKHR"));
+                    out.khr_video_queue.bind_video_session_memory_khr =
+                        to_option(loader(c"vkBindVideoSessionMemoryKHR"));
+                    out.khr_video_queue.create_video_session_parameters_khr =
+                        to_option(loader(c"vkCreateVideoSessionParametersKHR"));
+                    out.khr_video_queue.update_video_session_parameters_khr =
+                        to_option(loader(c"vkUpdateVideoSessionParametersKHR"));
+                    out.khr_video_queue.destroy_video_session_parameters_khr =
+                        to_option(loader(c"vkDestroyVideoSessionParametersKHR"));
                 }
                 b"VK_NVX_binary_import" => {
-                    out.nvx_binary_import = Some(DeviceFnNvxBinaryImport::load(&mut loader))
+                    out.nvx_binary_import.create_cu_module_nvx =
+                        to_option(loader(c"vkCreateCuModuleNVX"));
+                    out.nvx_binary_import.create_cu_function_nvx =
+                        to_option(loader(c"vkCreateCuFunctionNVX"));
+                    out.nvx_binary_import.destroy_cu_module_nvx =
+                        to_option(loader(c"vkDestroyCuModuleNVX"));
+                    out.nvx_binary_import.destroy_cu_function_nvx =
+                        to_option(loader(c"vkDestroyCuFunctionNVX"));
                 }
                 b"VK_NVX_image_view_handle" => {
-                    out.nvx_image_view_handle = Some(DeviceFnNvxImageViewHandle::load(&mut loader))
+                    out.nvx_image_view_handle.get_image_view_handle_nvx =
+                        to_option(loader(c"vkGetImageViewHandleNVX"));
+                    out.nvx_image_view_handle.get_image_view_handle64_nvx =
+                        to_option(loader(c"vkGetImageViewHandle64NVX"));
+                    out.nvx_image_view_handle.get_image_view_address_nvx =
+                        to_option(loader(c"vkGetImageViewAddressNVX"));
+                    out.nvx_image_view_handle
+                        .get_device_combined_image_sampler_index_nvx =
+                        to_option(loader(c"vkGetDeviceCombinedImageSamplerIndexNVX"));
                 }
-                b"VK_OHOS_external_memory" => {
-                    out.ohos_external_memory = Some(DeviceFnOhosExternalMemory::load(&mut loader))
+                b"VK_AMD_shader_info" => {
+                    out.amd_shader_info.get_shader_info_amd =
+                        to_option(loader(c"vkGetShaderInfoAMD"));
                 }
-                b"VK_QCOM_tile_properties" => {
-                    out.qcom_tile_properties = Some(DeviceFnQcomTileProperties::load(&mut loader))
+                b"VK_NV_external_memory_win32" => {
+                    out.nv_external_memory_win32.get_memory_win32_handle_nv =
+                        to_option(loader(c"vkGetMemoryWin32HandleNV"));
                 }
-                b"VK_QNX_external_memory_screen_buffer" => {
-                    out.qnx_external_memory_screen_buffer =
-                        Some(DeviceFnQnxExternalMemoryScreenBuffer::load(&mut loader))
+                b"VK_KHR_device_group" => {
+                    if out.v1_1.get_device_group_peer_memory_features.is_none() {
+                        out.v1_1.get_device_group_peer_memory_features =
+                            to_option(loader(c"vkGetDeviceGroupPeerMemoryFeaturesKHR"));
+                    }
+                    if out
+                        .khr_device_group
+                        .get_device_group_present_capabilities_khr
+                        .is_none()
+                    {
+                        out.khr_device_group
+                            .get_device_group_present_capabilities_khr =
+                            to_option(loader(c"vkGetDeviceGroupPresentCapabilitiesKHR"));
+                    }
+                    if out
+                        .khr_device_group
+                        .get_device_group_surface_present_modes_khr
+                        .is_none()
+                    {
+                        out.khr_device_group
+                            .get_device_group_surface_present_modes_khr =
+                            to_option(loader(c"vkGetDeviceGroupSurfacePresentModesKHR"));
+                    }
+                    if out.khr_device_group.acquire_next_image2_khr.is_none() {
+                        out.khr_device_group.acquire_next_image2_khr =
+                            to_option(loader(c"vkAcquireNextImage2KHR"));
+                    }
+                }
+                b"VK_KHR_maintenance1" => {
+                    if out.v1_1.trim_command_pool.is_none() {
+                        out.v1_1.trim_command_pool = to_option(loader(c"vkTrimCommandPoolKHR"));
+                    }
+                }
+                b"VK_KHR_external_memory_win32" => {
+                    out.khr_external_memory_win32.get_memory_win32_handle_khr =
+                        to_option(loader(c"vkGetMemoryWin32HandleKHR"));
+                    out.khr_external_memory_win32
+                        .get_memory_win32_handle_properties_khr =
+                        to_option(loader(c"vkGetMemoryWin32HandlePropertiesKHR"));
+                }
+                b"VK_KHR_external_memory_fd" => {
+                    out.khr_external_memory_fd.get_memory_fd_khr =
+                        to_option(loader(c"vkGetMemoryFdKHR"));
+                    out.khr_external_memory_fd.get_memory_fd_properties_khr =
+                        to_option(loader(c"vkGetMemoryFdPropertiesKHR"));
+                }
+                b"VK_KHR_external_semaphore_win32" => {
+                    out.khr_external_semaphore_win32
+                        .import_semaphore_win32_handle_khr =
+                        to_option(loader(c"vkImportSemaphoreWin32HandleKHR"));
+                    out.khr_external_semaphore_win32
+                        .get_semaphore_win32_handle_khr =
+                        to_option(loader(c"vkGetSemaphoreWin32HandleKHR"));
+                }
+                b"VK_KHR_external_semaphore_fd" => {
+                    out.khr_external_semaphore_fd.import_semaphore_fd_khr =
+                        to_option(loader(c"vkImportSemaphoreFdKHR"));
+                    out.khr_external_semaphore_fd.get_semaphore_fd_khr =
+                        to_option(loader(c"vkGetSemaphoreFdKHR"));
+                }
+                b"VK_KHR_descriptor_update_template" => {
+                    if out.v1_1.create_descriptor_update_template.is_none() {
+                        out.v1_1.create_descriptor_update_template =
+                            to_option(loader(c"vkCreateDescriptorUpdateTemplateKHR"));
+                    }
+                    if out.v1_1.destroy_descriptor_update_template.is_none() {
+                        out.v1_1.destroy_descriptor_update_template =
+                            to_option(loader(c"vkDestroyDescriptorUpdateTemplateKHR"));
+                    }
+                    if out.v1_1.update_descriptor_set_with_template.is_none() {
+                        out.v1_1.update_descriptor_set_with_template =
+                            to_option(loader(c"vkUpdateDescriptorSetWithTemplateKHR"));
+                    }
+                }
+                b"VK_EXT_display_control" => {
+                    out.ext_display_control.display_power_control_ext =
+                        to_option(loader(c"vkDisplayPowerControlEXT"));
+                    out.ext_display_control.register_device_event_ext =
+                        to_option(loader(c"vkRegisterDeviceEventEXT"));
+                    out.ext_display_control.register_display_event_ext =
+                        to_option(loader(c"vkRegisterDisplayEventEXT"));
+                    out.ext_display_control.get_swapchain_counter_ext =
+                        to_option(loader(c"vkGetSwapchainCounterEXT"));
+                }
+                b"VK_GOOGLE_display_timing" => {
+                    out.google_display_timing.get_refresh_cycle_duration_google =
+                        to_option(loader(c"vkGetRefreshCycleDurationGOOGLE"));
+                    out.google_display_timing
+                        .get_past_presentation_timing_google =
+                        to_option(loader(c"vkGetPastPresentationTimingGOOGLE"));
+                }
+                b"VK_EXT_hdr_metadata" => {
+                    out.ext_hdr_metadata.set_hdr_metadata_ext =
+                        to_option(loader(c"vkSetHdrMetadataEXT"));
+                }
+                b"VK_KHR_create_renderpass2" => {
+                    if out.v1_2.create_render_pass2.is_none() {
+                        out.v1_2.create_render_pass2 = to_option(loader(c"vkCreateRenderPass2KHR"));
+                    }
+                }
+                b"VK_KHR_shared_presentable_image" => {
+                    out.khr_shared_presentable_image.get_swapchain_status_khr =
+                        to_option(loader(c"vkGetSwapchainStatusKHR"));
+                }
+                b"VK_KHR_external_fence_win32" => {
+                    out.khr_external_fence_win32.import_fence_win32_handle_khr =
+                        to_option(loader(c"vkImportFenceWin32HandleKHR"));
+                    out.khr_external_fence_win32.get_fence_win32_handle_khr =
+                        to_option(loader(c"vkGetFenceWin32HandleKHR"));
+                }
+                b"VK_KHR_external_fence_fd" => {
+                    out.khr_external_fence_fd.import_fence_fd_khr =
+                        to_option(loader(c"vkImportFenceFdKHR"));
+                    out.khr_external_fence_fd.get_fence_fd_khr =
+                        to_option(loader(c"vkGetFenceFdKHR"));
+                }
+                b"VK_KHR_performance_query" => {
+                    out.khr_performance_query.acquire_profiling_lock_khr =
+                        to_option(loader(c"vkAcquireProfilingLockKHR"));
+                    out.khr_performance_query.release_profiling_lock_khr =
+                        to_option(loader(c"vkReleaseProfilingLockKHR"));
+                }
+                b"VK_ANDROID_external_memory_android_hardware_buffer" => {
+                    out.android_external_memory_android_hardware_buffer
+                        .get_android_hardware_buffer_properties_android =
+                        to_option(loader(c"vkGetAndroidHardwareBufferPropertiesANDROID"));
+                    out.android_external_memory_android_hardware_buffer
+                        .get_memory_android_hardware_buffer_android =
+                        to_option(loader(c"vkGetMemoryAndroidHardwareBufferANDROID"));
+                }
+                b"VK_AMD_gpa_interface" => {
+                    out.amd_gpa_interface.create_gpa_session_amd =
+                        to_option(loader(c"vkCreateGpaSessionAMD"));
+                    out.amd_gpa_interface.destroy_gpa_session_amd =
+                        to_option(loader(c"vkDestroyGpaSessionAMD"));
+                    out.amd_gpa_interface.set_gpa_device_clock_mode_amd =
+                        to_option(loader(c"vkSetGpaDeviceClockModeAMD"));
+                    out.amd_gpa_interface.get_gpa_device_clock_info_amd =
+                        to_option(loader(c"vkGetGpaDeviceClockInfoAMD"));
+                    out.amd_gpa_interface.get_gpa_session_status_amd =
+                        to_option(loader(c"vkGetGpaSessionStatusAMD"));
+                    out.amd_gpa_interface.get_gpa_session_results_amd =
+                        to_option(loader(c"vkGetGpaSessionResultsAMD"));
+                    out.amd_gpa_interface.reset_gpa_session_amd =
+                        to_option(loader(c"vkResetGpaSessionAMD"));
+                }
+                b"VK_AMDX_shader_enqueue" => {
+                    out.amdx_shader_enqueue
+                        .create_execution_graph_pipelines_amdx =
+                        to_option(loader(c"vkCreateExecutionGraphPipelinesAMDX"));
+                    out.amdx_shader_enqueue
+                        .get_execution_graph_pipeline_scratch_size_amdx =
+                        to_option(loader(c"vkGetExecutionGraphPipelineScratchSizeAMDX"));
+                    out.amdx_shader_enqueue
+                        .get_execution_graph_pipeline_node_index_amdx =
+                        to_option(loader(c"vkGetExecutionGraphPipelineNodeIndexAMDX"));
+                }
+                b"VK_EXT_descriptor_heap" => {
+                    out.ext_descriptor_heap.write_sampler_descriptors_ext =
+                        to_option(loader(c"vkWriteSamplerDescriptorsEXT"));
+                    out.ext_descriptor_heap.write_resource_descriptors_ext =
+                        to_option(loader(c"vkWriteResourceDescriptorsEXT"));
+                    out.ext_descriptor_heap.get_image_opaque_capture_data_ext =
+                        to_option(loader(c"vkGetImageOpaqueCaptureDataEXT"));
+                    out.ext_descriptor_heap.register_custom_border_color_ext =
+                        to_option(loader(c"vkRegisterCustomBorderColorEXT"));
+                    out.ext_descriptor_heap.unregister_custom_border_color_ext =
+                        to_option(loader(c"vkUnregisterCustomBorderColorEXT"));
+                    out.ext_descriptor_heap.get_tensor_opaque_capture_data_arm =
+                        to_option(loader(c"vkGetTensorOpaqueCaptureDataARM"));
+                }
+                b"VK_KHR_get_memory_requirements2" => {
+                    if out.v1_1.get_image_memory_requirements2.is_none() {
+                        out.v1_1.get_image_memory_requirements2 =
+                            to_option(loader(c"vkGetImageMemoryRequirements2KHR"));
+                    }
+                    if out.v1_1.get_buffer_memory_requirements2.is_none() {
+                        out.v1_1.get_buffer_memory_requirements2 =
+                            to_option(loader(c"vkGetBufferMemoryRequirements2KHR"));
+                    }
+                    if out.v1_1.get_image_sparse_memory_requirements2.is_none() {
+                        out.v1_1.get_image_sparse_memory_requirements2 =
+                            to_option(loader(c"vkGetImageSparseMemoryRequirements2KHR"));
+                    }
+                }
+                b"VK_KHR_acceleration_structure" => {
+                    out.khr_acceleration_structure
+                        .create_acceleration_structure_khr =
+                        to_option(loader(c"vkCreateAccelerationStructureKHR"));
+                    out.khr_acceleration_structure
+                        .destroy_acceleration_structure_khr =
+                        to_option(loader(c"vkDestroyAccelerationStructureKHR"));
+                    out.khr_acceleration_structure
+                        .build_acceleration_structures_khr =
+                        to_option(loader(c"vkBuildAccelerationStructuresKHR"));
+                    out.khr_acceleration_structure
+                        .copy_acceleration_structure_khr =
+                        to_option(loader(c"vkCopyAccelerationStructureKHR"));
+                    out.khr_acceleration_structure
+                        .copy_acceleration_structure_to_memory_khr =
+                        to_option(loader(c"vkCopyAccelerationStructureToMemoryKHR"));
+                    out.khr_acceleration_structure
+                        .copy_memory_to_acceleration_structure_khr =
+                        to_option(loader(c"vkCopyMemoryToAccelerationStructureKHR"));
+                    out.khr_acceleration_structure
+                        .write_acceleration_structures_properties_khr =
+                        to_option(loader(c"vkWriteAccelerationStructuresPropertiesKHR"));
+                    out.khr_acceleration_structure
+                        .get_acceleration_structure_device_address_khr =
+                        to_option(loader(c"vkGetAccelerationStructureDeviceAddressKHR"));
+                    out.khr_acceleration_structure
+                        .get_device_acceleration_structure_compatibility_khr =
+                        to_option(loader(c"vkGetDeviceAccelerationStructureCompatibilityKHR"));
+                    out.khr_acceleration_structure
+                        .get_acceleration_structure_build_sizes_khr =
+                        to_option(loader(c"vkGetAccelerationStructureBuildSizesKHR"));
+                }
+                b"VK_KHR_ray_tracing_pipeline" => {
+                    out.khr_ray_tracing_pipeline
+                        .create_ray_tracing_pipelines_khr =
+                        to_option(loader(c"vkCreateRayTracingPipelinesKHR"));
+                    if out
+                        .khr_ray_tracing_pipeline
+                        .get_ray_tracing_shader_group_handles_khr
+                        .is_none()
+                    {
+                        out.khr_ray_tracing_pipeline
+                            .get_ray_tracing_shader_group_handles_khr =
+                            to_option(loader(c"vkGetRayTracingShaderGroupHandlesKHR"));
+                    }
+                    out.khr_ray_tracing_pipeline
+                        .get_ray_tracing_capture_replay_shader_group_handles_khr =
+                        to_option(loader(c"vkGetRayTracingCaptureReplayShaderGroupHandlesKHR"));
+                    out.khr_ray_tracing_pipeline
+                        .get_ray_tracing_shader_group_stack_size_khr =
+                        to_option(loader(c"vkGetRayTracingShaderGroupStackSizeKHR"));
+                }
+                b"VK_KHR_sampler_ycbcr_conversion" => {
+                    if out.v1_1.create_sampler_ycbcr_conversion.is_none() {
+                        out.v1_1.create_sampler_ycbcr_conversion =
+                            to_option(loader(c"vkCreateSamplerYcbcrConversionKHR"));
+                    }
+                    if out.v1_1.destroy_sampler_ycbcr_conversion.is_none() {
+                        out.v1_1.destroy_sampler_ycbcr_conversion =
+                            to_option(loader(c"vkDestroySamplerYcbcrConversionKHR"));
+                    }
+                }
+                b"VK_KHR_bind_memory2" => {
+                    if out.v1_1.bind_buffer_memory2.is_none() {
+                        out.v1_1.bind_buffer_memory2 = to_option(loader(c"vkBindBufferMemory2KHR"));
+                    }
+                    if out.v1_1.bind_image_memory2.is_none() {
+                        out.v1_1.bind_image_memory2 = to_option(loader(c"vkBindImageMemory2KHR"));
+                    }
+                }
+                b"VK_EXT_image_drm_format_modifier" => {
+                    out.ext_image_drm_format_modifier
+                        .get_image_drm_format_modifier_properties_ext =
+                        to_option(loader(c"vkGetImageDrmFormatModifierPropertiesEXT"));
+                }
+                b"VK_EXT_validation_cache" => {
+                    out.ext_validation_cache.create_validation_cache_ext =
+                        to_option(loader(c"vkCreateValidationCacheEXT"));
+                    out.ext_validation_cache.destroy_validation_cache_ext =
+                        to_option(loader(c"vkDestroyValidationCacheEXT"));
+                    out.ext_validation_cache.merge_validation_caches_ext =
+                        to_option(loader(c"vkMergeValidationCachesEXT"));
+                    out.ext_validation_cache.get_validation_cache_data_ext =
+                        to_option(loader(c"vkGetValidationCacheDataEXT"));
+                }
+                b"VK_NV_ray_tracing" => {
+                    out.nv_ray_tracing.create_acceleration_structure_nv =
+                        to_option(loader(c"vkCreateAccelerationStructureNV"));
+                    out.nv_ray_tracing.destroy_acceleration_structure_nv =
+                        to_option(loader(c"vkDestroyAccelerationStructureNV"));
+                    out.nv_ray_tracing
+                        .get_acceleration_structure_memory_requirements_nv =
+                        to_option(loader(c"vkGetAccelerationStructureMemoryRequirementsNV"));
+                    out.nv_ray_tracing.bind_acceleration_structure_memory_nv =
+                        to_option(loader(c"vkBindAccelerationStructureMemoryNV"));
+                    out.nv_ray_tracing.create_ray_tracing_pipelines_nv =
+                        to_option(loader(c"vkCreateRayTracingPipelinesNV"));
+                    if out
+                        .khr_ray_tracing_pipeline
+                        .get_ray_tracing_shader_group_handles_khr
+                        .is_none()
+                    {
+                        out.khr_ray_tracing_pipeline
+                            .get_ray_tracing_shader_group_handles_khr =
+                            to_option(loader(c"vkGetRayTracingShaderGroupHandlesNV"));
+                    }
+                    out.nv_ray_tracing.get_acceleration_structure_handle_nv =
+                        to_option(loader(c"vkGetAccelerationStructureHandleNV"));
+                    out.nv_ray_tracing.compile_deferred_nv =
+                        to_option(loader(c"vkCompileDeferredNV"));
+                }
+                b"VK_KHR_maintenance3" => {
+                    if out.v1_1.get_descriptor_set_layout_support.is_none() {
+                        out.v1_1.get_descriptor_set_layout_support =
+                            to_option(loader(c"vkGetDescriptorSetLayoutSupportKHR"));
+                    }
+                }
+                b"VK_EXT_external_memory_host" => {
+                    out.ext_external_memory_host
+                        .get_memory_host_pointer_properties_ext =
+                        to_option(loader(c"vkGetMemoryHostPointerPropertiesEXT"));
+                }
+                b"VK_EXT_calibrated_timestamps" => {
+                    if out
+                        .khr_calibrated_timestamps
+                        .get_calibrated_timestamps_khr
+                        .is_none()
+                    {
+                        out.khr_calibrated_timestamps.get_calibrated_timestamps_khr =
+                            to_option(loader(c"vkGetCalibratedTimestampsEXT"));
+                    }
+                }
+                b"VK_KHR_timeline_semaphore" => {
+                    if out.v1_2.get_semaphore_counter_value.is_none() {
+                        out.v1_2.get_semaphore_counter_value =
+                            to_option(loader(c"vkGetSemaphoreCounterValueKHR"));
+                    }
+                    if out.v1_2.wait_semaphores.is_none() {
+                        out.v1_2.wait_semaphores = to_option(loader(c"vkWaitSemaphoresKHR"));
+                    }
+                    if out.v1_2.signal_semaphore.is_none() {
+                        out.v1_2.signal_semaphore = to_option(loader(c"vkSignalSemaphoreKHR"));
+                    }
+                }
+                b"VK_EXT_present_timing" => {
+                    out.ext_present_timing
+                        .set_swapchain_present_timing_queue_size_ext =
+                        to_option(loader(c"vkSetSwapchainPresentTimingQueueSizeEXT"));
+                    out.ext_present_timing.get_swapchain_timing_properties_ext =
+                        to_option(loader(c"vkGetSwapchainTimingPropertiesEXT"));
+                    out.ext_present_timing
+                        .get_swapchain_time_domain_properties_ext =
+                        to_option(loader(c"vkGetSwapchainTimeDomainPropertiesEXT"));
+                    out.ext_present_timing.get_past_presentation_timing_ext =
+                        to_option(loader(c"vkGetPastPresentationTimingEXT"));
+                }
+                b"VK_INTEL_performance_query" => {
+                    out.intel_performance_query.initialize_performance_api_intel =
+                        to_option(loader(c"vkInitializePerformanceApiINTEL"));
+                    out.intel_performance_query
+                        .uninitialize_performance_api_intel =
+                        to_option(loader(c"vkUninitializePerformanceApiINTEL"));
+                    out.intel_performance_query
+                        .acquire_performance_configuration_intel =
+                        to_option(loader(c"vkAcquirePerformanceConfigurationINTEL"));
+                    out.intel_performance_query
+                        .release_performance_configuration_intel =
+                        to_option(loader(c"vkReleasePerformanceConfigurationINTEL"));
+                    out.intel_performance_query.get_performance_parameter_intel =
+                        to_option(loader(c"vkGetPerformanceParameterINTEL"));
+                }
+                b"VK_AMD_display_native_hdr" => {
+                    out.amd_display_native_hdr.set_local_dimming_amd =
+                        to_option(loader(c"vkSetLocalDimmingAMD"));
+                }
+                b"VK_EXT_buffer_device_address" => {
+                    if out.v1_2.get_buffer_device_address.is_none() {
+                        out.v1_2.get_buffer_device_address =
+                            to_option(loader(c"vkGetBufferDeviceAddressEXT"));
+                    }
+                }
+                b"VK_KHR_present_wait" => {
+                    out.khr_present_wait.wait_for_present_khr =
+                        to_option(loader(c"vkWaitForPresentKHR"));
+                }
+                b"VK_EXT_full_screen_exclusive" => {
+                    out.ext_full_screen_exclusive
+                        .acquire_full_screen_exclusive_mode_ext =
+                        to_option(loader(c"vkAcquireFullScreenExclusiveModeEXT"));
+                    out.ext_full_screen_exclusive
+                        .release_full_screen_exclusive_mode_ext =
+                        to_option(loader(c"vkReleaseFullScreenExclusiveModeEXT"));
+                    out.ext_full_screen_exclusive
+                        .get_device_group_surface_present_modes2_ext =
+                        to_option(loader(c"vkGetDeviceGroupSurfacePresentModes2EXT"));
+                }
+                b"VK_KHR_buffer_device_address" => {
+                    if out.v1_2.get_buffer_device_address.is_none() {
+                        out.v1_2.get_buffer_device_address =
+                            to_option(loader(c"vkGetBufferDeviceAddressKHR"));
+                    }
+                    if out.v1_2.get_buffer_opaque_capture_address.is_none() {
+                        out.v1_2.get_buffer_opaque_capture_address =
+                            to_option(loader(c"vkGetBufferOpaqueCaptureAddressKHR"));
+                    }
+                    if out.v1_2.get_device_memory_opaque_capture_address.is_none() {
+                        out.v1_2.get_device_memory_opaque_capture_address =
+                            to_option(loader(c"vkGetDeviceMemoryOpaqueCaptureAddressKHR"));
+                    }
+                }
+                b"VK_EXT_host_query_reset" => {
+                    if out.v1_2.reset_query_pool.is_none() {
+                        out.v1_2.reset_query_pool = to_option(loader(c"vkResetQueryPoolEXT"));
+                    }
+                }
+                b"VK_KHR_deferred_host_operations" => {
+                    out.khr_deferred_host_operations
+                        .create_deferred_operation_khr =
+                        to_option(loader(c"vkCreateDeferredOperationKHR"));
+                    out.khr_deferred_host_operations
+                        .destroy_deferred_operation_khr =
+                        to_option(loader(c"vkDestroyDeferredOperationKHR"));
+                    out.khr_deferred_host_operations
+                        .get_deferred_operation_max_concurrency_khr =
+                        to_option(loader(c"vkGetDeferredOperationMaxConcurrencyKHR"));
+                    out.khr_deferred_host_operations
+                        .get_deferred_operation_result_khr =
+                        to_option(loader(c"vkGetDeferredOperationResultKHR"));
+                    out.khr_deferred_host_operations.deferred_operation_join_khr =
+                        to_option(loader(c"vkDeferredOperationJoinKHR"));
+                }
+                b"VK_KHR_pipeline_executable_properties" => {
+                    out.khr_pipeline_executable_properties
+                        .get_pipeline_executable_properties_khr =
+                        to_option(loader(c"vkGetPipelineExecutablePropertiesKHR"));
+                    out.khr_pipeline_executable_properties
+                        .get_pipeline_executable_statistics_khr =
+                        to_option(loader(c"vkGetPipelineExecutableStatisticsKHR"));
+                    out.khr_pipeline_executable_properties
+                        .get_pipeline_executable_internal_representations_khr =
+                        to_option(loader(c"vkGetPipelineExecutableInternalRepresentationsKHR"));
+                }
+                b"VK_EXT_host_image_copy" => {
+                    if out.v1_4.copy_memory_to_image.is_none() {
+                        out.v1_4.copy_memory_to_image =
+                            to_option(loader(c"vkCopyMemoryToImageEXT"));
+                    }
+                    if out.v1_4.copy_image_to_memory.is_none() {
+                        out.v1_4.copy_image_to_memory =
+                            to_option(loader(c"vkCopyImageToMemoryEXT"));
+                    }
+                    if out.v1_4.copy_image_to_image.is_none() {
+                        out.v1_4.copy_image_to_image = to_option(loader(c"vkCopyImageToImageEXT"));
+                    }
+                    if out.v1_4.transition_image_layout.is_none() {
+                        out.v1_4.transition_image_layout =
+                            to_option(loader(c"vkTransitionImageLayoutEXT"));
+                    }
+                    if out.v1_4.get_image_subresource_layout2.is_none() {
+                        out.v1_4.get_image_subresource_layout2 =
+                            to_option(loader(c"vkGetImageSubresourceLayout2EXT"));
+                    }
+                }
+                b"VK_KHR_map_memory2" => {
+                    if out.v1_4.map_memory2.is_none() {
+                        out.v1_4.map_memory2 = to_option(loader(c"vkMapMemory2KHR"));
+                    }
+                    if out.v1_4.unmap_memory2.is_none() {
+                        out.v1_4.unmap_memory2 = to_option(loader(c"vkUnmapMemory2KHR"));
+                    }
+                }
+                b"VK_EXT_swapchain_maintenance1" => {
+                    if out
+                        .khr_swapchain_maintenance1
+                        .release_swapchain_images_khr
+                        .is_none()
+                    {
+                        out.khr_swapchain_maintenance1.release_swapchain_images_khr =
+                            to_option(loader(c"vkReleaseSwapchainImagesEXT"));
+                    }
+                }
+                b"VK_NV_device_generated_commands" => {
+                    out.nv_device_generated_commands
+                        .get_generated_commands_memory_requirements_nv =
+                        to_option(loader(c"vkGetGeneratedCommandsMemoryRequirementsNV"));
+                    out.nv_device_generated_commands
+                        .create_indirect_commands_layout_nv =
+                        to_option(loader(c"vkCreateIndirectCommandsLayoutNV"));
+                    out.nv_device_generated_commands
+                        .destroy_indirect_commands_layout_nv =
+                        to_option(loader(c"vkDestroyIndirectCommandsLayoutNV"));
+                }
+                b"VK_EXT_private_data" => {
+                    if out.v1_3.create_private_data_slot.is_none() {
+                        out.v1_3.create_private_data_slot =
+                            to_option(loader(c"vkCreatePrivateDataSlotEXT"));
+                    }
+                    if out.v1_3.destroy_private_data_slot.is_none() {
+                        out.v1_3.destroy_private_data_slot =
+                            to_option(loader(c"vkDestroyPrivateDataSlotEXT"));
+                    }
+                    if out.v1_3.set_private_data.is_none() {
+                        out.v1_3.set_private_data = to_option(loader(c"vkSetPrivateDataEXT"));
+                    }
+                    if out.v1_3.get_private_data.is_none() {
+                        out.v1_3.get_private_data = to_option(loader(c"vkGetPrivateDataEXT"));
+                    }
+                }
+                b"VK_KHR_video_encode_queue" => {
+                    out.khr_video_encode_queue
+                        .get_encoded_video_session_parameters_khr =
+                        to_option(loader(c"vkGetEncodedVideoSessionParametersKHR"));
+                }
+                b"VK_NV_cuda_kernel_launch" => {
+                    out.nv_cuda_kernel_launch.create_cuda_module_nv =
+                        to_option(loader(c"vkCreateCudaModuleNV"));
+                    out.nv_cuda_kernel_launch.get_cuda_module_cache_nv =
+                        to_option(loader(c"vkGetCudaModuleCacheNV"));
+                    out.nv_cuda_kernel_launch.create_cuda_function_nv =
+                        to_option(loader(c"vkCreateCudaFunctionNV"));
+                    out.nv_cuda_kernel_launch.destroy_cuda_module_nv =
+                        to_option(loader(c"vkDestroyCudaModuleNV"));
+                    out.nv_cuda_kernel_launch.destroy_cuda_function_nv =
+                        to_option(loader(c"vkDestroyCudaFunctionNV"));
+                }
+                b"VK_NV_low_latency" => {
+                    out.nv_low_latency.set_latency_sleep_mode_legacy_nv =
+                        to_option(loader(c"vkSetLatencySleepModeLegacyNV"));
+                    out.nv_low_latency.latency_sleep_legacy_nv =
+                        to_option(loader(c"vkLatencySleepLegacyNV"));
+                    out.nv_low_latency.set_latency_marker_legacy_nv =
+                        to_option(loader(c"vkSetLatencyMarkerLegacyNV"));
+                    out.nv_low_latency.get_latency_timings_legacy_nv =
+                        to_option(loader(c"vkGetLatencyTimingsLegacyNV"));
+                    out.nv_low_latency.get_sleep_status_legacy_nv =
+                        to_option(loader(c"vkGetSleepStatusLegacyNV"));
+                    out.nv_low_latency.shutdown_latency_device_legacy_nv =
+                        to_option(loader(c"vkShutdownLatencyDeviceLegacyNV"));
+                }
+                b"VK_EXT_metal_objects" => {
+                    out.ext_metal_objects.export_metal_objects_ext =
+                        to_option(loader(c"vkExportMetalObjectsEXT"));
+                }
+                b"VK_EXT_descriptor_buffer" => {
+                    out.ext_descriptor_buffer.get_descriptor_set_layout_size_ext =
+                        to_option(loader(c"vkGetDescriptorSetLayoutSizeEXT"));
+                    out.ext_descriptor_buffer
+                        .get_descriptor_set_layout_binding_offset_ext =
+                        to_option(loader(c"vkGetDescriptorSetLayoutBindingOffsetEXT"));
+                    out.ext_descriptor_buffer.get_descriptor_ext =
+                        to_option(loader(c"vkGetDescriptorEXT"));
+                    out.ext_descriptor_buffer
+                        .get_buffer_opaque_capture_descriptor_data_ext =
+                        to_option(loader(c"vkGetBufferOpaqueCaptureDescriptorDataEXT"));
+                    out.ext_descriptor_buffer
+                        .get_image_opaque_capture_descriptor_data_ext =
+                        to_option(loader(c"vkGetImageOpaqueCaptureDescriptorDataEXT"));
+                    out.ext_descriptor_buffer
+                        .get_image_view_opaque_capture_descriptor_data_ext =
+                        to_option(loader(c"vkGetImageViewOpaqueCaptureDescriptorDataEXT"));
+                    out.ext_descriptor_buffer
+                        .get_sampler_opaque_capture_descriptor_data_ext =
+                        to_option(loader(c"vkGetSamplerOpaqueCaptureDescriptorDataEXT"));
+                    out.ext_descriptor_buffer
+                        .get_acceleration_structure_opaque_capture_descriptor_data_ext = to_option(
+                        loader(c"vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT"),
+                    );
+                }
+                b"VK_KHR_device_address_commands" => {
+                    out.khr_device_address_commands
+                        .create_acceleration_structure2_khr =
+                        to_option(loader(c"vkCreateAccelerationStructure2KHR"));
+                }
+                b"VK_EXT_image_compression_control" => {
+                    if out.v1_4.get_image_subresource_layout2.is_none() {
+                        out.v1_4.get_image_subresource_layout2 =
+                            to_option(loader(c"vkGetImageSubresourceLayout2EXT"));
+                    }
+                }
+                b"VK_EXT_device_fault" => {
+                    out.ext_device_fault.get_device_fault_info_ext =
+                        to_option(loader(c"vkGetDeviceFaultInfoEXT"));
+                }
+                b"VK_FUCHSIA_external_memory" => {
+                    out.fuchsia_external_memory.get_memory_zircon_handle_fuchsia =
+                        to_option(loader(c"vkGetMemoryZirconHandleFUCHSIA"));
+                    out.fuchsia_external_memory
+                        .get_memory_zircon_handle_properties_fuchsia =
+                        to_option(loader(c"vkGetMemoryZirconHandlePropertiesFUCHSIA"));
+                }
+                b"VK_FUCHSIA_external_semaphore" => {
+                    out.fuchsia_external_semaphore
+                        .import_semaphore_zircon_handle_fuchsia =
+                        to_option(loader(c"vkImportSemaphoreZirconHandleFUCHSIA"));
+                    out.fuchsia_external_semaphore
+                        .get_semaphore_zircon_handle_fuchsia =
+                        to_option(loader(c"vkGetSemaphoreZirconHandleFUCHSIA"));
+                }
+                b"VK_FUCHSIA_buffer_collection" => {
+                    out.fuchsia_buffer_collection
+                        .create_buffer_collection_fuchsia =
+                        to_option(loader(c"vkCreateBufferCollectionFUCHSIA"));
+                    out.fuchsia_buffer_collection
+                        .set_buffer_collection_image_constraints_fuchsia =
+                        to_option(loader(c"vkSetBufferCollectionImageConstraintsFUCHSIA"));
+                    out.fuchsia_buffer_collection
+                        .set_buffer_collection_buffer_constraints_fuchsia =
+                        to_option(loader(c"vkSetBufferCollectionBufferConstraintsFUCHSIA"));
+                    out.fuchsia_buffer_collection
+                        .destroy_buffer_collection_fuchsia =
+                        to_option(loader(c"vkDestroyBufferCollectionFUCHSIA"));
+                    out.fuchsia_buffer_collection
+                        .get_buffer_collection_properties_fuchsia =
+                        to_option(loader(c"vkGetBufferCollectionPropertiesFUCHSIA"));
+                }
+                b"VK_HUAWEI_subpass_shading" => {
+                    out.huawei_subpass_shading
+                        .get_device_subpass_shading_max_workgroup_size_huawei =
+                        to_option(loader(c"vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI"));
+                }
+                b"VK_NV_external_memory_rdma" => {
+                    out.nv_external_memory_rdma.get_memory_remote_address_nv =
+                        to_option(loader(c"vkGetMemoryRemoteAddressNV"));
+                }
+                b"VK_EXT_pipeline_properties" => {
+                    out.ext_pipeline_properties.get_pipeline_properties_ext =
+                        to_option(loader(c"vkGetPipelinePropertiesEXT"));
+                }
+                b"VK_NV_external_sci_sync" => {
+                    if out
+                        .nv_external_sci_sync2
+                        .get_fence_sci_sync_fence_nv
+                        .is_none()
+                    {
+                        out.nv_external_sci_sync2.get_fence_sci_sync_fence_nv =
+                            to_option(loader(c"vkGetFenceSciSyncFenceNV"));
+                    }
+                    if out
+                        .nv_external_sci_sync2
+                        .get_fence_sci_sync_obj_nv
+                        .is_none()
+                    {
+                        out.nv_external_sci_sync2.get_fence_sci_sync_obj_nv =
+                            to_option(loader(c"vkGetFenceSciSyncObjNV"));
+                    }
+                    if out
+                        .nv_external_sci_sync2
+                        .import_fence_sci_sync_fence_nv
+                        .is_none()
+                    {
+                        out.nv_external_sci_sync2.import_fence_sci_sync_fence_nv =
+                            to_option(loader(c"vkImportFenceSciSyncFenceNV"));
+                    }
+                    if out
+                        .nv_external_sci_sync2
+                        .import_fence_sci_sync_obj_nv
+                        .is_none()
+                    {
+                        out.nv_external_sci_sync2.import_fence_sci_sync_obj_nv =
+                            to_option(loader(c"vkImportFenceSciSyncObjNV"));
+                    }
+                    out.nv_external_sci_sync.get_semaphore_sci_sync_obj_nv =
+                        to_option(loader(c"vkGetSemaphoreSciSyncObjNV"));
+                    out.nv_external_sci_sync.import_semaphore_sci_sync_obj_nv =
+                        to_option(loader(c"vkImportSemaphoreSciSyncObjNV"));
+                }
+                b"VK_NV_external_memory_sci_buf" => {
+                    out.nv_external_memory_sci_buf.get_memory_sci_buf_nv =
+                        to_option(loader(c"vkGetMemorySciBufNV"));
+                }
+                b"VK_EXT_opacity_micromap" => {
+                    out.ext_opacity_micromap.create_micromap_ext =
+                        to_option(loader(c"vkCreateMicromapEXT"));
+                    out.ext_opacity_micromap.destroy_micromap_ext =
+                        to_option(loader(c"vkDestroyMicromapEXT"));
+                    out.ext_opacity_micromap.build_micromaps_ext =
+                        to_option(loader(c"vkBuildMicromapsEXT"));
+                    out.ext_opacity_micromap.copy_micromap_ext =
+                        to_option(loader(c"vkCopyMicromapEXT"));
+                    out.ext_opacity_micromap.copy_micromap_to_memory_ext =
+                        to_option(loader(c"vkCopyMicromapToMemoryEXT"));
+                    out.ext_opacity_micromap.copy_memory_to_micromap_ext =
+                        to_option(loader(c"vkCopyMemoryToMicromapEXT"));
+                    out.ext_opacity_micromap.write_micromaps_properties_ext =
+                        to_option(loader(c"vkWriteMicromapsPropertiesEXT"));
+                    out.ext_opacity_micromap
+                        .get_device_micromap_compatibility_ext =
+                        to_option(loader(c"vkGetDeviceMicromapCompatibilityEXT"));
+                    out.ext_opacity_micromap.get_micromap_build_sizes_ext =
+                        to_option(loader(c"vkGetMicromapBuildSizesEXT"));
+                }
+                b"VK_EXT_pageable_device_local_memory" => {
+                    out.ext_pageable_device_local_memory
+                        .set_device_memory_priority_ext =
+                        to_option(loader(c"vkSetDeviceMemoryPriorityEXT"));
+                }
+                b"VK_KHR_maintenance4" => {
+                    if out.v1_3.get_device_buffer_memory_requirements.is_none() {
+                        out.v1_3.get_device_buffer_memory_requirements =
+                            to_option(loader(c"vkGetDeviceBufferMemoryRequirementsKHR"));
+                    }
+                    if out.v1_3.get_device_image_memory_requirements.is_none() {
+                        out.v1_3.get_device_image_memory_requirements =
+                            to_option(loader(c"vkGetDeviceImageMemoryRequirementsKHR"));
+                    }
+                    if out
+                        .v1_3
+                        .get_device_image_sparse_memory_requirements
+                        .is_none()
+                    {
+                        out.v1_3.get_device_image_sparse_memory_requirements =
+                            to_option(loader(c"vkGetDeviceImageSparseMemoryRequirementsKHR"));
+                    }
                 }
                 b"VK_VALVE_descriptor_set_host_mapping" => {
-                    out.valve_descriptor_set_host_mapping =
-                        Some(DeviceFnValveDescriptorSetHostMapping::load(&mut loader))
+                    out.valve_descriptor_set_host_mapping
+                        .get_descriptor_set_layout_host_mapping_info_valve =
+                        to_option(loader(c"vkGetDescriptorSetLayoutHostMappingInfoVALVE"));
+                    out.valve_descriptor_set_host_mapping
+                        .get_descriptor_set_host_mapping_valve =
+                        to_option(loader(c"vkGetDescriptorSetHostMappingVALVE"));
+                }
+                b"VK_NV_device_generated_commands_compute" => {
+                    out.nv_device_generated_commands_compute
+                        .get_pipeline_indirect_memory_requirements_nv =
+                        to_option(loader(c"vkGetPipelineIndirectMemoryRequirementsNV"));
+                    out.nv_device_generated_commands_compute
+                        .get_pipeline_indirect_device_address_nv =
+                        to_option(loader(c"vkGetPipelineIndirectDeviceAddressNV"));
+                }
+                b"VK_OHOS_external_memory" => {
+                    out.ohos_external_memory.get_native_buffer_properties_ohos =
+                        to_option(loader(c"vkGetNativeBufferPropertiesOHOS"));
+                    out.ohos_external_memory.get_memory_native_buffer_ohos =
+                        to_option(loader(c"vkGetMemoryNativeBufferOHOS"));
+                }
+                b"VK_ARM_tensors" => {
+                    out.arm_tensors.create_tensor_arm = to_option(loader(c"vkCreateTensorARM"));
+                    out.arm_tensors.destroy_tensor_arm = to_option(loader(c"vkDestroyTensorARM"));
+                    out.arm_tensors.create_tensor_view_arm =
+                        to_option(loader(c"vkCreateTensorViewARM"));
+                    out.arm_tensors.destroy_tensor_view_arm =
+                        to_option(loader(c"vkDestroyTensorViewARM"));
+                    out.arm_tensors.get_tensor_memory_requirements_arm =
+                        to_option(loader(c"vkGetTensorMemoryRequirementsARM"));
+                    out.arm_tensors.bind_tensor_memory_arm =
+                        to_option(loader(c"vkBindTensorMemoryARM"));
+                    out.arm_tensors.get_device_tensor_memory_requirements_arm =
+                        to_option(loader(c"vkGetDeviceTensorMemoryRequirementsARM"));
+                    out.arm_tensors
+                        .get_tensor_opaque_capture_descriptor_data_arm =
+                        to_option(loader(c"vkGetTensorOpaqueCaptureDescriptorDataARM"));
+                    out.arm_tensors
+                        .get_tensor_view_opaque_capture_descriptor_data_arm =
+                        to_option(loader(c"vkGetTensorViewOpaqueCaptureDescriptorDataARM"));
+                }
+                b"VK_EXT_shader_module_identifier" => {
+                    out.ext_shader_module_identifier
+                        .get_shader_module_identifier_ext =
+                        to_option(loader(c"vkGetShaderModuleIdentifierEXT"));
+                    out.ext_shader_module_identifier
+                        .get_shader_module_create_info_identifier_ext =
+                        to_option(loader(c"vkGetShaderModuleCreateInfoIdentifierEXT"));
+                }
+                b"VK_NV_optical_flow" => {
+                    out.nv_optical_flow.create_optical_flow_session_nv =
+                        to_option(loader(c"vkCreateOpticalFlowSessionNV"));
+                    out.nv_optical_flow.destroy_optical_flow_session_nv =
+                        to_option(loader(c"vkDestroyOpticalFlowSessionNV"));
+                    out.nv_optical_flow.bind_optical_flow_session_image_nv =
+                        to_option(loader(c"vkBindOpticalFlowSessionImageNV"));
+                }
+                b"VK_KHR_maintenance5" => {
+                    if out.v1_4.get_rendering_area_granularity.is_none() {
+                        out.v1_4.get_rendering_area_granularity =
+                            to_option(loader(c"vkGetRenderingAreaGranularityKHR"));
+                    }
+                    if out.v1_4.get_device_image_subresource_layout.is_none() {
+                        out.v1_4.get_device_image_subresource_layout =
+                            to_option(loader(c"vkGetDeviceImageSubresourceLayoutKHR"));
+                    }
+                    if out.v1_4.get_image_subresource_layout2.is_none() {
+                        out.v1_4.get_image_subresource_layout2 =
+                            to_option(loader(c"vkGetImageSubresourceLayout2KHR"));
+                    }
+                }
+                b"VK_AMD_anti_lag" => {
+                    out.amd_anti_lag.anti_lag_update_amd = to_option(loader(c"vkAntiLagUpdateAMD"));
+                }
+                b"VK_KHR_present_wait2" => {
+                    out.khr_present_wait2.wait_for_present2_khr =
+                        to_option(loader(c"vkWaitForPresent2KHR"));
+                }
+                b"VK_EXT_shader_object" => {
+                    out.ext_shader_object.create_shaders_ext =
+                        to_option(loader(c"vkCreateShadersEXT"));
+                    out.ext_shader_object.destroy_shader_ext =
+                        to_option(loader(c"vkDestroyShaderEXT"));
+                    out.ext_shader_object.get_shader_binary_data_ext =
+                        to_option(loader(c"vkGetShaderBinaryDataEXT"));
+                }
+                b"VK_KHR_pipeline_binary" => {
+                    out.khr_pipeline_binary.create_pipeline_binaries_khr =
+                        to_option(loader(c"vkCreatePipelineBinariesKHR"));
+                    out.khr_pipeline_binary.destroy_pipeline_binary_khr =
+                        to_option(loader(c"vkDestroyPipelineBinaryKHR"));
+                    out.khr_pipeline_binary.get_pipeline_key_khr =
+                        to_option(loader(c"vkGetPipelineKeyKHR"));
+                    out.khr_pipeline_binary.get_pipeline_binary_data_khr =
+                        to_option(loader(c"vkGetPipelineBinaryDataKHR"));
+                    out.khr_pipeline_binary.release_captured_pipeline_data_khr =
+                        to_option(loader(c"vkReleaseCapturedPipelineDataKHR"));
+                }
+                b"VK_QCOM_tile_properties" => {
+                    out.qcom_tile_properties
+                        .get_framebuffer_tile_properties_qcom =
+                        to_option(loader(c"vkGetFramebufferTilePropertiesQCOM"));
+                    out.qcom_tile_properties
+                        .get_dynamic_rendering_tile_properties_qcom =
+                        to_option(loader(c"vkGetDynamicRenderingTilePropertiesQCOM"));
+                }
+                b"VK_KHR_swapchain_maintenance1" => {
+                    if out
+                        .khr_swapchain_maintenance1
+                        .release_swapchain_images_khr
+                        .is_none()
+                    {
+                        out.khr_swapchain_maintenance1.release_swapchain_images_khr =
+                            to_option(loader(c"vkReleaseSwapchainImagesKHR"));
+                    }
+                }
+                b"VK_NV_external_sci_sync2" => {
+                    out.nv_external_sci_sync2.create_semaphore_sci_sync_pool_nv =
+                        to_option(loader(c"vkCreateSemaphoreSciSyncPoolNV"));
+                    out.nv_external_sci_sync2.destroy_semaphore_sci_sync_pool_nv =
+                        to_option(loader(c"vkDestroySemaphoreSciSyncPoolNV"));
+                    if out
+                        .nv_external_sci_sync2
+                        .get_fence_sci_sync_fence_nv
+                        .is_none()
+                    {
+                        out.nv_external_sci_sync2.get_fence_sci_sync_fence_nv =
+                            to_option(loader(c"vkGetFenceSciSyncFenceNV"));
+                    }
+                    if out
+                        .nv_external_sci_sync2
+                        .get_fence_sci_sync_obj_nv
+                        .is_none()
+                    {
+                        out.nv_external_sci_sync2.get_fence_sci_sync_obj_nv =
+                            to_option(loader(c"vkGetFenceSciSyncObjNV"));
+                    }
+                    if out
+                        .nv_external_sci_sync2
+                        .import_fence_sci_sync_fence_nv
+                        .is_none()
+                    {
+                        out.nv_external_sci_sync2.import_fence_sci_sync_fence_nv =
+                            to_option(loader(c"vkImportFenceSciSyncFenceNV"));
+                    }
+                    if out
+                        .nv_external_sci_sync2
+                        .import_fence_sci_sync_obj_nv
+                        .is_none()
+                    {
+                        out.nv_external_sci_sync2.import_fence_sci_sync_obj_nv =
+                            to_option(loader(c"vkImportFenceSciSyncObjNV"));
+                    }
+                }
+                b"VK_NV_cooperative_vector" => {
+                    out.nv_cooperative_vector
+                        .convert_cooperative_vector_matrix_nv =
+                        to_option(loader(c"vkConvertCooperativeVectorMatrixNV"));
+                }
+                b"VK_NV_low_latency2" => {
+                    out.nv_low_latency2.set_latency_sleep_mode_nv =
+                        to_option(loader(c"vkSetLatencySleepModeNV"));
+                    out.nv_low_latency2.latency_sleep_nv = to_option(loader(c"vkLatencySleepNV"));
+                    out.nv_low_latency2.set_latency_marker_nv =
+                        to_option(loader(c"vkSetLatencyMarkerNV"));
+                    out.nv_low_latency2.get_latency_timings_nv =
+                        to_option(loader(c"vkGetLatencyTimingsNV"));
+                }
+                b"VK_ARM_data_graph" => {
+                    out.arm_data_graph.create_data_graph_pipelines_arm =
+                        to_option(loader(c"vkCreateDataGraphPipelinesARM"));
+                    out.arm_data_graph.create_data_graph_pipeline_session_arm =
+                        to_option(loader(c"vkCreateDataGraphPipelineSessionARM"));
+                    out.arm_data_graph
+                        .get_data_graph_pipeline_session_bind_point_requirements_arm = to_option(
+                        loader(c"vkGetDataGraphPipelineSessionBindPointRequirementsARM"),
+                    );
+                    out.arm_data_graph
+                        .get_data_graph_pipeline_session_memory_requirements_arm = to_option(
+                        loader(c"vkGetDataGraphPipelineSessionMemoryRequirementsARM"),
+                    );
+                    out.arm_data_graph
+                        .bind_data_graph_pipeline_session_memory_arm =
+                        to_option(loader(c"vkBindDataGraphPipelineSessionMemoryARM"));
+                    out.arm_data_graph.destroy_data_graph_pipeline_session_arm =
+                        to_option(loader(c"vkDestroyDataGraphPipelineSessionARM"));
+                    out.arm_data_graph
+                        .get_data_graph_pipeline_available_properties_arm =
+                        to_option(loader(c"vkGetDataGraphPipelineAvailablePropertiesARM"));
+                    out.arm_data_graph.get_data_graph_pipeline_properties_arm =
+                        to_option(loader(c"vkGetDataGraphPipelinePropertiesARM"));
+                }
+                b"VK_QNX_external_memory_screen_buffer" => {
+                    out.qnx_external_memory_screen_buffer
+                        .get_screen_buffer_properties_qnx =
+                        to_option(loader(c"vkGetScreenBufferPropertiesQNX"));
+                }
+                b"VK_KHR_calibrated_timestamps" => {
+                    if out
+                        .khr_calibrated_timestamps
+                        .get_calibrated_timestamps_khr
+                        .is_none()
+                    {
+                        out.khr_calibrated_timestamps.get_calibrated_timestamps_khr =
+                            to_option(loader(c"vkGetCalibratedTimestampsKHR"));
+                    }
+                }
+                b"VK_NV_external_compute_queue" => {
+                    out.nv_external_compute_queue
+                        .create_external_compute_queue_nv =
+                        to_option(loader(c"vkCreateExternalComputeQueueNV"));
+                    out.nv_external_compute_queue
+                        .destroy_external_compute_queue_nv =
+                        to_option(loader(c"vkDestroyExternalComputeQueueNV"));
+                }
+                b"VK_NV_cluster_acceleration_structure" => {
+                    out.nv_cluster_acceleration_structure
+                        .get_cluster_acceleration_structure_build_sizes_nv =
+                        to_option(loader(c"vkGetClusterAccelerationStructureBuildSizesNV"));
+                }
+                b"VK_NV_partitioned_acceleration_structure" => {
+                    out.nv_partitioned_acceleration_structure
+                        .get_partitioned_acceleration_structures_build_sizes_nv = to_option(
+                        loader(c"vkGetPartitionedAccelerationStructuresBuildSizesNV"),
+                    );
+                }
+                b"VK_EXT_device_generated_commands" => {
+                    out.ext_device_generated_commands
+                        .get_generated_commands_memory_requirements_ext =
+                        to_option(loader(c"vkGetGeneratedCommandsMemoryRequirementsEXT"));
+                    out.ext_device_generated_commands
+                        .create_indirect_commands_layout_ext =
+                        to_option(loader(c"vkCreateIndirectCommandsLayoutEXT"));
+                    out.ext_device_generated_commands
+                        .destroy_indirect_commands_layout_ext =
+                        to_option(loader(c"vkDestroyIndirectCommandsLayoutEXT"));
+                    out.ext_device_generated_commands
+                        .create_indirect_execution_set_ext =
+                        to_option(loader(c"vkCreateIndirectExecutionSetEXT"));
+                    out.ext_device_generated_commands
+                        .destroy_indirect_execution_set_ext =
+                        to_option(loader(c"vkDestroyIndirectExecutionSetEXT"));
+                    out.ext_device_generated_commands
+                        .update_indirect_execution_set_pipeline_ext =
+                        to_option(loader(c"vkUpdateIndirectExecutionSetPipelineEXT"));
+                    out.ext_device_generated_commands
+                        .update_indirect_execution_set_shader_ext =
+                        to_option(loader(c"vkUpdateIndirectExecutionSetShaderEXT"));
+                }
+                b"VK_KHR_device_fault" => {
+                    out.khr_device_fault.get_device_fault_reports_khr =
+                        to_option(loader(c"vkGetDeviceFaultReportsKHR"));
+                    out.khr_device_fault.get_device_fault_debug_info_khr =
+                        to_option(loader(c"vkGetDeviceFaultDebugInfoKHR"));
+                }
+                b"VK_EXT_external_memory_metal" => {
+                    out.ext_external_memory_metal.get_memory_metal_handle_ext =
+                        to_option(loader(c"vkGetMemoryMetalHandleEXT"));
+                    out.ext_external_memory_metal
+                        .get_memory_metal_handle_properties_ext =
+                        to_option(loader(c"vkGetMemoryMetalHandlePropertiesEXT"));
+                }
+                b"VK_ARM_shader_instrumentation" => {
+                    out.arm_shader_instrumentation
+                        .create_shader_instrumentation_arm =
+                        to_option(loader(c"vkCreateShaderInstrumentationARM"));
+                    out.arm_shader_instrumentation
+                        .destroy_shader_instrumentation_arm =
+                        to_option(loader(c"vkDestroyShaderInstrumentationARM"));
+                    out.arm_shader_instrumentation
+                        .get_shader_instrumentation_values_arm =
+                        to_option(loader(c"vkGetShaderInstrumentationValuesARM"));
+                    out.arm_shader_instrumentation
+                        .clear_shader_instrumentation_metrics_arm =
+                        to_option(loader(c"vkClearShaderInstrumentationMetricsARM"));
                 }
                 _ => (),
             }
@@ -2141,6 +3087,81 @@ pub struct DeviceFnv1_0 {
 }
 
 impl DeviceFnv1_0 {
+    pub const EMPTY: Self = Self {
+        destroy_device: None,
+        get_device_queue: None,
+        device_wait_idle: None,
+        allocate_memory: None,
+        free_memory: None,
+        map_memory: None,
+        unmap_memory: None,
+        flush_mapped_memory_ranges: None,
+        invalidate_mapped_memory_ranges: None,
+        get_device_memory_commitment: None,
+        get_buffer_memory_requirements: None,
+        bind_buffer_memory: None,
+        get_image_memory_requirements: None,
+        bind_image_memory: None,
+        get_image_sparse_memory_requirements: None,
+        create_fence: None,
+        destroy_fence: None,
+        reset_fences: None,
+        get_fence_status: None,
+        wait_for_fences: None,
+        create_semaphore: None,
+        destroy_semaphore: None,
+        create_event: None,
+        destroy_event: None,
+        get_event_status: None,
+        set_event: None,
+        reset_event: None,
+        create_query_pool: None,
+        destroy_query_pool: None,
+        get_query_pool_results: None,
+        create_buffer: None,
+        destroy_buffer: None,
+        create_buffer_view: None,
+        destroy_buffer_view: None,
+        create_image: None,
+        destroy_image: None,
+        get_image_subresource_layout: None,
+        create_image_view: None,
+        destroy_image_view: None,
+        create_shader_module: None,
+        destroy_shader_module: None,
+        create_pipeline_cache: None,
+        destroy_pipeline_cache: None,
+        get_pipeline_cache_data: None,
+        merge_pipeline_caches: None,
+        create_graphics_pipelines: None,
+        create_compute_pipelines: None,
+        destroy_pipeline: None,
+        create_pipeline_layout: None,
+        destroy_pipeline_layout: None,
+        create_sampler: None,
+        destroy_sampler: None,
+        create_descriptor_set_layout: None,
+        destroy_descriptor_set_layout: None,
+        create_descriptor_pool: None,
+        destroy_descriptor_pool: None,
+        reset_descriptor_pool: None,
+        allocate_descriptor_sets: None,
+        free_descriptor_sets: None,
+        update_descriptor_sets: None,
+        create_framebuffer: None,
+        destroy_framebuffer: None,
+        create_render_pass: None,
+        destroy_render_pass: None,
+        get_render_area_granularity: None,
+        create_command_pool: None,
+        destroy_command_pool: None,
+        reset_command_pool: None,
+        allocate_command_buffers: None,
+        free_command_buffers: None,
+        get_fault_data: None,
+        get_command_pool_memory_consumption: None,
+    };
+
     pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
         Self {
             destroy_device: to_option(loader(c"vkDestroyDevice")),
@@ -2226,95 +3247,66 @@ impl DeviceFnv1_0 {
 #[derive(Clone, Default)]
 pub struct DeviceFnv1_1 {
     pub trim_command_pool: Option<vkTrimCommandPool>,
-    pub trim_command_pool_khr: Option<vkTrimCommandPoolKHR>,
     pub get_device_group_peer_memory_features: Option<vkGetDeviceGroupPeerMemoryFeatures>,
-    pub get_device_group_peer_memory_features_khr: Option<vkGetDeviceGroupPeerMemoryFeaturesKHR>,
     pub bind_buffer_memory2: Option<vkBindBufferMemory2>,
-    pub bind_buffer_memory2_khr: Option<vkBindBufferMemory2KHR>,
     pub bind_image_memory2: Option<vkBindImageMemory2>,
-    pub bind_image_memory2_khr: Option<vkBindImageMemory2KHR>,
     pub create_descriptor_update_template: Option<vkCreateDescriptorUpdateTemplate>,
-    pub create_descriptor_update_template_khr: Option<vkCreateDescriptorUpdateTemplateKHR>,
     pub destroy_descriptor_update_template: Option<vkDestroyDescriptorUpdateTemplate>,
-    pub destroy_descriptor_update_template_khr: Option<vkDestroyDescriptorUpdateTemplateKHR>,
     pub update_descriptor_set_with_template: Option<vkUpdateDescriptorSetWithTemplate>,
-    pub update_descriptor_set_with_template_khr: Option<vkUpdateDescriptorSetWithTemplateKHR>,
     pub get_buffer_memory_requirements2: Option<vkGetBufferMemoryRequirements2>,
-    pub get_buffer_memory_requirements2_khr: Option<vkGetBufferMemoryRequirements2KHR>,
     pub get_image_memory_requirements2: Option<vkGetImageMemoryRequirements2>,
-    pub get_image_memory_requirements2_khr: Option<vkGetImageMemoryRequirements2KHR>,
     pub get_image_sparse_memory_requirements2: Option<vkGetImageSparseMemoryRequirements2>,
-    pub get_image_sparse_memory_requirements2_khr: Option<vkGetImageSparseMemoryRequirements2KHR>,
     pub create_sampler_ycbcr_conversion: Option<vkCreateSamplerYcbcrConversion>,
-    pub create_sampler_ycbcr_conversion_khr: Option<vkCreateSamplerYcbcrConversionKHR>,
     pub destroy_sampler_ycbcr_conversion: Option<vkDestroySamplerYcbcrConversion>,
-    pub destroy_sampler_ycbcr_conversion_khr: Option<vkDestroySamplerYcbcrConversionKHR>,
     pub get_device_queue2: Option<vkGetDeviceQueue2>,
     pub get_descriptor_set_layout_support: Option<vkGetDescriptorSetLayoutSupport>,
-    pub get_descriptor_set_layout_support_khr: Option<vkGetDescriptorSetLayoutSupportKHR>,
 }
 
 impl DeviceFnv1_1 {
+    pub const EMPTY: Self = Self {
+        trim_command_pool: None,
+        get_device_group_peer_memory_features: None,
+        bind_buffer_memory2: None,
+        bind_image_memory2: None,
+        create_descriptor_update_template: None,
+        destroy_descriptor_update_template: None,
+        update_descriptor_set_with_template: None,
+        get_buffer_memory_requirements2: None,
+        get_image_memory_requirements2: None,
+        get_image_sparse_memory_requirements2: None,
+        create_sampler_ycbcr_conversion: None,
+        destroy_sampler_ycbcr_conversion: None,
+        get_device_queue2: None,
+        get_descriptor_set_layout_support: None,
+    };
+
     pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
         Self {
             trim_command_pool: to_option(loader(c"vkTrimCommandPool")),
-            trim_command_pool_khr: to_option(loader(c"vkTrimCommandPoolKHR")),
             get_device_group_peer_memory_features: to_option(loader(
                 c"vkGetDeviceGroupPeerMemoryFeatures",
             )),
-            get_device_group_peer_memory_features_khr: to_option(loader(
-                c"vkGetDeviceGroupPeerMemoryFeaturesKHR",
-            )),
             bind_buffer_memory2: to_option(loader(c"vkBindBufferMemory2")),
-            bind_buffer_memory2_khr: to_option(loader(c"vkBindBufferMemory2KHR")),
             bind_image_memory2: to_option(loader(c"vkBindImageMemory2")),
-            bind_image_memory2_khr: to_option(loader(c"vkBindImageMemory2KHR")),
             create_descriptor_update_template: to_option(loader(
                 c"vkCreateDescriptorUpdateTemplate",
-            )),
-            create_descriptor_update_template_khr: to_option(loader(
-                c"vkCreateDescriptorUpdateTemplateKHR",
             )),
             destroy_descriptor_update_template: to_option(loader(
                 c"vkDestroyDescriptorUpdateTemplate",
             )),
-            destroy_descriptor_update_template_khr: to_option(loader(
-                c"vkDestroyDescriptorUpdateTemplateKHR",
-            )),
             update_descriptor_set_with_template: to_option(loader(
                 c"vkUpdateDescriptorSetWithTemplate",
             )),
-            update_descriptor_set_with_template_khr: to_option(loader(
-                c"vkUpdateDescriptorSetWithTemplateKHR",
-            )),
             get_buffer_memory_requirements2: to_option(loader(c"vkGetBufferMemoryRequirements2")),
-            get_buffer_memory_requirements2_khr: to_option(loader(
-                c"vkGetBufferMemoryRequirements2KHR",
-            )),
             get_image_memory_requirements2: to_option(loader(c"vkGetImageMemoryRequirements2")),
-            get_image_memory_requirements2_khr: to_option(loader(
-                c"vkGetImageMemoryRequirements2KHR",
-            )),
             get_image_sparse_memory_requirements2: to_option(loader(
                 c"vkGetImageSparseMemoryRequirements2",
             )),
-            get_image_sparse_memory_requirements2_khr: to_option(loader(
-                c"vkGetImageSparseMemoryRequirements2KHR",
-            )),
             create_sampler_ycbcr_conversion: to_option(loader(c"vkCreateSamplerYcbcrConversion")),
-            create_sampler_ycbcr_conversion_khr: to_option(loader(
-                c"vkCreateSamplerYcbcrConversionKHR",
-            )),
             destroy_sampler_ycbcr_conversion: to_option(loader(c"vkDestroySamplerYcbcrConversion")),
-            destroy_sampler_ycbcr_conversion_khr: to_option(loader(
-                c"vkDestroySamplerYcbcrConversionKHR",
-            )),
             get_device_queue2: to_option(loader(c"vkGetDeviceQueue2")),
             get_descriptor_set_layout_support: to_option(loader(
                 c"vkGetDescriptorSetLayoutSupport",
-            )),
-            get_descriptor_set_layout_support_khr: to_option(loader(
-                c"vkGetDescriptorSetLayoutSupportKHR",
             )),
         }
     }
@@ -2323,52 +3315,40 @@ impl DeviceFnv1_1 {
 #[derive(Clone, Default)]
 pub struct DeviceFnv1_2 {
     pub reset_query_pool: Option<vkResetQueryPool>,
-    pub reset_query_pool_ext: Option<vkResetQueryPoolEXT>,
     pub create_render_pass2: Option<vkCreateRenderPass2>,
-    pub create_render_pass2_khr: Option<vkCreateRenderPass2KHR>,
     pub get_semaphore_counter_value: Option<vkGetSemaphoreCounterValue>,
-    pub get_semaphore_counter_value_khr: Option<vkGetSemaphoreCounterValueKHR>,
     pub wait_semaphores: Option<vkWaitSemaphores>,
-    pub wait_semaphores_khr: Option<vkWaitSemaphoresKHR>,
     pub signal_semaphore: Option<vkSignalSemaphore>,
-    pub signal_semaphore_khr: Option<vkSignalSemaphoreKHR>,
     pub get_buffer_opaque_capture_address: Option<vkGetBufferOpaqueCaptureAddress>,
-    pub get_buffer_opaque_capture_address_khr: Option<vkGetBufferOpaqueCaptureAddressKHR>,
     pub get_buffer_device_address: Option<vkGetBufferDeviceAddress>,
-    pub get_buffer_device_address_khr: Option<vkGetBufferDeviceAddressKHR>,
-    pub get_buffer_device_address_ext: Option<vkGetBufferDeviceAddressEXT>,
     pub get_device_memory_opaque_capture_address: Option<vkGetDeviceMemoryOpaqueCaptureAddress>,
-    pub get_device_memory_opaque_capture_address_khr:
-        Option<vkGetDeviceMemoryOpaqueCaptureAddressKHR>,
 }
 
 impl DeviceFnv1_2 {
+    pub const EMPTY: Self = Self {
+        reset_query_pool: None,
+        create_render_pass2: None,
+        get_semaphore_counter_value: None,
+        wait_semaphores: None,
+        signal_semaphore: None,
+        get_buffer_opaque_capture_address: None,
+        get_buffer_device_address: None,
+        get_device_memory_opaque_capture_address: None,
+    };
+
     pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
         Self {
             reset_query_pool: to_option(loader(c"vkResetQueryPool")),
-            reset_query_pool_ext: to_option(loader(c"vkResetQueryPoolEXT")),
             create_render_pass2: to_option(loader(c"vkCreateRenderPass2")),
-            create_render_pass2_khr: to_option(loader(c"vkCreateRenderPass2KHR")),
             get_semaphore_counter_value: to_option(loader(c"vkGetSemaphoreCounterValue")),
-            get_semaphore_counter_value_khr: to_option(loader(c"vkGetSemaphoreCounterValueKHR")),
             wait_semaphores: to_option(loader(c"vkWaitSemaphores")),
-            wait_semaphores_khr: to_option(loader(c"vkWaitSemaphoresKHR")),
             signal_semaphore: to_option(loader(c"vkSignalSemaphore")),
-            signal_semaphore_khr: to_option(loader(c"vkSignalSemaphoreKHR")),
             get_buffer_opaque_capture_address: to_option(loader(
                 c"vkGetBufferOpaqueCaptureAddress",
             )),
-            get_buffer_opaque_capture_address_khr: to_option(loader(
-                c"vkGetBufferOpaqueCaptureAddressKHR",
-            )),
             get_buffer_device_address: to_option(loader(c"vkGetBufferDeviceAddress")),
-            get_buffer_device_address_khr: to_option(loader(c"vkGetBufferDeviceAddressKHR")),
-            get_buffer_device_address_ext: to_option(loader(c"vkGetBufferDeviceAddressEXT")),
             get_device_memory_opaque_capture_address: to_option(loader(
                 c"vkGetDeviceMemoryOpaqueCaptureAddress",
-            )),
-            get_device_memory_opaque_capture_address_khr: to_option(loader(
-                c"vkGetDeviceMemoryOpaqueCaptureAddressKHR",
             )),
         }
     }
@@ -2377,52 +3357,41 @@ impl DeviceFnv1_2 {
 #[derive(Clone, Default)]
 pub struct DeviceFnv1_3 {
     pub get_device_buffer_memory_requirements: Option<vkGetDeviceBufferMemoryRequirements>,
-    pub get_device_buffer_memory_requirements_khr: Option<vkGetDeviceBufferMemoryRequirementsKHR>,
     pub get_device_image_memory_requirements: Option<vkGetDeviceImageMemoryRequirements>,
-    pub get_device_image_memory_requirements_khr: Option<vkGetDeviceImageMemoryRequirementsKHR>,
     pub get_device_image_sparse_memory_requirements:
         Option<vkGetDeviceImageSparseMemoryRequirements>,
-    pub get_device_image_sparse_memory_requirements_khr:
-        Option<vkGetDeviceImageSparseMemoryRequirementsKHR>,
     pub create_private_data_slot: Option<vkCreatePrivateDataSlot>,
-    pub create_private_data_slot_ext: Option<vkCreatePrivateDataSlotEXT>,
     pub destroy_private_data_slot: Option<vkDestroyPrivateDataSlot>,
-    pub destroy_private_data_slot_ext: Option<vkDestroyPrivateDataSlotEXT>,
     pub set_private_data: Option<vkSetPrivateData>,
-    pub set_private_data_ext: Option<vkSetPrivateDataEXT>,
     pub get_private_data: Option<vkGetPrivateData>,
-    pub get_private_data_ext: Option<vkGetPrivateDataEXT>,
 }
 
 impl DeviceFnv1_3 {
+    pub const EMPTY: Self = Self {
+        get_device_buffer_memory_requirements: None,
+        get_device_image_memory_requirements: None,
+        get_device_image_sparse_memory_requirements: None,
+        create_private_data_slot: None,
+        destroy_private_data_slot: None,
+        set_private_data: None,
+        get_private_data: None,
+    };
+
     pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
         Self {
             get_device_buffer_memory_requirements: to_option(loader(
                 c"vkGetDeviceBufferMemoryRequirements",
             )),
-            get_device_buffer_memory_requirements_khr: to_option(loader(
-                c"vkGetDeviceBufferMemoryRequirementsKHR",
-            )),
             get_device_image_memory_requirements: to_option(loader(
                 c"vkGetDeviceImageMemoryRequirements",
-            )),
-            get_device_image_memory_requirements_khr: to_option(loader(
-                c"vkGetDeviceImageMemoryRequirementsKHR",
             )),
             get_device_image_sparse_memory_requirements: to_option(loader(
                 c"vkGetDeviceImageSparseMemoryRequirements",
             )),
-            get_device_image_sparse_memory_requirements_khr: to_option(loader(
-                c"vkGetDeviceImageSparseMemoryRequirementsKHR",
-            )),
             create_private_data_slot: to_option(loader(c"vkCreatePrivateDataSlot")),
-            create_private_data_slot_ext: to_option(loader(c"vkCreatePrivateDataSlotEXT")),
             destroy_private_data_slot: to_option(loader(c"vkDestroyPrivateDataSlot")),
-            destroy_private_data_slot_ext: to_option(loader(c"vkDestroyPrivateDataSlotEXT")),
             set_private_data: to_option(loader(c"vkSetPrivateData")),
-            set_private_data_ext: to_option(loader(c"vkSetPrivateDataEXT")),
             get_private_data: to_option(loader(c"vkGetPrivateData")),
-            get_private_data_ext: to_option(loader(c"vkGetPrivateDataEXT")),
         }
     }
 }
@@ -2430,1681 +3399,1322 @@ impl DeviceFnv1_3 {
 #[derive(Clone, Default)]
 pub struct DeviceFnv1_4 {
     pub get_rendering_area_granularity: Option<vkGetRenderingAreaGranularity>,
-    pub get_rendering_area_granularity_khr: Option<vkGetRenderingAreaGranularityKHR>,
     pub copy_memory_to_image: Option<vkCopyMemoryToImage>,
-    pub copy_memory_to_image_ext: Option<vkCopyMemoryToImageEXT>,
     pub copy_image_to_memory: Option<vkCopyImageToMemory>,
-    pub copy_image_to_memory_ext: Option<vkCopyImageToMemoryEXT>,
     pub copy_image_to_image: Option<vkCopyImageToImage>,
-    pub copy_image_to_image_ext: Option<vkCopyImageToImageEXT>,
     pub transition_image_layout: Option<vkTransitionImageLayout>,
-    pub transition_image_layout_ext: Option<vkTransitionImageLayoutEXT>,
     pub get_image_subresource_layout2: Option<vkGetImageSubresourceLayout2>,
-    pub get_image_subresource_layout2_khr: Option<vkGetImageSubresourceLayout2KHR>,
-    pub get_image_subresource_layout2_ext: Option<vkGetImageSubresourceLayout2EXT>,
     pub get_device_image_subresource_layout: Option<vkGetDeviceImageSubresourceLayout>,
-    pub get_device_image_subresource_layout_khr: Option<vkGetDeviceImageSubresourceLayoutKHR>,
     pub map_memory2: Option<vkMapMemory2>,
-    pub map_memory2_khr: Option<vkMapMemory2KHR>,
     pub unmap_memory2: Option<vkUnmapMemory2>,
-    pub unmap_memory2_khr: Option<vkUnmapMemory2KHR>,
 }
 
 impl DeviceFnv1_4 {
+    pub const EMPTY: Self = Self {
+        get_rendering_area_granularity: None,
+        copy_memory_to_image: None,
+        copy_image_to_memory: None,
+        copy_image_to_image: None,
+        transition_image_layout: None,
+        get_image_subresource_layout2: None,
+        get_device_image_subresource_layout: None,
+        map_memory2: None,
+        unmap_memory2: None,
+    };
+
     pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
         Self {
             get_rendering_area_granularity: to_option(loader(c"vkGetRenderingAreaGranularity")),
-            get_rendering_area_granularity_khr: to_option(loader(
-                c"vkGetRenderingAreaGranularityKHR",
-            )),
             copy_memory_to_image: to_option(loader(c"vkCopyMemoryToImage")),
-            copy_memory_to_image_ext: to_option(loader(c"vkCopyMemoryToImageEXT")),
             copy_image_to_memory: to_option(loader(c"vkCopyImageToMemory")),
-            copy_image_to_memory_ext: to_option(loader(c"vkCopyImageToMemoryEXT")),
             copy_image_to_image: to_option(loader(c"vkCopyImageToImage")),
-            copy_image_to_image_ext: to_option(loader(c"vkCopyImageToImageEXT")),
             transition_image_layout: to_option(loader(c"vkTransitionImageLayout")),
-            transition_image_layout_ext: to_option(loader(c"vkTransitionImageLayoutEXT")),
             get_image_subresource_layout2: to_option(loader(c"vkGetImageSubresourceLayout2")),
-            get_image_subresource_layout2_khr: to_option(loader(
-                c"vkGetImageSubresourceLayout2KHR",
-            )),
-            get_image_subresource_layout2_ext: to_option(loader(
-                c"vkGetImageSubresourceLayout2EXT",
-            )),
             get_device_image_subresource_layout: to_option(loader(
                 c"vkGetDeviceImageSubresourceLayout",
             )),
-            get_device_image_subresource_layout_khr: to_option(loader(
-                c"vkGetDeviceImageSubresourceLayoutKHR",
-            )),
             map_memory2: to_option(loader(c"vkMapMemory2")),
-            map_memory2_khr: to_option(loader(c"vkMapMemory2KHR")),
             unmap_memory2: to_option(loader(c"vkUnmapMemory2")),
-            unmap_memory2_khr: to_option(loader(c"vkUnmapMemory2KHR")),
         }
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnAmdAntiLag {
-    pub anti_lag_update_amd: vkAntiLagUpdateAMD,
+    pub anti_lag_update_amd: Option<vkAntiLagUpdateAMD>,
 }
 
 impl DeviceFnAmdAntiLag {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            anti_lag_update_amd: to_panic(loader(c"vkAntiLagUpdateAMD")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        anti_lag_update_amd: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnAmdDisplayNativeHdr {
-    pub set_local_dimming_amd: vkSetLocalDimmingAMD,
+    pub set_local_dimming_amd: Option<vkSetLocalDimmingAMD>,
 }
 
 impl DeviceFnAmdDisplayNativeHdr {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            set_local_dimming_amd: to_panic(loader(c"vkSetLocalDimmingAMD")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        set_local_dimming_amd: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnAmdGpaInterface {
-    pub create_gpa_session_amd: vkCreateGpaSessionAMD,
-    pub destroy_gpa_session_amd: vkDestroyGpaSessionAMD,
-    pub set_gpa_device_clock_mode_amd: vkSetGpaDeviceClockModeAMD,
-    pub get_gpa_device_clock_info_amd: vkGetGpaDeviceClockInfoAMD,
-    pub get_gpa_session_status_amd: vkGetGpaSessionStatusAMD,
-    pub get_gpa_session_results_amd: vkGetGpaSessionResultsAMD,
-    pub reset_gpa_session_amd: vkResetGpaSessionAMD,
+    pub create_gpa_session_amd: Option<vkCreateGpaSessionAMD>,
+    pub destroy_gpa_session_amd: Option<vkDestroyGpaSessionAMD>,
+    pub set_gpa_device_clock_mode_amd: Option<vkSetGpaDeviceClockModeAMD>,
+    pub get_gpa_device_clock_info_amd: Option<vkGetGpaDeviceClockInfoAMD>,
+    pub get_gpa_session_status_amd: Option<vkGetGpaSessionStatusAMD>,
+    pub get_gpa_session_results_amd: Option<vkGetGpaSessionResultsAMD>,
+    pub reset_gpa_session_amd: Option<vkResetGpaSessionAMD>,
 }
 
 impl DeviceFnAmdGpaInterface {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            create_gpa_session_amd: to_panic(loader(c"vkCreateGpaSessionAMD")),
-            destroy_gpa_session_amd: to_panic(loader(c"vkDestroyGpaSessionAMD")),
-            set_gpa_device_clock_mode_amd: to_panic(loader(c"vkSetGpaDeviceClockModeAMD")),
-            get_gpa_device_clock_info_amd: to_panic(loader(c"vkGetGpaDeviceClockInfoAMD")),
-            get_gpa_session_status_amd: to_panic(loader(c"vkGetGpaSessionStatusAMD")),
-            get_gpa_session_results_amd: to_panic(loader(c"vkGetGpaSessionResultsAMD")),
-            reset_gpa_session_amd: to_panic(loader(c"vkResetGpaSessionAMD")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        create_gpa_session_amd: None,
+        destroy_gpa_session_amd: None,
+        set_gpa_device_clock_mode_amd: None,
+        get_gpa_device_clock_info_amd: None,
+        get_gpa_session_status_amd: None,
+        get_gpa_session_results_amd: None,
+        reset_gpa_session_amd: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnAmdShaderInfo {
-    pub get_shader_info_amd: vkGetShaderInfoAMD,
+    pub get_shader_info_amd: Option<vkGetShaderInfoAMD>,
 }
 
 impl DeviceFnAmdShaderInfo {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_shader_info_amd: to_panic(loader(c"vkGetShaderInfoAMD")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_shader_info_amd: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnAmdxShaderEnqueue {
-    pub get_execution_graph_pipeline_scratch_size_amdx: vkGetExecutionGraphPipelineScratchSizeAMDX,
-    pub get_execution_graph_pipeline_node_index_amdx: vkGetExecutionGraphPipelineNodeIndexAMDX,
-    pub create_execution_graph_pipelines_amdx: vkCreateExecutionGraphPipelinesAMDX,
+    pub get_execution_graph_pipeline_scratch_size_amdx:
+        Option<vkGetExecutionGraphPipelineScratchSizeAMDX>,
+    pub get_execution_graph_pipeline_node_index_amdx:
+        Option<vkGetExecutionGraphPipelineNodeIndexAMDX>,
+    pub create_execution_graph_pipelines_amdx: Option<vkCreateExecutionGraphPipelinesAMDX>,
 }
 
 impl DeviceFnAmdxShaderEnqueue {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_execution_graph_pipeline_scratch_size_amdx: to_panic(loader(
-                c"vkGetExecutionGraphPipelineScratchSizeAMDX",
-            )),
-            get_execution_graph_pipeline_node_index_amdx: to_panic(loader(
-                c"vkGetExecutionGraphPipelineNodeIndexAMDX",
-            )),
-            create_execution_graph_pipelines_amdx: to_panic(loader(
-                c"vkCreateExecutionGraphPipelinesAMDX",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_execution_graph_pipeline_scratch_size_amdx: None,
+        get_execution_graph_pipeline_node_index_amdx: None,
+        create_execution_graph_pipelines_amdx: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnAndroidExternalMemoryAndroidHardwareBuffer {
-    pub get_android_hardware_buffer_properties_android: vkGetAndroidHardwareBufferPropertiesANDROID,
-    pub get_memory_android_hardware_buffer_android: vkGetMemoryAndroidHardwareBufferANDROID,
+    pub get_android_hardware_buffer_properties_android:
+        Option<vkGetAndroidHardwareBufferPropertiesANDROID>,
+    pub get_memory_android_hardware_buffer_android: Option<vkGetMemoryAndroidHardwareBufferANDROID>,
 }
 
 impl DeviceFnAndroidExternalMemoryAndroidHardwareBuffer {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_android_hardware_buffer_properties_android: to_panic(loader(
-                c"vkGetAndroidHardwareBufferPropertiesANDROID",
-            )),
-            get_memory_android_hardware_buffer_android: to_panic(loader(
-                c"vkGetMemoryAndroidHardwareBufferANDROID",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_android_hardware_buffer_properties_android: None,
+        get_memory_android_hardware_buffer_android: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnArmDataGraph {
-    pub create_data_graph_pipelines_arm: vkCreateDataGraphPipelinesARM,
-    pub create_data_graph_pipeline_session_arm: vkCreateDataGraphPipelineSessionARM,
+    pub create_data_graph_pipelines_arm: Option<vkCreateDataGraphPipelinesARM>,
+    pub create_data_graph_pipeline_session_arm: Option<vkCreateDataGraphPipelineSessionARM>,
     pub get_data_graph_pipeline_session_bind_point_requirements_arm:
-        vkGetDataGraphPipelineSessionBindPointRequirementsARM,
+        Option<vkGetDataGraphPipelineSessionBindPointRequirementsARM>,
     pub get_data_graph_pipeline_session_memory_requirements_arm:
-        vkGetDataGraphPipelineSessionMemoryRequirementsARM,
-    pub bind_data_graph_pipeline_session_memory_arm: vkBindDataGraphPipelineSessionMemoryARM,
-    pub destroy_data_graph_pipeline_session_arm: vkDestroyDataGraphPipelineSessionARM,
+        Option<vkGetDataGraphPipelineSessionMemoryRequirementsARM>,
+    pub bind_data_graph_pipeline_session_memory_arm:
+        Option<vkBindDataGraphPipelineSessionMemoryARM>,
+    pub destroy_data_graph_pipeline_session_arm: Option<vkDestroyDataGraphPipelineSessionARM>,
     pub get_data_graph_pipeline_available_properties_arm:
-        vkGetDataGraphPipelineAvailablePropertiesARM,
-    pub get_data_graph_pipeline_properties_arm: vkGetDataGraphPipelinePropertiesARM,
+        Option<vkGetDataGraphPipelineAvailablePropertiesARM>,
+    pub get_data_graph_pipeline_properties_arm: Option<vkGetDataGraphPipelinePropertiesARM>,
 }
 
 impl DeviceFnArmDataGraph {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            create_data_graph_pipelines_arm: to_panic(loader(c"vkCreateDataGraphPipelinesARM")),
-            create_data_graph_pipeline_session_arm: to_panic(loader(
-                c"vkCreateDataGraphPipelineSessionARM",
-            )),
-            get_data_graph_pipeline_session_bind_point_requirements_arm: to_panic(loader(
-                c"vkGetDataGraphPipelineSessionBindPointRequirementsARM",
-            )),
-            get_data_graph_pipeline_session_memory_requirements_arm: to_panic(loader(
-                c"vkGetDataGraphPipelineSessionMemoryRequirementsARM",
-            )),
-            bind_data_graph_pipeline_session_memory_arm: to_panic(loader(
-                c"vkBindDataGraphPipelineSessionMemoryARM",
-            )),
-            destroy_data_graph_pipeline_session_arm: to_panic(loader(
-                c"vkDestroyDataGraphPipelineSessionARM",
-            )),
-            get_data_graph_pipeline_available_properties_arm: to_panic(loader(
-                c"vkGetDataGraphPipelineAvailablePropertiesARM",
-            )),
-            get_data_graph_pipeline_properties_arm: to_panic(loader(
-                c"vkGetDataGraphPipelinePropertiesARM",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        create_data_graph_pipelines_arm: None,
+        create_data_graph_pipeline_session_arm: None,
+        get_data_graph_pipeline_session_bind_point_requirements_arm: None,
+        get_data_graph_pipeline_session_memory_requirements_arm: None,
+        bind_data_graph_pipeline_session_memory_arm: None,
+        destroy_data_graph_pipeline_session_arm: None,
+        get_data_graph_pipeline_available_properties_arm: None,
+        get_data_graph_pipeline_properties_arm: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnArmShaderInstrumentation {
-    pub create_shader_instrumentation_arm: vkCreateShaderInstrumentationARM,
-    pub destroy_shader_instrumentation_arm: vkDestroyShaderInstrumentationARM,
-    pub get_shader_instrumentation_values_arm: vkGetShaderInstrumentationValuesARM,
-    pub clear_shader_instrumentation_metrics_arm: vkClearShaderInstrumentationMetricsARM,
+    pub create_shader_instrumentation_arm: Option<vkCreateShaderInstrumentationARM>,
+    pub destroy_shader_instrumentation_arm: Option<vkDestroyShaderInstrumentationARM>,
+    pub get_shader_instrumentation_values_arm: Option<vkGetShaderInstrumentationValuesARM>,
+    pub clear_shader_instrumentation_metrics_arm: Option<vkClearShaderInstrumentationMetricsARM>,
 }
 
 impl DeviceFnArmShaderInstrumentation {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            create_shader_instrumentation_arm: to_panic(loader(
-                c"vkCreateShaderInstrumentationARM",
-            )),
-            destroy_shader_instrumentation_arm: to_panic(loader(
-                c"vkDestroyShaderInstrumentationARM",
-            )),
-            get_shader_instrumentation_values_arm: to_panic(loader(
-                c"vkGetShaderInstrumentationValuesARM",
-            )),
-            clear_shader_instrumentation_metrics_arm: to_panic(loader(
-                c"vkClearShaderInstrumentationMetricsARM",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        create_shader_instrumentation_arm: None,
+        destroy_shader_instrumentation_arm: None,
+        get_shader_instrumentation_values_arm: None,
+        clear_shader_instrumentation_metrics_arm: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnArmTensors {
-    pub create_tensor_arm: vkCreateTensorARM,
-    pub destroy_tensor_arm: vkDestroyTensorARM,
-    pub create_tensor_view_arm: vkCreateTensorViewARM,
-    pub destroy_tensor_view_arm: vkDestroyTensorViewARM,
-    pub get_tensor_memory_requirements_arm: vkGetTensorMemoryRequirementsARM,
-    pub bind_tensor_memory_arm: vkBindTensorMemoryARM,
-    pub get_device_tensor_memory_requirements_arm: vkGetDeviceTensorMemoryRequirementsARM,
-    pub get_tensor_opaque_capture_descriptor_data_arm: vkGetTensorOpaqueCaptureDescriptorDataARM,
+    pub create_tensor_arm: Option<vkCreateTensorARM>,
+    pub destroy_tensor_arm: Option<vkDestroyTensorARM>,
+    pub create_tensor_view_arm: Option<vkCreateTensorViewARM>,
+    pub destroy_tensor_view_arm: Option<vkDestroyTensorViewARM>,
+    pub get_tensor_memory_requirements_arm: Option<vkGetTensorMemoryRequirementsARM>,
+    pub bind_tensor_memory_arm: Option<vkBindTensorMemoryARM>,
+    pub get_device_tensor_memory_requirements_arm: Option<vkGetDeviceTensorMemoryRequirementsARM>,
+    pub get_tensor_opaque_capture_descriptor_data_arm:
+        Option<vkGetTensorOpaqueCaptureDescriptorDataARM>,
     pub get_tensor_view_opaque_capture_descriptor_data_arm:
-        vkGetTensorViewOpaqueCaptureDescriptorDataARM,
+        Option<vkGetTensorViewOpaqueCaptureDescriptorDataARM>,
 }
 
 impl DeviceFnArmTensors {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            create_tensor_arm: to_panic(loader(c"vkCreateTensorARM")),
-            destroy_tensor_arm: to_panic(loader(c"vkDestroyTensorARM")),
-            create_tensor_view_arm: to_panic(loader(c"vkCreateTensorViewARM")),
-            destroy_tensor_view_arm: to_panic(loader(c"vkDestroyTensorViewARM")),
-            get_tensor_memory_requirements_arm: to_panic(loader(
-                c"vkGetTensorMemoryRequirementsARM",
-            )),
-            bind_tensor_memory_arm: to_panic(loader(c"vkBindTensorMemoryARM")),
-            get_device_tensor_memory_requirements_arm: to_panic(loader(
-                c"vkGetDeviceTensorMemoryRequirementsARM",
-            )),
-            get_tensor_opaque_capture_descriptor_data_arm: to_panic(loader(
-                c"vkGetTensorOpaqueCaptureDescriptorDataARM",
-            )),
-            get_tensor_view_opaque_capture_descriptor_data_arm: to_panic(loader(
-                c"vkGetTensorViewOpaqueCaptureDescriptorDataARM",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        create_tensor_arm: None,
+        destroy_tensor_arm: None,
+        create_tensor_view_arm: None,
+        destroy_tensor_view_arm: None,
+        get_tensor_memory_requirements_arm: None,
+        bind_tensor_memory_arm: None,
+        get_device_tensor_memory_requirements_arm: None,
+        get_tensor_opaque_capture_descriptor_data_arm: None,
+        get_tensor_view_opaque_capture_descriptor_data_arm: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnExtDebugMarker {
-    pub debug_marker_set_object_name_ext: vkDebugMarkerSetObjectNameEXT,
-    pub debug_marker_set_object_tag_ext: vkDebugMarkerSetObjectTagEXT,
+    pub debug_marker_set_object_name_ext: Option<vkDebugMarkerSetObjectNameEXT>,
+    pub debug_marker_set_object_tag_ext: Option<vkDebugMarkerSetObjectTagEXT>,
 }
 
 impl DeviceFnExtDebugMarker {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            debug_marker_set_object_name_ext: to_panic(loader(c"vkDebugMarkerSetObjectNameEXT")),
-            debug_marker_set_object_tag_ext: to_panic(loader(c"vkDebugMarkerSetObjectTagEXT")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        debug_marker_set_object_name_ext: None,
+        debug_marker_set_object_tag_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnExtDebugUtils {
-    pub set_debug_utils_object_name_ext: vkSetDebugUtilsObjectNameEXT,
-    pub set_debug_utils_object_tag_ext: vkSetDebugUtilsObjectTagEXT,
+    pub set_debug_utils_object_name_ext: Option<vkSetDebugUtilsObjectNameEXT>,
+    pub set_debug_utils_object_tag_ext: Option<vkSetDebugUtilsObjectTagEXT>,
 }
 
 impl DeviceFnExtDebugUtils {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            set_debug_utils_object_name_ext: to_panic(loader(c"vkSetDebugUtilsObjectNameEXT")),
-            set_debug_utils_object_tag_ext: to_panic(loader(c"vkSetDebugUtilsObjectTagEXT")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        set_debug_utils_object_name_ext: None,
+        set_debug_utils_object_tag_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnExtDescriptorBuffer {
-    pub get_descriptor_set_layout_size_ext: vkGetDescriptorSetLayoutSizeEXT,
-    pub get_descriptor_set_layout_binding_offset_ext: vkGetDescriptorSetLayoutBindingOffsetEXT,
-    pub get_descriptor_ext: vkGetDescriptorEXT,
-    pub get_buffer_opaque_capture_descriptor_data_ext: vkGetBufferOpaqueCaptureDescriptorDataEXT,
-    pub get_image_opaque_capture_descriptor_data_ext: vkGetImageOpaqueCaptureDescriptorDataEXT,
+    pub get_descriptor_set_layout_size_ext: Option<vkGetDescriptorSetLayoutSizeEXT>,
+    pub get_descriptor_set_layout_binding_offset_ext:
+        Option<vkGetDescriptorSetLayoutBindingOffsetEXT>,
+    pub get_descriptor_ext: Option<vkGetDescriptorEXT>,
+    pub get_buffer_opaque_capture_descriptor_data_ext:
+        Option<vkGetBufferOpaqueCaptureDescriptorDataEXT>,
+    pub get_image_opaque_capture_descriptor_data_ext:
+        Option<vkGetImageOpaqueCaptureDescriptorDataEXT>,
     pub get_image_view_opaque_capture_descriptor_data_ext:
-        vkGetImageViewOpaqueCaptureDescriptorDataEXT,
-    pub get_sampler_opaque_capture_descriptor_data_ext: vkGetSamplerOpaqueCaptureDescriptorDataEXT,
+        Option<vkGetImageViewOpaqueCaptureDescriptorDataEXT>,
+    pub get_sampler_opaque_capture_descriptor_data_ext:
+        Option<vkGetSamplerOpaqueCaptureDescriptorDataEXT>,
     pub get_acceleration_structure_opaque_capture_descriptor_data_ext:
-        vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT,
+        Option<vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT>,
 }
 
 impl DeviceFnExtDescriptorBuffer {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_descriptor_set_layout_size_ext: to_panic(loader(
-                c"vkGetDescriptorSetLayoutSizeEXT",
-            )),
-            get_descriptor_set_layout_binding_offset_ext: to_panic(loader(
-                c"vkGetDescriptorSetLayoutBindingOffsetEXT",
-            )),
-            get_descriptor_ext: to_panic(loader(c"vkGetDescriptorEXT")),
-            get_buffer_opaque_capture_descriptor_data_ext: to_panic(loader(
-                c"vkGetBufferOpaqueCaptureDescriptorDataEXT",
-            )),
-            get_image_opaque_capture_descriptor_data_ext: to_panic(loader(
-                c"vkGetImageOpaqueCaptureDescriptorDataEXT",
-            )),
-            get_image_view_opaque_capture_descriptor_data_ext: to_panic(loader(
-                c"vkGetImageViewOpaqueCaptureDescriptorDataEXT",
-            )),
-            get_sampler_opaque_capture_descriptor_data_ext: to_panic(loader(
-                c"vkGetSamplerOpaqueCaptureDescriptorDataEXT",
-            )),
-            get_acceleration_structure_opaque_capture_descriptor_data_ext: to_panic(loader(
-                c"vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_descriptor_set_layout_size_ext: None,
+        get_descriptor_set_layout_binding_offset_ext: None,
+        get_descriptor_ext: None,
+        get_buffer_opaque_capture_descriptor_data_ext: None,
+        get_image_opaque_capture_descriptor_data_ext: None,
+        get_image_view_opaque_capture_descriptor_data_ext: None,
+        get_sampler_opaque_capture_descriptor_data_ext: None,
+        get_acceleration_structure_opaque_capture_descriptor_data_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnExtDescriptorHeap {
-    pub write_sampler_descriptors_ext: vkWriteSamplerDescriptorsEXT,
-    pub write_resource_descriptors_ext: vkWriteResourceDescriptorsEXT,
-    pub register_custom_border_color_ext: vkRegisterCustomBorderColorEXT,
-    pub unregister_custom_border_color_ext: vkUnregisterCustomBorderColorEXT,
-    pub get_image_opaque_capture_data_ext: vkGetImageOpaqueCaptureDataEXT,
-    pub get_tensor_opaque_capture_data_arm: vkGetTensorOpaqueCaptureDataARM,
+    pub write_sampler_descriptors_ext: Option<vkWriteSamplerDescriptorsEXT>,
+    pub write_resource_descriptors_ext: Option<vkWriteResourceDescriptorsEXT>,
+    pub register_custom_border_color_ext: Option<vkRegisterCustomBorderColorEXT>,
+    pub unregister_custom_border_color_ext: Option<vkUnregisterCustomBorderColorEXT>,
+    pub get_image_opaque_capture_data_ext: Option<vkGetImageOpaqueCaptureDataEXT>,
+    pub get_tensor_opaque_capture_data_arm: Option<vkGetTensorOpaqueCaptureDataARM>,
 }
 
 impl DeviceFnExtDescriptorHeap {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            write_sampler_descriptors_ext: to_panic(loader(c"vkWriteSamplerDescriptorsEXT")),
-            write_resource_descriptors_ext: to_panic(loader(c"vkWriteResourceDescriptorsEXT")),
-            register_custom_border_color_ext: to_panic(loader(c"vkRegisterCustomBorderColorEXT")),
-            unregister_custom_border_color_ext: to_panic(loader(
-                c"vkUnregisterCustomBorderColorEXT",
-            )),
-            get_image_opaque_capture_data_ext: to_panic(loader(c"vkGetImageOpaqueCaptureDataEXT")),
-            get_tensor_opaque_capture_data_arm: to_panic(loader(
-                c"vkGetTensorOpaqueCaptureDataARM",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        write_sampler_descriptors_ext: None,
+        write_resource_descriptors_ext: None,
+        register_custom_border_color_ext: None,
+        unregister_custom_border_color_ext: None,
+        get_image_opaque_capture_data_ext: None,
+        get_tensor_opaque_capture_data_arm: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnExtDeviceFault {
-    pub get_device_fault_info_ext: vkGetDeviceFaultInfoEXT,
+    pub get_device_fault_info_ext: Option<vkGetDeviceFaultInfoEXT>,
 }
 
 impl DeviceFnExtDeviceFault {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_device_fault_info_ext: to_panic(loader(c"vkGetDeviceFaultInfoEXT")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_device_fault_info_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnExtDeviceGeneratedCommands {
-    pub get_generated_commands_memory_requirements_ext: vkGetGeneratedCommandsMemoryRequirementsEXT,
-    pub create_indirect_commands_layout_ext: vkCreateIndirectCommandsLayoutEXT,
-    pub destroy_indirect_commands_layout_ext: vkDestroyIndirectCommandsLayoutEXT,
-    pub create_indirect_execution_set_ext: vkCreateIndirectExecutionSetEXT,
-    pub destroy_indirect_execution_set_ext: vkDestroyIndirectExecutionSetEXT,
-    pub update_indirect_execution_set_pipeline_ext: vkUpdateIndirectExecutionSetPipelineEXT,
-    pub update_indirect_execution_set_shader_ext: vkUpdateIndirectExecutionSetShaderEXT,
+    pub get_generated_commands_memory_requirements_ext:
+        Option<vkGetGeneratedCommandsMemoryRequirementsEXT>,
+    pub create_indirect_commands_layout_ext: Option<vkCreateIndirectCommandsLayoutEXT>,
+    pub destroy_indirect_commands_layout_ext: Option<vkDestroyIndirectCommandsLayoutEXT>,
+    pub create_indirect_execution_set_ext: Option<vkCreateIndirectExecutionSetEXT>,
+    pub destroy_indirect_execution_set_ext: Option<vkDestroyIndirectExecutionSetEXT>,
+    pub update_indirect_execution_set_pipeline_ext: Option<vkUpdateIndirectExecutionSetPipelineEXT>,
+    pub update_indirect_execution_set_shader_ext: Option<vkUpdateIndirectExecutionSetShaderEXT>,
 }
 
 impl DeviceFnExtDeviceGeneratedCommands {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_generated_commands_memory_requirements_ext: to_panic(loader(
-                c"vkGetGeneratedCommandsMemoryRequirementsEXT",
-            )),
-            create_indirect_commands_layout_ext: to_panic(loader(
-                c"vkCreateIndirectCommandsLayoutEXT",
-            )),
-            destroy_indirect_commands_layout_ext: to_panic(loader(
-                c"vkDestroyIndirectCommandsLayoutEXT",
-            )),
-            create_indirect_execution_set_ext: to_panic(loader(c"vkCreateIndirectExecutionSetEXT")),
-            destroy_indirect_execution_set_ext: to_panic(loader(
-                c"vkDestroyIndirectExecutionSetEXT",
-            )),
-            update_indirect_execution_set_pipeline_ext: to_panic(loader(
-                c"vkUpdateIndirectExecutionSetPipelineEXT",
-            )),
-            update_indirect_execution_set_shader_ext: to_panic(loader(
-                c"vkUpdateIndirectExecutionSetShaderEXT",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_generated_commands_memory_requirements_ext: None,
+        create_indirect_commands_layout_ext: None,
+        destroy_indirect_commands_layout_ext: None,
+        create_indirect_execution_set_ext: None,
+        destroy_indirect_execution_set_ext: None,
+        update_indirect_execution_set_pipeline_ext: None,
+        update_indirect_execution_set_shader_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnExtDisplayControl {
-    pub display_power_control_ext: vkDisplayPowerControlEXT,
-    pub register_device_event_ext: vkRegisterDeviceEventEXT,
-    pub register_display_event_ext: vkRegisterDisplayEventEXT,
-    pub get_swapchain_counter_ext: vkGetSwapchainCounterEXT,
+    pub display_power_control_ext: Option<vkDisplayPowerControlEXT>,
+    pub register_device_event_ext: Option<vkRegisterDeviceEventEXT>,
+    pub register_display_event_ext: Option<vkRegisterDisplayEventEXT>,
+    pub get_swapchain_counter_ext: Option<vkGetSwapchainCounterEXT>,
 }
 
 impl DeviceFnExtDisplayControl {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            display_power_control_ext: to_panic(loader(c"vkDisplayPowerControlEXT")),
-            register_device_event_ext: to_panic(loader(c"vkRegisterDeviceEventEXT")),
-            register_display_event_ext: to_panic(loader(c"vkRegisterDisplayEventEXT")),
-            get_swapchain_counter_ext: to_panic(loader(c"vkGetSwapchainCounterEXT")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        display_power_control_ext: None,
+        register_device_event_ext: None,
+        register_display_event_ext: None,
+        get_swapchain_counter_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnExtExternalMemoryHost {
-    pub get_memory_host_pointer_properties_ext: vkGetMemoryHostPointerPropertiesEXT,
+    pub get_memory_host_pointer_properties_ext: Option<vkGetMemoryHostPointerPropertiesEXT>,
 }
 
 impl DeviceFnExtExternalMemoryHost {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_memory_host_pointer_properties_ext: to_panic(loader(
-                c"vkGetMemoryHostPointerPropertiesEXT",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_memory_host_pointer_properties_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnExtExternalMemoryMetal {
-    pub get_memory_metal_handle_ext: vkGetMemoryMetalHandleEXT,
-    pub get_memory_metal_handle_properties_ext: vkGetMemoryMetalHandlePropertiesEXT,
+    pub get_memory_metal_handle_ext: Option<vkGetMemoryMetalHandleEXT>,
+    pub get_memory_metal_handle_properties_ext: Option<vkGetMemoryMetalHandlePropertiesEXT>,
 }
 
 impl DeviceFnExtExternalMemoryMetal {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_memory_metal_handle_ext: to_panic(loader(c"vkGetMemoryMetalHandleEXT")),
-            get_memory_metal_handle_properties_ext: to_panic(loader(
-                c"vkGetMemoryMetalHandlePropertiesEXT",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_memory_metal_handle_ext: None,
+        get_memory_metal_handle_properties_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnExtFullScreenExclusive {
-    pub get_device_group_surface_present_modes2_ext: vkGetDeviceGroupSurfacePresentModes2EXT,
-    pub acquire_full_screen_exclusive_mode_ext: vkAcquireFullScreenExclusiveModeEXT,
-    pub release_full_screen_exclusive_mode_ext: vkReleaseFullScreenExclusiveModeEXT,
+    pub get_device_group_surface_present_modes2_ext:
+        Option<vkGetDeviceGroupSurfacePresentModes2EXT>,
+    pub acquire_full_screen_exclusive_mode_ext: Option<vkAcquireFullScreenExclusiveModeEXT>,
+    pub release_full_screen_exclusive_mode_ext: Option<vkReleaseFullScreenExclusiveModeEXT>,
 }
 
 impl DeviceFnExtFullScreenExclusive {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_device_group_surface_present_modes2_ext: to_panic(loader(
-                c"vkGetDeviceGroupSurfacePresentModes2EXT",
-            )),
-            acquire_full_screen_exclusive_mode_ext: to_panic(loader(
-                c"vkAcquireFullScreenExclusiveModeEXT",
-            )),
-            release_full_screen_exclusive_mode_ext: to_panic(loader(
-                c"vkReleaseFullScreenExclusiveModeEXT",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_device_group_surface_present_modes2_ext: None,
+        acquire_full_screen_exclusive_mode_ext: None,
+        release_full_screen_exclusive_mode_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnExtHdrMetadata {
-    pub set_hdr_metadata_ext: vkSetHdrMetadataEXT,
+    pub set_hdr_metadata_ext: Option<vkSetHdrMetadataEXT>,
 }
 
 impl DeviceFnExtHdrMetadata {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            set_hdr_metadata_ext: to_panic(loader(c"vkSetHdrMetadataEXT")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        set_hdr_metadata_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnExtImageDrmFormatModifier {
-    pub get_image_drm_format_modifier_properties_ext: vkGetImageDrmFormatModifierPropertiesEXT,
+    pub get_image_drm_format_modifier_properties_ext:
+        Option<vkGetImageDrmFormatModifierPropertiesEXT>,
 }
 
 impl DeviceFnExtImageDrmFormatModifier {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_image_drm_format_modifier_properties_ext: to_panic(loader(
-                c"vkGetImageDrmFormatModifierPropertiesEXT",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_image_drm_format_modifier_properties_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnExtMetalObjects {
-    pub export_metal_objects_ext: vkExportMetalObjectsEXT,
+    pub export_metal_objects_ext: Option<vkExportMetalObjectsEXT>,
 }
 
 impl DeviceFnExtMetalObjects {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            export_metal_objects_ext: to_panic(loader(c"vkExportMetalObjectsEXT")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        export_metal_objects_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnExtOpacityMicromap {
-    pub create_micromap_ext: vkCreateMicromapEXT,
-    pub build_micromaps_ext: vkBuildMicromapsEXT,
-    pub destroy_micromap_ext: vkDestroyMicromapEXT,
-    pub copy_micromap_ext: vkCopyMicromapEXT,
-    pub copy_micromap_to_memory_ext: vkCopyMicromapToMemoryEXT,
-    pub copy_memory_to_micromap_ext: vkCopyMemoryToMicromapEXT,
-    pub write_micromaps_properties_ext: vkWriteMicromapsPropertiesEXT,
-    pub get_device_micromap_compatibility_ext: vkGetDeviceMicromapCompatibilityEXT,
-    pub get_micromap_build_sizes_ext: vkGetMicromapBuildSizesEXT,
+    pub create_micromap_ext: Option<vkCreateMicromapEXT>,
+    pub build_micromaps_ext: Option<vkBuildMicromapsEXT>,
+    pub destroy_micromap_ext: Option<vkDestroyMicromapEXT>,
+    pub copy_micromap_ext: Option<vkCopyMicromapEXT>,
+    pub copy_micromap_to_memory_ext: Option<vkCopyMicromapToMemoryEXT>,
+    pub copy_memory_to_micromap_ext: Option<vkCopyMemoryToMicromapEXT>,
+    pub write_micromaps_properties_ext: Option<vkWriteMicromapsPropertiesEXT>,
+    pub get_device_micromap_compatibility_ext: Option<vkGetDeviceMicromapCompatibilityEXT>,
+    pub get_micromap_build_sizes_ext: Option<vkGetMicromapBuildSizesEXT>,
 }
 
 impl DeviceFnExtOpacityMicromap {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            create_micromap_ext: to_panic(loader(c"vkCreateMicromapEXT")),
-            build_micromaps_ext: to_panic(loader(c"vkBuildMicromapsEXT")),
-            destroy_micromap_ext: to_panic(loader(c"vkDestroyMicromapEXT")),
-            copy_micromap_ext: to_panic(loader(c"vkCopyMicromapEXT")),
-            copy_micromap_to_memory_ext: to_panic(loader(c"vkCopyMicromapToMemoryEXT")),
-            copy_memory_to_micromap_ext: to_panic(loader(c"vkCopyMemoryToMicromapEXT")),
-            write_micromaps_properties_ext: to_panic(loader(c"vkWriteMicromapsPropertiesEXT")),
-            get_device_micromap_compatibility_ext: to_panic(loader(
-                c"vkGetDeviceMicromapCompatibilityEXT",
-            )),
-            get_micromap_build_sizes_ext: to_panic(loader(c"vkGetMicromapBuildSizesEXT")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        create_micromap_ext: None,
+        build_micromaps_ext: None,
+        destroy_micromap_ext: None,
+        copy_micromap_ext: None,
+        copy_micromap_to_memory_ext: None,
+        copy_memory_to_micromap_ext: None,
+        write_micromaps_properties_ext: None,
+        get_device_micromap_compatibility_ext: None,
+        get_micromap_build_sizes_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnExtPageableDeviceLocalMemory {
-    pub set_device_memory_priority_ext: vkSetDeviceMemoryPriorityEXT,
+    pub set_device_memory_priority_ext: Option<vkSetDeviceMemoryPriorityEXT>,
 }
 
 impl DeviceFnExtPageableDeviceLocalMemory {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            set_device_memory_priority_ext: to_panic(loader(c"vkSetDeviceMemoryPriorityEXT")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        set_device_memory_priority_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnExtPipelineProperties {
-    pub get_pipeline_properties_ext: vkGetPipelinePropertiesEXT,
+    pub get_pipeline_properties_ext: Option<vkGetPipelinePropertiesEXT>,
 }
 
 impl DeviceFnExtPipelineProperties {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_pipeline_properties_ext: to_panic(loader(c"vkGetPipelinePropertiesEXT")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_pipeline_properties_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnExtPresentTiming {
-    pub set_swapchain_present_timing_queue_size_ext: vkSetSwapchainPresentTimingQueueSizeEXT,
-    pub get_swapchain_timing_properties_ext: vkGetSwapchainTimingPropertiesEXT,
-    pub get_swapchain_time_domain_properties_ext: vkGetSwapchainTimeDomainPropertiesEXT,
-    pub get_past_presentation_timing_ext: vkGetPastPresentationTimingEXT,
+    pub set_swapchain_present_timing_queue_size_ext:
+        Option<vkSetSwapchainPresentTimingQueueSizeEXT>,
+    pub get_swapchain_timing_properties_ext: Option<vkGetSwapchainTimingPropertiesEXT>,
+    pub get_swapchain_time_domain_properties_ext: Option<vkGetSwapchainTimeDomainPropertiesEXT>,
+    pub get_past_presentation_timing_ext: Option<vkGetPastPresentationTimingEXT>,
 }
 
 impl DeviceFnExtPresentTiming {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            set_swapchain_present_timing_queue_size_ext: to_panic(loader(
-                c"vkSetSwapchainPresentTimingQueueSizeEXT",
-            )),
-            get_swapchain_timing_properties_ext: to_panic(loader(
-                c"vkGetSwapchainTimingPropertiesEXT",
-            )),
-            get_swapchain_time_domain_properties_ext: to_panic(loader(
-                c"vkGetSwapchainTimeDomainPropertiesEXT",
-            )),
-            get_past_presentation_timing_ext: to_panic(loader(c"vkGetPastPresentationTimingEXT")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        set_swapchain_present_timing_queue_size_ext: None,
+        get_swapchain_timing_properties_ext: None,
+        get_swapchain_time_domain_properties_ext: None,
+        get_past_presentation_timing_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnExtShaderModuleIdentifier {
-    pub get_shader_module_identifier_ext: vkGetShaderModuleIdentifierEXT,
-    pub get_shader_module_create_info_identifier_ext: vkGetShaderModuleCreateInfoIdentifierEXT,
+    pub get_shader_module_identifier_ext: Option<vkGetShaderModuleIdentifierEXT>,
+    pub get_shader_module_create_info_identifier_ext:
+        Option<vkGetShaderModuleCreateInfoIdentifierEXT>,
 }
 
 impl DeviceFnExtShaderModuleIdentifier {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_shader_module_identifier_ext: to_panic(loader(c"vkGetShaderModuleIdentifierEXT")),
-            get_shader_module_create_info_identifier_ext: to_panic(loader(
-                c"vkGetShaderModuleCreateInfoIdentifierEXT",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_shader_module_identifier_ext: None,
+        get_shader_module_create_info_identifier_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnExtShaderObject {
-    pub create_shaders_ext: vkCreateShadersEXT,
-    pub destroy_shader_ext: vkDestroyShaderEXT,
-    pub get_shader_binary_data_ext: vkGetShaderBinaryDataEXT,
+    pub create_shaders_ext: Option<vkCreateShadersEXT>,
+    pub destroy_shader_ext: Option<vkDestroyShaderEXT>,
+    pub get_shader_binary_data_ext: Option<vkGetShaderBinaryDataEXT>,
 }
 
 impl DeviceFnExtShaderObject {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            create_shaders_ext: to_panic(loader(c"vkCreateShadersEXT")),
-            destroy_shader_ext: to_panic(loader(c"vkDestroyShaderEXT")),
-            get_shader_binary_data_ext: to_panic(loader(c"vkGetShaderBinaryDataEXT")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        create_shaders_ext: None,
+        destroy_shader_ext: None,
+        get_shader_binary_data_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnExtValidationCache {
-    pub create_validation_cache_ext: vkCreateValidationCacheEXT,
-    pub destroy_validation_cache_ext: vkDestroyValidationCacheEXT,
-    pub get_validation_cache_data_ext: vkGetValidationCacheDataEXT,
-    pub merge_validation_caches_ext: vkMergeValidationCachesEXT,
+    pub create_validation_cache_ext: Option<vkCreateValidationCacheEXT>,
+    pub destroy_validation_cache_ext: Option<vkDestroyValidationCacheEXT>,
+    pub get_validation_cache_data_ext: Option<vkGetValidationCacheDataEXT>,
+    pub merge_validation_caches_ext: Option<vkMergeValidationCachesEXT>,
 }
 
 impl DeviceFnExtValidationCache {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            create_validation_cache_ext: to_panic(loader(c"vkCreateValidationCacheEXT")),
-            destroy_validation_cache_ext: to_panic(loader(c"vkDestroyValidationCacheEXT")),
-            get_validation_cache_data_ext: to_panic(loader(c"vkGetValidationCacheDataEXT")),
-            merge_validation_caches_ext: to_panic(loader(c"vkMergeValidationCachesEXT")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        create_validation_cache_ext: None,
+        destroy_validation_cache_ext: None,
+        get_validation_cache_data_ext: None,
+        merge_validation_caches_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnFuchsiaBufferCollection {
-    pub create_buffer_collection_fuchsia: vkCreateBufferCollectionFUCHSIA,
+    pub create_buffer_collection_fuchsia: Option<vkCreateBufferCollectionFUCHSIA>,
     pub set_buffer_collection_buffer_constraints_fuchsia:
-        vkSetBufferCollectionBufferConstraintsFUCHSIA,
+        Option<vkSetBufferCollectionBufferConstraintsFUCHSIA>,
     pub set_buffer_collection_image_constraints_fuchsia:
-        vkSetBufferCollectionImageConstraintsFUCHSIA,
-    pub destroy_buffer_collection_fuchsia: vkDestroyBufferCollectionFUCHSIA,
-    pub get_buffer_collection_properties_fuchsia: vkGetBufferCollectionPropertiesFUCHSIA,
+        Option<vkSetBufferCollectionImageConstraintsFUCHSIA>,
+    pub destroy_buffer_collection_fuchsia: Option<vkDestroyBufferCollectionFUCHSIA>,
+    pub get_buffer_collection_properties_fuchsia: Option<vkGetBufferCollectionPropertiesFUCHSIA>,
 }
 
 impl DeviceFnFuchsiaBufferCollection {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            create_buffer_collection_fuchsia: to_panic(loader(c"vkCreateBufferCollectionFUCHSIA")),
-            set_buffer_collection_buffer_constraints_fuchsia: to_panic(loader(
-                c"vkSetBufferCollectionBufferConstraintsFUCHSIA",
-            )),
-            set_buffer_collection_image_constraints_fuchsia: to_panic(loader(
-                c"vkSetBufferCollectionImageConstraintsFUCHSIA",
-            )),
-            destroy_buffer_collection_fuchsia: to_panic(loader(
-                c"vkDestroyBufferCollectionFUCHSIA",
-            )),
-            get_buffer_collection_properties_fuchsia: to_panic(loader(
-                c"vkGetBufferCollectionPropertiesFUCHSIA",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        create_buffer_collection_fuchsia: None,
+        set_buffer_collection_buffer_constraints_fuchsia: None,
+        set_buffer_collection_image_constraints_fuchsia: None,
+        destroy_buffer_collection_fuchsia: None,
+        get_buffer_collection_properties_fuchsia: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnFuchsiaExternalMemory {
-    pub get_memory_zircon_handle_fuchsia: vkGetMemoryZirconHandleFUCHSIA,
-    pub get_memory_zircon_handle_properties_fuchsia: vkGetMemoryZirconHandlePropertiesFUCHSIA,
+    pub get_memory_zircon_handle_fuchsia: Option<vkGetMemoryZirconHandleFUCHSIA>,
+    pub get_memory_zircon_handle_properties_fuchsia:
+        Option<vkGetMemoryZirconHandlePropertiesFUCHSIA>,
 }
 
 impl DeviceFnFuchsiaExternalMemory {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_memory_zircon_handle_fuchsia: to_panic(loader(c"vkGetMemoryZirconHandleFUCHSIA")),
-            get_memory_zircon_handle_properties_fuchsia: to_panic(loader(
-                c"vkGetMemoryZirconHandlePropertiesFUCHSIA",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_memory_zircon_handle_fuchsia: None,
+        get_memory_zircon_handle_properties_fuchsia: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnFuchsiaExternalSemaphore {
-    pub get_semaphore_zircon_handle_fuchsia: vkGetSemaphoreZirconHandleFUCHSIA,
-    pub import_semaphore_zircon_handle_fuchsia: vkImportSemaphoreZirconHandleFUCHSIA,
+    pub get_semaphore_zircon_handle_fuchsia: Option<vkGetSemaphoreZirconHandleFUCHSIA>,
+    pub import_semaphore_zircon_handle_fuchsia: Option<vkImportSemaphoreZirconHandleFUCHSIA>,
 }
 
 impl DeviceFnFuchsiaExternalSemaphore {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_semaphore_zircon_handle_fuchsia: to_panic(loader(
-                c"vkGetSemaphoreZirconHandleFUCHSIA",
-            )),
-            import_semaphore_zircon_handle_fuchsia: to_panic(loader(
-                c"vkImportSemaphoreZirconHandleFUCHSIA",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_semaphore_zircon_handle_fuchsia: None,
+        import_semaphore_zircon_handle_fuchsia: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnGoogleDisplayTiming {
-    pub get_refresh_cycle_duration_google: vkGetRefreshCycleDurationGOOGLE,
-    pub get_past_presentation_timing_google: vkGetPastPresentationTimingGOOGLE,
+    pub get_refresh_cycle_duration_google: Option<vkGetRefreshCycleDurationGOOGLE>,
+    pub get_past_presentation_timing_google: Option<vkGetPastPresentationTimingGOOGLE>,
 }
 
 impl DeviceFnGoogleDisplayTiming {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_refresh_cycle_duration_google: to_panic(loader(c"vkGetRefreshCycleDurationGOOGLE")),
-            get_past_presentation_timing_google: to_panic(loader(
-                c"vkGetPastPresentationTimingGOOGLE",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_refresh_cycle_duration_google: None,
+        get_past_presentation_timing_google: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnHuaweiSubpassShading {
     pub get_device_subpass_shading_max_workgroup_size_huawei:
-        vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI,
+        Option<vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI>,
 }
 
 impl DeviceFnHuaweiSubpassShading {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_device_subpass_shading_max_workgroup_size_huawei: to_panic(loader(
-                c"vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_device_subpass_shading_max_workgroup_size_huawei: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnIntelPerformanceQuery {
-    pub initialize_performance_api_intel: vkInitializePerformanceApiINTEL,
-    pub uninitialize_performance_api_intel: vkUninitializePerformanceApiINTEL,
-    pub acquire_performance_configuration_intel: vkAcquirePerformanceConfigurationINTEL,
-    pub release_performance_configuration_intel: vkReleasePerformanceConfigurationINTEL,
-    pub get_performance_parameter_intel: vkGetPerformanceParameterINTEL,
+    pub initialize_performance_api_intel: Option<vkInitializePerformanceApiINTEL>,
+    pub uninitialize_performance_api_intel: Option<vkUninitializePerformanceApiINTEL>,
+    pub acquire_performance_configuration_intel: Option<vkAcquirePerformanceConfigurationINTEL>,
+    pub release_performance_configuration_intel: Option<vkReleasePerformanceConfigurationINTEL>,
+    pub get_performance_parameter_intel: Option<vkGetPerformanceParameterINTEL>,
 }
 
 impl DeviceFnIntelPerformanceQuery {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            initialize_performance_api_intel: to_panic(loader(c"vkInitializePerformanceApiINTEL")),
-            uninitialize_performance_api_intel: to_panic(loader(
-                c"vkUninitializePerformanceApiINTEL",
-            )),
-            acquire_performance_configuration_intel: to_panic(loader(
-                c"vkAcquirePerformanceConfigurationINTEL",
-            )),
-            release_performance_configuration_intel: to_panic(loader(
-                c"vkReleasePerformanceConfigurationINTEL",
-            )),
-            get_performance_parameter_intel: to_panic(loader(c"vkGetPerformanceParameterINTEL")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        initialize_performance_api_intel: None,
+        uninitialize_performance_api_intel: None,
+        acquire_performance_configuration_intel: None,
+        release_performance_configuration_intel: None,
+        get_performance_parameter_intel: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnKhrAccelerationStructure {
-    pub destroy_acceleration_structure_khr: vkDestroyAccelerationStructureKHR,
-    pub copy_acceleration_structure_khr: vkCopyAccelerationStructureKHR,
-    pub copy_acceleration_structure_to_memory_khr: vkCopyAccelerationStructureToMemoryKHR,
-    pub copy_memory_to_acceleration_structure_khr: vkCopyMemoryToAccelerationStructureKHR,
-    pub write_acceleration_structures_properties_khr: vkWriteAccelerationStructuresPropertiesKHR,
+    pub destroy_acceleration_structure_khr: Option<vkDestroyAccelerationStructureKHR>,
+    pub copy_acceleration_structure_khr: Option<vkCopyAccelerationStructureKHR>,
+    pub copy_acceleration_structure_to_memory_khr: Option<vkCopyAccelerationStructureToMemoryKHR>,
+    pub copy_memory_to_acceleration_structure_khr: Option<vkCopyMemoryToAccelerationStructureKHR>,
+    pub write_acceleration_structures_properties_khr:
+        Option<vkWriteAccelerationStructuresPropertiesKHR>,
     pub get_device_acceleration_structure_compatibility_khr:
-        vkGetDeviceAccelerationStructureCompatibilityKHR,
-    pub create_acceleration_structure_khr: vkCreateAccelerationStructureKHR,
-    pub build_acceleration_structures_khr: vkBuildAccelerationStructuresKHR,
-    pub get_acceleration_structure_device_address_khr: vkGetAccelerationStructureDeviceAddressKHR,
-    pub get_acceleration_structure_build_sizes_khr: vkGetAccelerationStructureBuildSizesKHR,
+        Option<vkGetDeviceAccelerationStructureCompatibilityKHR>,
+    pub create_acceleration_structure_khr: Option<vkCreateAccelerationStructureKHR>,
+    pub build_acceleration_structures_khr: Option<vkBuildAccelerationStructuresKHR>,
+    pub get_acceleration_structure_device_address_khr:
+        Option<vkGetAccelerationStructureDeviceAddressKHR>,
+    pub get_acceleration_structure_build_sizes_khr: Option<vkGetAccelerationStructureBuildSizesKHR>,
 }
 
 impl DeviceFnKhrAccelerationStructure {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            destroy_acceleration_structure_khr: to_panic(loader(
-                c"vkDestroyAccelerationStructureKHR",
-            )),
-            copy_acceleration_structure_khr: to_panic(loader(c"vkCopyAccelerationStructureKHR")),
-            copy_acceleration_structure_to_memory_khr: to_panic(loader(
-                c"vkCopyAccelerationStructureToMemoryKHR",
-            )),
-            copy_memory_to_acceleration_structure_khr: to_panic(loader(
-                c"vkCopyMemoryToAccelerationStructureKHR",
-            )),
-            write_acceleration_structures_properties_khr: to_panic(loader(
-                c"vkWriteAccelerationStructuresPropertiesKHR",
-            )),
-            get_device_acceleration_structure_compatibility_khr: to_panic(loader(
-                c"vkGetDeviceAccelerationStructureCompatibilityKHR",
-            )),
-            create_acceleration_structure_khr: to_panic(loader(
-                c"vkCreateAccelerationStructureKHR",
-            )),
-            build_acceleration_structures_khr: to_panic(loader(
-                c"vkBuildAccelerationStructuresKHR",
-            )),
-            get_acceleration_structure_device_address_khr: to_panic(loader(
-                c"vkGetAccelerationStructureDeviceAddressKHR",
-            )),
-            get_acceleration_structure_build_sizes_khr: to_panic(loader(
-                c"vkGetAccelerationStructureBuildSizesKHR",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        destroy_acceleration_structure_khr: None,
+        copy_acceleration_structure_khr: None,
+        copy_acceleration_structure_to_memory_khr: None,
+        copy_memory_to_acceleration_structure_khr: None,
+        write_acceleration_structures_properties_khr: None,
+        get_device_acceleration_structure_compatibility_khr: None,
+        create_acceleration_structure_khr: None,
+        build_acceleration_structures_khr: None,
+        get_acceleration_structure_device_address_khr: None,
+        get_acceleration_structure_build_sizes_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnKhrCalibratedTimestamps {
-    pub get_calibrated_timestamps_khr: vkGetCalibratedTimestampsKHR,
-    pub get_calibrated_timestamps_ext: vkGetCalibratedTimestampsEXT,
+    pub get_calibrated_timestamps_khr: Option<vkGetCalibratedTimestampsKHR>,
 }
 
 impl DeviceFnKhrCalibratedTimestamps {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_calibrated_timestamps_khr: to_panic(loader(c"vkGetCalibratedTimestampsKHR")),
-            get_calibrated_timestamps_ext: to_panic(loader(c"vkGetCalibratedTimestampsEXT")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_calibrated_timestamps_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnKhrDeferredHostOperations {
-    pub create_deferred_operation_khr: vkCreateDeferredOperationKHR,
-    pub destroy_deferred_operation_khr: vkDestroyDeferredOperationKHR,
-    pub get_deferred_operation_max_concurrency_khr: vkGetDeferredOperationMaxConcurrencyKHR,
-    pub get_deferred_operation_result_khr: vkGetDeferredOperationResultKHR,
-    pub deferred_operation_join_khr: vkDeferredOperationJoinKHR,
+    pub create_deferred_operation_khr: Option<vkCreateDeferredOperationKHR>,
+    pub destroy_deferred_operation_khr: Option<vkDestroyDeferredOperationKHR>,
+    pub get_deferred_operation_max_concurrency_khr: Option<vkGetDeferredOperationMaxConcurrencyKHR>,
+    pub get_deferred_operation_result_khr: Option<vkGetDeferredOperationResultKHR>,
+    pub deferred_operation_join_khr: Option<vkDeferredOperationJoinKHR>,
 }
 
 impl DeviceFnKhrDeferredHostOperations {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            create_deferred_operation_khr: to_panic(loader(c"vkCreateDeferredOperationKHR")),
-            destroy_deferred_operation_khr: to_panic(loader(c"vkDestroyDeferredOperationKHR")),
-            get_deferred_operation_max_concurrency_khr: to_panic(loader(
-                c"vkGetDeferredOperationMaxConcurrencyKHR",
-            )),
-            get_deferred_operation_result_khr: to_panic(loader(c"vkGetDeferredOperationResultKHR")),
-            deferred_operation_join_khr: to_panic(loader(c"vkDeferredOperationJoinKHR")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        create_deferred_operation_khr: None,
+        destroy_deferred_operation_khr: None,
+        get_deferred_operation_max_concurrency_khr: None,
+        get_deferred_operation_result_khr: None,
+        deferred_operation_join_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnKhrDeviceAddressCommands {
-    pub create_acceleration_structure2_khr: vkCreateAccelerationStructure2KHR,
+    pub create_acceleration_structure2_khr: Option<vkCreateAccelerationStructure2KHR>,
 }
 
 impl DeviceFnKhrDeviceAddressCommands {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            create_acceleration_structure2_khr: to_panic(loader(
-                c"vkCreateAccelerationStructure2KHR",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        create_acceleration_structure2_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnKhrDeviceFault {
-    pub get_device_fault_reports_khr: vkGetDeviceFaultReportsKHR,
-    pub get_device_fault_debug_info_khr: vkGetDeviceFaultDebugInfoKHR,
+    pub get_device_fault_reports_khr: Option<vkGetDeviceFaultReportsKHR>,
+    pub get_device_fault_debug_info_khr: Option<vkGetDeviceFaultDebugInfoKHR>,
 }
 
 impl DeviceFnKhrDeviceFault {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_device_fault_reports_khr: to_panic(loader(c"vkGetDeviceFaultReportsKHR")),
-            get_device_fault_debug_info_khr: to_panic(loader(c"vkGetDeviceFaultDebugInfoKHR")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_device_fault_reports_khr: None,
+        get_device_fault_debug_info_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnKhrDeviceGroup {
-    pub get_device_group_present_capabilities_khr: vkGetDeviceGroupPresentCapabilitiesKHR,
-    pub get_device_group_surface_present_modes_khr: vkGetDeviceGroupSurfacePresentModesKHR,
-    pub acquire_next_image2_khr: vkAcquireNextImage2KHR,
+    pub get_device_group_present_capabilities_khr: Option<vkGetDeviceGroupPresentCapabilitiesKHR>,
+    pub get_device_group_surface_present_modes_khr: Option<vkGetDeviceGroupSurfacePresentModesKHR>,
+    pub acquire_next_image2_khr: Option<vkAcquireNextImage2KHR>,
 }
 
 impl DeviceFnKhrDeviceGroup {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_device_group_present_capabilities_khr: to_panic(loader(
-                c"vkGetDeviceGroupPresentCapabilitiesKHR",
-            )),
-            get_device_group_surface_present_modes_khr: to_panic(loader(
-                c"vkGetDeviceGroupSurfacePresentModesKHR",
-            )),
-            acquire_next_image2_khr: to_panic(loader(c"vkAcquireNextImage2KHR")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_device_group_present_capabilities_khr: None,
+        get_device_group_surface_present_modes_khr: None,
+        acquire_next_image2_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnKhrDisplaySwapchain {
-    pub create_shared_swapchains_khr: vkCreateSharedSwapchainsKHR,
+    pub create_shared_swapchains_khr: Option<vkCreateSharedSwapchainsKHR>,
 }
 
 impl DeviceFnKhrDisplaySwapchain {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            create_shared_swapchains_khr: to_panic(loader(c"vkCreateSharedSwapchainsKHR")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        create_shared_swapchains_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnKhrExternalFenceFd {
-    pub get_fence_fd_khr: vkGetFenceFdKHR,
-    pub import_fence_fd_khr: vkImportFenceFdKHR,
+    pub get_fence_fd_khr: Option<vkGetFenceFdKHR>,
+    pub import_fence_fd_khr: Option<vkImportFenceFdKHR>,
 }
 
 impl DeviceFnKhrExternalFenceFd {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_fence_fd_khr: to_panic(loader(c"vkGetFenceFdKHR")),
-            import_fence_fd_khr: to_panic(loader(c"vkImportFenceFdKHR")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_fence_fd_khr: None,
+        import_fence_fd_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnKhrExternalFenceWin32 {
-    pub get_fence_win32_handle_khr: vkGetFenceWin32HandleKHR,
-    pub import_fence_win32_handle_khr: vkImportFenceWin32HandleKHR,
+    pub get_fence_win32_handle_khr: Option<vkGetFenceWin32HandleKHR>,
+    pub import_fence_win32_handle_khr: Option<vkImportFenceWin32HandleKHR>,
 }
 
 impl DeviceFnKhrExternalFenceWin32 {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_fence_win32_handle_khr: to_panic(loader(c"vkGetFenceWin32HandleKHR")),
-            import_fence_win32_handle_khr: to_panic(loader(c"vkImportFenceWin32HandleKHR")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_fence_win32_handle_khr: None,
+        import_fence_win32_handle_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnKhrExternalMemoryFd {
-    pub get_memory_fd_khr: vkGetMemoryFdKHR,
-    pub get_memory_fd_properties_khr: vkGetMemoryFdPropertiesKHR,
+    pub get_memory_fd_khr: Option<vkGetMemoryFdKHR>,
+    pub get_memory_fd_properties_khr: Option<vkGetMemoryFdPropertiesKHR>,
 }
 
 impl DeviceFnKhrExternalMemoryFd {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_memory_fd_khr: to_panic(loader(c"vkGetMemoryFdKHR")),
-            get_memory_fd_properties_khr: to_panic(loader(c"vkGetMemoryFdPropertiesKHR")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_memory_fd_khr: None,
+        get_memory_fd_properties_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnKhrExternalMemoryWin32 {
-    pub get_memory_win32_handle_khr: vkGetMemoryWin32HandleKHR,
-    pub get_memory_win32_handle_properties_khr: vkGetMemoryWin32HandlePropertiesKHR,
+    pub get_memory_win32_handle_khr: Option<vkGetMemoryWin32HandleKHR>,
+    pub get_memory_win32_handle_properties_khr: Option<vkGetMemoryWin32HandlePropertiesKHR>,
 }
 
 impl DeviceFnKhrExternalMemoryWin32 {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_memory_win32_handle_khr: to_panic(loader(c"vkGetMemoryWin32HandleKHR")),
-            get_memory_win32_handle_properties_khr: to_panic(loader(
-                c"vkGetMemoryWin32HandlePropertiesKHR",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_memory_win32_handle_khr: None,
+        get_memory_win32_handle_properties_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnKhrExternalSemaphoreFd {
-    pub get_semaphore_fd_khr: vkGetSemaphoreFdKHR,
-    pub import_semaphore_fd_khr: vkImportSemaphoreFdKHR,
+    pub get_semaphore_fd_khr: Option<vkGetSemaphoreFdKHR>,
+    pub import_semaphore_fd_khr: Option<vkImportSemaphoreFdKHR>,
 }
 
 impl DeviceFnKhrExternalSemaphoreFd {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_semaphore_fd_khr: to_panic(loader(c"vkGetSemaphoreFdKHR")),
-            import_semaphore_fd_khr: to_panic(loader(c"vkImportSemaphoreFdKHR")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_semaphore_fd_khr: None,
+        import_semaphore_fd_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnKhrExternalSemaphoreWin32 {
-    pub get_semaphore_win32_handle_khr: vkGetSemaphoreWin32HandleKHR,
-    pub import_semaphore_win32_handle_khr: vkImportSemaphoreWin32HandleKHR,
+    pub get_semaphore_win32_handle_khr: Option<vkGetSemaphoreWin32HandleKHR>,
+    pub import_semaphore_win32_handle_khr: Option<vkImportSemaphoreWin32HandleKHR>,
 }
 
 impl DeviceFnKhrExternalSemaphoreWin32 {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_semaphore_win32_handle_khr: to_panic(loader(c"vkGetSemaphoreWin32HandleKHR")),
-            import_semaphore_win32_handle_khr: to_panic(loader(c"vkImportSemaphoreWin32HandleKHR")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_semaphore_win32_handle_khr: None,
+        import_semaphore_win32_handle_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnKhrPerformanceQuery {
-    pub acquire_profiling_lock_khr: vkAcquireProfilingLockKHR,
-    pub release_profiling_lock_khr: vkReleaseProfilingLockKHR,
+    pub acquire_profiling_lock_khr: Option<vkAcquireProfilingLockKHR>,
+    pub release_profiling_lock_khr: Option<vkReleaseProfilingLockKHR>,
 }
 
 impl DeviceFnKhrPerformanceQuery {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            acquire_profiling_lock_khr: to_panic(loader(c"vkAcquireProfilingLockKHR")),
-            release_profiling_lock_khr: to_panic(loader(c"vkReleaseProfilingLockKHR")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        acquire_profiling_lock_khr: None,
+        release_profiling_lock_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnKhrPipelineBinary {
-    pub create_pipeline_binaries_khr: vkCreatePipelineBinariesKHR,
-    pub destroy_pipeline_binary_khr: vkDestroyPipelineBinaryKHR,
-    pub get_pipeline_key_khr: vkGetPipelineKeyKHR,
-    pub get_pipeline_binary_data_khr: vkGetPipelineBinaryDataKHR,
-    pub release_captured_pipeline_data_khr: vkReleaseCapturedPipelineDataKHR,
+    pub create_pipeline_binaries_khr: Option<vkCreatePipelineBinariesKHR>,
+    pub destroy_pipeline_binary_khr: Option<vkDestroyPipelineBinaryKHR>,
+    pub get_pipeline_key_khr: Option<vkGetPipelineKeyKHR>,
+    pub get_pipeline_binary_data_khr: Option<vkGetPipelineBinaryDataKHR>,
+    pub release_captured_pipeline_data_khr: Option<vkReleaseCapturedPipelineDataKHR>,
 }
 
 impl DeviceFnKhrPipelineBinary {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            create_pipeline_binaries_khr: to_panic(loader(c"vkCreatePipelineBinariesKHR")),
-            destroy_pipeline_binary_khr: to_panic(loader(c"vkDestroyPipelineBinaryKHR")),
-            get_pipeline_key_khr: to_panic(loader(c"vkGetPipelineKeyKHR")),
-            get_pipeline_binary_data_khr: to_panic(loader(c"vkGetPipelineBinaryDataKHR")),
-            release_captured_pipeline_data_khr: to_panic(loader(
-                c"vkReleaseCapturedPipelineDataKHR",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        create_pipeline_binaries_khr: None,
+        destroy_pipeline_binary_khr: None,
+        get_pipeline_key_khr: None,
+        get_pipeline_binary_data_khr: None,
+        release_captured_pipeline_data_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnKhrPipelineExecutableProperties {
-    pub get_pipeline_executable_properties_khr: vkGetPipelineExecutablePropertiesKHR,
-    pub get_pipeline_executable_statistics_khr: vkGetPipelineExecutableStatisticsKHR,
+    pub get_pipeline_executable_properties_khr: Option<vkGetPipelineExecutablePropertiesKHR>,
+    pub get_pipeline_executable_statistics_khr: Option<vkGetPipelineExecutableStatisticsKHR>,
     pub get_pipeline_executable_internal_representations_khr:
-        vkGetPipelineExecutableInternalRepresentationsKHR,
+        Option<vkGetPipelineExecutableInternalRepresentationsKHR>,
 }
 
 impl DeviceFnKhrPipelineExecutableProperties {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_pipeline_executable_properties_khr: to_panic(loader(
-                c"vkGetPipelineExecutablePropertiesKHR",
-            )),
-            get_pipeline_executable_statistics_khr: to_panic(loader(
-                c"vkGetPipelineExecutableStatisticsKHR",
-            )),
-            get_pipeline_executable_internal_representations_khr: to_panic(loader(
-                c"vkGetPipelineExecutableInternalRepresentationsKHR",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_pipeline_executable_properties_khr: None,
+        get_pipeline_executable_statistics_khr: None,
+        get_pipeline_executable_internal_representations_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnKhrPresentWait {
-    pub wait_for_present_khr: vkWaitForPresentKHR,
+    pub wait_for_present_khr: Option<vkWaitForPresentKHR>,
 }
 
 impl DeviceFnKhrPresentWait {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            wait_for_present_khr: to_panic(loader(c"vkWaitForPresentKHR")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        wait_for_present_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnKhrPresentWait2 {
-    pub wait_for_present2_khr: vkWaitForPresent2KHR,
+    pub wait_for_present2_khr: Option<vkWaitForPresent2KHR>,
 }
 
 impl DeviceFnKhrPresentWait2 {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            wait_for_present2_khr: to_panic(loader(c"vkWaitForPresent2KHR")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        wait_for_present2_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnKhrRayTracingPipeline {
-    pub get_ray_tracing_shader_group_handles_khr: vkGetRayTracingShaderGroupHandlesKHR,
-    pub get_ray_tracing_shader_group_handles_nv: vkGetRayTracingShaderGroupHandlesNV,
+    pub get_ray_tracing_shader_group_handles_khr: Option<vkGetRayTracingShaderGroupHandlesKHR>,
     pub get_ray_tracing_capture_replay_shader_group_handles_khr:
-        vkGetRayTracingCaptureReplayShaderGroupHandlesKHR,
-    pub create_ray_tracing_pipelines_khr: vkCreateRayTracingPipelinesKHR,
-    pub get_ray_tracing_shader_group_stack_size_khr: vkGetRayTracingShaderGroupStackSizeKHR,
+        Option<vkGetRayTracingCaptureReplayShaderGroupHandlesKHR>,
+    pub create_ray_tracing_pipelines_khr: Option<vkCreateRayTracingPipelinesKHR>,
+    pub get_ray_tracing_shader_group_stack_size_khr: Option<vkGetRayTracingShaderGroupStackSizeKHR>,
 }
 
 impl DeviceFnKhrRayTracingPipeline {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_ray_tracing_shader_group_handles_khr: to_panic(loader(
-                c"vkGetRayTracingShaderGroupHandlesKHR",
-            )),
-            get_ray_tracing_shader_group_handles_nv: to_panic(loader(
-                c"vkGetRayTracingShaderGroupHandlesNV",
-            )),
-            get_ray_tracing_capture_replay_shader_group_handles_khr: to_panic(loader(
-                c"vkGetRayTracingCaptureReplayShaderGroupHandlesKHR",
-            )),
-            create_ray_tracing_pipelines_khr: to_panic(loader(c"vkCreateRayTracingPipelinesKHR")),
-            get_ray_tracing_shader_group_stack_size_khr: to_panic(loader(
-                c"vkGetRayTracingShaderGroupStackSizeKHR",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_ray_tracing_shader_group_handles_khr: None,
+        get_ray_tracing_capture_replay_shader_group_handles_khr: None,
+        create_ray_tracing_pipelines_khr: None,
+        get_ray_tracing_shader_group_stack_size_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnKhrSharedPresentableImage {
-    pub get_swapchain_status_khr: vkGetSwapchainStatusKHR,
+    pub get_swapchain_status_khr: Option<vkGetSwapchainStatusKHR>,
 }
 
 impl DeviceFnKhrSharedPresentableImage {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_swapchain_status_khr: to_panic(loader(c"vkGetSwapchainStatusKHR")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_swapchain_status_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnKhrSwapchain {
-    pub create_swapchain_khr: vkCreateSwapchainKHR,
-    pub destroy_swapchain_khr: vkDestroySwapchainKHR,
-    pub get_swapchain_images_khr: vkGetSwapchainImagesKHR,
-    pub acquire_next_image_khr: vkAcquireNextImageKHR,
+    pub create_swapchain_khr: Option<vkCreateSwapchainKHR>,
+    pub destroy_swapchain_khr: Option<vkDestroySwapchainKHR>,
+    pub get_swapchain_images_khr: Option<vkGetSwapchainImagesKHR>,
+    pub acquire_next_image_khr: Option<vkAcquireNextImageKHR>,
 }
 
 impl DeviceFnKhrSwapchain {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            create_swapchain_khr: to_panic(loader(c"vkCreateSwapchainKHR")),
-            destroy_swapchain_khr: to_panic(loader(c"vkDestroySwapchainKHR")),
-            get_swapchain_images_khr: to_panic(loader(c"vkGetSwapchainImagesKHR")),
-            acquire_next_image_khr: to_panic(loader(c"vkAcquireNextImageKHR")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        create_swapchain_khr: None,
+        destroy_swapchain_khr: None,
+        get_swapchain_images_khr: None,
+        acquire_next_image_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnKhrSwapchainMaintenance1 {
-    pub release_swapchain_images_khr: vkReleaseSwapchainImagesKHR,
-    pub release_swapchain_images_ext: vkReleaseSwapchainImagesEXT,
+    pub release_swapchain_images_khr: Option<vkReleaseSwapchainImagesKHR>,
 }
 
 impl DeviceFnKhrSwapchainMaintenance1 {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            release_swapchain_images_khr: to_panic(loader(c"vkReleaseSwapchainImagesKHR")),
-            release_swapchain_images_ext: to_panic(loader(c"vkReleaseSwapchainImagesEXT")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        release_swapchain_images_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnKhrVideoEncodeQueue {
-    pub get_encoded_video_session_parameters_khr: vkGetEncodedVideoSessionParametersKHR,
+    pub get_encoded_video_session_parameters_khr: Option<vkGetEncodedVideoSessionParametersKHR>,
 }
 
 impl DeviceFnKhrVideoEncodeQueue {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_encoded_video_session_parameters_khr: to_panic(loader(
-                c"vkGetEncodedVideoSessionParametersKHR",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_encoded_video_session_parameters_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnKhrVideoQueue {
-    pub create_video_session_khr: vkCreateVideoSessionKHR,
-    pub destroy_video_session_khr: vkDestroyVideoSessionKHR,
-    pub create_video_session_parameters_khr: vkCreateVideoSessionParametersKHR,
-    pub update_video_session_parameters_khr: vkUpdateVideoSessionParametersKHR,
-    pub destroy_video_session_parameters_khr: vkDestroyVideoSessionParametersKHR,
-    pub get_video_session_memory_requirements_khr: vkGetVideoSessionMemoryRequirementsKHR,
-    pub bind_video_session_memory_khr: vkBindVideoSessionMemoryKHR,
+    pub create_video_session_khr: Option<vkCreateVideoSessionKHR>,
+    pub destroy_video_session_khr: Option<vkDestroyVideoSessionKHR>,
+    pub create_video_session_parameters_khr: Option<vkCreateVideoSessionParametersKHR>,
+    pub update_video_session_parameters_khr: Option<vkUpdateVideoSessionParametersKHR>,
+    pub destroy_video_session_parameters_khr: Option<vkDestroyVideoSessionParametersKHR>,
+    pub get_video_session_memory_requirements_khr: Option<vkGetVideoSessionMemoryRequirementsKHR>,
+    pub bind_video_session_memory_khr: Option<vkBindVideoSessionMemoryKHR>,
 }
 
 impl DeviceFnKhrVideoQueue {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            create_video_session_khr: to_panic(loader(c"vkCreateVideoSessionKHR")),
-            destroy_video_session_khr: to_panic(loader(c"vkDestroyVideoSessionKHR")),
-            create_video_session_parameters_khr: to_panic(loader(
-                c"vkCreateVideoSessionParametersKHR",
-            )),
-            update_video_session_parameters_khr: to_panic(loader(
-                c"vkUpdateVideoSessionParametersKHR",
-            )),
-            destroy_video_session_parameters_khr: to_panic(loader(
-                c"vkDestroyVideoSessionParametersKHR",
-            )),
-            get_video_session_memory_requirements_khr: to_panic(loader(
-                c"vkGetVideoSessionMemoryRequirementsKHR",
-            )),
-            bind_video_session_memory_khr: to_panic(loader(c"vkBindVideoSessionMemoryKHR")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        create_video_session_khr: None,
+        destroy_video_session_khr: None,
+        create_video_session_parameters_khr: None,
+        update_video_session_parameters_khr: None,
+        destroy_video_session_parameters_khr: None,
+        get_video_session_memory_requirements_khr: None,
+        bind_video_session_memory_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnNvClusterAccelerationStructure {
     pub get_cluster_acceleration_structure_build_sizes_nv:
-        vkGetClusterAccelerationStructureBuildSizesNV,
+        Option<vkGetClusterAccelerationStructureBuildSizesNV>,
 }
 
 impl DeviceFnNvClusterAccelerationStructure {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_cluster_acceleration_structure_build_sizes_nv: to_panic(loader(
-                c"vkGetClusterAccelerationStructureBuildSizesNV",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_cluster_acceleration_structure_build_sizes_nv: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnNvCooperativeVector {
-    pub convert_cooperative_vector_matrix_nv: vkConvertCooperativeVectorMatrixNV,
+    pub convert_cooperative_vector_matrix_nv: Option<vkConvertCooperativeVectorMatrixNV>,
 }
 
 impl DeviceFnNvCooperativeVector {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            convert_cooperative_vector_matrix_nv: to_panic(loader(
-                c"vkConvertCooperativeVectorMatrixNV",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        convert_cooperative_vector_matrix_nv: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnNvCudaKernelLaunch {
-    pub create_cuda_module_nv: vkCreateCudaModuleNV,
-    pub get_cuda_module_cache_nv: vkGetCudaModuleCacheNV,
-    pub create_cuda_function_nv: vkCreateCudaFunctionNV,
-    pub destroy_cuda_module_nv: vkDestroyCudaModuleNV,
-    pub destroy_cuda_function_nv: vkDestroyCudaFunctionNV,
+    pub create_cuda_module_nv: Option<vkCreateCudaModuleNV>,
+    pub get_cuda_module_cache_nv: Option<vkGetCudaModuleCacheNV>,
+    pub create_cuda_function_nv: Option<vkCreateCudaFunctionNV>,
+    pub destroy_cuda_module_nv: Option<vkDestroyCudaModuleNV>,
+    pub destroy_cuda_function_nv: Option<vkDestroyCudaFunctionNV>,
 }
 
 impl DeviceFnNvCudaKernelLaunch {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            create_cuda_module_nv: to_panic(loader(c"vkCreateCudaModuleNV")),
-            get_cuda_module_cache_nv: to_panic(loader(c"vkGetCudaModuleCacheNV")),
-            create_cuda_function_nv: to_panic(loader(c"vkCreateCudaFunctionNV")),
-            destroy_cuda_module_nv: to_panic(loader(c"vkDestroyCudaModuleNV")),
-            destroy_cuda_function_nv: to_panic(loader(c"vkDestroyCudaFunctionNV")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        create_cuda_module_nv: None,
+        get_cuda_module_cache_nv: None,
+        create_cuda_function_nv: None,
+        destroy_cuda_module_nv: None,
+        destroy_cuda_function_nv: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnNvDeviceGeneratedCommands {
-    pub get_generated_commands_memory_requirements_nv: vkGetGeneratedCommandsMemoryRequirementsNV,
-    pub create_indirect_commands_layout_nv: vkCreateIndirectCommandsLayoutNV,
-    pub destroy_indirect_commands_layout_nv: vkDestroyIndirectCommandsLayoutNV,
+    pub get_generated_commands_memory_requirements_nv:
+        Option<vkGetGeneratedCommandsMemoryRequirementsNV>,
+    pub create_indirect_commands_layout_nv: Option<vkCreateIndirectCommandsLayoutNV>,
+    pub destroy_indirect_commands_layout_nv: Option<vkDestroyIndirectCommandsLayoutNV>,
 }
 
 impl DeviceFnNvDeviceGeneratedCommands {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_generated_commands_memory_requirements_nv: to_panic(loader(
-                c"vkGetGeneratedCommandsMemoryRequirementsNV",
-            )),
-            create_indirect_commands_layout_nv: to_panic(loader(
-                c"vkCreateIndirectCommandsLayoutNV",
-            )),
-            destroy_indirect_commands_layout_nv: to_panic(loader(
-                c"vkDestroyIndirectCommandsLayoutNV",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_generated_commands_memory_requirements_nv: None,
+        create_indirect_commands_layout_nv: None,
+        destroy_indirect_commands_layout_nv: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnNvDeviceGeneratedCommandsCompute {
-    pub get_pipeline_indirect_memory_requirements_nv: vkGetPipelineIndirectMemoryRequirementsNV,
-    pub get_pipeline_indirect_device_address_nv: vkGetPipelineIndirectDeviceAddressNV,
+    pub get_pipeline_indirect_memory_requirements_nv:
+        Option<vkGetPipelineIndirectMemoryRequirementsNV>,
+    pub get_pipeline_indirect_device_address_nv: Option<vkGetPipelineIndirectDeviceAddressNV>,
 }
 
 impl DeviceFnNvDeviceGeneratedCommandsCompute {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_pipeline_indirect_memory_requirements_nv: to_panic(loader(
-                c"vkGetPipelineIndirectMemoryRequirementsNV",
-            )),
-            get_pipeline_indirect_device_address_nv: to_panic(loader(
-                c"vkGetPipelineIndirectDeviceAddressNV",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_pipeline_indirect_memory_requirements_nv: None,
+        get_pipeline_indirect_device_address_nv: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnNvExternalComputeQueue {
-    pub create_external_compute_queue_nv: vkCreateExternalComputeQueueNV,
-    pub destroy_external_compute_queue_nv: vkDestroyExternalComputeQueueNV,
+    pub create_external_compute_queue_nv: Option<vkCreateExternalComputeQueueNV>,
+    pub destroy_external_compute_queue_nv: Option<vkDestroyExternalComputeQueueNV>,
 }
 
 impl DeviceFnNvExternalComputeQueue {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            create_external_compute_queue_nv: to_panic(loader(c"vkCreateExternalComputeQueueNV")),
-            destroy_external_compute_queue_nv: to_panic(loader(c"vkDestroyExternalComputeQueueNV")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        create_external_compute_queue_nv: None,
+        destroy_external_compute_queue_nv: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnNvExternalMemoryRdma {
-    pub get_memory_remote_address_nv: vkGetMemoryRemoteAddressNV,
+    pub get_memory_remote_address_nv: Option<vkGetMemoryRemoteAddressNV>,
 }
 
 impl DeviceFnNvExternalMemoryRdma {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_memory_remote_address_nv: to_panic(loader(c"vkGetMemoryRemoteAddressNV")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_memory_remote_address_nv: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnNvExternalMemorySciBuf {
-    pub get_memory_sci_buf_nv: vkGetMemorySciBufNV,
+    pub get_memory_sci_buf_nv: Option<vkGetMemorySciBufNV>,
 }
 
 impl DeviceFnNvExternalMemorySciBuf {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_memory_sci_buf_nv: to_panic(loader(c"vkGetMemorySciBufNV")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_memory_sci_buf_nv: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnNvExternalMemoryWin32 {
-    pub get_memory_win32_handle_nv: vkGetMemoryWin32HandleNV,
+    pub get_memory_win32_handle_nv: Option<vkGetMemoryWin32HandleNV>,
 }
 
 impl DeviceFnNvExternalMemoryWin32 {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_memory_win32_handle_nv: to_panic(loader(c"vkGetMemoryWin32HandleNV")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_memory_win32_handle_nv: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnNvExternalSciSync {
-    pub get_semaphore_sci_sync_obj_nv: vkGetSemaphoreSciSyncObjNV,
-    pub import_semaphore_sci_sync_obj_nv: vkImportSemaphoreSciSyncObjNV,
+    pub get_semaphore_sci_sync_obj_nv: Option<vkGetSemaphoreSciSyncObjNV>,
+    pub import_semaphore_sci_sync_obj_nv: Option<vkImportSemaphoreSciSyncObjNV>,
 }
 
 impl DeviceFnNvExternalSciSync {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_semaphore_sci_sync_obj_nv: to_panic(loader(c"vkGetSemaphoreSciSyncObjNV")),
-            import_semaphore_sci_sync_obj_nv: to_panic(loader(c"vkImportSemaphoreSciSyncObjNV")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_semaphore_sci_sync_obj_nv: None,
+        import_semaphore_sci_sync_obj_nv: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnNvExternalSciSync2 {
-    pub get_fence_sci_sync_fence_nv: vkGetFenceSciSyncFenceNV,
-    pub get_fence_sci_sync_obj_nv: vkGetFenceSciSyncObjNV,
-    pub import_fence_sci_sync_fence_nv: vkImportFenceSciSyncFenceNV,
-    pub import_fence_sci_sync_obj_nv: vkImportFenceSciSyncObjNV,
-    pub create_semaphore_sci_sync_pool_nv: vkCreateSemaphoreSciSyncPoolNV,
-    pub destroy_semaphore_sci_sync_pool_nv: vkDestroySemaphoreSciSyncPoolNV,
+    pub get_fence_sci_sync_fence_nv: Option<vkGetFenceSciSyncFenceNV>,
+    pub get_fence_sci_sync_obj_nv: Option<vkGetFenceSciSyncObjNV>,
+    pub import_fence_sci_sync_fence_nv: Option<vkImportFenceSciSyncFenceNV>,
+    pub import_fence_sci_sync_obj_nv: Option<vkImportFenceSciSyncObjNV>,
+    pub create_semaphore_sci_sync_pool_nv: Option<vkCreateSemaphoreSciSyncPoolNV>,
+    pub destroy_semaphore_sci_sync_pool_nv: Option<vkDestroySemaphoreSciSyncPoolNV>,
 }
 
 impl DeviceFnNvExternalSciSync2 {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_fence_sci_sync_fence_nv: to_panic(loader(c"vkGetFenceSciSyncFenceNV")),
-            get_fence_sci_sync_obj_nv: to_panic(loader(c"vkGetFenceSciSyncObjNV")),
-            import_fence_sci_sync_fence_nv: to_panic(loader(c"vkImportFenceSciSyncFenceNV")),
-            import_fence_sci_sync_obj_nv: to_panic(loader(c"vkImportFenceSciSyncObjNV")),
-            create_semaphore_sci_sync_pool_nv: to_panic(loader(c"vkCreateSemaphoreSciSyncPoolNV")),
-            destroy_semaphore_sci_sync_pool_nv: to_panic(loader(
-                c"vkDestroySemaphoreSciSyncPoolNV",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_fence_sci_sync_fence_nv: None,
+        get_fence_sci_sync_obj_nv: None,
+        import_fence_sci_sync_fence_nv: None,
+        import_fence_sci_sync_obj_nv: None,
+        create_semaphore_sci_sync_pool_nv: None,
+        destroy_semaphore_sci_sync_pool_nv: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnNvLowLatency {
-    pub set_latency_sleep_mode_legacy_nv: vkSetLatencySleepModeLegacyNV,
-    pub latency_sleep_legacy_nv: vkLatencySleepLegacyNV,
-    pub set_latency_marker_legacy_nv: vkSetLatencyMarkerLegacyNV,
-    pub get_latency_timings_legacy_nv: vkGetLatencyTimingsLegacyNV,
-    pub get_sleep_status_legacy_nv: vkGetSleepStatusLegacyNV,
-    pub shutdown_latency_device_legacy_nv: vkShutdownLatencyDeviceLegacyNV,
+    pub set_latency_sleep_mode_legacy_nv: Option<vkSetLatencySleepModeLegacyNV>,
+    pub latency_sleep_legacy_nv: Option<vkLatencySleepLegacyNV>,
+    pub set_latency_marker_legacy_nv: Option<vkSetLatencyMarkerLegacyNV>,
+    pub get_latency_timings_legacy_nv: Option<vkGetLatencyTimingsLegacyNV>,
+    pub get_sleep_status_legacy_nv: Option<vkGetSleepStatusLegacyNV>,
+    pub shutdown_latency_device_legacy_nv: Option<vkShutdownLatencyDeviceLegacyNV>,
 }
 
 impl DeviceFnNvLowLatency {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            set_latency_sleep_mode_legacy_nv: to_panic(loader(c"vkSetLatencySleepModeLegacyNV")),
-            latency_sleep_legacy_nv: to_panic(loader(c"vkLatencySleepLegacyNV")),
-            set_latency_marker_legacy_nv: to_panic(loader(c"vkSetLatencyMarkerLegacyNV")),
-            get_latency_timings_legacy_nv: to_panic(loader(c"vkGetLatencyTimingsLegacyNV")),
-            get_sleep_status_legacy_nv: to_panic(loader(c"vkGetSleepStatusLegacyNV")),
-            shutdown_latency_device_legacy_nv: to_panic(loader(c"vkShutdownLatencyDeviceLegacyNV")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        set_latency_sleep_mode_legacy_nv: None,
+        latency_sleep_legacy_nv: None,
+        set_latency_marker_legacy_nv: None,
+        get_latency_timings_legacy_nv: None,
+        get_sleep_status_legacy_nv: None,
+        shutdown_latency_device_legacy_nv: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnNvLowLatency2 {
-    pub set_latency_sleep_mode_nv: vkSetLatencySleepModeNV,
-    pub latency_sleep_nv: vkLatencySleepNV,
-    pub set_latency_marker_nv: vkSetLatencyMarkerNV,
-    pub get_latency_timings_nv: vkGetLatencyTimingsNV,
+    pub set_latency_sleep_mode_nv: Option<vkSetLatencySleepModeNV>,
+    pub latency_sleep_nv: Option<vkLatencySleepNV>,
+    pub set_latency_marker_nv: Option<vkSetLatencyMarkerNV>,
+    pub get_latency_timings_nv: Option<vkGetLatencyTimingsNV>,
 }
 
 impl DeviceFnNvLowLatency2 {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            set_latency_sleep_mode_nv: to_panic(loader(c"vkSetLatencySleepModeNV")),
-            latency_sleep_nv: to_panic(loader(c"vkLatencySleepNV")),
-            set_latency_marker_nv: to_panic(loader(c"vkSetLatencyMarkerNV")),
-            get_latency_timings_nv: to_panic(loader(c"vkGetLatencyTimingsNV")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        set_latency_sleep_mode_nv: None,
+        latency_sleep_nv: None,
+        set_latency_marker_nv: None,
+        get_latency_timings_nv: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnNvOpticalFlow {
-    pub create_optical_flow_session_nv: vkCreateOpticalFlowSessionNV,
-    pub destroy_optical_flow_session_nv: vkDestroyOpticalFlowSessionNV,
-    pub bind_optical_flow_session_image_nv: vkBindOpticalFlowSessionImageNV,
+    pub create_optical_flow_session_nv: Option<vkCreateOpticalFlowSessionNV>,
+    pub destroy_optical_flow_session_nv: Option<vkDestroyOpticalFlowSessionNV>,
+    pub bind_optical_flow_session_image_nv: Option<vkBindOpticalFlowSessionImageNV>,
 }
 
 impl DeviceFnNvOpticalFlow {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            create_optical_flow_session_nv: to_panic(loader(c"vkCreateOpticalFlowSessionNV")),
-            destroy_optical_flow_session_nv: to_panic(loader(c"vkDestroyOpticalFlowSessionNV")),
-            bind_optical_flow_session_image_nv: to_panic(loader(
-                c"vkBindOpticalFlowSessionImageNV",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        create_optical_flow_session_nv: None,
+        destroy_optical_flow_session_nv: None,
+        bind_optical_flow_session_image_nv: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnNvPartitionedAccelerationStructure {
     pub get_partitioned_acceleration_structures_build_sizes_nv:
-        vkGetPartitionedAccelerationStructuresBuildSizesNV,
+        Option<vkGetPartitionedAccelerationStructuresBuildSizesNV>,
 }
 
 impl DeviceFnNvPartitionedAccelerationStructure {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_partitioned_acceleration_structures_build_sizes_nv: to_panic(loader(
-                c"vkGetPartitionedAccelerationStructuresBuildSizesNV",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_partitioned_acceleration_structures_build_sizes_nv: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnNvRayTracing {
-    pub compile_deferred_nv: vkCompileDeferredNV,
-    pub create_acceleration_structure_nv: vkCreateAccelerationStructureNV,
-    pub destroy_acceleration_structure_nv: vkDestroyAccelerationStructureNV,
+    pub compile_deferred_nv: Option<vkCompileDeferredNV>,
+    pub create_acceleration_structure_nv: Option<vkCreateAccelerationStructureNV>,
+    pub destroy_acceleration_structure_nv: Option<vkDestroyAccelerationStructureNV>,
     pub get_acceleration_structure_memory_requirements_nv:
-        vkGetAccelerationStructureMemoryRequirementsNV,
-    pub bind_acceleration_structure_memory_nv: vkBindAccelerationStructureMemoryNV,
-    pub get_acceleration_structure_handle_nv: vkGetAccelerationStructureHandleNV,
-    pub create_ray_tracing_pipelines_nv: vkCreateRayTracingPipelinesNV,
+        Option<vkGetAccelerationStructureMemoryRequirementsNV>,
+    pub bind_acceleration_structure_memory_nv: Option<vkBindAccelerationStructureMemoryNV>,
+    pub get_acceleration_structure_handle_nv: Option<vkGetAccelerationStructureHandleNV>,
+    pub create_ray_tracing_pipelines_nv: Option<vkCreateRayTracingPipelinesNV>,
 }
 
 impl DeviceFnNvRayTracing {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            compile_deferred_nv: to_panic(loader(c"vkCompileDeferredNV")),
-            create_acceleration_structure_nv: to_panic(loader(c"vkCreateAccelerationStructureNV")),
-            destroy_acceleration_structure_nv: to_panic(loader(
-                c"vkDestroyAccelerationStructureNV",
-            )),
-            get_acceleration_structure_memory_requirements_nv: to_panic(loader(
-                c"vkGetAccelerationStructureMemoryRequirementsNV",
-            )),
-            bind_acceleration_structure_memory_nv: to_panic(loader(
-                c"vkBindAccelerationStructureMemoryNV",
-            )),
-            get_acceleration_structure_handle_nv: to_panic(loader(
-                c"vkGetAccelerationStructureHandleNV",
-            )),
-            create_ray_tracing_pipelines_nv: to_panic(loader(c"vkCreateRayTracingPipelinesNV")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        compile_deferred_nv: None,
+        create_acceleration_structure_nv: None,
+        destroy_acceleration_structure_nv: None,
+        get_acceleration_structure_memory_requirements_nv: None,
+        bind_acceleration_structure_memory_nv: None,
+        get_acceleration_structure_handle_nv: None,
+        create_ray_tracing_pipelines_nv: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnNvxBinaryImport {
-    pub create_cu_module_nvx: vkCreateCuModuleNVX,
-    pub create_cu_function_nvx: vkCreateCuFunctionNVX,
-    pub destroy_cu_module_nvx: vkDestroyCuModuleNVX,
-    pub destroy_cu_function_nvx: vkDestroyCuFunctionNVX,
+    pub create_cu_module_nvx: Option<vkCreateCuModuleNVX>,
+    pub create_cu_function_nvx: Option<vkCreateCuFunctionNVX>,
+    pub destroy_cu_module_nvx: Option<vkDestroyCuModuleNVX>,
+    pub destroy_cu_function_nvx: Option<vkDestroyCuFunctionNVX>,
 }
 
 impl DeviceFnNvxBinaryImport {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            create_cu_module_nvx: to_panic(loader(c"vkCreateCuModuleNVX")),
-            create_cu_function_nvx: to_panic(loader(c"vkCreateCuFunctionNVX")),
-            destroy_cu_module_nvx: to_panic(loader(c"vkDestroyCuModuleNVX")),
-            destroy_cu_function_nvx: to_panic(loader(c"vkDestroyCuFunctionNVX")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        create_cu_module_nvx: None,
+        create_cu_function_nvx: None,
+        destroy_cu_module_nvx: None,
+        destroy_cu_function_nvx: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnNvxImageViewHandle {
-    pub get_image_view_handle_nvx: vkGetImageViewHandleNVX,
-    pub get_image_view_handle64_nvx: vkGetImageViewHandle64NVX,
-    pub get_image_view_address_nvx: vkGetImageViewAddressNVX,
-    pub get_device_combined_image_sampler_index_nvx: vkGetDeviceCombinedImageSamplerIndexNVX,
+    pub get_image_view_handle_nvx: Option<vkGetImageViewHandleNVX>,
+    pub get_image_view_handle64_nvx: Option<vkGetImageViewHandle64NVX>,
+    pub get_image_view_address_nvx: Option<vkGetImageViewAddressNVX>,
+    pub get_device_combined_image_sampler_index_nvx:
+        Option<vkGetDeviceCombinedImageSamplerIndexNVX>,
 }
 
 impl DeviceFnNvxImageViewHandle {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_image_view_handle_nvx: to_panic(loader(c"vkGetImageViewHandleNVX")),
-            get_image_view_handle64_nvx: to_panic(loader(c"vkGetImageViewHandle64NVX")),
-            get_image_view_address_nvx: to_panic(loader(c"vkGetImageViewAddressNVX")),
-            get_device_combined_image_sampler_index_nvx: to_panic(loader(
-                c"vkGetDeviceCombinedImageSamplerIndexNVX",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_image_view_handle_nvx: None,
+        get_image_view_handle64_nvx: None,
+        get_image_view_address_nvx: None,
+        get_device_combined_image_sampler_index_nvx: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnOhosExternalMemory {
-    pub get_native_buffer_properties_ohos: vkGetNativeBufferPropertiesOHOS,
-    pub get_memory_native_buffer_ohos: vkGetMemoryNativeBufferOHOS,
+    pub get_native_buffer_properties_ohos: Option<vkGetNativeBufferPropertiesOHOS>,
+    pub get_memory_native_buffer_ohos: Option<vkGetMemoryNativeBufferOHOS>,
 }
 
 impl DeviceFnOhosExternalMemory {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_native_buffer_properties_ohos: to_panic(loader(c"vkGetNativeBufferPropertiesOHOS")),
-            get_memory_native_buffer_ohos: to_panic(loader(c"vkGetMemoryNativeBufferOHOS")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_native_buffer_properties_ohos: None,
+        get_memory_native_buffer_ohos: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnQcomTileProperties {
-    pub get_framebuffer_tile_properties_qcom: vkGetFramebufferTilePropertiesQCOM,
-    pub get_dynamic_rendering_tile_properties_qcom: vkGetDynamicRenderingTilePropertiesQCOM,
+    pub get_framebuffer_tile_properties_qcom: Option<vkGetFramebufferTilePropertiesQCOM>,
+    pub get_dynamic_rendering_tile_properties_qcom: Option<vkGetDynamicRenderingTilePropertiesQCOM>,
 }
 
 impl DeviceFnQcomTileProperties {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_framebuffer_tile_properties_qcom: to_panic(loader(
-                c"vkGetFramebufferTilePropertiesQCOM",
-            )),
-            get_dynamic_rendering_tile_properties_qcom: to_panic(loader(
-                c"vkGetDynamicRenderingTilePropertiesQCOM",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_framebuffer_tile_properties_qcom: None,
+        get_dynamic_rendering_tile_properties_qcom: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnQnxExternalMemoryScreenBuffer {
-    pub get_screen_buffer_properties_qnx: vkGetScreenBufferPropertiesQNX,
+    pub get_screen_buffer_properties_qnx: Option<vkGetScreenBufferPropertiesQNX>,
 }
 
 impl DeviceFnQnxExternalMemoryScreenBuffer {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_screen_buffer_properties_qnx: to_panic(loader(c"vkGetScreenBufferPropertiesQNX")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_screen_buffer_properties_qnx: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct DeviceFnValveDescriptorSetHostMapping {
     pub get_descriptor_set_layout_host_mapping_info_valve:
-        vkGetDescriptorSetLayoutHostMappingInfoVALVE,
-    pub get_descriptor_set_host_mapping_valve: vkGetDescriptorSetHostMappingVALVE,
+        Option<vkGetDescriptorSetLayoutHostMappingInfoVALVE>,
+    pub get_descriptor_set_host_mapping_valve: Option<vkGetDescriptorSetHostMappingVALVE>,
 }
 
 impl DeviceFnValveDescriptorSetHostMapping {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_descriptor_set_layout_host_mapping_info_valve: to_panic(loader(
-                c"vkGetDescriptorSetLayoutHostMappingInfoVALVE",
-            )),
-            get_descriptor_set_host_mapping_valve: to_panic(loader(
-                c"vkGetDescriptorSetHostMappingVALVE",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_descriptor_set_layout_host_mapping_info_valve: None,
+        get_descriptor_set_host_mapping_valve: None,
+    };
 }
 
 #[derive(Clone)]
 pub struct QueueFn {
     pub v1_0: QueueFnv1_0,
     pub v1_3: QueueFnv1_3,
-    pub ext_debug_utils: Option<QueueFnExtDebugUtils>,
-    pub intel_performance_query: Option<QueueFnIntelPerformanceQuery>,
-    pub khr_swapchain: Option<QueueFnKhrSwapchain>,
-    pub nv_device_diagnostic_checkpoints: Option<QueueFnNvDeviceDiagnosticCheckpoints>,
-    pub nv_low_latency: Option<QueueFnNvLowLatency>,
-    pub nv_low_latency2: Option<QueueFnNvLowLatency2>,
-    pub qcom_queue_perf_hint: Option<QueueFnQcomQueuePerfHint>,
+    pub ext_debug_utils: QueueFnExtDebugUtils,
+    pub intel_performance_query: QueueFnIntelPerformanceQuery,
+    pub khr_swapchain: QueueFnKhrSwapchain,
+    pub nv_device_diagnostic_checkpoints: QueueFnNvDeviceDiagnosticCheckpoints,
+    pub nv_low_latency: QueueFnNvLowLatency,
+    pub nv_low_latency2: QueueFnNvLowLatency2,
+    pub qcom_queue_perf_hint: QueueFnQcomQueuePerfHint,
 }
 
 impl QueueFn {
+    /// A table with no functions loaded; every call through it panics.
+    pub const EMPTY: Self = Self {
+        v1_0: QueueFnv1_0::EMPTY,
+        v1_3: QueueFnv1_3::EMPTY,
+        ext_debug_utils: QueueFnExtDebugUtils::EMPTY,
+        intel_performance_query: QueueFnIntelPerformanceQuery::EMPTY,
+        khr_swapchain: QueueFnKhrSwapchain::EMPTY,
+        nv_device_diagnostic_checkpoints: QueueFnNvDeviceDiagnosticCheckpoints::EMPTY,
+        nv_low_latency: QueueFnNvLowLatency::EMPTY,
+        nv_low_latency2: QueueFnNvLowLatency2::EMPTY,
+        qcom_queue_perf_hint: QueueFnQcomQueuePerfHint::EMPTY,
+    };
+
     pub fn load<F: FnMut(&CStr) -> *const c_void>(
         mut loader: F,
         api_version: u32,
@@ -4115,41 +4725,56 @@ impl QueueFn {
             v1_3: if api_version >= API_VERSION_1_3 {
                 QueueFnv1_3::load(&mut loader)
             } else {
-                QueueFnv1_3::default()
+                QueueFnv1_3::EMPTY
             },
-            ext_debug_utils: None,
-            intel_performance_query: None,
-            khr_swapchain: None,
-            nv_device_diagnostic_checkpoints: None,
-            nv_low_latency: None,
-            nv_low_latency2: None,
-            qcom_queue_perf_hint: None,
+            ext_debug_utils: QueueFnExtDebugUtils::EMPTY,
+            intel_performance_query: QueueFnIntelPerformanceQuery::EMPTY,
+            khr_swapchain: QueueFnKhrSwapchain::EMPTY,
+            nv_device_diagnostic_checkpoints: QueueFnNvDeviceDiagnosticCheckpoints::EMPTY,
+            nv_low_latency: QueueFnNvLowLatency::EMPTY,
+            nv_low_latency2: QueueFnNvLowLatency2::EMPTY,
+            qcom_queue_perf_hint: QueueFnQcomQueuePerfHint::EMPTY,
         };
+        out.ext_debug_utils.queue_begin_debug_utils_label_ext =
+            to_option(loader(c"vkQueueBeginDebugUtilsLabelEXT"));
+        out.ext_debug_utils.queue_end_debug_utils_label_ext =
+            to_option(loader(c"vkQueueEndDebugUtilsLabelEXT"));
+        out.ext_debug_utils.queue_insert_debug_utils_label_ext =
+            to_option(loader(c"vkQueueInsertDebugUtilsLabelEXT"));
         for &ext in extensions {
-            let ext = unsafe { CStr::from_ptr(ext).to_bytes() };
-            match ext {
-                b"VK_EXT_debug_utils" => {
-                    out.ext_debug_utils = Some(QueueFnExtDebugUtils::load(&mut loader))
-                }
-                b"VK_INTEL_performance_query" => {
-                    out.intel_performance_query =
-                        Some(QueueFnIntelPerformanceQuery::load(&mut loader))
-                }
+            match unsafe { CStr::from_ptr(ext) }.to_bytes() {
                 b"VK_KHR_swapchain" => {
-                    out.khr_swapchain = Some(QueueFnKhrSwapchain::load(&mut loader))
+                    out.khr_swapchain.queue_present_khr = to_option(loader(c"vkQueuePresentKHR"));
                 }
                 b"VK_NV_device_diagnostic_checkpoints" => {
-                    out.nv_device_diagnostic_checkpoints =
-                        Some(QueueFnNvDeviceDiagnosticCheckpoints::load(&mut loader))
+                    out.nv_device_diagnostic_checkpoints
+                        .get_queue_checkpoint_data_nv =
+                        to_option(loader(c"vkGetQueueCheckpointDataNV"));
+                    out.nv_device_diagnostic_checkpoints
+                        .get_queue_checkpoint_data2_nv =
+                        to_option(loader(c"vkGetQueueCheckpointData2NV"));
                 }
-                b"VK_NV_low_latency" => {
-                    out.nv_low_latency = Some(QueueFnNvLowLatency::load(&mut loader))
-                }
-                b"VK_NV_low_latency2" => {
-                    out.nv_low_latency2 = Some(QueueFnNvLowLatency2::load(&mut loader))
+                b"VK_INTEL_performance_query" => {
+                    out.intel_performance_query
+                        .queue_set_performance_configuration_intel =
+                        to_option(loader(c"vkQueueSetPerformanceConfigurationINTEL"));
                 }
                 b"VK_QCOM_queue_perf_hint" => {
-                    out.qcom_queue_perf_hint = Some(QueueFnQcomQueuePerfHint::load(&mut loader))
+                    out.qcom_queue_perf_hint.queue_set_perf_hint_qcom =
+                        to_option(loader(c"vkQueueSetPerfHintQCOM"));
+                }
+                b"VK_NV_low_latency" => {
+                    out.nv_low_latency.queue_notify_out_of_band_legacy_nv =
+                        to_option(loader(c"vkQueueNotifyOutOfBandLegacyNV"));
+                }
+                b"VK_KHR_synchronization2" => {
+                    if out.v1_3.queue_submit2.is_none() {
+                        out.v1_3.queue_submit2 = to_option(loader(c"vkQueueSubmit2KHR"));
+                    }
+                }
+                b"VK_NV_low_latency2" => {
+                    out.nv_low_latency2.queue_notify_out_of_band_nv =
+                        to_option(loader(c"vkQueueNotifyOutOfBandNV"));
                 }
                 _ => (),
             }
@@ -4166,6 +4791,12 @@ pub struct QueueFnv1_0 {
 }
 
 impl QueueFnv1_0 {
+    pub const EMPTY: Self = Self {
+        queue_submit: None,
+        queue_wait_idle: None,
+        queue_bind_sparse: None,
+    };
+
     pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
         Self {
             queue_submit: to_option(loader(c"vkQueueSubmit")),
@@ -4178,117 +4809,101 @@ impl QueueFnv1_0 {
 #[derive(Clone, Default)]
 pub struct QueueFnv1_3 {
     pub queue_submit2: Option<vkQueueSubmit2>,
-    pub queue_submit2_khr: Option<vkQueueSubmit2KHR>,
 }
 
 impl QueueFnv1_3 {
+    pub const EMPTY: Self = Self {
+        queue_submit2: None,
+    };
+
     pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
         Self {
             queue_submit2: to_option(loader(c"vkQueueSubmit2")),
-            queue_submit2_khr: to_option(loader(c"vkQueueSubmit2KHR")),
         }
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct QueueFnExtDebugUtils {
-    pub queue_begin_debug_utils_label_ext: vkQueueBeginDebugUtilsLabelEXT,
-    pub queue_end_debug_utils_label_ext: vkQueueEndDebugUtilsLabelEXT,
-    pub queue_insert_debug_utils_label_ext: vkQueueInsertDebugUtilsLabelEXT,
+    pub queue_begin_debug_utils_label_ext: Option<vkQueueBeginDebugUtilsLabelEXT>,
+    pub queue_end_debug_utils_label_ext: Option<vkQueueEndDebugUtilsLabelEXT>,
+    pub queue_insert_debug_utils_label_ext: Option<vkQueueInsertDebugUtilsLabelEXT>,
 }
 
 impl QueueFnExtDebugUtils {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            queue_begin_debug_utils_label_ext: to_panic(loader(c"vkQueueBeginDebugUtilsLabelEXT")),
-            queue_end_debug_utils_label_ext: to_panic(loader(c"vkQueueEndDebugUtilsLabelEXT")),
-            queue_insert_debug_utils_label_ext: to_panic(loader(
-                c"vkQueueInsertDebugUtilsLabelEXT",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        queue_begin_debug_utils_label_ext: None,
+        queue_end_debug_utils_label_ext: None,
+        queue_insert_debug_utils_label_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct QueueFnIntelPerformanceQuery {
-    pub queue_set_performance_configuration_intel: vkQueueSetPerformanceConfigurationINTEL,
+    pub queue_set_performance_configuration_intel: Option<vkQueueSetPerformanceConfigurationINTEL>,
 }
 
 impl QueueFnIntelPerformanceQuery {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            queue_set_performance_configuration_intel: to_panic(loader(
-                c"vkQueueSetPerformanceConfigurationINTEL",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        queue_set_performance_configuration_intel: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct QueueFnKhrSwapchain {
-    pub queue_present_khr: vkQueuePresentKHR,
+    pub queue_present_khr: Option<vkQueuePresentKHR>,
 }
 
 impl QueueFnKhrSwapchain {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            queue_present_khr: to_panic(loader(c"vkQueuePresentKHR")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        queue_present_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct QueueFnNvDeviceDiagnosticCheckpoints {
-    pub get_queue_checkpoint_data_nv: vkGetQueueCheckpointDataNV,
-    pub get_queue_checkpoint_data2_nv: vkGetQueueCheckpointData2NV,
+    pub get_queue_checkpoint_data_nv: Option<vkGetQueueCheckpointDataNV>,
+    pub get_queue_checkpoint_data2_nv: Option<vkGetQueueCheckpointData2NV>,
 }
 
 impl QueueFnNvDeviceDiagnosticCheckpoints {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            get_queue_checkpoint_data_nv: to_panic(loader(c"vkGetQueueCheckpointDataNV")),
-            get_queue_checkpoint_data2_nv: to_panic(loader(c"vkGetQueueCheckpointData2NV")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        get_queue_checkpoint_data_nv: None,
+        get_queue_checkpoint_data2_nv: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct QueueFnNvLowLatency {
-    pub queue_notify_out_of_band_legacy_nv: vkQueueNotifyOutOfBandLegacyNV,
+    pub queue_notify_out_of_band_legacy_nv: Option<vkQueueNotifyOutOfBandLegacyNV>,
 }
 
 impl QueueFnNvLowLatency {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            queue_notify_out_of_band_legacy_nv: to_panic(loader(c"vkQueueNotifyOutOfBandLegacyNV")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        queue_notify_out_of_band_legacy_nv: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct QueueFnNvLowLatency2 {
-    pub queue_notify_out_of_band_nv: vkQueueNotifyOutOfBandNV,
+    pub queue_notify_out_of_band_nv: Option<vkQueueNotifyOutOfBandNV>,
 }
 
 impl QueueFnNvLowLatency2 {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            queue_notify_out_of_band_nv: to_panic(loader(c"vkQueueNotifyOutOfBandNV")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        queue_notify_out_of_band_nv: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct QueueFnQcomQueuePerfHint {
-    pub queue_set_perf_hint_qcom: vkQueueSetPerfHintQCOM,
+    pub queue_set_perf_hint_qcom: Option<vkQueueSetPerfHintQCOM>,
 }
 
 impl QueueFnQcomQueuePerfHint {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            queue_set_perf_hint_qcom: to_panic(loader(c"vkQueueSetPerfHintQCOM")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        queue_set_perf_hint_qcom: None,
+    };
 }
 
 #[derive(Clone)]
@@ -4298,75 +4913,148 @@ pub struct CommandBufferFn {
     pub v1_2: CommandBufferFnv1_2,
     pub v1_3: CommandBufferFnv1_3,
     pub v1_4: CommandBufferFnv1_4,
-    pub amd_buffer_marker: Option<CommandBufferFnAmdBufferMarker>,
-    pub amd_gpa_interface: Option<CommandBufferFnAmdGpaInterface>,
-    pub amdx_shader_enqueue: Option<CommandBufferFnAmdxShaderEnqueue>,
-    pub arm_data_graph: Option<CommandBufferFnArmDataGraph>,
-    pub arm_scheduling_controls: Option<CommandBufferFnArmSchedulingControls>,
-    pub arm_shader_instrumentation: Option<CommandBufferFnArmShaderInstrumentation>,
-    pub arm_tensors: Option<CommandBufferFnArmTensors>,
+    pub amd_buffer_marker: CommandBufferFnAmdBufferMarker,
+    pub amd_gpa_interface: CommandBufferFnAmdGpaInterface,
+    pub amdx_shader_enqueue: CommandBufferFnAmdxShaderEnqueue,
+    pub arm_data_graph: CommandBufferFnArmDataGraph,
+    pub arm_scheduling_controls: CommandBufferFnArmSchedulingControls,
+    pub arm_shader_instrumentation: CommandBufferFnArmShaderInstrumentation,
+    pub arm_tensors: CommandBufferFnArmTensors,
     pub ext_attachment_feedback_loop_dynamic_state:
-        Option<CommandBufferFnExtAttachmentFeedbackLoopDynamicState>,
-    pub ext_color_write_enable: Option<CommandBufferFnExtColorWriteEnable>,
-    pub ext_conditional_rendering: Option<CommandBufferFnExtConditionalRendering>,
-    pub ext_custom_resolve: Option<CommandBufferFnExtCustomResolve>,
-    pub ext_debug_marker: Option<CommandBufferFnExtDebugMarker>,
-    pub ext_debug_utils: Option<CommandBufferFnExtDebugUtils>,
-    pub ext_depth_bias_control: Option<CommandBufferFnExtDepthBiasControl>,
-    pub ext_depth_clamp_control: Option<CommandBufferFnExtDepthClampControl>,
-    pub ext_descriptor_buffer: Option<CommandBufferFnExtDescriptorBuffer>,
-    pub ext_descriptor_heap: Option<CommandBufferFnExtDescriptorHeap>,
-    pub ext_device_generated_commands: Option<CommandBufferFnExtDeviceGeneratedCommands>,
-    pub ext_discard_rectangles: Option<CommandBufferFnExtDiscardRectangles>,
-    pub ext_memory_decompression: Option<CommandBufferFnExtMemoryDecompression>,
-    pub ext_mesh_shader: Option<CommandBufferFnExtMeshShader>,
-    pub ext_multi_draw: Option<CommandBufferFnExtMultiDraw>,
-    pub ext_opacity_micromap: Option<CommandBufferFnExtOpacityMicromap>,
-    pub ext_primitive_restart_index: Option<CommandBufferFnExtPrimitiveRestartIndex>,
-    pub ext_sample_locations: Option<CommandBufferFnExtSampleLocations>,
-    pub ext_shader_object: Option<CommandBufferFnExtShaderObject>,
-    pub ext_transform_feedback: Option<CommandBufferFnExtTransformFeedback>,
-    pub huawei_cluster_culling_shader: Option<CommandBufferFnHuaweiClusterCullingShader>,
-    pub huawei_invocation_mask: Option<CommandBufferFnHuaweiInvocationMask>,
-    pub huawei_subpass_shading: Option<CommandBufferFnHuaweiSubpassShading>,
-    pub intel_performance_query: Option<CommandBufferFnIntelPerformanceQuery>,
-    pub khr_acceleration_structure: Option<CommandBufferFnKhrAccelerationStructure>,
-    pub khr_copy_memory_indirect: Option<CommandBufferFnKhrCopyMemoryIndirect>,
-    pub khr_device_address_commands: Option<CommandBufferFnKhrDeviceAddressCommands>,
-    pub khr_fragment_shading_rate: Option<CommandBufferFnKhrFragmentShadingRate>,
-    pub khr_maintenance10: Option<CommandBufferFnKhrMaintenance10>,
-    pub khr_maintenance6: Option<CommandBufferFnKhrMaintenance6>,
-    pub khr_object_refresh: Option<CommandBufferFnKhrObjectRefresh>,
-    pub khr_ray_tracing_maintenance1: Option<CommandBufferFnKhrRayTracingMaintenance1>,
-    pub khr_ray_tracing_pipeline: Option<CommandBufferFnKhrRayTracingPipeline>,
-    pub khr_video_decode_queue: Option<CommandBufferFnKhrVideoDecodeQueue>,
-    pub khr_video_encode_queue: Option<CommandBufferFnKhrVideoEncodeQueue>,
-    pub khr_video_queue: Option<CommandBufferFnKhrVideoQueue>,
-    pub nv_clip_space_w_scaling: Option<CommandBufferFnNvClipSpaceWScaling>,
-    pub nv_cluster_acceleration_structure: Option<CommandBufferFnNvClusterAccelerationStructure>,
-    pub nv_compute_occupancy_priority: Option<CommandBufferFnNvComputeOccupancyPriority>,
-    pub nv_cooperative_vector: Option<CommandBufferFnNvCooperativeVector>,
-    pub nv_copy_memory_indirect: Option<CommandBufferFnNvCopyMemoryIndirect>,
-    pub nv_cuda_kernel_launch: Option<CommandBufferFnNvCudaKernelLaunch>,
-    pub nv_device_diagnostic_checkpoints: Option<CommandBufferFnNvDeviceDiagnosticCheckpoints>,
-    pub nv_device_generated_commands: Option<CommandBufferFnNvDeviceGeneratedCommands>,
-    pub nv_device_generated_commands_compute:
-        Option<CommandBufferFnNvDeviceGeneratedCommandsCompute>,
-    pub nv_fragment_shading_rate_enums: Option<CommandBufferFnNvFragmentShadingRateEnums>,
-    pub nv_memory_decompression: Option<CommandBufferFnNvMemoryDecompression>,
-    pub nv_mesh_shader: Option<CommandBufferFnNvMeshShader>,
-    pub nv_optical_flow: Option<CommandBufferFnNvOpticalFlow>,
-    pub nv_partitioned_acceleration_structure:
-        Option<CommandBufferFnNvPartitionedAccelerationStructure>,
-    pub nv_ray_tracing: Option<CommandBufferFnNvRayTracing>,
-    pub nv_scissor_exclusive: Option<CommandBufferFnNvScissorExclusive>,
-    pub nv_shading_rate_image: Option<CommandBufferFnNvShadingRateImage>,
-    pub nvx_binary_import: Option<CommandBufferFnNvxBinaryImport>,
-    pub qcom_tile_memory_heap: Option<CommandBufferFnQcomTileMemoryHeap>,
-    pub qcom_tile_shading: Option<CommandBufferFnQcomTileShading>,
+        CommandBufferFnExtAttachmentFeedbackLoopDynamicState,
+    pub ext_color_write_enable: CommandBufferFnExtColorWriteEnable,
+    pub ext_conditional_rendering: CommandBufferFnExtConditionalRendering,
+    pub ext_custom_resolve: CommandBufferFnExtCustomResolve,
+    pub ext_debug_marker: CommandBufferFnExtDebugMarker,
+    pub ext_debug_utils: CommandBufferFnExtDebugUtils,
+    pub ext_depth_bias_control: CommandBufferFnExtDepthBiasControl,
+    pub ext_depth_clamp_control: CommandBufferFnExtDepthClampControl,
+    pub ext_descriptor_buffer: CommandBufferFnExtDescriptorBuffer,
+    pub ext_descriptor_heap: CommandBufferFnExtDescriptorHeap,
+    pub ext_device_generated_commands: CommandBufferFnExtDeviceGeneratedCommands,
+    pub ext_discard_rectangles: CommandBufferFnExtDiscardRectangles,
+    pub ext_memory_decompression: CommandBufferFnExtMemoryDecompression,
+    pub ext_mesh_shader: CommandBufferFnExtMeshShader,
+    pub ext_multi_draw: CommandBufferFnExtMultiDraw,
+    pub ext_opacity_micromap: CommandBufferFnExtOpacityMicromap,
+    pub ext_primitive_restart_index: CommandBufferFnExtPrimitiveRestartIndex,
+    pub ext_sample_locations: CommandBufferFnExtSampleLocations,
+    pub ext_shader_object: CommandBufferFnExtShaderObject,
+    pub ext_transform_feedback: CommandBufferFnExtTransformFeedback,
+    pub huawei_cluster_culling_shader: CommandBufferFnHuaweiClusterCullingShader,
+    pub huawei_invocation_mask: CommandBufferFnHuaweiInvocationMask,
+    pub huawei_subpass_shading: CommandBufferFnHuaweiSubpassShading,
+    pub intel_performance_query: CommandBufferFnIntelPerformanceQuery,
+    pub khr_acceleration_structure: CommandBufferFnKhrAccelerationStructure,
+    pub khr_copy_memory_indirect: CommandBufferFnKhrCopyMemoryIndirect,
+    pub khr_device_address_commands: CommandBufferFnKhrDeviceAddressCommands,
+    pub khr_fragment_shading_rate: CommandBufferFnKhrFragmentShadingRate,
+    pub khr_maintenance10: CommandBufferFnKhrMaintenance10,
+    pub khr_maintenance6: CommandBufferFnKhrMaintenance6,
+    pub khr_object_refresh: CommandBufferFnKhrObjectRefresh,
+    pub khr_ray_tracing_maintenance1: CommandBufferFnKhrRayTracingMaintenance1,
+    pub khr_ray_tracing_pipeline: CommandBufferFnKhrRayTracingPipeline,
+    pub khr_video_decode_queue: CommandBufferFnKhrVideoDecodeQueue,
+    pub khr_video_encode_queue: CommandBufferFnKhrVideoEncodeQueue,
+    pub khr_video_queue: CommandBufferFnKhrVideoQueue,
+    pub nv_clip_space_w_scaling: CommandBufferFnNvClipSpaceWScaling,
+    pub nv_cluster_acceleration_structure: CommandBufferFnNvClusterAccelerationStructure,
+    pub nv_compute_occupancy_priority: CommandBufferFnNvComputeOccupancyPriority,
+    pub nv_cooperative_vector: CommandBufferFnNvCooperativeVector,
+    pub nv_copy_memory_indirect: CommandBufferFnNvCopyMemoryIndirect,
+    pub nv_cuda_kernel_launch: CommandBufferFnNvCudaKernelLaunch,
+    pub nv_device_diagnostic_checkpoints: CommandBufferFnNvDeviceDiagnosticCheckpoints,
+    pub nv_device_generated_commands: CommandBufferFnNvDeviceGeneratedCommands,
+    pub nv_device_generated_commands_compute: CommandBufferFnNvDeviceGeneratedCommandsCompute,
+    pub nv_fragment_shading_rate_enums: CommandBufferFnNvFragmentShadingRateEnums,
+    pub nv_memory_decompression: CommandBufferFnNvMemoryDecompression,
+    pub nv_mesh_shader: CommandBufferFnNvMeshShader,
+    pub nv_optical_flow: CommandBufferFnNvOpticalFlow,
+    pub nv_partitioned_acceleration_structure: CommandBufferFnNvPartitionedAccelerationStructure,
+    pub nv_ray_tracing: CommandBufferFnNvRayTracing,
+    pub nv_scissor_exclusive: CommandBufferFnNvScissorExclusive,
+    pub nv_shading_rate_image: CommandBufferFnNvShadingRateImage,
+    pub nvx_binary_import: CommandBufferFnNvxBinaryImport,
+    pub qcom_tile_memory_heap: CommandBufferFnQcomTileMemoryHeap,
+    pub qcom_tile_shading: CommandBufferFnQcomTileShading,
 }
 
 impl CommandBufferFn {
+    /// A table with no functions loaded; every call through it panics.
+    pub const EMPTY: Self = Self {
+        v1_0: CommandBufferFnv1_0::EMPTY,
+        v1_1: CommandBufferFnv1_1::EMPTY,
+        v1_2: CommandBufferFnv1_2::EMPTY,
+        v1_3: CommandBufferFnv1_3::EMPTY,
+        v1_4: CommandBufferFnv1_4::EMPTY,
+        amd_buffer_marker: CommandBufferFnAmdBufferMarker::EMPTY,
+        amd_gpa_interface: CommandBufferFnAmdGpaInterface::EMPTY,
+        amdx_shader_enqueue: CommandBufferFnAmdxShaderEnqueue::EMPTY,
+        arm_data_graph: CommandBufferFnArmDataGraph::EMPTY,
+        arm_scheduling_controls: CommandBufferFnArmSchedulingControls::EMPTY,
+        arm_shader_instrumentation: CommandBufferFnArmShaderInstrumentation::EMPTY,
+        arm_tensors: CommandBufferFnArmTensors::EMPTY,
+        ext_attachment_feedback_loop_dynamic_state:
+            CommandBufferFnExtAttachmentFeedbackLoopDynamicState::EMPTY,
+        ext_color_write_enable: CommandBufferFnExtColorWriteEnable::EMPTY,
+        ext_conditional_rendering: CommandBufferFnExtConditionalRendering::EMPTY,
+        ext_custom_resolve: CommandBufferFnExtCustomResolve::EMPTY,
+        ext_debug_marker: CommandBufferFnExtDebugMarker::EMPTY,
+        ext_debug_utils: CommandBufferFnExtDebugUtils::EMPTY,
+        ext_depth_bias_control: CommandBufferFnExtDepthBiasControl::EMPTY,
+        ext_depth_clamp_control: CommandBufferFnExtDepthClampControl::EMPTY,
+        ext_descriptor_buffer: CommandBufferFnExtDescriptorBuffer::EMPTY,
+        ext_descriptor_heap: CommandBufferFnExtDescriptorHeap::EMPTY,
+        ext_device_generated_commands: CommandBufferFnExtDeviceGeneratedCommands::EMPTY,
+        ext_discard_rectangles: CommandBufferFnExtDiscardRectangles::EMPTY,
+        ext_memory_decompression: CommandBufferFnExtMemoryDecompression::EMPTY,
+        ext_mesh_shader: CommandBufferFnExtMeshShader::EMPTY,
+        ext_multi_draw: CommandBufferFnExtMultiDraw::EMPTY,
+        ext_opacity_micromap: CommandBufferFnExtOpacityMicromap::EMPTY,
+        ext_primitive_restart_index: CommandBufferFnExtPrimitiveRestartIndex::EMPTY,
+        ext_sample_locations: CommandBufferFnExtSampleLocations::EMPTY,
+        ext_shader_object: CommandBufferFnExtShaderObject::EMPTY,
+        ext_transform_feedback: CommandBufferFnExtTransformFeedback::EMPTY,
+        huawei_cluster_culling_shader: CommandBufferFnHuaweiClusterCullingShader::EMPTY,
+        huawei_invocation_mask: CommandBufferFnHuaweiInvocationMask::EMPTY,
+        huawei_subpass_shading: CommandBufferFnHuaweiSubpassShading::EMPTY,
+        intel_performance_query: CommandBufferFnIntelPerformanceQuery::EMPTY,
+        khr_acceleration_structure: CommandBufferFnKhrAccelerationStructure::EMPTY,
+        khr_copy_memory_indirect: CommandBufferFnKhrCopyMemoryIndirect::EMPTY,
+        khr_device_address_commands: CommandBufferFnKhrDeviceAddressCommands::EMPTY,
+        khr_fragment_shading_rate: CommandBufferFnKhrFragmentShadingRate::EMPTY,
+        khr_maintenance10: CommandBufferFnKhrMaintenance10::EMPTY,
+        khr_maintenance6: CommandBufferFnKhrMaintenance6::EMPTY,
+        khr_object_refresh: CommandBufferFnKhrObjectRefresh::EMPTY,
+        khr_ray_tracing_maintenance1: CommandBufferFnKhrRayTracingMaintenance1::EMPTY,
+        khr_ray_tracing_pipeline: CommandBufferFnKhrRayTracingPipeline::EMPTY,
+        khr_video_decode_queue: CommandBufferFnKhrVideoDecodeQueue::EMPTY,
+        khr_video_encode_queue: CommandBufferFnKhrVideoEncodeQueue::EMPTY,
+        khr_video_queue: CommandBufferFnKhrVideoQueue::EMPTY,
+        nv_clip_space_w_scaling: CommandBufferFnNvClipSpaceWScaling::EMPTY,
+        nv_cluster_acceleration_structure: CommandBufferFnNvClusterAccelerationStructure::EMPTY,
+        nv_compute_occupancy_priority: CommandBufferFnNvComputeOccupancyPriority::EMPTY,
+        nv_cooperative_vector: CommandBufferFnNvCooperativeVector::EMPTY,
+        nv_copy_memory_indirect: CommandBufferFnNvCopyMemoryIndirect::EMPTY,
+        nv_cuda_kernel_launch: CommandBufferFnNvCudaKernelLaunch::EMPTY,
+        nv_device_diagnostic_checkpoints: CommandBufferFnNvDeviceDiagnosticCheckpoints::EMPTY,
+        nv_device_generated_commands: CommandBufferFnNvDeviceGeneratedCommands::EMPTY,
+        nv_device_generated_commands_compute:
+            CommandBufferFnNvDeviceGeneratedCommandsCompute::EMPTY,
+        nv_fragment_shading_rate_enums: CommandBufferFnNvFragmentShadingRateEnums::EMPTY,
+        nv_memory_decompression: CommandBufferFnNvMemoryDecompression::EMPTY,
+        nv_mesh_shader: CommandBufferFnNvMeshShader::EMPTY,
+        nv_optical_flow: CommandBufferFnNvOpticalFlow::EMPTY,
+        nv_partitioned_acceleration_structure:
+            CommandBufferFnNvPartitionedAccelerationStructure::EMPTY,
+        nv_ray_tracing: CommandBufferFnNvRayTracing::EMPTY,
+        nv_scissor_exclusive: CommandBufferFnNvScissorExclusive::EMPTY,
+        nv_shading_rate_image: CommandBufferFnNvShadingRateImage::EMPTY,
+        nvx_binary_import: CommandBufferFnNvxBinaryImport::EMPTY,
+        qcom_tile_memory_heap: CommandBufferFnQcomTileMemoryHeap::EMPTY,
+        qcom_tile_shading: CommandBufferFnQcomTileShading::EMPTY,
+    };
+
     pub fn load<F: FnMut(&CStr) -> *const c_void>(
         mut loader: F,
         api_version: u32,
@@ -4377,329 +5065,1254 @@ impl CommandBufferFn {
             v1_1: if api_version >= API_VERSION_1_1 {
                 CommandBufferFnv1_1::load(&mut loader)
             } else {
-                CommandBufferFnv1_1::default()
+                CommandBufferFnv1_1::EMPTY
             },
             v1_2: if api_version >= API_VERSION_1_2 {
                 CommandBufferFnv1_2::load(&mut loader)
             } else {
-                CommandBufferFnv1_2::default()
+                CommandBufferFnv1_2::EMPTY
             },
             v1_3: if api_version >= API_VERSION_1_3 {
                 CommandBufferFnv1_3::load(&mut loader)
             } else {
-                CommandBufferFnv1_3::default()
+                CommandBufferFnv1_3::EMPTY
             },
             v1_4: if api_version >= API_VERSION_1_4 {
                 CommandBufferFnv1_4::load(&mut loader)
             } else {
-                CommandBufferFnv1_4::default()
+                CommandBufferFnv1_4::EMPTY
             },
-            amd_buffer_marker: None,
-            amd_gpa_interface: None,
-            amdx_shader_enqueue: None,
-            arm_data_graph: None,
-            arm_scheduling_controls: None,
-            arm_shader_instrumentation: None,
-            arm_tensors: None,
-            ext_attachment_feedback_loop_dynamic_state: None,
-            ext_color_write_enable: None,
-            ext_conditional_rendering: None,
-            ext_custom_resolve: None,
-            ext_debug_marker: None,
-            ext_debug_utils: None,
-            ext_depth_bias_control: None,
-            ext_depth_clamp_control: None,
-            ext_descriptor_buffer: None,
-            ext_descriptor_heap: None,
-            ext_device_generated_commands: None,
-            ext_discard_rectangles: None,
-            ext_memory_decompression: None,
-            ext_mesh_shader: None,
-            ext_multi_draw: None,
-            ext_opacity_micromap: None,
-            ext_primitive_restart_index: None,
-            ext_sample_locations: None,
-            ext_shader_object: None,
-            ext_transform_feedback: None,
-            huawei_cluster_culling_shader: None,
-            huawei_invocation_mask: None,
-            huawei_subpass_shading: None,
-            intel_performance_query: None,
-            khr_acceleration_structure: None,
-            khr_copy_memory_indirect: None,
-            khr_device_address_commands: None,
-            khr_fragment_shading_rate: None,
-            khr_maintenance10: None,
-            khr_maintenance6: None,
-            khr_object_refresh: None,
-            khr_ray_tracing_maintenance1: None,
-            khr_ray_tracing_pipeline: None,
-            khr_video_decode_queue: None,
-            khr_video_encode_queue: None,
-            khr_video_queue: None,
-            nv_clip_space_w_scaling: None,
-            nv_cluster_acceleration_structure: None,
-            nv_compute_occupancy_priority: None,
-            nv_cooperative_vector: None,
-            nv_copy_memory_indirect: None,
-            nv_cuda_kernel_launch: None,
-            nv_device_diagnostic_checkpoints: None,
-            nv_device_generated_commands: None,
-            nv_device_generated_commands_compute: None,
-            nv_fragment_shading_rate_enums: None,
-            nv_memory_decompression: None,
-            nv_mesh_shader: None,
-            nv_optical_flow: None,
-            nv_partitioned_acceleration_structure: None,
-            nv_ray_tracing: None,
-            nv_scissor_exclusive: None,
-            nv_shading_rate_image: None,
-            nvx_binary_import: None,
-            qcom_tile_memory_heap: None,
-            qcom_tile_shading: None,
+            amd_buffer_marker: CommandBufferFnAmdBufferMarker::EMPTY,
+            amd_gpa_interface: CommandBufferFnAmdGpaInterface::EMPTY,
+            amdx_shader_enqueue: CommandBufferFnAmdxShaderEnqueue::EMPTY,
+            arm_data_graph: CommandBufferFnArmDataGraph::EMPTY,
+            arm_scheduling_controls: CommandBufferFnArmSchedulingControls::EMPTY,
+            arm_shader_instrumentation: CommandBufferFnArmShaderInstrumentation::EMPTY,
+            arm_tensors: CommandBufferFnArmTensors::EMPTY,
+            ext_attachment_feedback_loop_dynamic_state:
+                CommandBufferFnExtAttachmentFeedbackLoopDynamicState::EMPTY,
+            ext_color_write_enable: CommandBufferFnExtColorWriteEnable::EMPTY,
+            ext_conditional_rendering: CommandBufferFnExtConditionalRendering::EMPTY,
+            ext_custom_resolve: CommandBufferFnExtCustomResolve::EMPTY,
+            ext_debug_marker: CommandBufferFnExtDebugMarker::EMPTY,
+            ext_debug_utils: CommandBufferFnExtDebugUtils::EMPTY,
+            ext_depth_bias_control: CommandBufferFnExtDepthBiasControl::EMPTY,
+            ext_depth_clamp_control: CommandBufferFnExtDepthClampControl::EMPTY,
+            ext_descriptor_buffer: CommandBufferFnExtDescriptorBuffer::EMPTY,
+            ext_descriptor_heap: CommandBufferFnExtDescriptorHeap::EMPTY,
+            ext_device_generated_commands: CommandBufferFnExtDeviceGeneratedCommands::EMPTY,
+            ext_discard_rectangles: CommandBufferFnExtDiscardRectangles::EMPTY,
+            ext_memory_decompression: CommandBufferFnExtMemoryDecompression::EMPTY,
+            ext_mesh_shader: CommandBufferFnExtMeshShader::EMPTY,
+            ext_multi_draw: CommandBufferFnExtMultiDraw::EMPTY,
+            ext_opacity_micromap: CommandBufferFnExtOpacityMicromap::EMPTY,
+            ext_primitive_restart_index: CommandBufferFnExtPrimitiveRestartIndex::EMPTY,
+            ext_sample_locations: CommandBufferFnExtSampleLocations::EMPTY,
+            ext_shader_object: CommandBufferFnExtShaderObject::EMPTY,
+            ext_transform_feedback: CommandBufferFnExtTransformFeedback::EMPTY,
+            huawei_cluster_culling_shader: CommandBufferFnHuaweiClusterCullingShader::EMPTY,
+            huawei_invocation_mask: CommandBufferFnHuaweiInvocationMask::EMPTY,
+            huawei_subpass_shading: CommandBufferFnHuaweiSubpassShading::EMPTY,
+            intel_performance_query: CommandBufferFnIntelPerformanceQuery::EMPTY,
+            khr_acceleration_structure: CommandBufferFnKhrAccelerationStructure::EMPTY,
+            khr_copy_memory_indirect: CommandBufferFnKhrCopyMemoryIndirect::EMPTY,
+            khr_device_address_commands: CommandBufferFnKhrDeviceAddressCommands::EMPTY,
+            khr_fragment_shading_rate: CommandBufferFnKhrFragmentShadingRate::EMPTY,
+            khr_maintenance10: CommandBufferFnKhrMaintenance10::EMPTY,
+            khr_maintenance6: CommandBufferFnKhrMaintenance6::EMPTY,
+            khr_object_refresh: CommandBufferFnKhrObjectRefresh::EMPTY,
+            khr_ray_tracing_maintenance1: CommandBufferFnKhrRayTracingMaintenance1::EMPTY,
+            khr_ray_tracing_pipeline: CommandBufferFnKhrRayTracingPipeline::EMPTY,
+            khr_video_decode_queue: CommandBufferFnKhrVideoDecodeQueue::EMPTY,
+            khr_video_encode_queue: CommandBufferFnKhrVideoEncodeQueue::EMPTY,
+            khr_video_queue: CommandBufferFnKhrVideoQueue::EMPTY,
+            nv_clip_space_w_scaling: CommandBufferFnNvClipSpaceWScaling::EMPTY,
+            nv_cluster_acceleration_structure: CommandBufferFnNvClusterAccelerationStructure::EMPTY,
+            nv_compute_occupancy_priority: CommandBufferFnNvComputeOccupancyPriority::EMPTY,
+            nv_cooperative_vector: CommandBufferFnNvCooperativeVector::EMPTY,
+            nv_copy_memory_indirect: CommandBufferFnNvCopyMemoryIndirect::EMPTY,
+            nv_cuda_kernel_launch: CommandBufferFnNvCudaKernelLaunch::EMPTY,
+            nv_device_diagnostic_checkpoints: CommandBufferFnNvDeviceDiagnosticCheckpoints::EMPTY,
+            nv_device_generated_commands: CommandBufferFnNvDeviceGeneratedCommands::EMPTY,
+            nv_device_generated_commands_compute:
+                CommandBufferFnNvDeviceGeneratedCommandsCompute::EMPTY,
+            nv_fragment_shading_rate_enums: CommandBufferFnNvFragmentShadingRateEnums::EMPTY,
+            nv_memory_decompression: CommandBufferFnNvMemoryDecompression::EMPTY,
+            nv_mesh_shader: CommandBufferFnNvMeshShader::EMPTY,
+            nv_optical_flow: CommandBufferFnNvOpticalFlow::EMPTY,
+            nv_partitioned_acceleration_structure:
+                CommandBufferFnNvPartitionedAccelerationStructure::EMPTY,
+            nv_ray_tracing: CommandBufferFnNvRayTracing::EMPTY,
+            nv_scissor_exclusive: CommandBufferFnNvScissorExclusive::EMPTY,
+            nv_shading_rate_image: CommandBufferFnNvShadingRateImage::EMPTY,
+            nvx_binary_import: CommandBufferFnNvxBinaryImport::EMPTY,
+            qcom_tile_memory_heap: CommandBufferFnQcomTileMemoryHeap::EMPTY,
+            qcom_tile_shading: CommandBufferFnQcomTileShading::EMPTY,
         };
+        out.ext_debug_utils.begin_debug_utils_label_ext =
+            to_option(loader(c"vkCmdBeginDebugUtilsLabelEXT"));
+        out.ext_debug_utils.end_debug_utils_label_ext =
+            to_option(loader(c"vkCmdEndDebugUtilsLabelEXT"));
+        out.ext_debug_utils.insert_debug_utils_label_ext =
+            to_option(loader(c"vkCmdInsertDebugUtilsLabelEXT"));
         for &ext in extensions {
-            let ext = unsafe { CStr::from_ptr(ext).to_bytes() };
-            match ext {
-                b"VK_AMD_buffer_marker" => {
-                    out.amd_buffer_marker = Some(CommandBufferFnAmdBufferMarker::load(&mut loader))
-                }
-                b"VK_AMD_gpa_interface" => {
-                    out.amd_gpa_interface = Some(CommandBufferFnAmdGpaInterface::load(&mut loader))
-                }
-                b"VK_AMDX_shader_enqueue" => {
-                    out.amdx_shader_enqueue =
-                        Some(CommandBufferFnAmdxShaderEnqueue::load(&mut loader))
-                }
-                b"VK_ARM_data_graph" => {
-                    out.arm_data_graph = Some(CommandBufferFnArmDataGraph::load(&mut loader))
-                }
-                b"VK_ARM_scheduling_controls" => {
-                    out.arm_scheduling_controls =
-                        Some(CommandBufferFnArmSchedulingControls::load(&mut loader))
-                }
-                b"VK_ARM_shader_instrumentation" => {
-                    out.arm_shader_instrumentation =
-                        Some(CommandBufferFnArmShaderInstrumentation::load(&mut loader))
-                }
-                b"VK_ARM_tensors" => {
-                    out.arm_tensors = Some(CommandBufferFnArmTensors::load(&mut loader))
-                }
-                b"VK_EXT_attachment_feedback_loop_dynamic_state" => {
-                    out.ext_attachment_feedback_loop_dynamic_state = Some(
-                        CommandBufferFnExtAttachmentFeedbackLoopDynamicState::load(&mut loader),
-                    )
-                }
-                b"VK_EXT_color_write_enable" => {
-                    out.ext_color_write_enable =
-                        Some(CommandBufferFnExtColorWriteEnable::load(&mut loader))
-                }
-                b"VK_EXT_conditional_rendering" => {
-                    out.ext_conditional_rendering =
-                        Some(CommandBufferFnExtConditionalRendering::load(&mut loader))
-                }
-                b"VK_EXT_custom_resolve" => {
-                    out.ext_custom_resolve =
-                        Some(CommandBufferFnExtCustomResolve::load(&mut loader))
-                }
+            match unsafe { CStr::from_ptr(ext) }.to_bytes() {
                 b"VK_EXT_debug_marker" => {
-                    out.ext_debug_marker = Some(CommandBufferFnExtDebugMarker::load(&mut loader))
-                }
-                b"VK_EXT_debug_utils" => {
-                    out.ext_debug_utils = Some(CommandBufferFnExtDebugUtils::load(&mut loader))
-                }
-                b"VK_EXT_depth_bias_control" => {
-                    out.ext_depth_bias_control =
-                        Some(CommandBufferFnExtDepthBiasControl::load(&mut loader))
-                }
-                b"VK_EXT_depth_clamp_control" => {
-                    out.ext_depth_clamp_control =
-                        Some(CommandBufferFnExtDepthClampControl::load(&mut loader))
-                }
-                b"VK_EXT_descriptor_buffer" => {
-                    out.ext_descriptor_buffer =
-                        Some(CommandBufferFnExtDescriptorBuffer::load(&mut loader))
-                }
-                b"VK_EXT_descriptor_heap" => {
-                    out.ext_descriptor_heap =
-                        Some(CommandBufferFnExtDescriptorHeap::load(&mut loader))
-                }
-                b"VK_EXT_device_generated_commands" => {
-                    out.ext_device_generated_commands =
-                        Some(CommandBufferFnExtDeviceGeneratedCommands::load(&mut loader))
-                }
-                b"VK_EXT_discard_rectangles" => {
-                    out.ext_discard_rectangles =
-                        Some(CommandBufferFnExtDiscardRectangles::load(&mut loader))
-                }
-                b"VK_EXT_memory_decompression" => {
-                    out.ext_memory_decompression =
-                        Some(CommandBufferFnExtMemoryDecompression::load(&mut loader))
-                }
-                b"VK_EXT_mesh_shader" => {
-                    out.ext_mesh_shader = Some(CommandBufferFnExtMeshShader::load(&mut loader))
-                }
-                b"VK_EXT_multi_draw" => {
-                    out.ext_multi_draw = Some(CommandBufferFnExtMultiDraw::load(&mut loader))
-                }
-                b"VK_EXT_opacity_micromap" => {
-                    out.ext_opacity_micromap =
-                        Some(CommandBufferFnExtOpacityMicromap::load(&mut loader))
-                }
-                b"VK_EXT_primitive_restart_index" => {
-                    out.ext_primitive_restart_index =
-                        Some(CommandBufferFnExtPrimitiveRestartIndex::load(&mut loader))
-                }
-                b"VK_EXT_sample_locations" => {
-                    out.ext_sample_locations =
-                        Some(CommandBufferFnExtSampleLocations::load(&mut loader))
-                }
-                b"VK_EXT_shader_object" => {
-                    out.ext_shader_object = Some(CommandBufferFnExtShaderObject::load(&mut loader))
-                }
-                b"VK_EXT_transform_feedback" => {
-                    out.ext_transform_feedback =
-                        Some(CommandBufferFnExtTransformFeedback::load(&mut loader))
-                }
-                b"VK_HUAWEI_cluster_culling_shader" => {
-                    out.huawei_cluster_culling_shader =
-                        Some(CommandBufferFnHuaweiClusterCullingShader::load(&mut loader))
-                }
-                b"VK_HUAWEI_invocation_mask" => {
-                    out.huawei_invocation_mask =
-                        Some(CommandBufferFnHuaweiInvocationMask::load(&mut loader))
-                }
-                b"VK_HUAWEI_subpass_shading" => {
-                    out.huawei_subpass_shading =
-                        Some(CommandBufferFnHuaweiSubpassShading::load(&mut loader))
-                }
-                b"VK_INTEL_performance_query" => {
-                    out.intel_performance_query =
-                        Some(CommandBufferFnIntelPerformanceQuery::load(&mut loader))
-                }
-                b"VK_KHR_acceleration_structure" => {
-                    out.khr_acceleration_structure =
-                        Some(CommandBufferFnKhrAccelerationStructure::load(&mut loader))
-                }
-                b"VK_KHR_copy_memory_indirect" => {
-                    out.khr_copy_memory_indirect =
-                        Some(CommandBufferFnKhrCopyMemoryIndirect::load(&mut loader))
-                }
-                b"VK_KHR_device_address_commands" => {
-                    out.khr_device_address_commands =
-                        Some(CommandBufferFnKhrDeviceAddressCommands::load(&mut loader))
-                }
-                b"VK_KHR_fragment_shading_rate" => {
-                    out.khr_fragment_shading_rate =
-                        Some(CommandBufferFnKhrFragmentShadingRate::load(&mut loader))
-                }
-                b"VK_KHR_maintenance10" => {
-                    out.khr_maintenance10 = Some(CommandBufferFnKhrMaintenance10::load(&mut loader))
-                }
-                b"VK_KHR_maintenance6" => {
-                    out.khr_maintenance6 = Some(CommandBufferFnKhrMaintenance6::load(&mut loader))
-                }
-                b"VK_KHR_object_refresh" => {
-                    out.khr_object_refresh =
-                        Some(CommandBufferFnKhrObjectRefresh::load(&mut loader))
-                }
-                b"VK_KHR_ray_tracing_maintenance1" => {
-                    out.khr_ray_tracing_maintenance1 =
-                        Some(CommandBufferFnKhrRayTracingMaintenance1::load(&mut loader))
-                }
-                b"VK_KHR_ray_tracing_pipeline" => {
-                    out.khr_ray_tracing_pipeline =
-                        Some(CommandBufferFnKhrRayTracingPipeline::load(&mut loader))
-                }
-                b"VK_KHR_video_decode_queue" => {
-                    out.khr_video_decode_queue =
-                        Some(CommandBufferFnKhrVideoDecodeQueue::load(&mut loader))
-                }
-                b"VK_KHR_video_encode_queue" => {
-                    out.khr_video_encode_queue =
-                        Some(CommandBufferFnKhrVideoEncodeQueue::load(&mut loader))
+                    out.ext_debug_marker.debug_marker_begin_ext =
+                        to_option(loader(c"vkCmdDebugMarkerBeginEXT"));
+                    out.ext_debug_marker.debug_marker_end_ext =
+                        to_option(loader(c"vkCmdDebugMarkerEndEXT"));
+                    out.ext_debug_marker.debug_marker_insert_ext =
+                        to_option(loader(c"vkCmdDebugMarkerInsertEXT"));
                 }
                 b"VK_KHR_video_queue" => {
-                    out.khr_video_queue = Some(CommandBufferFnKhrVideoQueue::load(&mut loader))
+                    out.khr_video_queue.begin_video_coding_khr =
+                        to_option(loader(c"vkCmdBeginVideoCodingKHR"));
+                    out.khr_video_queue.end_video_coding_khr =
+                        to_option(loader(c"vkCmdEndVideoCodingKHR"));
+                    out.khr_video_queue.control_video_coding_khr =
+                        to_option(loader(c"vkCmdControlVideoCodingKHR"));
                 }
-                b"VK_NV_clip_space_w_scaling" => {
-                    out.nv_clip_space_w_scaling =
-                        Some(CommandBufferFnNvClipSpaceWScaling::load(&mut loader))
+                b"VK_KHR_video_decode_queue" => {
+                    out.khr_video_decode_queue.decode_video_khr =
+                        to_option(loader(c"vkCmdDecodeVideoKHR"));
                 }
-                b"VK_NV_cluster_acceleration_structure" => {
-                    out.nv_cluster_acceleration_structure = Some(
-                        CommandBufferFnNvClusterAccelerationStructure::load(&mut loader),
-                    )
-                }
-                b"VK_NV_compute_occupancy_priority" => {
-                    out.nv_compute_occupancy_priority =
-                        Some(CommandBufferFnNvComputeOccupancyPriority::load(&mut loader))
-                }
-                b"VK_NV_cooperative_vector" => {
-                    out.nv_cooperative_vector =
-                        Some(CommandBufferFnNvCooperativeVector::load(&mut loader))
-                }
-                b"VK_NV_copy_memory_indirect" => {
-                    out.nv_copy_memory_indirect =
-                        Some(CommandBufferFnNvCopyMemoryIndirect::load(&mut loader))
-                }
-                b"VK_NV_cuda_kernel_launch" => {
-                    out.nv_cuda_kernel_launch =
-                        Some(CommandBufferFnNvCudaKernelLaunch::load(&mut loader))
-                }
-                b"VK_NV_device_diagnostic_checkpoints" => {
-                    out.nv_device_diagnostic_checkpoints = Some(
-                        CommandBufferFnNvDeviceDiagnosticCheckpoints::load(&mut loader),
-                    )
-                }
-                b"VK_NV_device_generated_commands" => {
-                    out.nv_device_generated_commands =
-                        Some(CommandBufferFnNvDeviceGeneratedCommands::load(&mut loader))
-                }
-                b"VK_NV_device_generated_commands_compute" => {
-                    out.nv_device_generated_commands_compute = Some(
-                        CommandBufferFnNvDeviceGeneratedCommandsCompute::load(&mut loader),
-                    )
-                }
-                b"VK_NV_fragment_shading_rate_enums" => {
-                    out.nv_fragment_shading_rate_enums =
-                        Some(CommandBufferFnNvFragmentShadingRateEnums::load(&mut loader))
-                }
-                b"VK_NV_memory_decompression" => {
-                    out.nv_memory_decompression =
-                        Some(CommandBufferFnNvMemoryDecompression::load(&mut loader))
-                }
-                b"VK_NV_mesh_shader" => {
-                    out.nv_mesh_shader = Some(CommandBufferFnNvMeshShader::load(&mut loader))
-                }
-                b"VK_NV_optical_flow" => {
-                    out.nv_optical_flow = Some(CommandBufferFnNvOpticalFlow::load(&mut loader))
-                }
-                b"VK_NV_partitioned_acceleration_structure" => {
-                    out.nv_partitioned_acceleration_structure = Some(
-                        CommandBufferFnNvPartitionedAccelerationStructure::load(&mut loader),
-                    )
-                }
-                b"VK_NV_ray_tracing" => {
-                    out.nv_ray_tracing = Some(CommandBufferFnNvRayTracing::load(&mut loader))
-                }
-                b"VK_NV_scissor_exclusive" => {
-                    out.nv_scissor_exclusive =
-                        Some(CommandBufferFnNvScissorExclusive::load(&mut loader))
-                }
-                b"VK_NV_shading_rate_image" => {
-                    out.nv_shading_rate_image =
-                        Some(CommandBufferFnNvShadingRateImage::load(&mut loader))
+                b"VK_EXT_transform_feedback" => {
+                    out.ext_transform_feedback
+                        .bind_transform_feedback_buffers_ext =
+                        to_option(loader(c"vkCmdBindTransformFeedbackBuffersEXT"));
+                    out.ext_transform_feedback.begin_transform_feedback_ext =
+                        to_option(loader(c"vkCmdBeginTransformFeedbackEXT"));
+                    out.ext_transform_feedback.end_transform_feedback_ext =
+                        to_option(loader(c"vkCmdEndTransformFeedbackEXT"));
+                    out.ext_transform_feedback.begin_query_indexed_ext =
+                        to_option(loader(c"vkCmdBeginQueryIndexedEXT"));
+                    out.ext_transform_feedback.end_query_indexed_ext =
+                        to_option(loader(c"vkCmdEndQueryIndexedEXT"));
+                    out.ext_transform_feedback.draw_indirect_byte_count_ext =
+                        to_option(loader(c"vkCmdDrawIndirectByteCountEXT"));
                 }
                 b"VK_NVX_binary_import" => {
-                    out.nvx_binary_import = Some(CommandBufferFnNvxBinaryImport::load(&mut loader))
+                    out.nvx_binary_import.cu_launch_kernel_nvx =
+                        to_option(loader(c"vkCmdCuLaunchKernelNVX"));
                 }
-                b"VK_QCOM_tile_memory_heap" => {
-                    out.qcom_tile_memory_heap =
-                        Some(CommandBufferFnQcomTileMemoryHeap::load(&mut loader))
+                b"VK_AMD_draw_indirect_count" => {
+                    if out.v1_2.draw_indirect_count.is_none() {
+                        out.v1_2.draw_indirect_count =
+                            to_option(loader(c"vkCmdDrawIndirectCountAMD"));
+                    }
+                    if out.v1_2.draw_indexed_indirect_count.is_none() {
+                        out.v1_2.draw_indexed_indirect_count =
+                            to_option(loader(c"vkCmdDrawIndexedIndirectCountAMD"));
+                    }
+                }
+                b"VK_KHR_dynamic_rendering" => {
+                    if out.v1_3.begin_rendering.is_none() {
+                        out.v1_3.begin_rendering = to_option(loader(c"vkCmdBeginRenderingKHR"));
+                    }
+                    if out.v1_3.end_rendering.is_none() {
+                        out.v1_3.end_rendering = to_option(loader(c"vkCmdEndRenderingKHR"));
+                    }
+                }
+                b"VK_KHR_device_group" => {
+                    if out.v1_1.set_device_mask.is_none() {
+                        out.v1_1.set_device_mask = to_option(loader(c"vkCmdSetDeviceMaskKHR"));
+                    }
+                    if out.v1_1.dispatch_base.is_none() {
+                        out.v1_1.dispatch_base = to_option(loader(c"vkCmdDispatchBaseKHR"));
+                    }
+                }
+                b"VK_KHR_push_descriptor" => {
+                    if out.v1_4.push_descriptor_set.is_none() {
+                        out.v1_4.push_descriptor_set =
+                            to_option(loader(c"vkCmdPushDescriptorSetKHR"));
+                    }
+                    if out.v1_4.push_descriptor_set_with_template.is_none() {
+                        out.v1_4.push_descriptor_set_with_template =
+                            to_option(loader(c"vkCmdPushDescriptorSetWithTemplateKHR"));
+                    }
+                }
+                b"VK_EXT_conditional_rendering" => {
+                    out.ext_conditional_rendering
+                        .begin_conditional_rendering_ext =
+                        to_option(loader(c"vkCmdBeginConditionalRenderingEXT"));
+                    out.ext_conditional_rendering.end_conditional_rendering_ext =
+                        to_option(loader(c"vkCmdEndConditionalRenderingEXT"));
+                }
+                b"VK_KHR_descriptor_update_template" => {
+                    if out.v1_4.push_descriptor_set_with_template.is_none() {
+                        out.v1_4.push_descriptor_set_with_template =
+                            to_option(loader(c"vkCmdPushDescriptorSetWithTemplateKHR"));
+                    }
+                }
+                b"VK_NV_clip_space_w_scaling" => {
+                    out.nv_clip_space_w_scaling.set_viewport_w_scaling_nv =
+                        to_option(loader(c"vkCmdSetViewportWScalingNV"));
+                }
+                b"VK_EXT_discard_rectangles" => {
+                    out.ext_discard_rectangles.set_discard_rectangle_ext =
+                        to_option(loader(c"vkCmdSetDiscardRectangleEXT"));
+                    out.ext_discard_rectangles.set_discard_rectangle_enable_ext =
+                        to_option(loader(c"vkCmdSetDiscardRectangleEnableEXT"));
+                    out.ext_discard_rectangles.set_discard_rectangle_mode_ext =
+                        to_option(loader(c"vkCmdSetDiscardRectangleModeEXT"));
+                }
+                b"VK_KHR_create_renderpass2" => {
+                    if out.v1_2.begin_render_pass2.is_none() {
+                        out.v1_2.begin_render_pass2 =
+                            to_option(loader(c"vkCmdBeginRenderPass2KHR"));
+                    }
+                    if out.v1_2.next_subpass2.is_none() {
+                        out.v1_2.next_subpass2 = to_option(loader(c"vkCmdNextSubpass2KHR"));
+                    }
+                    if out.v1_2.end_render_pass2.is_none() {
+                        out.v1_2.end_render_pass2 = to_option(loader(c"vkCmdEndRenderPass2KHR"));
+                    }
+                }
+                b"VK_AMD_gpa_interface" => {
+                    out.amd_gpa_interface.begin_gpa_session_amd =
+                        to_option(loader(c"vkCmdBeginGpaSessionAMD"));
+                    out.amd_gpa_interface.end_gpa_session_amd =
+                        to_option(loader(c"vkCmdEndGpaSessionAMD"));
+                    out.amd_gpa_interface.begin_gpa_sample_amd =
+                        to_option(loader(c"vkCmdBeginGpaSampleAMD"));
+                    out.amd_gpa_interface.end_gpa_sample_amd =
+                        to_option(loader(c"vkCmdEndGpaSampleAMD"));
+                    out.amd_gpa_interface.copy_gpa_session_results_amd =
+                        to_option(loader(c"vkCmdCopyGpaSessionResultsAMD"));
+                }
+                b"VK_AMDX_shader_enqueue" => {
+                    out.amdx_shader_enqueue.initialize_graph_scratch_memory_amdx =
+                        to_option(loader(c"vkCmdInitializeGraphScratchMemoryAMDX"));
+                    out.amdx_shader_enqueue.dispatch_graph_amdx =
+                        to_option(loader(c"vkCmdDispatchGraphAMDX"));
+                    out.amdx_shader_enqueue.dispatch_graph_indirect_amdx =
+                        to_option(loader(c"vkCmdDispatchGraphIndirectAMDX"));
+                    out.amdx_shader_enqueue.dispatch_graph_indirect_count_amdx =
+                        to_option(loader(c"vkCmdDispatchGraphIndirectCountAMDX"));
+                }
+                b"VK_EXT_descriptor_heap" => {
+                    out.ext_descriptor_heap.bind_sampler_heap_ext =
+                        to_option(loader(c"vkCmdBindSamplerHeapEXT"));
+                    out.ext_descriptor_heap.bind_resource_heap_ext =
+                        to_option(loader(c"vkCmdBindResourceHeapEXT"));
+                    out.ext_descriptor_heap.push_data_ext = to_option(loader(c"vkCmdPushDataEXT"));
+                }
+                b"VK_EXT_sample_locations" => {
+                    out.ext_sample_locations.set_sample_locations_ext =
+                        to_option(loader(c"vkCmdSetSampleLocationsEXT"));
+                }
+                b"VK_KHR_acceleration_structure" => {
+                    out.khr_acceleration_structure
+                        .build_acceleration_structures_khr =
+                        to_option(loader(c"vkCmdBuildAccelerationStructuresKHR"));
+                    out.khr_acceleration_structure
+                        .build_acceleration_structures_indirect_khr =
+                        to_option(loader(c"vkCmdBuildAccelerationStructuresIndirectKHR"));
+                    out.khr_acceleration_structure
+                        .copy_acceleration_structure_khr =
+                        to_option(loader(c"vkCmdCopyAccelerationStructureKHR"));
+                    out.khr_acceleration_structure
+                        .copy_acceleration_structure_to_memory_khr =
+                        to_option(loader(c"vkCmdCopyAccelerationStructureToMemoryKHR"));
+                    out.khr_acceleration_structure
+                        .copy_memory_to_acceleration_structure_khr =
+                        to_option(loader(c"vkCmdCopyMemoryToAccelerationStructureKHR"));
+                    out.khr_acceleration_structure
+                        .write_acceleration_structures_properties_khr =
+                        to_option(loader(c"vkCmdWriteAccelerationStructuresPropertiesKHR"));
+                }
+                b"VK_KHR_ray_tracing_pipeline" => {
+                    out.khr_ray_tracing_pipeline.trace_rays_khr =
+                        to_option(loader(c"vkCmdTraceRaysKHR"));
+                    out.khr_ray_tracing_pipeline.trace_rays_indirect_khr =
+                        to_option(loader(c"vkCmdTraceRaysIndirectKHR"));
+                    out.khr_ray_tracing_pipeline
+                        .set_ray_tracing_pipeline_stack_size_khr =
+                        to_option(loader(c"vkCmdSetRayTracingPipelineStackSizeKHR"));
+                }
+                b"VK_NV_shading_rate_image" => {
+                    out.nv_shading_rate_image.bind_shading_rate_image_nv =
+                        to_option(loader(c"vkCmdBindShadingRateImageNV"));
+                    out.nv_shading_rate_image
+                        .set_viewport_shading_rate_palette_nv =
+                        to_option(loader(c"vkCmdSetViewportShadingRatePaletteNV"));
+                    out.nv_shading_rate_image.set_coarse_sample_order_nv =
+                        to_option(loader(c"vkCmdSetCoarseSampleOrderNV"));
+                }
+                b"VK_NV_ray_tracing" => {
+                    out.nv_ray_tracing.build_acceleration_structure_nv =
+                        to_option(loader(c"vkCmdBuildAccelerationStructureNV"));
+                    out.nv_ray_tracing.copy_acceleration_structure_nv =
+                        to_option(loader(c"vkCmdCopyAccelerationStructureNV"));
+                    out.nv_ray_tracing.trace_rays_nv = to_option(loader(c"vkCmdTraceRaysNV"));
+                    out.nv_ray_tracing
+                        .write_acceleration_structures_properties_nv =
+                        to_option(loader(c"vkCmdWriteAccelerationStructuresPropertiesNV"));
+                }
+                b"VK_KHR_draw_indirect_count" => {
+                    if out.v1_2.draw_indirect_count.is_none() {
+                        out.v1_2.draw_indirect_count =
+                            to_option(loader(c"vkCmdDrawIndirectCountKHR"));
+                    }
+                    if out.v1_2.draw_indexed_indirect_count.is_none() {
+                        out.v1_2.draw_indexed_indirect_count =
+                            to_option(loader(c"vkCmdDrawIndexedIndirectCountKHR"));
+                    }
+                }
+                b"VK_AMD_buffer_marker" => {
+                    out.amd_buffer_marker.write_buffer_marker_amd =
+                        to_option(loader(c"vkCmdWriteBufferMarkerAMD"));
+                    out.amd_buffer_marker.write_buffer_marker2_amd =
+                        to_option(loader(c"vkCmdWriteBufferMarker2AMD"));
+                }
+                b"VK_NV_mesh_shader" => {
+                    out.nv_mesh_shader.draw_mesh_tasks_nv =
+                        to_option(loader(c"vkCmdDrawMeshTasksNV"));
+                    out.nv_mesh_shader.draw_mesh_tasks_indirect_nv =
+                        to_option(loader(c"vkCmdDrawMeshTasksIndirectNV"));
+                    out.nv_mesh_shader.draw_mesh_tasks_indirect_count_nv =
+                        to_option(loader(c"vkCmdDrawMeshTasksIndirectCountNV"));
+                }
+                b"VK_NV_scissor_exclusive" => {
+                    out.nv_scissor_exclusive.set_exclusive_scissor_enable_nv =
+                        to_option(loader(c"vkCmdSetExclusiveScissorEnableNV"));
+                    out.nv_scissor_exclusive.set_exclusive_scissor_nv =
+                        to_option(loader(c"vkCmdSetExclusiveScissorNV"));
+                }
+                b"VK_NV_device_diagnostic_checkpoints" => {
+                    out.nv_device_diagnostic_checkpoints.set_checkpoint_nv =
+                        to_option(loader(c"vkCmdSetCheckpointNV"));
+                }
+                b"VK_INTEL_performance_query" => {
+                    out.intel_performance_query.set_performance_marker_intel =
+                        to_option(loader(c"vkCmdSetPerformanceMarkerINTEL"));
+                    out.intel_performance_query
+                        .set_performance_stream_marker_intel =
+                        to_option(loader(c"vkCmdSetPerformanceStreamMarkerINTEL"));
+                    out.intel_performance_query.set_performance_override_intel =
+                        to_option(loader(c"vkCmdSetPerformanceOverrideINTEL"));
+                }
+                b"VK_KHR_fragment_shading_rate" => {
+                    out.khr_fragment_shading_rate.set_fragment_shading_rate_khr =
+                        to_option(loader(c"vkCmdSetFragmentShadingRateKHR"));
+                }
+                b"VK_KHR_dynamic_rendering_local_read" => {
+                    if out.v1_4.set_rendering_attachment_locations.is_none() {
+                        out.v1_4.set_rendering_attachment_locations =
+                            to_option(loader(c"vkCmdSetRenderingAttachmentLocationsKHR"));
+                    }
+                    if out.v1_4.set_rendering_input_attachment_indices.is_none() {
+                        out.v1_4.set_rendering_input_attachment_indices =
+                            to_option(loader(c"vkCmdSetRenderingInputAttachmentIndicesKHR"));
+                    }
+                }
+                b"VK_EXT_line_rasterization" => {
+                    if out.v1_4.set_line_stipple.is_none() {
+                        out.v1_4.set_line_stipple = to_option(loader(c"vkCmdSetLineStippleEXT"));
+                    }
+                }
+                b"VK_EXT_extended_dynamic_state" => {
+                    if out.v1_3.set_cull_mode.is_none() {
+                        out.v1_3.set_cull_mode = to_option(loader(c"vkCmdSetCullModeEXT"));
+                    }
+                    if out.v1_3.set_front_face.is_none() {
+                        out.v1_3.set_front_face = to_option(loader(c"vkCmdSetFrontFaceEXT"));
+                    }
+                    if out.v1_3.set_primitive_topology.is_none() {
+                        out.v1_3.set_primitive_topology =
+                            to_option(loader(c"vkCmdSetPrimitiveTopologyEXT"));
+                    }
+                    if out.v1_3.set_viewport_with_count.is_none() {
+                        out.v1_3.set_viewport_with_count =
+                            to_option(loader(c"vkCmdSetViewportWithCountEXT"));
+                    }
+                    if out.v1_3.set_scissor_with_count.is_none() {
+                        out.v1_3.set_scissor_with_count =
+                            to_option(loader(c"vkCmdSetScissorWithCountEXT"));
+                    }
+                    if out.v1_3.bind_vertex_buffers2.is_none() {
+                        out.v1_3.bind_vertex_buffers2 =
+                            to_option(loader(c"vkCmdBindVertexBuffers2EXT"));
+                    }
+                    if out.v1_3.set_depth_test_enable.is_none() {
+                        out.v1_3.set_depth_test_enable =
+                            to_option(loader(c"vkCmdSetDepthTestEnableEXT"));
+                    }
+                    if out.v1_3.set_depth_write_enable.is_none() {
+                        out.v1_3.set_depth_write_enable =
+                            to_option(loader(c"vkCmdSetDepthWriteEnableEXT"));
+                    }
+                    if out.v1_3.set_depth_compare_op.is_none() {
+                        out.v1_3.set_depth_compare_op =
+                            to_option(loader(c"vkCmdSetDepthCompareOpEXT"));
+                    }
+                    if out.v1_3.set_depth_bounds_test_enable.is_none() {
+                        out.v1_3.set_depth_bounds_test_enable =
+                            to_option(loader(c"vkCmdSetDepthBoundsTestEnableEXT"));
+                    }
+                    if out.v1_3.set_stencil_test_enable.is_none() {
+                        out.v1_3.set_stencil_test_enable =
+                            to_option(loader(c"vkCmdSetStencilTestEnableEXT"));
+                    }
+                    if out.v1_3.set_stencil_op.is_none() {
+                        out.v1_3.set_stencil_op = to_option(loader(c"vkCmdSetStencilOpEXT"));
+                    }
+                }
+                b"VK_NV_device_generated_commands" => {
+                    out.nv_device_generated_commands
+                        .preprocess_generated_commands_nv =
+                        to_option(loader(c"vkCmdPreprocessGeneratedCommandsNV"));
+                    out.nv_device_generated_commands
+                        .execute_generated_commands_nv =
+                        to_option(loader(c"vkCmdExecuteGeneratedCommandsNV"));
+                    out.nv_device_generated_commands
+                        .bind_pipeline_shader_group_nv =
+                        to_option(loader(c"vkCmdBindPipelineShaderGroupNV"));
+                }
+                b"VK_EXT_depth_bias_control" => {
+                    out.ext_depth_bias_control.set_depth_bias2_ext =
+                        to_option(loader(c"vkCmdSetDepthBias2EXT"));
+                }
+                b"VK_KHR_video_encode_queue" => {
+                    out.khr_video_encode_queue.encode_video_khr =
+                        to_option(loader(c"vkCmdEncodeVideoKHR"));
+                }
+                b"VK_NV_cuda_kernel_launch" => {
+                    out.nv_cuda_kernel_launch.cuda_launch_kernel_nv =
+                        to_option(loader(c"vkCmdCudaLaunchKernelNV"));
+                }
+                b"VK_KHR_object_refresh" => {
+                    out.khr_object_refresh.refresh_objects_khr =
+                        to_option(loader(c"vkCmdRefreshObjectsKHR"));
                 }
                 b"VK_QCOM_tile_shading" => {
-                    out.qcom_tile_shading = Some(CommandBufferFnQcomTileShading::load(&mut loader))
+                    out.qcom_tile_shading.dispatch_tile_qcom =
+                        to_option(loader(c"vkCmdDispatchTileQCOM"));
+                    out.qcom_tile_shading.begin_per_tile_execution_qcom =
+                        to_option(loader(c"vkCmdBeginPerTileExecutionQCOM"));
+                    out.qcom_tile_shading.end_per_tile_execution_qcom =
+                        to_option(loader(c"vkCmdEndPerTileExecutionQCOM"));
+                }
+                b"VK_KHR_synchronization2" => {
+                    if out.v1_3.set_event2.is_none() {
+                        out.v1_3.set_event2 = to_option(loader(c"vkCmdSetEvent2KHR"));
+                    }
+                    if out.v1_3.reset_event2.is_none() {
+                        out.v1_3.reset_event2 = to_option(loader(c"vkCmdResetEvent2KHR"));
+                    }
+                    if out.v1_3.wait_events2.is_none() {
+                        out.v1_3.wait_events2 = to_option(loader(c"vkCmdWaitEvents2KHR"));
+                    }
+                    if out.v1_3.pipeline_barrier2.is_none() {
+                        out.v1_3.pipeline_barrier2 = to_option(loader(c"vkCmdPipelineBarrier2KHR"));
+                    }
+                    if out.v1_3.write_timestamp2.is_none() {
+                        out.v1_3.write_timestamp2 = to_option(loader(c"vkCmdWriteTimestamp2KHR"));
+                    }
+                }
+                b"VK_EXT_descriptor_buffer" => {
+                    out.ext_descriptor_buffer.bind_descriptor_buffers_ext =
+                        to_option(loader(c"vkCmdBindDescriptorBuffersEXT"));
+                    out.ext_descriptor_buffer.set_descriptor_buffer_offsets_ext =
+                        to_option(loader(c"vkCmdSetDescriptorBufferOffsetsEXT"));
+                    out.ext_descriptor_buffer
+                        .bind_descriptor_buffer_embedded_samplers_ext =
+                        to_option(loader(c"vkCmdBindDescriptorBufferEmbeddedSamplersEXT"));
+                }
+                b"VK_KHR_device_address_commands" => {
+                    out.khr_device_address_commands.bind_index_buffer3_khr =
+                        to_option(loader(c"vkCmdBindIndexBuffer3KHR"));
+                    out.khr_device_address_commands.bind_vertex_buffers3_khr =
+                        to_option(loader(c"vkCmdBindVertexBuffers3KHR"));
+                    out.khr_device_address_commands.draw_indirect2_khr =
+                        to_option(loader(c"vkCmdDrawIndirect2KHR"));
+                    out.khr_device_address_commands.draw_indexed_indirect2_khr =
+                        to_option(loader(c"vkCmdDrawIndexedIndirect2KHR"));
+                    out.khr_device_address_commands.dispatch_indirect2_khr =
+                        to_option(loader(c"vkCmdDispatchIndirect2KHR"));
+                    out.khr_device_address_commands.copy_memory_khr =
+                        to_option(loader(c"vkCmdCopyMemoryKHR"));
+                    out.khr_device_address_commands.copy_memory_to_image_khr =
+                        to_option(loader(c"vkCmdCopyMemoryToImageKHR"));
+                    out.khr_device_address_commands.copy_image_to_memory_khr =
+                        to_option(loader(c"vkCmdCopyImageToMemoryKHR"));
+                    out.khr_device_address_commands.update_memory_khr =
+                        to_option(loader(c"vkCmdUpdateMemoryKHR"));
+                    out.khr_device_address_commands.fill_memory_khr =
+                        to_option(loader(c"vkCmdFillMemoryKHR"));
+                    out.khr_device_address_commands
+                        .copy_query_pool_results_to_memory_khr =
+                        to_option(loader(c"vkCmdCopyQueryPoolResultsToMemoryKHR"));
+                    out.khr_device_address_commands.draw_indirect_count2_khr =
+                        to_option(loader(c"vkCmdDrawIndirectCount2KHR"));
+                    out.khr_device_address_commands
+                        .draw_indexed_indirect_count2_khr =
+                        to_option(loader(c"vkCmdDrawIndexedIndirectCount2KHR"));
+                    out.khr_device_address_commands
+                        .begin_conditional_rendering2_ext =
+                        to_option(loader(c"vkCmdBeginConditionalRendering2EXT"));
+                    out.khr_device_address_commands
+                        .bind_transform_feedback_buffers2_ext =
+                        to_option(loader(c"vkCmdBindTransformFeedbackBuffers2EXT"));
+                    out.khr_device_address_commands
+                        .begin_transform_feedback2_ext =
+                        to_option(loader(c"vkCmdBeginTransformFeedback2EXT"));
+                    out.khr_device_address_commands.end_transform_feedback2_ext =
+                        to_option(loader(c"vkCmdEndTransformFeedback2EXT"));
+                    out.khr_device_address_commands
+                        .draw_indirect_byte_count2_ext =
+                        to_option(loader(c"vkCmdDrawIndirectByteCount2EXT"));
+                    out.khr_device_address_commands
+                        .draw_mesh_tasks_indirect2_ext =
+                        to_option(loader(c"vkCmdDrawMeshTasksIndirect2EXT"));
+                    out.khr_device_address_commands
+                        .draw_mesh_tasks_indirect_count2_ext =
+                        to_option(loader(c"vkCmdDrawMeshTasksIndirectCount2EXT"));
+                    out.khr_device_address_commands.write_marker_to_memory_amd =
+                        to_option(loader(c"vkCmdWriteMarkerToMemoryAMD"));
+                }
+                b"VK_NV_fragment_shading_rate_enums" => {
+                    out.nv_fragment_shading_rate_enums
+                        .set_fragment_shading_rate_enum_nv =
+                        to_option(loader(c"vkCmdSetFragmentShadingRateEnumNV"));
+                }
+                b"VK_EXT_mesh_shader" => {
+                    out.ext_mesh_shader.draw_mesh_tasks_ext =
+                        to_option(loader(c"vkCmdDrawMeshTasksEXT"));
+                    out.ext_mesh_shader.draw_mesh_tasks_indirect_ext =
+                        to_option(loader(c"vkCmdDrawMeshTasksIndirectEXT"));
+                    out.ext_mesh_shader.draw_mesh_tasks_indirect_count_ext =
+                        to_option(loader(c"vkCmdDrawMeshTasksIndirectCountEXT"));
+                }
+                b"VK_KHR_copy_commands2" => {
+                    if out.v1_3.copy_buffer2.is_none() {
+                        out.v1_3.copy_buffer2 = to_option(loader(c"vkCmdCopyBuffer2KHR"));
+                    }
+                    if out.v1_3.copy_image2.is_none() {
+                        out.v1_3.copy_image2 = to_option(loader(c"vkCmdCopyImage2KHR"));
+                    }
+                    if out.v1_3.copy_buffer_to_image2.is_none() {
+                        out.v1_3.copy_buffer_to_image2 =
+                            to_option(loader(c"vkCmdCopyBufferToImage2KHR"));
+                    }
+                    if out.v1_3.copy_image_to_buffer2.is_none() {
+                        out.v1_3.copy_image_to_buffer2 =
+                            to_option(loader(c"vkCmdCopyImageToBuffer2KHR"));
+                    }
+                    if out.v1_3.blit_image2.is_none() {
+                        out.v1_3.blit_image2 = to_option(loader(c"vkCmdBlitImage2KHR"));
+                    }
+                    if out.v1_3.resolve_image2.is_none() {
+                        out.v1_3.resolve_image2 = to_option(loader(c"vkCmdResolveImage2KHR"));
+                    }
+                }
+                b"VK_EXT_vertex_input_dynamic_state" => {
+                    if out.ext_shader_object.set_vertex_input_ext.is_none() {
+                        out.ext_shader_object.set_vertex_input_ext =
+                            to_option(loader(c"vkCmdSetVertexInputEXT"));
+                    }
+                }
+                b"VK_HUAWEI_subpass_shading" => {
+                    out.huawei_subpass_shading.subpass_shading_huawei =
+                        to_option(loader(c"vkCmdSubpassShadingHUAWEI"));
+                }
+                b"VK_HUAWEI_invocation_mask" => {
+                    out.huawei_invocation_mask.bind_invocation_mask_huawei =
+                        to_option(loader(c"vkCmdBindInvocationMaskHUAWEI"));
+                }
+                b"VK_EXT_extended_dynamic_state2" => {
+                    if out.ext_shader_object.set_patch_control_points_ext.is_none() {
+                        out.ext_shader_object.set_patch_control_points_ext =
+                            to_option(loader(c"vkCmdSetPatchControlPointsEXT"));
+                    }
+                    if out.v1_3.set_rasterizer_discard_enable.is_none() {
+                        out.v1_3.set_rasterizer_discard_enable =
+                            to_option(loader(c"vkCmdSetRasterizerDiscardEnableEXT"));
+                    }
+                    if out.v1_3.set_depth_bias_enable.is_none() {
+                        out.v1_3.set_depth_bias_enable =
+                            to_option(loader(c"vkCmdSetDepthBiasEnableEXT"));
+                    }
+                    if out.ext_shader_object.set_logic_op_ext.is_none() {
+                        out.ext_shader_object.set_logic_op_ext =
+                            to_option(loader(c"vkCmdSetLogicOpEXT"));
+                    }
+                    if out.v1_3.set_primitive_restart_enable.is_none() {
+                        out.v1_3.set_primitive_restart_enable =
+                            to_option(loader(c"vkCmdSetPrimitiveRestartEnableEXT"));
+                    }
+                }
+                b"VK_EXT_color_write_enable" => {
+                    out.ext_color_write_enable.set_color_write_enable_ext =
+                        to_option(loader(c"vkCmdSetColorWriteEnableEXT"));
+                }
+                b"VK_KHR_ray_tracing_maintenance1" => {
+                    out.khr_ray_tracing_maintenance1.trace_rays_indirect2_khr =
+                        to_option(loader(c"vkCmdTraceRaysIndirect2KHR"));
+                }
+                b"VK_EXT_multi_draw" => {
+                    out.ext_multi_draw.draw_multi_ext = to_option(loader(c"vkCmdDrawMultiEXT"));
+                    out.ext_multi_draw.draw_multi_indexed_ext =
+                        to_option(loader(c"vkCmdDrawMultiIndexedEXT"));
+                }
+                b"VK_EXT_opacity_micromap" => {
+                    out.ext_opacity_micromap.build_micromaps_ext =
+                        to_option(loader(c"vkCmdBuildMicromapsEXT"));
+                    out.ext_opacity_micromap.copy_micromap_ext =
+                        to_option(loader(c"vkCmdCopyMicromapEXT"));
+                    out.ext_opacity_micromap.copy_micromap_to_memory_ext =
+                        to_option(loader(c"vkCmdCopyMicromapToMemoryEXT"));
+                    out.ext_opacity_micromap.copy_memory_to_micromap_ext =
+                        to_option(loader(c"vkCmdCopyMemoryToMicromapEXT"));
+                    out.ext_opacity_micromap.write_micromaps_properties_ext =
+                        to_option(loader(c"vkCmdWriteMicromapsPropertiesEXT"));
+                }
+                b"VK_HUAWEI_cluster_culling_shader" => {
+                    out.huawei_cluster_culling_shader.draw_cluster_huawei =
+                        to_option(loader(c"vkCmdDrawClusterHUAWEI"));
+                    out.huawei_cluster_culling_shader
+                        .draw_cluster_indirect_huawei =
+                        to_option(loader(c"vkCmdDrawClusterIndirectHUAWEI"));
+                }
+                b"VK_ARM_scheduling_controls" => {
+                    out.arm_scheduling_controls.set_dispatch_parameters_arm =
+                        to_option(loader(c"vkCmdSetDispatchParametersARM"));
+                }
+                b"VK_NV_copy_memory_indirect" => {
+                    out.nv_copy_memory_indirect.copy_memory_indirect_nv =
+                        to_option(loader(c"vkCmdCopyMemoryIndirectNV"));
+                    out.nv_copy_memory_indirect.copy_memory_to_image_indirect_nv =
+                        to_option(loader(c"vkCmdCopyMemoryToImageIndirectNV"));
+                }
+                b"VK_NV_memory_decompression" => {
+                    out.nv_memory_decompression.decompress_memory_nv =
+                        to_option(loader(c"vkCmdDecompressMemoryNV"));
+                    out.nv_memory_decompression
+                        .decompress_memory_indirect_count_nv =
+                        to_option(loader(c"vkCmdDecompressMemoryIndirectCountNV"));
+                }
+                b"VK_NV_device_generated_commands_compute" => {
+                    out.nv_device_generated_commands_compute
+                        .update_pipeline_indirect_buffer_nv =
+                        to_option(loader(c"vkCmdUpdatePipelineIndirectBufferNV"));
+                }
+                b"VK_EXT_extended_dynamic_state3" => {
+                    if out.ext_shader_object.set_depth_clamp_enable_ext.is_none() {
+                        out.ext_shader_object.set_depth_clamp_enable_ext =
+                            to_option(loader(c"vkCmdSetDepthClampEnableEXT"));
+                    }
+                    if out.ext_shader_object.set_polygon_mode_ext.is_none() {
+                        out.ext_shader_object.set_polygon_mode_ext =
+                            to_option(loader(c"vkCmdSetPolygonModeEXT"));
+                    }
+                    if out
+                        .ext_shader_object
+                        .set_rasterization_samples_ext
+                        .is_none()
+                    {
+                        out.ext_shader_object.set_rasterization_samples_ext =
+                            to_option(loader(c"vkCmdSetRasterizationSamplesEXT"));
+                    }
+                    if out.ext_shader_object.set_sample_mask_ext.is_none() {
+                        out.ext_shader_object.set_sample_mask_ext =
+                            to_option(loader(c"vkCmdSetSampleMaskEXT"));
+                    }
+                    if out
+                        .ext_shader_object
+                        .set_alpha_to_coverage_enable_ext
+                        .is_none()
+                    {
+                        out.ext_shader_object.set_alpha_to_coverage_enable_ext =
+                            to_option(loader(c"vkCmdSetAlphaToCoverageEnableEXT"));
+                    }
+                    if out.ext_shader_object.set_alpha_to_one_enable_ext.is_none() {
+                        out.ext_shader_object.set_alpha_to_one_enable_ext =
+                            to_option(loader(c"vkCmdSetAlphaToOneEnableEXT"));
+                    }
+                    if out.ext_shader_object.set_logic_op_enable_ext.is_none() {
+                        out.ext_shader_object.set_logic_op_enable_ext =
+                            to_option(loader(c"vkCmdSetLogicOpEnableEXT"));
+                    }
+                    if out.ext_shader_object.set_color_blend_enable_ext.is_none() {
+                        out.ext_shader_object.set_color_blend_enable_ext =
+                            to_option(loader(c"vkCmdSetColorBlendEnableEXT"));
+                    }
+                    if out.ext_shader_object.set_color_blend_equation_ext.is_none() {
+                        out.ext_shader_object.set_color_blend_equation_ext =
+                            to_option(loader(c"vkCmdSetColorBlendEquationEXT"));
+                    }
+                    if out.ext_shader_object.set_color_write_mask_ext.is_none() {
+                        out.ext_shader_object.set_color_write_mask_ext =
+                            to_option(loader(c"vkCmdSetColorWriteMaskEXT"));
+                    }
+                    if out
+                        .ext_shader_object
+                        .set_tessellation_domain_origin_ext
+                        .is_none()
+                    {
+                        out.ext_shader_object.set_tessellation_domain_origin_ext =
+                            to_option(loader(c"vkCmdSetTessellationDomainOriginEXT"));
+                    }
+                    if out.ext_shader_object.set_rasterization_stream_ext.is_none() {
+                        out.ext_shader_object.set_rasterization_stream_ext =
+                            to_option(loader(c"vkCmdSetRasterizationStreamEXT"));
+                    }
+                    if out
+                        .ext_shader_object
+                        .set_conservative_rasterization_mode_ext
+                        .is_none()
+                    {
+                        out.ext_shader_object
+                            .set_conservative_rasterization_mode_ext =
+                            to_option(loader(c"vkCmdSetConservativeRasterizationModeEXT"));
+                    }
+                    if out
+                        .ext_shader_object
+                        .set_extra_primitive_overestimation_size_ext
+                        .is_none()
+                    {
+                        out.ext_shader_object
+                            .set_extra_primitive_overestimation_size_ext =
+                            to_option(loader(c"vkCmdSetExtraPrimitiveOverestimationSizeEXT"));
+                    }
+                    if out.ext_shader_object.set_depth_clip_enable_ext.is_none() {
+                        out.ext_shader_object.set_depth_clip_enable_ext =
+                            to_option(loader(c"vkCmdSetDepthClipEnableEXT"));
+                    }
+                    if out
+                        .ext_shader_object
+                        .set_sample_locations_enable_ext
+                        .is_none()
+                    {
+                        out.ext_shader_object.set_sample_locations_enable_ext =
+                            to_option(loader(c"vkCmdSetSampleLocationsEnableEXT"));
+                    }
+                    if out.ext_shader_object.set_color_blend_advanced_ext.is_none() {
+                        out.ext_shader_object.set_color_blend_advanced_ext =
+                            to_option(loader(c"vkCmdSetColorBlendAdvancedEXT"));
+                    }
+                    if out
+                        .ext_shader_object
+                        .set_provoking_vertex_mode_ext
+                        .is_none()
+                    {
+                        out.ext_shader_object.set_provoking_vertex_mode_ext =
+                            to_option(loader(c"vkCmdSetProvokingVertexModeEXT"));
+                    }
+                    if out
+                        .ext_shader_object
+                        .set_line_rasterization_mode_ext
+                        .is_none()
+                    {
+                        out.ext_shader_object.set_line_rasterization_mode_ext =
+                            to_option(loader(c"vkCmdSetLineRasterizationModeEXT"));
+                    }
+                    if out.ext_shader_object.set_line_stipple_enable_ext.is_none() {
+                        out.ext_shader_object.set_line_stipple_enable_ext =
+                            to_option(loader(c"vkCmdSetLineStippleEnableEXT"));
+                    }
+                    if out
+                        .ext_shader_object
+                        .set_depth_clip_negative_one_to_one_ext
+                        .is_none()
+                    {
+                        out.ext_shader_object.set_depth_clip_negative_one_to_one_ext =
+                            to_option(loader(c"vkCmdSetDepthClipNegativeOneToOneEXT"));
+                    }
+                    if out
+                        .ext_shader_object
+                        .set_viewport_w_scaling_enable_nv
+                        .is_none()
+                    {
+                        out.ext_shader_object.set_viewport_w_scaling_enable_nv =
+                            to_option(loader(c"vkCmdSetViewportWScalingEnableNV"));
+                    }
+                    if out.ext_shader_object.set_viewport_swizzle_nv.is_none() {
+                        out.ext_shader_object.set_viewport_swizzle_nv =
+                            to_option(loader(c"vkCmdSetViewportSwizzleNV"));
+                    }
+                    if out
+                        .ext_shader_object
+                        .set_coverage_to_color_enable_nv
+                        .is_none()
+                    {
+                        out.ext_shader_object.set_coverage_to_color_enable_nv =
+                            to_option(loader(c"vkCmdSetCoverageToColorEnableNV"));
+                    }
+                    if out
+                        .ext_shader_object
+                        .set_coverage_to_color_location_nv
+                        .is_none()
+                    {
+                        out.ext_shader_object.set_coverage_to_color_location_nv =
+                            to_option(loader(c"vkCmdSetCoverageToColorLocationNV"));
+                    }
+                    if out
+                        .ext_shader_object
+                        .set_coverage_modulation_mode_nv
+                        .is_none()
+                    {
+                        out.ext_shader_object.set_coverage_modulation_mode_nv =
+                            to_option(loader(c"vkCmdSetCoverageModulationModeNV"));
+                    }
+                    if out
+                        .ext_shader_object
+                        .set_coverage_modulation_table_enable_nv
+                        .is_none()
+                    {
+                        out.ext_shader_object
+                            .set_coverage_modulation_table_enable_nv =
+                            to_option(loader(c"vkCmdSetCoverageModulationTableEnableNV"));
+                    }
+                    if out
+                        .ext_shader_object
+                        .set_coverage_modulation_table_nv
+                        .is_none()
+                    {
+                        out.ext_shader_object.set_coverage_modulation_table_nv =
+                            to_option(loader(c"vkCmdSetCoverageModulationTableNV"));
+                    }
+                    if out
+                        .ext_shader_object
+                        .set_shading_rate_image_enable_nv
+                        .is_none()
+                    {
+                        out.ext_shader_object.set_shading_rate_image_enable_nv =
+                            to_option(loader(c"vkCmdSetShadingRateImageEnableNV"));
+                    }
+                    if out
+                        .ext_shader_object
+                        .set_representative_fragment_test_enable_nv
+                        .is_none()
+                    {
+                        out.ext_shader_object
+                            .set_representative_fragment_test_enable_nv =
+                            to_option(loader(c"vkCmdSetRepresentativeFragmentTestEnableNV"));
+                    }
+                    if out
+                        .ext_shader_object
+                        .set_coverage_reduction_mode_nv
+                        .is_none()
+                    {
+                        out.ext_shader_object.set_coverage_reduction_mode_nv =
+                            to_option(loader(c"vkCmdSetCoverageReductionModeNV"));
+                    }
+                }
+                b"VK_ARM_tensors" => {
+                    out.arm_tensors.copy_tensor_arm = to_option(loader(c"vkCmdCopyTensorARM"));
+                }
+                b"VK_NV_optical_flow" => {
+                    out.nv_optical_flow.optical_flow_execute_nv =
+                        to_option(loader(c"vkCmdOpticalFlowExecuteNV"));
+                }
+                b"VK_KHR_maintenance5" => {
+                    if out.v1_4.bind_index_buffer2.is_none() {
+                        out.v1_4.bind_index_buffer2 =
+                            to_option(loader(c"vkCmdBindIndexBuffer2KHR"));
+                    }
+                }
+                b"VK_EXT_shader_object" => {
+                    out.ext_shader_object.bind_shaders_ext =
+                        to_option(loader(c"vkCmdBindShadersEXT"));
+                    if out.v1_3.set_cull_mode.is_none() {
+                        out.v1_3.set_cull_mode = to_option(loader(c"vkCmdSetCullModeEXT"));
+                    }
+                    if out.v1_3.set_front_face.is_none() {
+                        out.v1_3.set_front_face = to_option(loader(c"vkCmdSetFrontFaceEXT"));
+                    }
+                    if out.v1_3.set_primitive_topology.is_none() {
+                        out.v1_3.set_primitive_topology =
+                            to_option(loader(c"vkCmdSetPrimitiveTopologyEXT"));
+                    }
+                    if out.v1_3.set_viewport_with_count.is_none() {
+                        out.v1_3.set_viewport_with_count =
+                            to_option(loader(c"vkCmdSetViewportWithCountEXT"));
+                    }
+                    if out.v1_3.set_scissor_with_count.is_none() {
+                        out.v1_3.set_scissor_with_count =
+                            to_option(loader(c"vkCmdSetScissorWithCountEXT"));
+                    }
+                    if out.v1_3.bind_vertex_buffers2.is_none() {
+                        out.v1_3.bind_vertex_buffers2 =
+                            to_option(loader(c"vkCmdBindVertexBuffers2EXT"));
+                    }
+                    if out.v1_3.set_depth_test_enable.is_none() {
+                        out.v1_3.set_depth_test_enable =
+                            to_option(loader(c"vkCmdSetDepthTestEnableEXT"));
+                    }
+                    if out.v1_3.set_depth_write_enable.is_none() {
+                        out.v1_3.set_depth_write_enable =
+                            to_option(loader(c"vkCmdSetDepthWriteEnableEXT"));
+                    }
+                    if out.v1_3.set_depth_compare_op.is_none() {
+                        out.v1_3.set_depth_compare_op =
+                            to_option(loader(c"vkCmdSetDepthCompareOpEXT"));
+                    }
+                    if out.v1_3.set_depth_bounds_test_enable.is_none() {
+                        out.v1_3.set_depth_bounds_test_enable =
+                            to_option(loader(c"vkCmdSetDepthBoundsTestEnableEXT"));
+                    }
+                    if out.v1_3.set_stencil_test_enable.is_none() {
+                        out.v1_3.set_stencil_test_enable =
+                            to_option(loader(c"vkCmdSetStencilTestEnableEXT"));
+                    }
+                    if out.v1_3.set_stencil_op.is_none() {
+                        out.v1_3.set_stencil_op = to_option(loader(c"vkCmdSetStencilOpEXT"));
+                    }
+                    if out.ext_shader_object.set_vertex_input_ext.is_none() {
+                        out.ext_shader_object.set_vertex_input_ext =
+                            to_option(loader(c"vkCmdSetVertexInputEXT"));
+                    }
+                    if out.ext_shader_object.set_patch_control_points_ext.is_none() {
+                        out.ext_shader_object.set_patch_control_points_ext =
+                            to_option(loader(c"vkCmdSetPatchControlPointsEXT"));
+                    }
+                    if out.v1_3.set_rasterizer_discard_enable.is_none() {
+                        out.v1_3.set_rasterizer_discard_enable =
+                            to_option(loader(c"vkCmdSetRasterizerDiscardEnableEXT"));
+                    }
+                    if out.v1_3.set_depth_bias_enable.is_none() {
+                        out.v1_3.set_depth_bias_enable =
+                            to_option(loader(c"vkCmdSetDepthBiasEnableEXT"));
+                    }
+                    if out.ext_shader_object.set_logic_op_ext.is_none() {
+                        out.ext_shader_object.set_logic_op_ext =
+                            to_option(loader(c"vkCmdSetLogicOpEXT"));
+                    }
+                    if out.v1_3.set_primitive_restart_enable.is_none() {
+                        out.v1_3.set_primitive_restart_enable =
+                            to_option(loader(c"vkCmdSetPrimitiveRestartEnableEXT"));
+                    }
+                    if out
+                        .ext_shader_object
+                        .set_tessellation_domain_origin_ext
+                        .is_none()
+                    {
+                        out.ext_shader_object.set_tessellation_domain_origin_ext =
+                            to_option(loader(c"vkCmdSetTessellationDomainOriginEXT"));
+                    }
+                    if out.ext_shader_object.set_depth_clamp_enable_ext.is_none() {
+                        out.ext_shader_object.set_depth_clamp_enable_ext =
+                            to_option(loader(c"vkCmdSetDepthClampEnableEXT"));
+                    }
+                    if out.ext_shader_object.set_polygon_mode_ext.is_none() {
+                        out.ext_shader_object.set_polygon_mode_ext =
+                            to_option(loader(c"vkCmdSetPolygonModeEXT"));
+                    }
+                    if out
+                        .ext_shader_object
+                        .set_rasterization_samples_ext
+                        .is_none()
+                    {
+                        out.ext_shader_object.set_rasterization_samples_ext =
+                            to_option(loader(c"vkCmdSetRasterizationSamplesEXT"));
+                    }
+                    if out.ext_shader_object.set_sample_mask_ext.is_none() {
+                        out.ext_shader_object.set_sample_mask_ext =
+                            to_option(loader(c"vkCmdSetSampleMaskEXT"));
+                    }
+                    if out
+                        .ext_shader_object
+                        .set_alpha_to_coverage_enable_ext
+                        .is_none()
+                    {
+                        out.ext_shader_object.set_alpha_to_coverage_enable_ext =
+                            to_option(loader(c"vkCmdSetAlphaToCoverageEnableEXT"));
+                    }
+                    if out.ext_shader_object.set_alpha_to_one_enable_ext.is_none() {
+                        out.ext_shader_object.set_alpha_to_one_enable_ext =
+                            to_option(loader(c"vkCmdSetAlphaToOneEnableEXT"));
+                    }
+                    if out.ext_shader_object.set_logic_op_enable_ext.is_none() {
+                        out.ext_shader_object.set_logic_op_enable_ext =
+                            to_option(loader(c"vkCmdSetLogicOpEnableEXT"));
+                    }
+                    if out.ext_shader_object.set_color_blend_enable_ext.is_none() {
+                        out.ext_shader_object.set_color_blend_enable_ext =
+                            to_option(loader(c"vkCmdSetColorBlendEnableEXT"));
+                    }
+                    if out.ext_shader_object.set_color_blend_equation_ext.is_none() {
+                        out.ext_shader_object.set_color_blend_equation_ext =
+                            to_option(loader(c"vkCmdSetColorBlendEquationEXT"));
+                    }
+                    if out.ext_shader_object.set_color_write_mask_ext.is_none() {
+                        out.ext_shader_object.set_color_write_mask_ext =
+                            to_option(loader(c"vkCmdSetColorWriteMaskEXT"));
+                    }
+                    if out.ext_shader_object.set_rasterization_stream_ext.is_none() {
+                        out.ext_shader_object.set_rasterization_stream_ext =
+                            to_option(loader(c"vkCmdSetRasterizationStreamEXT"));
+                    }
+                    if out
+                        .ext_shader_object
+                        .set_conservative_rasterization_mode_ext
+                        .is_none()
+                    {
+                        out.ext_shader_object
+                            .set_conservative_rasterization_mode_ext =
+                            to_option(loader(c"vkCmdSetConservativeRasterizationModeEXT"));
+                    }
+                    if out
+                        .ext_shader_object
+                        .set_extra_primitive_overestimation_size_ext
+                        .is_none()
+                    {
+                        out.ext_shader_object
+                            .set_extra_primitive_overestimation_size_ext =
+                            to_option(loader(c"vkCmdSetExtraPrimitiveOverestimationSizeEXT"));
+                    }
+                    if out.ext_shader_object.set_depth_clip_enable_ext.is_none() {
+                        out.ext_shader_object.set_depth_clip_enable_ext =
+                            to_option(loader(c"vkCmdSetDepthClipEnableEXT"));
+                    }
+                    if out
+                        .ext_shader_object
+                        .set_sample_locations_enable_ext
+                        .is_none()
+                    {
+                        out.ext_shader_object.set_sample_locations_enable_ext =
+                            to_option(loader(c"vkCmdSetSampleLocationsEnableEXT"));
+                    }
+                    if out.ext_shader_object.set_color_blend_advanced_ext.is_none() {
+                        out.ext_shader_object.set_color_blend_advanced_ext =
+                            to_option(loader(c"vkCmdSetColorBlendAdvancedEXT"));
+                    }
+                    if out
+                        .ext_shader_object
+                        .set_provoking_vertex_mode_ext
+                        .is_none()
+                    {
+                        out.ext_shader_object.set_provoking_vertex_mode_ext =
+                            to_option(loader(c"vkCmdSetProvokingVertexModeEXT"));
+                    }
+                    if out
+                        .ext_shader_object
+                        .set_line_rasterization_mode_ext
+                        .is_none()
+                    {
+                        out.ext_shader_object.set_line_rasterization_mode_ext =
+                            to_option(loader(c"vkCmdSetLineRasterizationModeEXT"));
+                    }
+                    if out.ext_shader_object.set_line_stipple_enable_ext.is_none() {
+                        out.ext_shader_object.set_line_stipple_enable_ext =
+                            to_option(loader(c"vkCmdSetLineStippleEnableEXT"));
+                    }
+                    if out
+                        .ext_shader_object
+                        .set_depth_clip_negative_one_to_one_ext
+                        .is_none()
+                    {
+                        out.ext_shader_object.set_depth_clip_negative_one_to_one_ext =
+                            to_option(loader(c"vkCmdSetDepthClipNegativeOneToOneEXT"));
+                    }
+                    if out
+                        .ext_shader_object
+                        .set_viewport_w_scaling_enable_nv
+                        .is_none()
+                    {
+                        out.ext_shader_object.set_viewport_w_scaling_enable_nv =
+                            to_option(loader(c"vkCmdSetViewportWScalingEnableNV"));
+                    }
+                    if out.ext_shader_object.set_viewport_swizzle_nv.is_none() {
+                        out.ext_shader_object.set_viewport_swizzle_nv =
+                            to_option(loader(c"vkCmdSetViewportSwizzleNV"));
+                    }
+                    if out
+                        .ext_shader_object
+                        .set_coverage_to_color_enable_nv
+                        .is_none()
+                    {
+                        out.ext_shader_object.set_coverage_to_color_enable_nv =
+                            to_option(loader(c"vkCmdSetCoverageToColorEnableNV"));
+                    }
+                    if out
+                        .ext_shader_object
+                        .set_coverage_to_color_location_nv
+                        .is_none()
+                    {
+                        out.ext_shader_object.set_coverage_to_color_location_nv =
+                            to_option(loader(c"vkCmdSetCoverageToColorLocationNV"));
+                    }
+                    if out
+                        .ext_shader_object
+                        .set_coverage_modulation_mode_nv
+                        .is_none()
+                    {
+                        out.ext_shader_object.set_coverage_modulation_mode_nv =
+                            to_option(loader(c"vkCmdSetCoverageModulationModeNV"));
+                    }
+                    if out
+                        .ext_shader_object
+                        .set_coverage_modulation_table_enable_nv
+                        .is_none()
+                    {
+                        out.ext_shader_object
+                            .set_coverage_modulation_table_enable_nv =
+                            to_option(loader(c"vkCmdSetCoverageModulationTableEnableNV"));
+                    }
+                    if out
+                        .ext_shader_object
+                        .set_coverage_modulation_table_nv
+                        .is_none()
+                    {
+                        out.ext_shader_object.set_coverage_modulation_table_nv =
+                            to_option(loader(c"vkCmdSetCoverageModulationTableNV"));
+                    }
+                    if out
+                        .ext_shader_object
+                        .set_shading_rate_image_enable_nv
+                        .is_none()
+                    {
+                        out.ext_shader_object.set_shading_rate_image_enable_nv =
+                            to_option(loader(c"vkCmdSetShadingRateImageEnableNV"));
+                    }
+                    if out
+                        .ext_shader_object
+                        .set_representative_fragment_test_enable_nv
+                        .is_none()
+                    {
+                        out.ext_shader_object
+                            .set_representative_fragment_test_enable_nv =
+                            to_option(loader(c"vkCmdSetRepresentativeFragmentTestEnableNV"));
+                    }
+                    if out
+                        .ext_shader_object
+                        .set_coverage_reduction_mode_nv
+                        .is_none()
+                    {
+                        out.ext_shader_object.set_coverage_reduction_mode_nv =
+                            to_option(loader(c"vkCmdSetCoverageReductionModeNV"));
+                    }
+                    if out
+                        .ext_depth_clamp_control
+                        .set_depth_clamp_range_ext
+                        .is_none()
+                    {
+                        out.ext_depth_clamp_control.set_depth_clamp_range_ext =
+                            to_option(loader(c"vkCmdSetDepthClampRangeEXT"));
+                    }
+                }
+                b"VK_NV_cooperative_vector" => {
+                    out.nv_cooperative_vector
+                        .convert_cooperative_vector_matrix_nv =
+                        to_option(loader(c"vkCmdConvertCooperativeVectorMatrixNV"));
+                }
+                b"VK_ARM_data_graph" => {
+                    out.arm_data_graph.dispatch_data_graph_arm =
+                        to_option(loader(c"vkCmdDispatchDataGraphARM"));
+                }
+                b"VK_EXT_attachment_feedback_loop_dynamic_state" => {
+                    out.ext_attachment_feedback_loop_dynamic_state
+                        .set_attachment_feedback_loop_enable_ext =
+                        to_option(loader(c"vkCmdSetAttachmentFeedbackLoopEnableEXT"));
+                }
+                b"VK_KHR_line_rasterization" => {
+                    if out.v1_4.set_line_stipple.is_none() {
+                        out.v1_4.set_line_stipple = to_option(loader(c"vkCmdSetLineStippleKHR"));
+                    }
+                }
+                b"VK_KHR_maintenance6" => {
+                    if out.v1_4.bind_descriptor_sets2.is_none() {
+                        out.v1_4.bind_descriptor_sets2 =
+                            to_option(loader(c"vkCmdBindDescriptorSets2KHR"));
+                    }
+                    if out.v1_4.push_constants2.is_none() {
+                        out.v1_4.push_constants2 = to_option(loader(c"vkCmdPushConstants2KHR"));
+                    }
+                    if out.v1_4.push_descriptor_set2.is_none() {
+                        out.v1_4.push_descriptor_set2 =
+                            to_option(loader(c"vkCmdPushDescriptorSet2KHR"));
+                    }
+                    if out.v1_4.push_descriptor_set_with_template2.is_none() {
+                        out.v1_4.push_descriptor_set_with_template2 =
+                            to_option(loader(c"vkCmdPushDescriptorSetWithTemplate2KHR"));
+                    }
+                    out.khr_maintenance6.set_descriptor_buffer_offsets2_ext =
+                        to_option(loader(c"vkCmdSetDescriptorBufferOffsets2EXT"));
+                    out.khr_maintenance6
+                        .bind_descriptor_buffer_embedded_samplers2_ext =
+                        to_option(loader(c"vkCmdBindDescriptorBufferEmbeddedSamplers2EXT"));
+                }
+                b"VK_QCOM_tile_memory_heap" => {
+                    out.qcom_tile_memory_heap.bind_tile_memory_qcom =
+                        to_option(loader(c"vkCmdBindTileMemoryQCOM"));
+                }
+                b"VK_KHR_copy_memory_indirect" => {
+                    out.khr_copy_memory_indirect.copy_memory_indirect_khr =
+                        to_option(loader(c"vkCmdCopyMemoryIndirectKHR"));
+                    out.khr_copy_memory_indirect
+                        .copy_memory_to_image_indirect_khr =
+                        to_option(loader(c"vkCmdCopyMemoryToImageIndirectKHR"));
+                }
+                b"VK_EXT_memory_decompression" => {
+                    out.ext_memory_decompression.decompress_memory_ext =
+                        to_option(loader(c"vkCmdDecompressMemoryEXT"));
+                    out.ext_memory_decompression
+                        .decompress_memory_indirect_count_ext =
+                        to_option(loader(c"vkCmdDecompressMemoryIndirectCountEXT"));
+                }
+                b"VK_NV_cluster_acceleration_structure" => {
+                    out.nv_cluster_acceleration_structure
+                        .build_cluster_acceleration_structure_indirect_nv =
+                        to_option(loader(c"vkCmdBuildClusterAccelerationStructureIndirectNV"));
+                }
+                b"VK_NV_partitioned_acceleration_structure" => {
+                    out.nv_partitioned_acceleration_structure
+                        .build_partitioned_acceleration_structures_nv =
+                        to_option(loader(c"vkCmdBuildPartitionedAccelerationStructuresNV"));
+                }
+                b"VK_EXT_device_generated_commands" => {
+                    out.ext_device_generated_commands
+                        .preprocess_generated_commands_ext =
+                        to_option(loader(c"vkCmdPreprocessGeneratedCommandsEXT"));
+                    out.ext_device_generated_commands
+                        .execute_generated_commands_ext =
+                        to_option(loader(c"vkCmdExecuteGeneratedCommandsEXT"));
+                }
+                b"VK_EXT_depth_clamp_control" => {
+                    if out
+                        .ext_depth_clamp_control
+                        .set_depth_clamp_range_ext
+                        .is_none()
+                    {
+                        out.ext_depth_clamp_control.set_depth_clamp_range_ext =
+                            to_option(loader(c"vkCmdSetDepthClampRangeEXT"));
+                    }
+                }
+                b"VK_ARM_shader_instrumentation" => {
+                    out.arm_shader_instrumentation
+                        .begin_shader_instrumentation_arm =
+                        to_option(loader(c"vkCmdBeginShaderInstrumentationARM"));
+                    out.arm_shader_instrumentation
+                        .end_shader_instrumentation_arm =
+                        to_option(loader(c"vkCmdEndShaderInstrumentationARM"));
+                }
+                b"VK_EXT_fragment_density_map_offset" => {
+                    if out.khr_maintenance10.end_rendering2_khr.is_none() {
+                        out.khr_maintenance10.end_rendering2_khr =
+                            to_option(loader(c"vkCmdEndRendering2EXT"));
+                    }
+                }
+                b"VK_EXT_custom_resolve" => {
+                    out.ext_custom_resolve.begin_custom_resolve_ext =
+                        to_option(loader(c"vkCmdBeginCustomResolveEXT"));
+                }
+                b"VK_KHR_maintenance10" => {
+                    if out.khr_maintenance10.end_rendering2_khr.is_none() {
+                        out.khr_maintenance10.end_rendering2_khr =
+                            to_option(loader(c"vkCmdEndRendering2KHR"));
+                    }
+                }
+                b"VK_NV_compute_occupancy_priority" => {
+                    out.nv_compute_occupancy_priority
+                        .set_compute_occupancy_priority_nv =
+                        to_option(loader(c"vkCmdSetComputeOccupancyPriorityNV"));
+                }
+                b"VK_EXT_primitive_restart_index" => {
+                    out.ext_primitive_restart_index
+                        .set_primitive_restart_index_ext =
+                        to_option(loader(c"vkCmdSetPrimitiveRestartIndexEXT"));
                 }
                 _ => (),
             }
@@ -4760,6 +6373,56 @@ pub struct CommandBufferFnv1_0 {
 }
 
 impl CommandBufferFnv1_0 {
+    pub const EMPTY: Self = Self {
+        begin_command_buffer: None,
+        end_command_buffer: None,
+        reset_command_buffer: None,
+        bind_pipeline: None,
+        set_viewport: None,
+        set_scissor: None,
+        set_line_width: None,
+        set_depth_bias: None,
+        set_blend_constants: None,
+        set_depth_bounds: None,
+        set_stencil_compare_mask: None,
+        set_stencil_write_mask: None,
+        set_stencil_reference: None,
+        bind_descriptor_sets: None,
+        bind_index_buffer: None,
+        bind_vertex_buffers: None,
+        draw: None,
+        draw_indexed: None,
+        draw_indirect: None,
+        draw_indexed_indirect: None,
+        dispatch: None,
+        dispatch_indirect: None,
+        copy_buffer: None,
+        copy_image: None,
+        blit_image: None,
+        copy_buffer_to_image: None,
+        copy_image_to_buffer: None,
+        update_buffer: None,
+        fill_buffer: None,
+        clear_color_image: None,
+        clear_depth_stencil_image: None,
+        clear_attachments: None,
+        resolve_image: None,
+        set_event: None,
+        reset_event: None,
+        wait_events: None,
+        pipeline_barrier: None,
+        begin_query: None,
+        end_query: None,
+        reset_query_pool: None,
+        write_timestamp: None,
+        copy_query_pool_results: None,
+        push_constants: None,
+        begin_render_pass: None,
+        next_subpass: None,
+        end_render_pass: None,
+        execute_commands: None,
+    };
+
     pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
         Self {
             begin_command_buffer: to_option(loader(c"vkBeginCommandBuffer")),
@@ -4816,18 +6479,19 @@ impl CommandBufferFnv1_0 {
 #[derive(Clone, Default)]
 pub struct CommandBufferFnv1_1 {
     pub set_device_mask: Option<vkCmdSetDeviceMask>,
-    pub set_device_mask_khr: Option<vkCmdSetDeviceMaskKHR>,
     pub dispatch_base: Option<vkCmdDispatchBase>,
-    pub dispatch_base_khr: Option<vkCmdDispatchBaseKHR>,
 }
 
 impl CommandBufferFnv1_1 {
+    pub const EMPTY: Self = Self {
+        set_device_mask: None,
+        dispatch_base: None,
+    };
+
     pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
         Self {
             set_device_mask: to_option(loader(c"vkCmdSetDeviceMask")),
-            set_device_mask_khr: to_option(loader(c"vkCmdSetDeviceMaskKHR")),
             dispatch_base: to_option(loader(c"vkCmdDispatchBase")),
-            dispatch_base_khr: to_option(loader(c"vkCmdDispatchBaseKHR")),
         }
     }
 }
@@ -4835,34 +6499,28 @@ impl CommandBufferFnv1_1 {
 #[derive(Clone, Default)]
 pub struct CommandBufferFnv1_2 {
     pub begin_render_pass2: Option<vkCmdBeginRenderPass2>,
-    pub begin_render_pass2_khr: Option<vkCmdBeginRenderPass2KHR>,
     pub next_subpass2: Option<vkCmdNextSubpass2>,
-    pub next_subpass2_khr: Option<vkCmdNextSubpass2KHR>,
     pub end_render_pass2: Option<vkCmdEndRenderPass2>,
-    pub end_render_pass2_khr: Option<vkCmdEndRenderPass2KHR>,
     pub draw_indirect_count: Option<vkCmdDrawIndirectCount>,
-    pub draw_indirect_count_khr: Option<vkCmdDrawIndirectCountKHR>,
-    pub draw_indirect_count_amd: Option<vkCmdDrawIndirectCountAMD>,
     pub draw_indexed_indirect_count: Option<vkCmdDrawIndexedIndirectCount>,
-    pub draw_indexed_indirect_count_khr: Option<vkCmdDrawIndexedIndirectCountKHR>,
-    pub draw_indexed_indirect_count_amd: Option<vkCmdDrawIndexedIndirectCountAMD>,
 }
 
 impl CommandBufferFnv1_2 {
+    pub const EMPTY: Self = Self {
+        begin_render_pass2: None,
+        next_subpass2: None,
+        end_render_pass2: None,
+        draw_indirect_count: None,
+        draw_indexed_indirect_count: None,
+    };
+
     pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
         Self {
             begin_render_pass2: to_option(loader(c"vkCmdBeginRenderPass2")),
-            begin_render_pass2_khr: to_option(loader(c"vkCmdBeginRenderPass2KHR")),
             next_subpass2: to_option(loader(c"vkCmdNextSubpass2")),
-            next_subpass2_khr: to_option(loader(c"vkCmdNextSubpass2KHR")),
             end_render_pass2: to_option(loader(c"vkCmdEndRenderPass2")),
-            end_render_pass2_khr: to_option(loader(c"vkCmdEndRenderPass2KHR")),
             draw_indirect_count: to_option(loader(c"vkCmdDrawIndirectCount")),
-            draw_indirect_count_khr: to_option(loader(c"vkCmdDrawIndirectCountKHR")),
-            draw_indirect_count_amd: to_option(loader(c"vkCmdDrawIndirectCountAMD")),
             draw_indexed_indirect_count: to_option(loader(c"vkCmdDrawIndexedIndirectCount")),
-            draw_indexed_indirect_count_khr: to_option(loader(c"vkCmdDrawIndexedIndirectCountKHR")),
-            draw_indexed_indirect_count_amd: to_option(loader(c"vkCmdDrawIndexedIndirectCountAMD")),
         }
     }
 }
@@ -4870,128 +6528,97 @@ impl CommandBufferFnv1_2 {
 #[derive(Clone, Default)]
 pub struct CommandBufferFnv1_3 {
     pub set_cull_mode: Option<vkCmdSetCullMode>,
-    pub set_cull_mode_ext: Option<vkCmdSetCullModeEXT>,
     pub set_front_face: Option<vkCmdSetFrontFace>,
-    pub set_front_face_ext: Option<vkCmdSetFrontFaceEXT>,
     pub set_primitive_topology: Option<vkCmdSetPrimitiveTopology>,
-    pub set_primitive_topology_ext: Option<vkCmdSetPrimitiveTopologyEXT>,
     pub set_viewport_with_count: Option<vkCmdSetViewportWithCount>,
-    pub set_viewport_with_count_ext: Option<vkCmdSetViewportWithCountEXT>,
     pub set_scissor_with_count: Option<vkCmdSetScissorWithCount>,
-    pub set_scissor_with_count_ext: Option<vkCmdSetScissorWithCountEXT>,
     pub bind_vertex_buffers2: Option<vkCmdBindVertexBuffers2>,
-    pub bind_vertex_buffers2_ext: Option<vkCmdBindVertexBuffers2EXT>,
     pub set_depth_test_enable: Option<vkCmdSetDepthTestEnable>,
-    pub set_depth_test_enable_ext: Option<vkCmdSetDepthTestEnableEXT>,
     pub set_depth_write_enable: Option<vkCmdSetDepthWriteEnable>,
-    pub set_depth_write_enable_ext: Option<vkCmdSetDepthWriteEnableEXT>,
     pub set_depth_compare_op: Option<vkCmdSetDepthCompareOp>,
-    pub set_depth_compare_op_ext: Option<vkCmdSetDepthCompareOpEXT>,
     pub set_depth_bounds_test_enable: Option<vkCmdSetDepthBoundsTestEnable>,
-    pub set_depth_bounds_test_enable_ext: Option<vkCmdSetDepthBoundsTestEnableEXT>,
     pub set_stencil_test_enable: Option<vkCmdSetStencilTestEnable>,
-    pub set_stencil_test_enable_ext: Option<vkCmdSetStencilTestEnableEXT>,
     pub set_stencil_op: Option<vkCmdSetStencilOp>,
-    pub set_stencil_op_ext: Option<vkCmdSetStencilOpEXT>,
     pub set_rasterizer_discard_enable: Option<vkCmdSetRasterizerDiscardEnable>,
-    pub set_rasterizer_discard_enable_ext: Option<vkCmdSetRasterizerDiscardEnableEXT>,
     pub set_depth_bias_enable: Option<vkCmdSetDepthBiasEnable>,
-    pub set_depth_bias_enable_ext: Option<vkCmdSetDepthBiasEnableEXT>,
     pub set_primitive_restart_enable: Option<vkCmdSetPrimitiveRestartEnable>,
-    pub set_primitive_restart_enable_ext: Option<vkCmdSetPrimitiveRestartEnableEXT>,
     pub copy_buffer2: Option<vkCmdCopyBuffer2>,
-    pub copy_buffer2_khr: Option<vkCmdCopyBuffer2KHR>,
     pub copy_image2: Option<vkCmdCopyImage2>,
-    pub copy_image2_khr: Option<vkCmdCopyImage2KHR>,
     pub blit_image2: Option<vkCmdBlitImage2>,
-    pub blit_image2_khr: Option<vkCmdBlitImage2KHR>,
     pub copy_buffer_to_image2: Option<vkCmdCopyBufferToImage2>,
-    pub copy_buffer_to_image2_khr: Option<vkCmdCopyBufferToImage2KHR>,
     pub copy_image_to_buffer2: Option<vkCmdCopyImageToBuffer2>,
-    pub copy_image_to_buffer2_khr: Option<vkCmdCopyImageToBuffer2KHR>,
     pub resolve_image2: Option<vkCmdResolveImage2>,
-    pub resolve_image2_khr: Option<vkCmdResolveImage2KHR>,
     pub set_event2: Option<vkCmdSetEvent2>,
-    pub set_event2_khr: Option<vkCmdSetEvent2KHR>,
     pub reset_event2: Option<vkCmdResetEvent2>,
-    pub reset_event2_khr: Option<vkCmdResetEvent2KHR>,
     pub wait_events2: Option<vkCmdWaitEvents2>,
-    pub wait_events2_khr: Option<vkCmdWaitEvents2KHR>,
     pub pipeline_barrier2: Option<vkCmdPipelineBarrier2>,
-    pub pipeline_barrier2_khr: Option<vkCmdPipelineBarrier2KHR>,
     pub write_timestamp2: Option<vkCmdWriteTimestamp2>,
-    pub write_timestamp2_khr: Option<vkCmdWriteTimestamp2KHR>,
     pub begin_rendering: Option<vkCmdBeginRendering>,
-    pub begin_rendering_khr: Option<vkCmdBeginRenderingKHR>,
     pub end_rendering: Option<vkCmdEndRendering>,
-    pub end_rendering_khr: Option<vkCmdEndRenderingKHR>,
 }
 
 impl CommandBufferFnv1_3 {
+    pub const EMPTY: Self = Self {
+        set_cull_mode: None,
+        set_front_face: None,
+        set_primitive_topology: None,
+        set_viewport_with_count: None,
+        set_scissor_with_count: None,
+        bind_vertex_buffers2: None,
+        set_depth_test_enable: None,
+        set_depth_write_enable: None,
+        set_depth_compare_op: None,
+        set_depth_bounds_test_enable: None,
+        set_stencil_test_enable: None,
+        set_stencil_op: None,
+        set_rasterizer_discard_enable: None,
+        set_depth_bias_enable: None,
+        set_primitive_restart_enable: None,
+        copy_buffer2: None,
+        copy_image2: None,
+        blit_image2: None,
+        copy_buffer_to_image2: None,
+        copy_image_to_buffer2: None,
+        resolve_image2: None,
+        set_event2: None,
+        reset_event2: None,
+        wait_events2: None,
+        pipeline_barrier2: None,
+        write_timestamp2: None,
+        begin_rendering: None,
+        end_rendering: None,
+    };
+
     pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
         Self {
             set_cull_mode: to_option(loader(c"vkCmdSetCullMode")),
-            set_cull_mode_ext: to_option(loader(c"vkCmdSetCullModeEXT")),
             set_front_face: to_option(loader(c"vkCmdSetFrontFace")),
-            set_front_face_ext: to_option(loader(c"vkCmdSetFrontFaceEXT")),
             set_primitive_topology: to_option(loader(c"vkCmdSetPrimitiveTopology")),
-            set_primitive_topology_ext: to_option(loader(c"vkCmdSetPrimitiveTopologyEXT")),
             set_viewport_with_count: to_option(loader(c"vkCmdSetViewportWithCount")),
-            set_viewport_with_count_ext: to_option(loader(c"vkCmdSetViewportWithCountEXT")),
             set_scissor_with_count: to_option(loader(c"vkCmdSetScissorWithCount")),
-            set_scissor_with_count_ext: to_option(loader(c"vkCmdSetScissorWithCountEXT")),
             bind_vertex_buffers2: to_option(loader(c"vkCmdBindVertexBuffers2")),
-            bind_vertex_buffers2_ext: to_option(loader(c"vkCmdBindVertexBuffers2EXT")),
             set_depth_test_enable: to_option(loader(c"vkCmdSetDepthTestEnable")),
-            set_depth_test_enable_ext: to_option(loader(c"vkCmdSetDepthTestEnableEXT")),
             set_depth_write_enable: to_option(loader(c"vkCmdSetDepthWriteEnable")),
-            set_depth_write_enable_ext: to_option(loader(c"vkCmdSetDepthWriteEnableEXT")),
             set_depth_compare_op: to_option(loader(c"vkCmdSetDepthCompareOp")),
-            set_depth_compare_op_ext: to_option(loader(c"vkCmdSetDepthCompareOpEXT")),
             set_depth_bounds_test_enable: to_option(loader(c"vkCmdSetDepthBoundsTestEnable")),
-            set_depth_bounds_test_enable_ext: to_option(loader(
-                c"vkCmdSetDepthBoundsTestEnableEXT",
-            )),
             set_stencil_test_enable: to_option(loader(c"vkCmdSetStencilTestEnable")),
-            set_stencil_test_enable_ext: to_option(loader(c"vkCmdSetStencilTestEnableEXT")),
             set_stencil_op: to_option(loader(c"vkCmdSetStencilOp")),
-            set_stencil_op_ext: to_option(loader(c"vkCmdSetStencilOpEXT")),
             set_rasterizer_discard_enable: to_option(loader(c"vkCmdSetRasterizerDiscardEnable")),
-            set_rasterizer_discard_enable_ext: to_option(loader(
-                c"vkCmdSetRasterizerDiscardEnableEXT",
-            )),
             set_depth_bias_enable: to_option(loader(c"vkCmdSetDepthBiasEnable")),
-            set_depth_bias_enable_ext: to_option(loader(c"vkCmdSetDepthBiasEnableEXT")),
             set_primitive_restart_enable: to_option(loader(c"vkCmdSetPrimitiveRestartEnable")),
-            set_primitive_restart_enable_ext: to_option(loader(
-                c"vkCmdSetPrimitiveRestartEnableEXT",
-            )),
             copy_buffer2: to_option(loader(c"vkCmdCopyBuffer2")),
-            copy_buffer2_khr: to_option(loader(c"vkCmdCopyBuffer2KHR")),
             copy_image2: to_option(loader(c"vkCmdCopyImage2")),
-            copy_image2_khr: to_option(loader(c"vkCmdCopyImage2KHR")),
             blit_image2: to_option(loader(c"vkCmdBlitImage2")),
-            blit_image2_khr: to_option(loader(c"vkCmdBlitImage2KHR")),
             copy_buffer_to_image2: to_option(loader(c"vkCmdCopyBufferToImage2")),
-            copy_buffer_to_image2_khr: to_option(loader(c"vkCmdCopyBufferToImage2KHR")),
             copy_image_to_buffer2: to_option(loader(c"vkCmdCopyImageToBuffer2")),
-            copy_image_to_buffer2_khr: to_option(loader(c"vkCmdCopyImageToBuffer2KHR")),
             resolve_image2: to_option(loader(c"vkCmdResolveImage2")),
-            resolve_image2_khr: to_option(loader(c"vkCmdResolveImage2KHR")),
             set_event2: to_option(loader(c"vkCmdSetEvent2")),
-            set_event2_khr: to_option(loader(c"vkCmdSetEvent2KHR")),
             reset_event2: to_option(loader(c"vkCmdResetEvent2")),
-            reset_event2_khr: to_option(loader(c"vkCmdResetEvent2KHR")),
             wait_events2: to_option(loader(c"vkCmdWaitEvents2")),
-            wait_events2_khr: to_option(loader(c"vkCmdWaitEvents2KHR")),
             pipeline_barrier2: to_option(loader(c"vkCmdPipelineBarrier2")),
-            pipeline_barrier2_khr: to_option(loader(c"vkCmdPipelineBarrier2KHR")),
             write_timestamp2: to_option(loader(c"vkCmdWriteTimestamp2")),
-            write_timestamp2_khr: to_option(loader(c"vkCmdWriteTimestamp2KHR")),
             begin_rendering: to_option(loader(c"vkCmdBeginRendering")),
-            begin_rendering_khr: to_option(loader(c"vkCmdBeginRenderingKHR")),
             end_rendering: to_option(loader(c"vkCmdEndRendering")),
-            end_rendering_khr: to_option(loader(c"vkCmdEndRenderingKHR")),
         }
     }
 }
@@ -4999,1216 +6626,989 @@ impl CommandBufferFnv1_3 {
 #[derive(Clone, Default)]
 pub struct CommandBufferFnv1_4 {
     pub push_descriptor_set: Option<vkCmdPushDescriptorSet>,
-    pub push_descriptor_set_khr: Option<vkCmdPushDescriptorSetKHR>,
     pub push_descriptor_set_with_template: Option<vkCmdPushDescriptorSetWithTemplate>,
-    pub push_descriptor_set_with_template_khr: Option<vkCmdPushDescriptorSetWithTemplateKHR>,
     pub set_line_stipple: Option<vkCmdSetLineStipple>,
-    pub set_line_stipple_khr: Option<vkCmdSetLineStippleKHR>,
-    pub set_line_stipple_ext: Option<vkCmdSetLineStippleEXT>,
     pub bind_index_buffer2: Option<vkCmdBindIndexBuffer2>,
-    pub bind_index_buffer2_khr: Option<vkCmdBindIndexBuffer2KHR>,
     pub bind_descriptor_sets2: Option<vkCmdBindDescriptorSets2>,
-    pub bind_descriptor_sets2_khr: Option<vkCmdBindDescriptorSets2KHR>,
     pub push_constants2: Option<vkCmdPushConstants2>,
-    pub push_constants2_khr: Option<vkCmdPushConstants2KHR>,
     pub push_descriptor_set2: Option<vkCmdPushDescriptorSet2>,
-    pub push_descriptor_set2_khr: Option<vkCmdPushDescriptorSet2KHR>,
     pub push_descriptor_set_with_template2: Option<vkCmdPushDescriptorSetWithTemplate2>,
-    pub push_descriptor_set_with_template2_khr: Option<vkCmdPushDescriptorSetWithTemplate2KHR>,
     pub set_rendering_attachment_locations: Option<vkCmdSetRenderingAttachmentLocations>,
-    pub set_rendering_attachment_locations_khr: Option<vkCmdSetRenderingAttachmentLocationsKHR>,
     pub set_rendering_input_attachment_indices: Option<vkCmdSetRenderingInputAttachmentIndices>,
-    pub set_rendering_input_attachment_indices_khr:
-        Option<vkCmdSetRenderingInputAttachmentIndicesKHR>,
 }
 
 impl CommandBufferFnv1_4 {
+    pub const EMPTY: Self = Self {
+        push_descriptor_set: None,
+        push_descriptor_set_with_template: None,
+        set_line_stipple: None,
+        bind_index_buffer2: None,
+        bind_descriptor_sets2: None,
+        push_constants2: None,
+        push_descriptor_set2: None,
+        push_descriptor_set_with_template2: None,
+        set_rendering_attachment_locations: None,
+        set_rendering_input_attachment_indices: None,
+    };
+
     pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
         Self {
             push_descriptor_set: to_option(loader(c"vkCmdPushDescriptorSet")),
-            push_descriptor_set_khr: to_option(loader(c"vkCmdPushDescriptorSetKHR")),
             push_descriptor_set_with_template: to_option(loader(
                 c"vkCmdPushDescriptorSetWithTemplate",
             )),
-            push_descriptor_set_with_template_khr: to_option(loader(
-                c"vkCmdPushDescriptorSetWithTemplateKHR",
-            )),
             set_line_stipple: to_option(loader(c"vkCmdSetLineStipple")),
-            set_line_stipple_khr: to_option(loader(c"vkCmdSetLineStippleKHR")),
-            set_line_stipple_ext: to_option(loader(c"vkCmdSetLineStippleEXT")),
             bind_index_buffer2: to_option(loader(c"vkCmdBindIndexBuffer2")),
-            bind_index_buffer2_khr: to_option(loader(c"vkCmdBindIndexBuffer2KHR")),
             bind_descriptor_sets2: to_option(loader(c"vkCmdBindDescriptorSets2")),
-            bind_descriptor_sets2_khr: to_option(loader(c"vkCmdBindDescriptorSets2KHR")),
             push_constants2: to_option(loader(c"vkCmdPushConstants2")),
-            push_constants2_khr: to_option(loader(c"vkCmdPushConstants2KHR")),
             push_descriptor_set2: to_option(loader(c"vkCmdPushDescriptorSet2")),
-            push_descriptor_set2_khr: to_option(loader(c"vkCmdPushDescriptorSet2KHR")),
             push_descriptor_set_with_template2: to_option(loader(
                 c"vkCmdPushDescriptorSetWithTemplate2",
-            )),
-            push_descriptor_set_with_template2_khr: to_option(loader(
-                c"vkCmdPushDescriptorSetWithTemplate2KHR",
             )),
             set_rendering_attachment_locations: to_option(loader(
                 c"vkCmdSetRenderingAttachmentLocations",
             )),
-            set_rendering_attachment_locations_khr: to_option(loader(
-                c"vkCmdSetRenderingAttachmentLocationsKHR",
-            )),
             set_rendering_input_attachment_indices: to_option(loader(
                 c"vkCmdSetRenderingInputAttachmentIndices",
             )),
-            set_rendering_input_attachment_indices_khr: to_option(loader(
-                c"vkCmdSetRenderingInputAttachmentIndicesKHR",
-            )),
         }
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnAmdBufferMarker {
-    pub write_buffer_marker_amd: vkCmdWriteBufferMarkerAMD,
-    pub write_buffer_marker2_amd: vkCmdWriteBufferMarker2AMD,
+    pub write_buffer_marker_amd: Option<vkCmdWriteBufferMarkerAMD>,
+    pub write_buffer_marker2_amd: Option<vkCmdWriteBufferMarker2AMD>,
 }
 
 impl CommandBufferFnAmdBufferMarker {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            write_buffer_marker_amd: to_panic(loader(c"vkCmdWriteBufferMarkerAMD")),
-            write_buffer_marker2_amd: to_panic(loader(c"vkCmdWriteBufferMarker2AMD")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        write_buffer_marker_amd: None,
+        write_buffer_marker2_amd: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnAmdGpaInterface {
-    pub begin_gpa_session_amd: vkCmdBeginGpaSessionAMD,
-    pub end_gpa_session_amd: vkCmdEndGpaSessionAMD,
-    pub begin_gpa_sample_amd: vkCmdBeginGpaSampleAMD,
-    pub end_gpa_sample_amd: vkCmdEndGpaSampleAMD,
-    pub copy_gpa_session_results_amd: vkCmdCopyGpaSessionResultsAMD,
+    pub begin_gpa_session_amd: Option<vkCmdBeginGpaSessionAMD>,
+    pub end_gpa_session_amd: Option<vkCmdEndGpaSessionAMD>,
+    pub begin_gpa_sample_amd: Option<vkCmdBeginGpaSampleAMD>,
+    pub end_gpa_sample_amd: Option<vkCmdEndGpaSampleAMD>,
+    pub copy_gpa_session_results_amd: Option<vkCmdCopyGpaSessionResultsAMD>,
 }
 
 impl CommandBufferFnAmdGpaInterface {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            begin_gpa_session_amd: to_panic(loader(c"vkCmdBeginGpaSessionAMD")),
-            end_gpa_session_amd: to_panic(loader(c"vkCmdEndGpaSessionAMD")),
-            begin_gpa_sample_amd: to_panic(loader(c"vkCmdBeginGpaSampleAMD")),
-            end_gpa_sample_amd: to_panic(loader(c"vkCmdEndGpaSampleAMD")),
-            copy_gpa_session_results_amd: to_panic(loader(c"vkCmdCopyGpaSessionResultsAMD")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        begin_gpa_session_amd: None,
+        end_gpa_session_amd: None,
+        begin_gpa_sample_amd: None,
+        end_gpa_sample_amd: None,
+        copy_gpa_session_results_amd: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnAmdxShaderEnqueue {
-    pub initialize_graph_scratch_memory_amdx: vkCmdInitializeGraphScratchMemoryAMDX,
-    pub dispatch_graph_amdx: vkCmdDispatchGraphAMDX,
-    pub dispatch_graph_indirect_amdx: vkCmdDispatchGraphIndirectAMDX,
-    pub dispatch_graph_indirect_count_amdx: vkCmdDispatchGraphIndirectCountAMDX,
+    pub initialize_graph_scratch_memory_amdx: Option<vkCmdInitializeGraphScratchMemoryAMDX>,
+    pub dispatch_graph_amdx: Option<vkCmdDispatchGraphAMDX>,
+    pub dispatch_graph_indirect_amdx: Option<vkCmdDispatchGraphIndirectAMDX>,
+    pub dispatch_graph_indirect_count_amdx: Option<vkCmdDispatchGraphIndirectCountAMDX>,
 }
 
 impl CommandBufferFnAmdxShaderEnqueue {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            initialize_graph_scratch_memory_amdx: to_panic(loader(
-                c"vkCmdInitializeGraphScratchMemoryAMDX",
-            )),
-            dispatch_graph_amdx: to_panic(loader(c"vkCmdDispatchGraphAMDX")),
-            dispatch_graph_indirect_amdx: to_panic(loader(c"vkCmdDispatchGraphIndirectAMDX")),
-            dispatch_graph_indirect_count_amdx: to_panic(loader(
-                c"vkCmdDispatchGraphIndirectCountAMDX",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        initialize_graph_scratch_memory_amdx: None,
+        dispatch_graph_amdx: None,
+        dispatch_graph_indirect_amdx: None,
+        dispatch_graph_indirect_count_amdx: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnArmDataGraph {
-    pub dispatch_data_graph_arm: vkCmdDispatchDataGraphARM,
+    pub dispatch_data_graph_arm: Option<vkCmdDispatchDataGraphARM>,
 }
 
 impl CommandBufferFnArmDataGraph {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            dispatch_data_graph_arm: to_panic(loader(c"vkCmdDispatchDataGraphARM")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        dispatch_data_graph_arm: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnArmSchedulingControls {
-    pub set_dispatch_parameters_arm: vkCmdSetDispatchParametersARM,
+    pub set_dispatch_parameters_arm: Option<vkCmdSetDispatchParametersARM>,
 }
 
 impl CommandBufferFnArmSchedulingControls {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            set_dispatch_parameters_arm: to_panic(loader(c"vkCmdSetDispatchParametersARM")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        set_dispatch_parameters_arm: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnArmShaderInstrumentation {
-    pub begin_shader_instrumentation_arm: vkCmdBeginShaderInstrumentationARM,
-    pub end_shader_instrumentation_arm: vkCmdEndShaderInstrumentationARM,
+    pub begin_shader_instrumentation_arm: Option<vkCmdBeginShaderInstrumentationARM>,
+    pub end_shader_instrumentation_arm: Option<vkCmdEndShaderInstrumentationARM>,
 }
 
 impl CommandBufferFnArmShaderInstrumentation {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            begin_shader_instrumentation_arm: to_panic(loader(
-                c"vkCmdBeginShaderInstrumentationARM",
-            )),
-            end_shader_instrumentation_arm: to_panic(loader(c"vkCmdEndShaderInstrumentationARM")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        begin_shader_instrumentation_arm: None,
+        end_shader_instrumentation_arm: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnArmTensors {
-    pub copy_tensor_arm: vkCmdCopyTensorARM,
+    pub copy_tensor_arm: Option<vkCmdCopyTensorARM>,
 }
 
 impl CommandBufferFnArmTensors {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            copy_tensor_arm: to_panic(loader(c"vkCmdCopyTensorARM")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        copy_tensor_arm: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnExtAttachmentFeedbackLoopDynamicState {
-    pub set_attachment_feedback_loop_enable_ext: vkCmdSetAttachmentFeedbackLoopEnableEXT,
+    pub set_attachment_feedback_loop_enable_ext: Option<vkCmdSetAttachmentFeedbackLoopEnableEXT>,
 }
 
 impl CommandBufferFnExtAttachmentFeedbackLoopDynamicState {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            set_attachment_feedback_loop_enable_ext: to_panic(loader(
-                c"vkCmdSetAttachmentFeedbackLoopEnableEXT",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        set_attachment_feedback_loop_enable_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnExtColorWriteEnable {
-    pub set_color_write_enable_ext: vkCmdSetColorWriteEnableEXT,
+    pub set_color_write_enable_ext: Option<vkCmdSetColorWriteEnableEXT>,
 }
 
 impl CommandBufferFnExtColorWriteEnable {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            set_color_write_enable_ext: to_panic(loader(c"vkCmdSetColorWriteEnableEXT")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        set_color_write_enable_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnExtConditionalRendering {
-    pub begin_conditional_rendering_ext: vkCmdBeginConditionalRenderingEXT,
-    pub end_conditional_rendering_ext: vkCmdEndConditionalRenderingEXT,
+    pub begin_conditional_rendering_ext: Option<vkCmdBeginConditionalRenderingEXT>,
+    pub end_conditional_rendering_ext: Option<vkCmdEndConditionalRenderingEXT>,
 }
 
 impl CommandBufferFnExtConditionalRendering {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            begin_conditional_rendering_ext: to_panic(loader(c"vkCmdBeginConditionalRenderingEXT")),
-            end_conditional_rendering_ext: to_panic(loader(c"vkCmdEndConditionalRenderingEXT")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        begin_conditional_rendering_ext: None,
+        end_conditional_rendering_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnExtCustomResolve {
-    pub begin_custom_resolve_ext: vkCmdBeginCustomResolveEXT,
+    pub begin_custom_resolve_ext: Option<vkCmdBeginCustomResolveEXT>,
 }
 
 impl CommandBufferFnExtCustomResolve {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            begin_custom_resolve_ext: to_panic(loader(c"vkCmdBeginCustomResolveEXT")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        begin_custom_resolve_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnExtDebugMarker {
-    pub debug_marker_begin_ext: vkCmdDebugMarkerBeginEXT,
-    pub debug_marker_end_ext: vkCmdDebugMarkerEndEXT,
-    pub debug_marker_insert_ext: vkCmdDebugMarkerInsertEXT,
+    pub debug_marker_begin_ext: Option<vkCmdDebugMarkerBeginEXT>,
+    pub debug_marker_end_ext: Option<vkCmdDebugMarkerEndEXT>,
+    pub debug_marker_insert_ext: Option<vkCmdDebugMarkerInsertEXT>,
 }
 
 impl CommandBufferFnExtDebugMarker {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            debug_marker_begin_ext: to_panic(loader(c"vkCmdDebugMarkerBeginEXT")),
-            debug_marker_end_ext: to_panic(loader(c"vkCmdDebugMarkerEndEXT")),
-            debug_marker_insert_ext: to_panic(loader(c"vkCmdDebugMarkerInsertEXT")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        debug_marker_begin_ext: None,
+        debug_marker_end_ext: None,
+        debug_marker_insert_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnExtDebugUtils {
-    pub begin_debug_utils_label_ext: vkCmdBeginDebugUtilsLabelEXT,
-    pub end_debug_utils_label_ext: vkCmdEndDebugUtilsLabelEXT,
-    pub insert_debug_utils_label_ext: vkCmdInsertDebugUtilsLabelEXT,
+    pub begin_debug_utils_label_ext: Option<vkCmdBeginDebugUtilsLabelEXT>,
+    pub end_debug_utils_label_ext: Option<vkCmdEndDebugUtilsLabelEXT>,
+    pub insert_debug_utils_label_ext: Option<vkCmdInsertDebugUtilsLabelEXT>,
 }
 
 impl CommandBufferFnExtDebugUtils {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            begin_debug_utils_label_ext: to_panic(loader(c"vkCmdBeginDebugUtilsLabelEXT")),
-            end_debug_utils_label_ext: to_panic(loader(c"vkCmdEndDebugUtilsLabelEXT")),
-            insert_debug_utils_label_ext: to_panic(loader(c"vkCmdInsertDebugUtilsLabelEXT")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        begin_debug_utils_label_ext: None,
+        end_debug_utils_label_ext: None,
+        insert_debug_utils_label_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnExtDepthBiasControl {
-    pub set_depth_bias2_ext: vkCmdSetDepthBias2EXT,
+    pub set_depth_bias2_ext: Option<vkCmdSetDepthBias2EXT>,
 }
 
 impl CommandBufferFnExtDepthBiasControl {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            set_depth_bias2_ext: to_panic(loader(c"vkCmdSetDepthBias2EXT")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        set_depth_bias2_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnExtDepthClampControl {
-    pub set_depth_clamp_range_ext: vkCmdSetDepthClampRangeEXT,
+    pub set_depth_clamp_range_ext: Option<vkCmdSetDepthClampRangeEXT>,
 }
 
 impl CommandBufferFnExtDepthClampControl {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            set_depth_clamp_range_ext: to_panic(loader(c"vkCmdSetDepthClampRangeEXT")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        set_depth_clamp_range_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnExtDescriptorBuffer {
-    pub bind_descriptor_buffers_ext: vkCmdBindDescriptorBuffersEXT,
-    pub set_descriptor_buffer_offsets_ext: vkCmdSetDescriptorBufferOffsetsEXT,
-    pub bind_descriptor_buffer_embedded_samplers_ext: vkCmdBindDescriptorBufferEmbeddedSamplersEXT,
+    pub bind_descriptor_buffers_ext: Option<vkCmdBindDescriptorBuffersEXT>,
+    pub set_descriptor_buffer_offsets_ext: Option<vkCmdSetDescriptorBufferOffsetsEXT>,
+    pub bind_descriptor_buffer_embedded_samplers_ext:
+        Option<vkCmdBindDescriptorBufferEmbeddedSamplersEXT>,
 }
 
 impl CommandBufferFnExtDescriptorBuffer {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            bind_descriptor_buffers_ext: to_panic(loader(c"vkCmdBindDescriptorBuffersEXT")),
-            set_descriptor_buffer_offsets_ext: to_panic(loader(
-                c"vkCmdSetDescriptorBufferOffsetsEXT",
-            )),
-            bind_descriptor_buffer_embedded_samplers_ext: to_panic(loader(
-                c"vkCmdBindDescriptorBufferEmbeddedSamplersEXT",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        bind_descriptor_buffers_ext: None,
+        set_descriptor_buffer_offsets_ext: None,
+        bind_descriptor_buffer_embedded_samplers_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnExtDescriptorHeap {
-    pub bind_sampler_heap_ext: vkCmdBindSamplerHeapEXT,
-    pub bind_resource_heap_ext: vkCmdBindResourceHeapEXT,
-    pub push_data_ext: vkCmdPushDataEXT,
+    pub bind_sampler_heap_ext: Option<vkCmdBindSamplerHeapEXT>,
+    pub bind_resource_heap_ext: Option<vkCmdBindResourceHeapEXT>,
+    pub push_data_ext: Option<vkCmdPushDataEXT>,
 }
 
 impl CommandBufferFnExtDescriptorHeap {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            bind_sampler_heap_ext: to_panic(loader(c"vkCmdBindSamplerHeapEXT")),
-            bind_resource_heap_ext: to_panic(loader(c"vkCmdBindResourceHeapEXT")),
-            push_data_ext: to_panic(loader(c"vkCmdPushDataEXT")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        bind_sampler_heap_ext: None,
+        bind_resource_heap_ext: None,
+        push_data_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnExtDeviceGeneratedCommands {
-    pub execute_generated_commands_ext: vkCmdExecuteGeneratedCommandsEXT,
-    pub preprocess_generated_commands_ext: vkCmdPreprocessGeneratedCommandsEXT,
+    pub execute_generated_commands_ext: Option<vkCmdExecuteGeneratedCommandsEXT>,
+    pub preprocess_generated_commands_ext: Option<vkCmdPreprocessGeneratedCommandsEXT>,
 }
 
 impl CommandBufferFnExtDeviceGeneratedCommands {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            execute_generated_commands_ext: to_panic(loader(c"vkCmdExecuteGeneratedCommandsEXT")),
-            preprocess_generated_commands_ext: to_panic(loader(
-                c"vkCmdPreprocessGeneratedCommandsEXT",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        execute_generated_commands_ext: None,
+        preprocess_generated_commands_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnExtDiscardRectangles {
-    pub set_discard_rectangle_ext: vkCmdSetDiscardRectangleEXT,
-    pub set_discard_rectangle_enable_ext: vkCmdSetDiscardRectangleEnableEXT,
-    pub set_discard_rectangle_mode_ext: vkCmdSetDiscardRectangleModeEXT,
+    pub set_discard_rectangle_ext: Option<vkCmdSetDiscardRectangleEXT>,
+    pub set_discard_rectangle_enable_ext: Option<vkCmdSetDiscardRectangleEnableEXT>,
+    pub set_discard_rectangle_mode_ext: Option<vkCmdSetDiscardRectangleModeEXT>,
 }
 
 impl CommandBufferFnExtDiscardRectangles {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            set_discard_rectangle_ext: to_panic(loader(c"vkCmdSetDiscardRectangleEXT")),
-            set_discard_rectangle_enable_ext: to_panic(loader(
-                c"vkCmdSetDiscardRectangleEnableEXT",
-            )),
-            set_discard_rectangle_mode_ext: to_panic(loader(c"vkCmdSetDiscardRectangleModeEXT")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        set_discard_rectangle_ext: None,
+        set_discard_rectangle_enable_ext: None,
+        set_discard_rectangle_mode_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnExtMemoryDecompression {
-    pub decompress_memory_ext: vkCmdDecompressMemoryEXT,
-    pub decompress_memory_indirect_count_ext: vkCmdDecompressMemoryIndirectCountEXT,
+    pub decompress_memory_ext: Option<vkCmdDecompressMemoryEXT>,
+    pub decompress_memory_indirect_count_ext: Option<vkCmdDecompressMemoryIndirectCountEXT>,
 }
 
 impl CommandBufferFnExtMemoryDecompression {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            decompress_memory_ext: to_panic(loader(c"vkCmdDecompressMemoryEXT")),
-            decompress_memory_indirect_count_ext: to_panic(loader(
-                c"vkCmdDecompressMemoryIndirectCountEXT",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        decompress_memory_ext: None,
+        decompress_memory_indirect_count_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnExtMeshShader {
-    pub draw_mesh_tasks_ext: vkCmdDrawMeshTasksEXT,
-    pub draw_mesh_tasks_indirect_ext: vkCmdDrawMeshTasksIndirectEXT,
-    pub draw_mesh_tasks_indirect_count_ext: vkCmdDrawMeshTasksIndirectCountEXT,
+    pub draw_mesh_tasks_ext: Option<vkCmdDrawMeshTasksEXT>,
+    pub draw_mesh_tasks_indirect_ext: Option<vkCmdDrawMeshTasksIndirectEXT>,
+    pub draw_mesh_tasks_indirect_count_ext: Option<vkCmdDrawMeshTasksIndirectCountEXT>,
 }
 
 impl CommandBufferFnExtMeshShader {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            draw_mesh_tasks_ext: to_panic(loader(c"vkCmdDrawMeshTasksEXT")),
-            draw_mesh_tasks_indirect_ext: to_panic(loader(c"vkCmdDrawMeshTasksIndirectEXT")),
-            draw_mesh_tasks_indirect_count_ext: to_panic(loader(
-                c"vkCmdDrawMeshTasksIndirectCountEXT",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        draw_mesh_tasks_ext: None,
+        draw_mesh_tasks_indirect_ext: None,
+        draw_mesh_tasks_indirect_count_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnExtMultiDraw {
-    pub draw_multi_ext: vkCmdDrawMultiEXT,
-    pub draw_multi_indexed_ext: vkCmdDrawMultiIndexedEXT,
+    pub draw_multi_ext: Option<vkCmdDrawMultiEXT>,
+    pub draw_multi_indexed_ext: Option<vkCmdDrawMultiIndexedEXT>,
 }
 
 impl CommandBufferFnExtMultiDraw {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            draw_multi_ext: to_panic(loader(c"vkCmdDrawMultiEXT")),
-            draw_multi_indexed_ext: to_panic(loader(c"vkCmdDrawMultiIndexedEXT")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        draw_multi_ext: None,
+        draw_multi_indexed_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnExtOpacityMicromap {
-    pub build_micromaps_ext: vkCmdBuildMicromapsEXT,
-    pub copy_micromap_ext: vkCmdCopyMicromapEXT,
-    pub copy_micromap_to_memory_ext: vkCmdCopyMicromapToMemoryEXT,
-    pub copy_memory_to_micromap_ext: vkCmdCopyMemoryToMicromapEXT,
-    pub write_micromaps_properties_ext: vkCmdWriteMicromapsPropertiesEXT,
+    pub build_micromaps_ext: Option<vkCmdBuildMicromapsEXT>,
+    pub copy_micromap_ext: Option<vkCmdCopyMicromapEXT>,
+    pub copy_micromap_to_memory_ext: Option<vkCmdCopyMicromapToMemoryEXT>,
+    pub copy_memory_to_micromap_ext: Option<vkCmdCopyMemoryToMicromapEXT>,
+    pub write_micromaps_properties_ext: Option<vkCmdWriteMicromapsPropertiesEXT>,
 }
 
 impl CommandBufferFnExtOpacityMicromap {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            build_micromaps_ext: to_panic(loader(c"vkCmdBuildMicromapsEXT")),
-            copy_micromap_ext: to_panic(loader(c"vkCmdCopyMicromapEXT")),
-            copy_micromap_to_memory_ext: to_panic(loader(c"vkCmdCopyMicromapToMemoryEXT")),
-            copy_memory_to_micromap_ext: to_panic(loader(c"vkCmdCopyMemoryToMicromapEXT")),
-            write_micromaps_properties_ext: to_panic(loader(c"vkCmdWriteMicromapsPropertiesEXT")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        build_micromaps_ext: None,
+        copy_micromap_ext: None,
+        copy_micromap_to_memory_ext: None,
+        copy_memory_to_micromap_ext: None,
+        write_micromaps_properties_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnExtPrimitiveRestartIndex {
-    pub set_primitive_restart_index_ext: vkCmdSetPrimitiveRestartIndexEXT,
+    pub set_primitive_restart_index_ext: Option<vkCmdSetPrimitiveRestartIndexEXT>,
 }
 
 impl CommandBufferFnExtPrimitiveRestartIndex {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            set_primitive_restart_index_ext: to_panic(loader(c"vkCmdSetPrimitiveRestartIndexEXT")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        set_primitive_restart_index_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnExtSampleLocations {
-    pub set_sample_locations_ext: vkCmdSetSampleLocationsEXT,
+    pub set_sample_locations_ext: Option<vkCmdSetSampleLocationsEXT>,
 }
 
 impl CommandBufferFnExtSampleLocations {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            set_sample_locations_ext: to_panic(loader(c"vkCmdSetSampleLocationsEXT")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        set_sample_locations_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnExtShaderObject {
-    pub set_patch_control_points_ext: vkCmdSetPatchControlPointsEXT,
-    pub set_logic_op_ext: vkCmdSetLogicOpEXT,
-    pub set_tessellation_domain_origin_ext: vkCmdSetTessellationDomainOriginEXT,
-    pub set_depth_clamp_enable_ext: vkCmdSetDepthClampEnableEXT,
-    pub set_polygon_mode_ext: vkCmdSetPolygonModeEXT,
-    pub set_rasterization_samples_ext: vkCmdSetRasterizationSamplesEXT,
-    pub set_sample_mask_ext: vkCmdSetSampleMaskEXT,
-    pub set_alpha_to_coverage_enable_ext: vkCmdSetAlphaToCoverageEnableEXT,
-    pub set_alpha_to_one_enable_ext: vkCmdSetAlphaToOneEnableEXT,
-    pub set_logic_op_enable_ext: vkCmdSetLogicOpEnableEXT,
-    pub set_color_blend_enable_ext: vkCmdSetColorBlendEnableEXT,
-    pub set_color_blend_equation_ext: vkCmdSetColorBlendEquationEXT,
-    pub set_color_write_mask_ext: vkCmdSetColorWriteMaskEXT,
-    pub set_rasterization_stream_ext: vkCmdSetRasterizationStreamEXT,
-    pub set_conservative_rasterization_mode_ext: vkCmdSetConservativeRasterizationModeEXT,
-    pub set_extra_primitive_overestimation_size_ext: vkCmdSetExtraPrimitiveOverestimationSizeEXT,
-    pub set_depth_clip_enable_ext: vkCmdSetDepthClipEnableEXT,
-    pub set_sample_locations_enable_ext: vkCmdSetSampleLocationsEnableEXT,
-    pub set_color_blend_advanced_ext: vkCmdSetColorBlendAdvancedEXT,
-    pub set_provoking_vertex_mode_ext: vkCmdSetProvokingVertexModeEXT,
-    pub set_line_rasterization_mode_ext: vkCmdSetLineRasterizationModeEXT,
-    pub set_line_stipple_enable_ext: vkCmdSetLineStippleEnableEXT,
-    pub set_depth_clip_negative_one_to_one_ext: vkCmdSetDepthClipNegativeOneToOneEXT,
-    pub set_viewport_w_scaling_enable_nv: vkCmdSetViewportWScalingEnableNV,
-    pub set_viewport_swizzle_nv: vkCmdSetViewportSwizzleNV,
-    pub set_coverage_to_color_enable_nv: vkCmdSetCoverageToColorEnableNV,
-    pub set_coverage_to_color_location_nv: vkCmdSetCoverageToColorLocationNV,
-    pub set_coverage_modulation_mode_nv: vkCmdSetCoverageModulationModeNV,
-    pub set_coverage_modulation_table_enable_nv: vkCmdSetCoverageModulationTableEnableNV,
-    pub set_coverage_modulation_table_nv: vkCmdSetCoverageModulationTableNV,
-    pub set_shading_rate_image_enable_nv: vkCmdSetShadingRateImageEnableNV,
-    pub set_coverage_reduction_mode_nv: vkCmdSetCoverageReductionModeNV,
-    pub set_representative_fragment_test_enable_nv: vkCmdSetRepresentativeFragmentTestEnableNV,
-    pub set_vertex_input_ext: vkCmdSetVertexInputEXT,
-    pub bind_shaders_ext: vkCmdBindShadersEXT,
+    pub set_patch_control_points_ext: Option<vkCmdSetPatchControlPointsEXT>,
+    pub set_logic_op_ext: Option<vkCmdSetLogicOpEXT>,
+    pub set_tessellation_domain_origin_ext: Option<vkCmdSetTessellationDomainOriginEXT>,
+    pub set_depth_clamp_enable_ext: Option<vkCmdSetDepthClampEnableEXT>,
+    pub set_polygon_mode_ext: Option<vkCmdSetPolygonModeEXT>,
+    pub set_rasterization_samples_ext: Option<vkCmdSetRasterizationSamplesEXT>,
+    pub set_sample_mask_ext: Option<vkCmdSetSampleMaskEXT>,
+    pub set_alpha_to_coverage_enable_ext: Option<vkCmdSetAlphaToCoverageEnableEXT>,
+    pub set_alpha_to_one_enable_ext: Option<vkCmdSetAlphaToOneEnableEXT>,
+    pub set_logic_op_enable_ext: Option<vkCmdSetLogicOpEnableEXT>,
+    pub set_color_blend_enable_ext: Option<vkCmdSetColorBlendEnableEXT>,
+    pub set_color_blend_equation_ext: Option<vkCmdSetColorBlendEquationEXT>,
+    pub set_color_write_mask_ext: Option<vkCmdSetColorWriteMaskEXT>,
+    pub set_rasterization_stream_ext: Option<vkCmdSetRasterizationStreamEXT>,
+    pub set_conservative_rasterization_mode_ext: Option<vkCmdSetConservativeRasterizationModeEXT>,
+    pub set_extra_primitive_overestimation_size_ext:
+        Option<vkCmdSetExtraPrimitiveOverestimationSizeEXT>,
+    pub set_depth_clip_enable_ext: Option<vkCmdSetDepthClipEnableEXT>,
+    pub set_sample_locations_enable_ext: Option<vkCmdSetSampleLocationsEnableEXT>,
+    pub set_color_blend_advanced_ext: Option<vkCmdSetColorBlendAdvancedEXT>,
+    pub set_provoking_vertex_mode_ext: Option<vkCmdSetProvokingVertexModeEXT>,
+    pub set_line_rasterization_mode_ext: Option<vkCmdSetLineRasterizationModeEXT>,
+    pub set_line_stipple_enable_ext: Option<vkCmdSetLineStippleEnableEXT>,
+    pub set_depth_clip_negative_one_to_one_ext: Option<vkCmdSetDepthClipNegativeOneToOneEXT>,
+    pub set_viewport_w_scaling_enable_nv: Option<vkCmdSetViewportWScalingEnableNV>,
+    pub set_viewport_swizzle_nv: Option<vkCmdSetViewportSwizzleNV>,
+    pub set_coverage_to_color_enable_nv: Option<vkCmdSetCoverageToColorEnableNV>,
+    pub set_coverage_to_color_location_nv: Option<vkCmdSetCoverageToColorLocationNV>,
+    pub set_coverage_modulation_mode_nv: Option<vkCmdSetCoverageModulationModeNV>,
+    pub set_coverage_modulation_table_enable_nv: Option<vkCmdSetCoverageModulationTableEnableNV>,
+    pub set_coverage_modulation_table_nv: Option<vkCmdSetCoverageModulationTableNV>,
+    pub set_shading_rate_image_enable_nv: Option<vkCmdSetShadingRateImageEnableNV>,
+    pub set_coverage_reduction_mode_nv: Option<vkCmdSetCoverageReductionModeNV>,
+    pub set_representative_fragment_test_enable_nv:
+        Option<vkCmdSetRepresentativeFragmentTestEnableNV>,
+    pub set_vertex_input_ext: Option<vkCmdSetVertexInputEXT>,
+    pub bind_shaders_ext: Option<vkCmdBindShadersEXT>,
 }
 
 impl CommandBufferFnExtShaderObject {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            set_patch_control_points_ext: to_panic(loader(c"vkCmdSetPatchControlPointsEXT")),
-            set_logic_op_ext: to_panic(loader(c"vkCmdSetLogicOpEXT")),
-            set_tessellation_domain_origin_ext: to_panic(loader(
-                c"vkCmdSetTessellationDomainOriginEXT",
-            )),
-            set_depth_clamp_enable_ext: to_panic(loader(c"vkCmdSetDepthClampEnableEXT")),
-            set_polygon_mode_ext: to_panic(loader(c"vkCmdSetPolygonModeEXT")),
-            set_rasterization_samples_ext: to_panic(loader(c"vkCmdSetRasterizationSamplesEXT")),
-            set_sample_mask_ext: to_panic(loader(c"vkCmdSetSampleMaskEXT")),
-            set_alpha_to_coverage_enable_ext: to_panic(loader(c"vkCmdSetAlphaToCoverageEnableEXT")),
-            set_alpha_to_one_enable_ext: to_panic(loader(c"vkCmdSetAlphaToOneEnableEXT")),
-            set_logic_op_enable_ext: to_panic(loader(c"vkCmdSetLogicOpEnableEXT")),
-            set_color_blend_enable_ext: to_panic(loader(c"vkCmdSetColorBlendEnableEXT")),
-            set_color_blend_equation_ext: to_panic(loader(c"vkCmdSetColorBlendEquationEXT")),
-            set_color_write_mask_ext: to_panic(loader(c"vkCmdSetColorWriteMaskEXT")),
-            set_rasterization_stream_ext: to_panic(loader(c"vkCmdSetRasterizationStreamEXT")),
-            set_conservative_rasterization_mode_ext: to_panic(loader(
-                c"vkCmdSetConservativeRasterizationModeEXT",
-            )),
-            set_extra_primitive_overestimation_size_ext: to_panic(loader(
-                c"vkCmdSetExtraPrimitiveOverestimationSizeEXT",
-            )),
-            set_depth_clip_enable_ext: to_panic(loader(c"vkCmdSetDepthClipEnableEXT")),
-            set_sample_locations_enable_ext: to_panic(loader(c"vkCmdSetSampleLocationsEnableEXT")),
-            set_color_blend_advanced_ext: to_panic(loader(c"vkCmdSetColorBlendAdvancedEXT")),
-            set_provoking_vertex_mode_ext: to_panic(loader(c"vkCmdSetProvokingVertexModeEXT")),
-            set_line_rasterization_mode_ext: to_panic(loader(c"vkCmdSetLineRasterizationModeEXT")),
-            set_line_stipple_enable_ext: to_panic(loader(c"vkCmdSetLineStippleEnableEXT")),
-            set_depth_clip_negative_one_to_one_ext: to_panic(loader(
-                c"vkCmdSetDepthClipNegativeOneToOneEXT",
-            )),
-            set_viewport_w_scaling_enable_nv: to_panic(loader(c"vkCmdSetViewportWScalingEnableNV")),
-            set_viewport_swizzle_nv: to_panic(loader(c"vkCmdSetViewportSwizzleNV")),
-            set_coverage_to_color_enable_nv: to_panic(loader(c"vkCmdSetCoverageToColorEnableNV")),
-            set_coverage_to_color_location_nv: to_panic(loader(
-                c"vkCmdSetCoverageToColorLocationNV",
-            )),
-            set_coverage_modulation_mode_nv: to_panic(loader(c"vkCmdSetCoverageModulationModeNV")),
-            set_coverage_modulation_table_enable_nv: to_panic(loader(
-                c"vkCmdSetCoverageModulationTableEnableNV",
-            )),
-            set_coverage_modulation_table_nv: to_panic(loader(
-                c"vkCmdSetCoverageModulationTableNV",
-            )),
-            set_shading_rate_image_enable_nv: to_panic(loader(c"vkCmdSetShadingRateImageEnableNV")),
-            set_coverage_reduction_mode_nv: to_panic(loader(c"vkCmdSetCoverageReductionModeNV")),
-            set_representative_fragment_test_enable_nv: to_panic(loader(
-                c"vkCmdSetRepresentativeFragmentTestEnableNV",
-            )),
-            set_vertex_input_ext: to_panic(loader(c"vkCmdSetVertexInputEXT")),
-            bind_shaders_ext: to_panic(loader(c"vkCmdBindShadersEXT")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        set_patch_control_points_ext: None,
+        set_logic_op_ext: None,
+        set_tessellation_domain_origin_ext: None,
+        set_depth_clamp_enable_ext: None,
+        set_polygon_mode_ext: None,
+        set_rasterization_samples_ext: None,
+        set_sample_mask_ext: None,
+        set_alpha_to_coverage_enable_ext: None,
+        set_alpha_to_one_enable_ext: None,
+        set_logic_op_enable_ext: None,
+        set_color_blend_enable_ext: None,
+        set_color_blend_equation_ext: None,
+        set_color_write_mask_ext: None,
+        set_rasterization_stream_ext: None,
+        set_conservative_rasterization_mode_ext: None,
+        set_extra_primitive_overestimation_size_ext: None,
+        set_depth_clip_enable_ext: None,
+        set_sample_locations_enable_ext: None,
+        set_color_blend_advanced_ext: None,
+        set_provoking_vertex_mode_ext: None,
+        set_line_rasterization_mode_ext: None,
+        set_line_stipple_enable_ext: None,
+        set_depth_clip_negative_one_to_one_ext: None,
+        set_viewport_w_scaling_enable_nv: None,
+        set_viewport_swizzle_nv: None,
+        set_coverage_to_color_enable_nv: None,
+        set_coverage_to_color_location_nv: None,
+        set_coverage_modulation_mode_nv: None,
+        set_coverage_modulation_table_enable_nv: None,
+        set_coverage_modulation_table_nv: None,
+        set_shading_rate_image_enable_nv: None,
+        set_coverage_reduction_mode_nv: None,
+        set_representative_fragment_test_enable_nv: None,
+        set_vertex_input_ext: None,
+        bind_shaders_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnExtTransformFeedback {
-    pub bind_transform_feedback_buffers_ext: vkCmdBindTransformFeedbackBuffersEXT,
-    pub begin_transform_feedback_ext: vkCmdBeginTransformFeedbackEXT,
-    pub end_transform_feedback_ext: vkCmdEndTransformFeedbackEXT,
-    pub begin_query_indexed_ext: vkCmdBeginQueryIndexedEXT,
-    pub end_query_indexed_ext: vkCmdEndQueryIndexedEXT,
-    pub draw_indirect_byte_count_ext: vkCmdDrawIndirectByteCountEXT,
+    pub bind_transform_feedback_buffers_ext: Option<vkCmdBindTransformFeedbackBuffersEXT>,
+    pub begin_transform_feedback_ext: Option<vkCmdBeginTransformFeedbackEXT>,
+    pub end_transform_feedback_ext: Option<vkCmdEndTransformFeedbackEXT>,
+    pub begin_query_indexed_ext: Option<vkCmdBeginQueryIndexedEXT>,
+    pub end_query_indexed_ext: Option<vkCmdEndQueryIndexedEXT>,
+    pub draw_indirect_byte_count_ext: Option<vkCmdDrawIndirectByteCountEXT>,
 }
 
 impl CommandBufferFnExtTransformFeedback {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            bind_transform_feedback_buffers_ext: to_panic(loader(
-                c"vkCmdBindTransformFeedbackBuffersEXT",
-            )),
-            begin_transform_feedback_ext: to_panic(loader(c"vkCmdBeginTransformFeedbackEXT")),
-            end_transform_feedback_ext: to_panic(loader(c"vkCmdEndTransformFeedbackEXT")),
-            begin_query_indexed_ext: to_panic(loader(c"vkCmdBeginQueryIndexedEXT")),
-            end_query_indexed_ext: to_panic(loader(c"vkCmdEndQueryIndexedEXT")),
-            draw_indirect_byte_count_ext: to_panic(loader(c"vkCmdDrawIndirectByteCountEXT")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        bind_transform_feedback_buffers_ext: None,
+        begin_transform_feedback_ext: None,
+        end_transform_feedback_ext: None,
+        begin_query_indexed_ext: None,
+        end_query_indexed_ext: None,
+        draw_indirect_byte_count_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnHuaweiClusterCullingShader {
-    pub draw_cluster_huawei: vkCmdDrawClusterHUAWEI,
-    pub draw_cluster_indirect_huawei: vkCmdDrawClusterIndirectHUAWEI,
+    pub draw_cluster_huawei: Option<vkCmdDrawClusterHUAWEI>,
+    pub draw_cluster_indirect_huawei: Option<vkCmdDrawClusterIndirectHUAWEI>,
 }
 
 impl CommandBufferFnHuaweiClusterCullingShader {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            draw_cluster_huawei: to_panic(loader(c"vkCmdDrawClusterHUAWEI")),
-            draw_cluster_indirect_huawei: to_panic(loader(c"vkCmdDrawClusterIndirectHUAWEI")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        draw_cluster_huawei: None,
+        draw_cluster_indirect_huawei: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnHuaweiInvocationMask {
-    pub bind_invocation_mask_huawei: vkCmdBindInvocationMaskHUAWEI,
+    pub bind_invocation_mask_huawei: Option<vkCmdBindInvocationMaskHUAWEI>,
 }
 
 impl CommandBufferFnHuaweiInvocationMask {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            bind_invocation_mask_huawei: to_panic(loader(c"vkCmdBindInvocationMaskHUAWEI")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        bind_invocation_mask_huawei: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnHuaweiSubpassShading {
-    pub subpass_shading_huawei: vkCmdSubpassShadingHUAWEI,
+    pub subpass_shading_huawei: Option<vkCmdSubpassShadingHUAWEI>,
 }
 
 impl CommandBufferFnHuaweiSubpassShading {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            subpass_shading_huawei: to_panic(loader(c"vkCmdSubpassShadingHUAWEI")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        subpass_shading_huawei: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnIntelPerformanceQuery {
-    pub set_performance_marker_intel: vkCmdSetPerformanceMarkerINTEL,
-    pub set_performance_stream_marker_intel: vkCmdSetPerformanceStreamMarkerINTEL,
-    pub set_performance_override_intel: vkCmdSetPerformanceOverrideINTEL,
+    pub set_performance_marker_intel: Option<vkCmdSetPerformanceMarkerINTEL>,
+    pub set_performance_stream_marker_intel: Option<vkCmdSetPerformanceStreamMarkerINTEL>,
+    pub set_performance_override_intel: Option<vkCmdSetPerformanceOverrideINTEL>,
 }
 
 impl CommandBufferFnIntelPerformanceQuery {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            set_performance_marker_intel: to_panic(loader(c"vkCmdSetPerformanceMarkerINTEL")),
-            set_performance_stream_marker_intel: to_panic(loader(
-                c"vkCmdSetPerformanceStreamMarkerINTEL",
-            )),
-            set_performance_override_intel: to_panic(loader(c"vkCmdSetPerformanceOverrideINTEL")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        set_performance_marker_intel: None,
+        set_performance_stream_marker_intel: None,
+        set_performance_override_intel: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnKhrAccelerationStructure {
-    pub copy_acceleration_structure_khr: vkCmdCopyAccelerationStructureKHR,
-    pub copy_acceleration_structure_to_memory_khr: vkCmdCopyAccelerationStructureToMemoryKHR,
-    pub copy_memory_to_acceleration_structure_khr: vkCmdCopyMemoryToAccelerationStructureKHR,
-    pub write_acceleration_structures_properties_khr: vkCmdWriteAccelerationStructuresPropertiesKHR,
-    pub build_acceleration_structures_khr: vkCmdBuildAccelerationStructuresKHR,
-    pub build_acceleration_structures_indirect_khr: vkCmdBuildAccelerationStructuresIndirectKHR,
+    pub copy_acceleration_structure_khr: Option<vkCmdCopyAccelerationStructureKHR>,
+    pub copy_acceleration_structure_to_memory_khr:
+        Option<vkCmdCopyAccelerationStructureToMemoryKHR>,
+    pub copy_memory_to_acceleration_structure_khr:
+        Option<vkCmdCopyMemoryToAccelerationStructureKHR>,
+    pub write_acceleration_structures_properties_khr:
+        Option<vkCmdWriteAccelerationStructuresPropertiesKHR>,
+    pub build_acceleration_structures_khr: Option<vkCmdBuildAccelerationStructuresKHR>,
+    pub build_acceleration_structures_indirect_khr:
+        Option<vkCmdBuildAccelerationStructuresIndirectKHR>,
 }
 
 impl CommandBufferFnKhrAccelerationStructure {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            copy_acceleration_structure_khr: to_panic(loader(c"vkCmdCopyAccelerationStructureKHR")),
-            copy_acceleration_structure_to_memory_khr: to_panic(loader(
-                c"vkCmdCopyAccelerationStructureToMemoryKHR",
-            )),
-            copy_memory_to_acceleration_structure_khr: to_panic(loader(
-                c"vkCmdCopyMemoryToAccelerationStructureKHR",
-            )),
-            write_acceleration_structures_properties_khr: to_panic(loader(
-                c"vkCmdWriteAccelerationStructuresPropertiesKHR",
-            )),
-            build_acceleration_structures_khr: to_panic(loader(
-                c"vkCmdBuildAccelerationStructuresKHR",
-            )),
-            build_acceleration_structures_indirect_khr: to_panic(loader(
-                c"vkCmdBuildAccelerationStructuresIndirectKHR",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        copy_acceleration_structure_khr: None,
+        copy_acceleration_structure_to_memory_khr: None,
+        copy_memory_to_acceleration_structure_khr: None,
+        write_acceleration_structures_properties_khr: None,
+        build_acceleration_structures_khr: None,
+        build_acceleration_structures_indirect_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnKhrCopyMemoryIndirect {
-    pub copy_memory_indirect_khr: vkCmdCopyMemoryIndirectKHR,
-    pub copy_memory_to_image_indirect_khr: vkCmdCopyMemoryToImageIndirectKHR,
+    pub copy_memory_indirect_khr: Option<vkCmdCopyMemoryIndirectKHR>,
+    pub copy_memory_to_image_indirect_khr: Option<vkCmdCopyMemoryToImageIndirectKHR>,
 }
 
 impl CommandBufferFnKhrCopyMemoryIndirect {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            copy_memory_indirect_khr: to_panic(loader(c"vkCmdCopyMemoryIndirectKHR")),
-            copy_memory_to_image_indirect_khr: to_panic(loader(
-                c"vkCmdCopyMemoryToImageIndirectKHR",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        copy_memory_indirect_khr: None,
+        copy_memory_to_image_indirect_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnKhrDeviceAddressCommands {
-    pub copy_memory_khr: vkCmdCopyMemoryKHR,
-    pub copy_memory_to_image_khr: vkCmdCopyMemoryToImageKHR,
-    pub copy_image_to_memory_khr: vkCmdCopyImageToMemoryKHR,
-    pub update_memory_khr: vkCmdUpdateMemoryKHR,
-    pub fill_memory_khr: vkCmdFillMemoryKHR,
-    pub copy_query_pool_results_to_memory_khr: vkCmdCopyQueryPoolResultsToMemoryKHR,
-    pub begin_conditional_rendering2_ext: vkCmdBeginConditionalRendering2EXT,
-    pub bind_transform_feedback_buffers2_ext: vkCmdBindTransformFeedbackBuffers2EXT,
-    pub begin_transform_feedback2_ext: vkCmdBeginTransformFeedback2EXT,
-    pub end_transform_feedback2_ext: vkCmdEndTransformFeedback2EXT,
-    pub draw_indirect_byte_count2_ext: vkCmdDrawIndirectByteCount2EXT,
-    pub write_marker_to_memory_amd: vkCmdWriteMarkerToMemoryAMD,
-    pub bind_index_buffer3_khr: vkCmdBindIndexBuffer3KHR,
-    pub bind_vertex_buffers3_khr: vkCmdBindVertexBuffers3KHR,
-    pub draw_indirect2_khr: vkCmdDrawIndirect2KHR,
-    pub draw_indexed_indirect2_khr: vkCmdDrawIndexedIndirect2KHR,
-    pub draw_indirect_count2_khr: vkCmdDrawIndirectCount2KHR,
-    pub draw_indexed_indirect_count2_khr: vkCmdDrawIndexedIndirectCount2KHR,
-    pub draw_mesh_tasks_indirect2_ext: vkCmdDrawMeshTasksIndirect2EXT,
-    pub draw_mesh_tasks_indirect_count2_ext: vkCmdDrawMeshTasksIndirectCount2EXT,
-    pub dispatch_indirect2_khr: vkCmdDispatchIndirect2KHR,
+    pub copy_memory_khr: Option<vkCmdCopyMemoryKHR>,
+    pub copy_memory_to_image_khr: Option<vkCmdCopyMemoryToImageKHR>,
+    pub copy_image_to_memory_khr: Option<vkCmdCopyImageToMemoryKHR>,
+    pub update_memory_khr: Option<vkCmdUpdateMemoryKHR>,
+    pub fill_memory_khr: Option<vkCmdFillMemoryKHR>,
+    pub copy_query_pool_results_to_memory_khr: Option<vkCmdCopyQueryPoolResultsToMemoryKHR>,
+    pub begin_conditional_rendering2_ext: Option<vkCmdBeginConditionalRendering2EXT>,
+    pub bind_transform_feedback_buffers2_ext: Option<vkCmdBindTransformFeedbackBuffers2EXT>,
+    pub begin_transform_feedback2_ext: Option<vkCmdBeginTransformFeedback2EXT>,
+    pub end_transform_feedback2_ext: Option<vkCmdEndTransformFeedback2EXT>,
+    pub draw_indirect_byte_count2_ext: Option<vkCmdDrawIndirectByteCount2EXT>,
+    pub write_marker_to_memory_amd: Option<vkCmdWriteMarkerToMemoryAMD>,
+    pub bind_index_buffer3_khr: Option<vkCmdBindIndexBuffer3KHR>,
+    pub bind_vertex_buffers3_khr: Option<vkCmdBindVertexBuffers3KHR>,
+    pub draw_indirect2_khr: Option<vkCmdDrawIndirect2KHR>,
+    pub draw_indexed_indirect2_khr: Option<vkCmdDrawIndexedIndirect2KHR>,
+    pub draw_indirect_count2_khr: Option<vkCmdDrawIndirectCount2KHR>,
+    pub draw_indexed_indirect_count2_khr: Option<vkCmdDrawIndexedIndirectCount2KHR>,
+    pub draw_mesh_tasks_indirect2_ext: Option<vkCmdDrawMeshTasksIndirect2EXT>,
+    pub draw_mesh_tasks_indirect_count2_ext: Option<vkCmdDrawMeshTasksIndirectCount2EXT>,
+    pub dispatch_indirect2_khr: Option<vkCmdDispatchIndirect2KHR>,
 }
 
 impl CommandBufferFnKhrDeviceAddressCommands {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            copy_memory_khr: to_panic(loader(c"vkCmdCopyMemoryKHR")),
-            copy_memory_to_image_khr: to_panic(loader(c"vkCmdCopyMemoryToImageKHR")),
-            copy_image_to_memory_khr: to_panic(loader(c"vkCmdCopyImageToMemoryKHR")),
-            update_memory_khr: to_panic(loader(c"vkCmdUpdateMemoryKHR")),
-            fill_memory_khr: to_panic(loader(c"vkCmdFillMemoryKHR")),
-            copy_query_pool_results_to_memory_khr: to_panic(loader(
-                c"vkCmdCopyQueryPoolResultsToMemoryKHR",
-            )),
-            begin_conditional_rendering2_ext: to_panic(loader(
-                c"vkCmdBeginConditionalRendering2EXT",
-            )),
-            bind_transform_feedback_buffers2_ext: to_panic(loader(
-                c"vkCmdBindTransformFeedbackBuffers2EXT",
-            )),
-            begin_transform_feedback2_ext: to_panic(loader(c"vkCmdBeginTransformFeedback2EXT")),
-            end_transform_feedback2_ext: to_panic(loader(c"vkCmdEndTransformFeedback2EXT")),
-            draw_indirect_byte_count2_ext: to_panic(loader(c"vkCmdDrawIndirectByteCount2EXT")),
-            write_marker_to_memory_amd: to_panic(loader(c"vkCmdWriteMarkerToMemoryAMD")),
-            bind_index_buffer3_khr: to_panic(loader(c"vkCmdBindIndexBuffer3KHR")),
-            bind_vertex_buffers3_khr: to_panic(loader(c"vkCmdBindVertexBuffers3KHR")),
-            draw_indirect2_khr: to_panic(loader(c"vkCmdDrawIndirect2KHR")),
-            draw_indexed_indirect2_khr: to_panic(loader(c"vkCmdDrawIndexedIndirect2KHR")),
-            draw_indirect_count2_khr: to_panic(loader(c"vkCmdDrawIndirectCount2KHR")),
-            draw_indexed_indirect_count2_khr: to_panic(loader(
-                c"vkCmdDrawIndexedIndirectCount2KHR",
-            )),
-            draw_mesh_tasks_indirect2_ext: to_panic(loader(c"vkCmdDrawMeshTasksIndirect2EXT")),
-            draw_mesh_tasks_indirect_count2_ext: to_panic(loader(
-                c"vkCmdDrawMeshTasksIndirectCount2EXT",
-            )),
-            dispatch_indirect2_khr: to_panic(loader(c"vkCmdDispatchIndirect2KHR")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        copy_memory_khr: None,
+        copy_memory_to_image_khr: None,
+        copy_image_to_memory_khr: None,
+        update_memory_khr: None,
+        fill_memory_khr: None,
+        copy_query_pool_results_to_memory_khr: None,
+        begin_conditional_rendering2_ext: None,
+        bind_transform_feedback_buffers2_ext: None,
+        begin_transform_feedback2_ext: None,
+        end_transform_feedback2_ext: None,
+        draw_indirect_byte_count2_ext: None,
+        write_marker_to_memory_amd: None,
+        bind_index_buffer3_khr: None,
+        bind_vertex_buffers3_khr: None,
+        draw_indirect2_khr: None,
+        draw_indexed_indirect2_khr: None,
+        draw_indirect_count2_khr: None,
+        draw_indexed_indirect_count2_khr: None,
+        draw_mesh_tasks_indirect2_ext: None,
+        draw_mesh_tasks_indirect_count2_ext: None,
+        dispatch_indirect2_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnKhrFragmentShadingRate {
-    pub set_fragment_shading_rate_khr: vkCmdSetFragmentShadingRateKHR,
+    pub set_fragment_shading_rate_khr: Option<vkCmdSetFragmentShadingRateKHR>,
 }
 
 impl CommandBufferFnKhrFragmentShadingRate {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            set_fragment_shading_rate_khr: to_panic(loader(c"vkCmdSetFragmentShadingRateKHR")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        set_fragment_shading_rate_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnKhrMaintenance10 {
-    pub end_rendering2_khr: vkCmdEndRendering2KHR,
-    pub end_rendering2_ext: vkCmdEndRendering2EXT,
+    pub end_rendering2_khr: Option<vkCmdEndRendering2KHR>,
 }
 
 impl CommandBufferFnKhrMaintenance10 {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            end_rendering2_khr: to_panic(loader(c"vkCmdEndRendering2KHR")),
-            end_rendering2_ext: to_panic(loader(c"vkCmdEndRendering2EXT")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        end_rendering2_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnKhrMaintenance6 {
-    pub set_descriptor_buffer_offsets2_ext: vkCmdSetDescriptorBufferOffsets2EXT,
+    pub set_descriptor_buffer_offsets2_ext: Option<vkCmdSetDescriptorBufferOffsets2EXT>,
     pub bind_descriptor_buffer_embedded_samplers2_ext:
-        vkCmdBindDescriptorBufferEmbeddedSamplers2EXT,
+        Option<vkCmdBindDescriptorBufferEmbeddedSamplers2EXT>,
 }
 
 impl CommandBufferFnKhrMaintenance6 {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            set_descriptor_buffer_offsets2_ext: to_panic(loader(
-                c"vkCmdSetDescriptorBufferOffsets2EXT",
-            )),
-            bind_descriptor_buffer_embedded_samplers2_ext: to_panic(loader(
-                c"vkCmdBindDescriptorBufferEmbeddedSamplers2EXT",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        set_descriptor_buffer_offsets2_ext: None,
+        bind_descriptor_buffer_embedded_samplers2_ext: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnKhrObjectRefresh {
-    pub refresh_objects_khr: vkCmdRefreshObjectsKHR,
+    pub refresh_objects_khr: Option<vkCmdRefreshObjectsKHR>,
 }
 
 impl CommandBufferFnKhrObjectRefresh {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            refresh_objects_khr: to_panic(loader(c"vkCmdRefreshObjectsKHR")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        refresh_objects_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnKhrRayTracingMaintenance1 {
-    pub trace_rays_indirect2_khr: vkCmdTraceRaysIndirect2KHR,
+    pub trace_rays_indirect2_khr: Option<vkCmdTraceRaysIndirect2KHR>,
 }
 
 impl CommandBufferFnKhrRayTracingMaintenance1 {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            trace_rays_indirect2_khr: to_panic(loader(c"vkCmdTraceRaysIndirect2KHR")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        trace_rays_indirect2_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnKhrRayTracingPipeline {
-    pub trace_rays_khr: vkCmdTraceRaysKHR,
-    pub trace_rays_indirect_khr: vkCmdTraceRaysIndirectKHR,
-    pub set_ray_tracing_pipeline_stack_size_khr: vkCmdSetRayTracingPipelineStackSizeKHR,
+    pub trace_rays_khr: Option<vkCmdTraceRaysKHR>,
+    pub trace_rays_indirect_khr: Option<vkCmdTraceRaysIndirectKHR>,
+    pub set_ray_tracing_pipeline_stack_size_khr: Option<vkCmdSetRayTracingPipelineStackSizeKHR>,
 }
 
 impl CommandBufferFnKhrRayTracingPipeline {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            trace_rays_khr: to_panic(loader(c"vkCmdTraceRaysKHR")),
-            trace_rays_indirect_khr: to_panic(loader(c"vkCmdTraceRaysIndirectKHR")),
-            set_ray_tracing_pipeline_stack_size_khr: to_panic(loader(
-                c"vkCmdSetRayTracingPipelineStackSizeKHR",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        trace_rays_khr: None,
+        trace_rays_indirect_khr: None,
+        set_ray_tracing_pipeline_stack_size_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnKhrVideoDecodeQueue {
-    pub decode_video_khr: vkCmdDecodeVideoKHR,
+    pub decode_video_khr: Option<vkCmdDecodeVideoKHR>,
 }
 
 impl CommandBufferFnKhrVideoDecodeQueue {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            decode_video_khr: to_panic(loader(c"vkCmdDecodeVideoKHR")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        decode_video_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnKhrVideoEncodeQueue {
-    pub encode_video_khr: vkCmdEncodeVideoKHR,
+    pub encode_video_khr: Option<vkCmdEncodeVideoKHR>,
 }
 
 impl CommandBufferFnKhrVideoEncodeQueue {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            encode_video_khr: to_panic(loader(c"vkCmdEncodeVideoKHR")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        encode_video_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnKhrVideoQueue {
-    pub begin_video_coding_khr: vkCmdBeginVideoCodingKHR,
-    pub control_video_coding_khr: vkCmdControlVideoCodingKHR,
-    pub end_video_coding_khr: vkCmdEndVideoCodingKHR,
+    pub begin_video_coding_khr: Option<vkCmdBeginVideoCodingKHR>,
+    pub control_video_coding_khr: Option<vkCmdControlVideoCodingKHR>,
+    pub end_video_coding_khr: Option<vkCmdEndVideoCodingKHR>,
 }
 
 impl CommandBufferFnKhrVideoQueue {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            begin_video_coding_khr: to_panic(loader(c"vkCmdBeginVideoCodingKHR")),
-            control_video_coding_khr: to_panic(loader(c"vkCmdControlVideoCodingKHR")),
-            end_video_coding_khr: to_panic(loader(c"vkCmdEndVideoCodingKHR")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        begin_video_coding_khr: None,
+        control_video_coding_khr: None,
+        end_video_coding_khr: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnNvClipSpaceWScaling {
-    pub set_viewport_w_scaling_nv: vkCmdSetViewportWScalingNV,
+    pub set_viewport_w_scaling_nv: Option<vkCmdSetViewportWScalingNV>,
 }
 
 impl CommandBufferFnNvClipSpaceWScaling {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            set_viewport_w_scaling_nv: to_panic(loader(c"vkCmdSetViewportWScalingNV")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        set_viewport_w_scaling_nv: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnNvClusterAccelerationStructure {
     pub build_cluster_acceleration_structure_indirect_nv:
-        vkCmdBuildClusterAccelerationStructureIndirectNV,
+        Option<vkCmdBuildClusterAccelerationStructureIndirectNV>,
 }
 
 impl CommandBufferFnNvClusterAccelerationStructure {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            build_cluster_acceleration_structure_indirect_nv: to_panic(loader(
-                c"vkCmdBuildClusterAccelerationStructureIndirectNV",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        build_cluster_acceleration_structure_indirect_nv: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnNvComputeOccupancyPriority {
-    pub set_compute_occupancy_priority_nv: vkCmdSetComputeOccupancyPriorityNV,
+    pub set_compute_occupancy_priority_nv: Option<vkCmdSetComputeOccupancyPriorityNV>,
 }
 
 impl CommandBufferFnNvComputeOccupancyPriority {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            set_compute_occupancy_priority_nv: to_panic(loader(
-                c"vkCmdSetComputeOccupancyPriorityNV",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        set_compute_occupancy_priority_nv: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnNvCooperativeVector {
-    pub convert_cooperative_vector_matrix_nv: vkCmdConvertCooperativeVectorMatrixNV,
+    pub convert_cooperative_vector_matrix_nv: Option<vkCmdConvertCooperativeVectorMatrixNV>,
 }
 
 impl CommandBufferFnNvCooperativeVector {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            convert_cooperative_vector_matrix_nv: to_panic(loader(
-                c"vkCmdConvertCooperativeVectorMatrixNV",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        convert_cooperative_vector_matrix_nv: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnNvCopyMemoryIndirect {
-    pub copy_memory_indirect_nv: vkCmdCopyMemoryIndirectNV,
-    pub copy_memory_to_image_indirect_nv: vkCmdCopyMemoryToImageIndirectNV,
+    pub copy_memory_indirect_nv: Option<vkCmdCopyMemoryIndirectNV>,
+    pub copy_memory_to_image_indirect_nv: Option<vkCmdCopyMemoryToImageIndirectNV>,
 }
 
 impl CommandBufferFnNvCopyMemoryIndirect {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            copy_memory_indirect_nv: to_panic(loader(c"vkCmdCopyMemoryIndirectNV")),
-            copy_memory_to_image_indirect_nv: to_panic(loader(c"vkCmdCopyMemoryToImageIndirectNV")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        copy_memory_indirect_nv: None,
+        copy_memory_to_image_indirect_nv: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnNvCudaKernelLaunch {
-    pub cuda_launch_kernel_nv: vkCmdCudaLaunchKernelNV,
+    pub cuda_launch_kernel_nv: Option<vkCmdCudaLaunchKernelNV>,
 }
 
 impl CommandBufferFnNvCudaKernelLaunch {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            cuda_launch_kernel_nv: to_panic(loader(c"vkCmdCudaLaunchKernelNV")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        cuda_launch_kernel_nv: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnNvDeviceDiagnosticCheckpoints {
-    pub set_checkpoint_nv: vkCmdSetCheckpointNV,
+    pub set_checkpoint_nv: Option<vkCmdSetCheckpointNV>,
 }
 
 impl CommandBufferFnNvDeviceDiagnosticCheckpoints {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            set_checkpoint_nv: to_panic(loader(c"vkCmdSetCheckpointNV")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        set_checkpoint_nv: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnNvDeviceGeneratedCommands {
-    pub execute_generated_commands_nv: vkCmdExecuteGeneratedCommandsNV,
-    pub preprocess_generated_commands_nv: vkCmdPreprocessGeneratedCommandsNV,
-    pub bind_pipeline_shader_group_nv: vkCmdBindPipelineShaderGroupNV,
+    pub execute_generated_commands_nv: Option<vkCmdExecuteGeneratedCommandsNV>,
+    pub preprocess_generated_commands_nv: Option<vkCmdPreprocessGeneratedCommandsNV>,
+    pub bind_pipeline_shader_group_nv: Option<vkCmdBindPipelineShaderGroupNV>,
 }
 
 impl CommandBufferFnNvDeviceGeneratedCommands {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            execute_generated_commands_nv: to_panic(loader(c"vkCmdExecuteGeneratedCommandsNV")),
-            preprocess_generated_commands_nv: to_panic(loader(
-                c"vkCmdPreprocessGeneratedCommandsNV",
-            )),
-            bind_pipeline_shader_group_nv: to_panic(loader(c"vkCmdBindPipelineShaderGroupNV")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        execute_generated_commands_nv: None,
+        preprocess_generated_commands_nv: None,
+        bind_pipeline_shader_group_nv: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnNvDeviceGeneratedCommandsCompute {
-    pub update_pipeline_indirect_buffer_nv: vkCmdUpdatePipelineIndirectBufferNV,
+    pub update_pipeline_indirect_buffer_nv: Option<vkCmdUpdatePipelineIndirectBufferNV>,
 }
 
 impl CommandBufferFnNvDeviceGeneratedCommandsCompute {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            update_pipeline_indirect_buffer_nv: to_panic(loader(
-                c"vkCmdUpdatePipelineIndirectBufferNV",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        update_pipeline_indirect_buffer_nv: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnNvFragmentShadingRateEnums {
-    pub set_fragment_shading_rate_enum_nv: vkCmdSetFragmentShadingRateEnumNV,
+    pub set_fragment_shading_rate_enum_nv: Option<vkCmdSetFragmentShadingRateEnumNV>,
 }
 
 impl CommandBufferFnNvFragmentShadingRateEnums {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            set_fragment_shading_rate_enum_nv: to_panic(loader(
-                c"vkCmdSetFragmentShadingRateEnumNV",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        set_fragment_shading_rate_enum_nv: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnNvMemoryDecompression {
-    pub decompress_memory_nv: vkCmdDecompressMemoryNV,
-    pub decompress_memory_indirect_count_nv: vkCmdDecompressMemoryIndirectCountNV,
+    pub decompress_memory_nv: Option<vkCmdDecompressMemoryNV>,
+    pub decompress_memory_indirect_count_nv: Option<vkCmdDecompressMemoryIndirectCountNV>,
 }
 
 impl CommandBufferFnNvMemoryDecompression {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            decompress_memory_nv: to_panic(loader(c"vkCmdDecompressMemoryNV")),
-            decompress_memory_indirect_count_nv: to_panic(loader(
-                c"vkCmdDecompressMemoryIndirectCountNV",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        decompress_memory_nv: None,
+        decompress_memory_indirect_count_nv: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnNvMeshShader {
-    pub draw_mesh_tasks_nv: vkCmdDrawMeshTasksNV,
-    pub draw_mesh_tasks_indirect_nv: vkCmdDrawMeshTasksIndirectNV,
-    pub draw_mesh_tasks_indirect_count_nv: vkCmdDrawMeshTasksIndirectCountNV,
+    pub draw_mesh_tasks_nv: Option<vkCmdDrawMeshTasksNV>,
+    pub draw_mesh_tasks_indirect_nv: Option<vkCmdDrawMeshTasksIndirectNV>,
+    pub draw_mesh_tasks_indirect_count_nv: Option<vkCmdDrawMeshTasksIndirectCountNV>,
 }
 
 impl CommandBufferFnNvMeshShader {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            draw_mesh_tasks_nv: to_panic(loader(c"vkCmdDrawMeshTasksNV")),
-            draw_mesh_tasks_indirect_nv: to_panic(loader(c"vkCmdDrawMeshTasksIndirectNV")),
-            draw_mesh_tasks_indirect_count_nv: to_panic(loader(
-                c"vkCmdDrawMeshTasksIndirectCountNV",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        draw_mesh_tasks_nv: None,
+        draw_mesh_tasks_indirect_nv: None,
+        draw_mesh_tasks_indirect_count_nv: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnNvOpticalFlow {
-    pub optical_flow_execute_nv: vkCmdOpticalFlowExecuteNV,
+    pub optical_flow_execute_nv: Option<vkCmdOpticalFlowExecuteNV>,
 }
 
 impl CommandBufferFnNvOpticalFlow {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            optical_flow_execute_nv: to_panic(loader(c"vkCmdOpticalFlowExecuteNV")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        optical_flow_execute_nv: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnNvPartitionedAccelerationStructure {
-    pub build_partitioned_acceleration_structures_nv: vkCmdBuildPartitionedAccelerationStructuresNV,
+    pub build_partitioned_acceleration_structures_nv:
+        Option<vkCmdBuildPartitionedAccelerationStructuresNV>,
 }
 
 impl CommandBufferFnNvPartitionedAccelerationStructure {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            build_partitioned_acceleration_structures_nv: to_panic(loader(
-                c"vkCmdBuildPartitionedAccelerationStructuresNV",
-            )),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        build_partitioned_acceleration_structures_nv: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnNvRayTracing {
-    pub copy_acceleration_structure_nv: vkCmdCopyAccelerationStructureNV,
-    pub write_acceleration_structures_properties_nv: vkCmdWriteAccelerationStructuresPropertiesNV,
-    pub build_acceleration_structure_nv: vkCmdBuildAccelerationStructureNV,
-    pub trace_rays_nv: vkCmdTraceRaysNV,
+    pub copy_acceleration_structure_nv: Option<vkCmdCopyAccelerationStructureNV>,
+    pub write_acceleration_structures_properties_nv:
+        Option<vkCmdWriteAccelerationStructuresPropertiesNV>,
+    pub build_acceleration_structure_nv: Option<vkCmdBuildAccelerationStructureNV>,
+    pub trace_rays_nv: Option<vkCmdTraceRaysNV>,
 }
 
 impl CommandBufferFnNvRayTracing {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            copy_acceleration_structure_nv: to_panic(loader(c"vkCmdCopyAccelerationStructureNV")),
-            write_acceleration_structures_properties_nv: to_panic(loader(
-                c"vkCmdWriteAccelerationStructuresPropertiesNV",
-            )),
-            build_acceleration_structure_nv: to_panic(loader(c"vkCmdBuildAccelerationStructureNV")),
-            trace_rays_nv: to_panic(loader(c"vkCmdTraceRaysNV")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        copy_acceleration_structure_nv: None,
+        write_acceleration_structures_properties_nv: None,
+        build_acceleration_structure_nv: None,
+        trace_rays_nv: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnNvScissorExclusive {
-    pub set_exclusive_scissor_nv: vkCmdSetExclusiveScissorNV,
-    pub set_exclusive_scissor_enable_nv: vkCmdSetExclusiveScissorEnableNV,
+    pub set_exclusive_scissor_nv: Option<vkCmdSetExclusiveScissorNV>,
+    pub set_exclusive_scissor_enable_nv: Option<vkCmdSetExclusiveScissorEnableNV>,
 }
 
 impl CommandBufferFnNvScissorExclusive {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            set_exclusive_scissor_nv: to_panic(loader(c"vkCmdSetExclusiveScissorNV")),
-            set_exclusive_scissor_enable_nv: to_panic(loader(c"vkCmdSetExclusiveScissorEnableNV")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        set_exclusive_scissor_nv: None,
+        set_exclusive_scissor_enable_nv: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnNvShadingRateImage {
-    pub bind_shading_rate_image_nv: vkCmdBindShadingRateImageNV,
-    pub set_viewport_shading_rate_palette_nv: vkCmdSetViewportShadingRatePaletteNV,
-    pub set_coarse_sample_order_nv: vkCmdSetCoarseSampleOrderNV,
+    pub bind_shading_rate_image_nv: Option<vkCmdBindShadingRateImageNV>,
+    pub set_viewport_shading_rate_palette_nv: Option<vkCmdSetViewportShadingRatePaletteNV>,
+    pub set_coarse_sample_order_nv: Option<vkCmdSetCoarseSampleOrderNV>,
 }
 
 impl CommandBufferFnNvShadingRateImage {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            bind_shading_rate_image_nv: to_panic(loader(c"vkCmdBindShadingRateImageNV")),
-            set_viewport_shading_rate_palette_nv: to_panic(loader(
-                c"vkCmdSetViewportShadingRatePaletteNV",
-            )),
-            set_coarse_sample_order_nv: to_panic(loader(c"vkCmdSetCoarseSampleOrderNV")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        bind_shading_rate_image_nv: None,
+        set_viewport_shading_rate_palette_nv: None,
+        set_coarse_sample_order_nv: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnNvxBinaryImport {
-    pub cu_launch_kernel_nvx: vkCmdCuLaunchKernelNVX,
+    pub cu_launch_kernel_nvx: Option<vkCmdCuLaunchKernelNVX>,
 }
 
 impl CommandBufferFnNvxBinaryImport {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            cu_launch_kernel_nvx: to_panic(loader(c"vkCmdCuLaunchKernelNVX")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        cu_launch_kernel_nvx: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnQcomTileMemoryHeap {
-    pub bind_tile_memory_qcom: vkCmdBindTileMemoryQCOM,
+    pub bind_tile_memory_qcom: Option<vkCmdBindTileMemoryQCOM>,
 }
 
 impl CommandBufferFnQcomTileMemoryHeap {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            bind_tile_memory_qcom: to_panic(loader(c"vkCmdBindTileMemoryQCOM")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        bind_tile_memory_qcom: None,
+    };
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CommandBufferFnQcomTileShading {
-    pub dispatch_tile_qcom: vkCmdDispatchTileQCOM,
-    pub begin_per_tile_execution_qcom: vkCmdBeginPerTileExecutionQCOM,
-    pub end_per_tile_execution_qcom: vkCmdEndPerTileExecutionQCOM,
+    pub dispatch_tile_qcom: Option<vkCmdDispatchTileQCOM>,
+    pub begin_per_tile_execution_qcom: Option<vkCmdBeginPerTileExecutionQCOM>,
+    pub end_per_tile_execution_qcom: Option<vkCmdEndPerTileExecutionQCOM>,
 }
 
 impl CommandBufferFnQcomTileShading {
-    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {
-        Self {
-            dispatch_tile_qcom: to_panic(loader(c"vkCmdDispatchTileQCOM")),
-            begin_per_tile_execution_qcom: to_panic(loader(c"vkCmdBeginPerTileExecutionQCOM")),
-            end_per_tile_execution_qcom: to_panic(loader(c"vkCmdEndPerTileExecutionQCOM")),
-        }
-    }
+    pub const EMPTY: Self = Self {
+        dispatch_tile_qcom: None,
+        begin_per_tile_execution_qcom: None,
+        end_per_tile_execution_qcom: None,
+    };
 }
 
 #[derive(Clone)]

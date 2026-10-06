@@ -118,22 +118,6 @@ impl VkCommand {
         self.version.as_deref().unwrap_or("Ext")
     }
 
-    pub fn option_member(&self) -> bool {
-        let dep = if let Some(version) = &self.version {
-            Depends::Core(version.to_string())
-        } else if let Some(ext) = &self.extension {
-            Depends::Ext(ext.to_string())
-        } else {
-            Depends::Undefined
-        };
-
-        match dep {
-            Depends::Core(_) => true,
-            Depends::Ext(_) => false,
-            Depends::Undefined => true,
-        }
-    }
-
     pub fn table_name(&self) -> Depends {
         if let Some(version) = &self.version {
             Depends::Core(version.to_string())
@@ -184,6 +168,10 @@ pub struct Extension {
     pub spec_version: u32,
     pub disabled: bool,
     pub deprecated_by: Option<String>,
+    /// `VK_VERSION_x_y` or the extension this one was promoted to.
+    pub promoted_to: Option<String>,
+    /// Dependency expression: `+` is AND, `,` is OR, parentheses group.
+    pub depends: Option<String>,
     pub requires: Vec<String>,
     pub require_blocks: Vec<RequireBlock>,
     /// Device | Instance

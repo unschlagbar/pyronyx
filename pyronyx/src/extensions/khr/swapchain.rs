@@ -10,6 +10,8 @@ use core::mem::MaybeUninit;
 use core::ptr::{from_ref, null};
 
 /// Type: `Device`
+///
+/// Requires: [`VK_KHR_surface`](crate::khr::surface)
 pub const NAME: &CStr = c"VK_KHR_swapchain";
 pub const SPEC_VERSION: u32 = 70;
 
@@ -45,9 +47,8 @@ impl SwapchainDevice for Device {
         let call = self
             .fns()
             .khr_swapchain
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .create_swapchain_khr;
+            .create_swapchain_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -66,9 +67,8 @@ impl SwapchainDevice for Device {
         let call = self
             .fns()
             .khr_swapchain
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .destroy_swapchain_khr;
+            .destroy_swapchain_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, swapchain, allocator.map_or(null(), from_ref)) };
     }
@@ -79,9 +79,8 @@ impl SwapchainDevice for Device {
         let call = self
             .fns()
             .khr_swapchain
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_swapchain_images_khr;
+            .get_swapchain_images_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         read_into_vec_result(|count, data| unsafe { (call)(self.handle, swapchain, count, data) })
     }
@@ -99,9 +98,8 @@ impl SwapchainDevice for Device {
         let call = self
             .fns()
             .khr_swapchain
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .acquire_next_image_khr;
+            .acquire_next_image_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -128,9 +126,8 @@ impl SwapchainQueue for Queue {
         let call = self
             .fns()
             .khr_swapchain
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .queue_present_khr;
+            .queue_present_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, present_info) }.result()
     }

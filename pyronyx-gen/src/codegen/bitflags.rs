@@ -63,7 +63,7 @@ fn write_bitflag_struct(w: &mut Writer, en: &VkEnum, repr: &str) {
                 w.ln(&format!("/// {c}"));
             }
 
-            let literal = to_binary_literal(v.value as u32);
+            let literal = to_binary_literal(v.value as u64);
             w.ln(&format!("pub const {const_name}: Self = Self({literal});"));
         }
 
@@ -187,8 +187,8 @@ pub fn move_digits_to_end(s: &str) -> String {
     format!("{}{}", rest, digits)
 }
 
-/// Formats a `u32` as a grouped binary literal (`0b1_0000_0000`).
-fn to_binary_literal(value: u32) -> String {
+/// Formats a `u64` as a grouped binary literal (`0b1_0000_0000`).
+fn to_binary_literal(value: u64) -> String {
     if value == 0 {
         return "0".to_string();
     }

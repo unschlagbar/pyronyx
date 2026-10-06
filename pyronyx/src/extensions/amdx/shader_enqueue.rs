@@ -9,6 +9,8 @@ use core::mem::MaybeUninit;
 use core::ptr::{from_ref, null};
 
 /// Type: `Device`
+///
+/// Requires: (([`VK_KHR_synchronization2`](crate::khr::synchronization2) + [`VK_KHR_spirv_1_4`](crate::khr::spirv_1_4) + [`VK_EXT_extended_dynamic_state`](crate::ext::extended_dynamic_state)) or Vulkan 1.3) + [`VK_KHR_maintenance5`](crate::khr::maintenance5) + [`VK_KHR_pipeline_library`](crate::khr::pipeline_library)
 pub const NAME: &CStr = c"VK_AMDX_shader_enqueue";
 pub const SPEC_VERSION: u32 = 2;
 
@@ -16,7 +18,8 @@ pub trait ShaderEnqueueDevice {
     fn get_execution_graph_pipeline_scratch_size(
         &self,
         execution_graph: Pipeline,
-    ) -> Result<ExecutionGraphPipelineScratchSizeAMDX<'_>>;
+        size_info: &mut ExecutionGraphPipelineScratchSizeAMDX<'_>,
+    ) -> Result<()>;
 
     fn get_execution_graph_pipeline_node_index(
         &self,
@@ -39,16 +42,15 @@ impl ShaderEnqueueDevice for Device {
     fn get_execution_graph_pipeline_scratch_size(
         &self,
         execution_graph: Pipeline,
-    ) -> Result<ExecutionGraphPipelineScratchSizeAMDX<'_>> {
-        let mut out = MaybeUninit::uninit();
+        size_info: &mut ExecutionGraphPipelineScratchSizeAMDX<'_>,
+    ) -> Result<()> {
         let call = self
             .fns()
             .amdx_shader_enqueue
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_execution_graph_pipeline_scratch_size_amdx;
+            .get_execution_graph_pipeline_scratch_size_amdx
+            .unwrap_or_else(|| Self::ext_load_error());
 
-        unsafe { (call)(self.handle, execution_graph, out.as_mut_ptr()) }.init_on_success(out)
+        unsafe { (call)(self.handle, execution_graph, size_info) }.result()
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetExecutionGraphPipelineNodeIndexAMDX.html>
@@ -62,9 +64,8 @@ impl ShaderEnqueueDevice for Device {
         let call = self
             .fns()
             .amdx_shader_enqueue
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_execution_graph_pipeline_node_index_amdx;
+            .get_execution_graph_pipeline_node_index_amdx
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, execution_graph, node_info, out.as_mut_ptr()) }
             .init_on_success(out)
@@ -83,9 +84,8 @@ impl ShaderEnqueueDevice for Device {
         let call = self
             .fns()
             .amdx_shader_enqueue
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .create_execution_graph_pipelines_amdx;
+            .create_execution_graph_pipelines_amdx
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -148,9 +148,8 @@ impl ShaderEnqueueCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .amdx_shader_enqueue
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .initialize_graph_scratch_memory_amdx;
+            .initialize_graph_scratch_memory_amdx
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, execution_graph, scratch, scratch_size) };
     }
@@ -172,9 +171,8 @@ impl ShaderEnqueueCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .amdx_shader_enqueue
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .dispatch_graph_amdx;
+            .dispatch_graph_amdx
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, scratch, scratch_size, count_info) };
     }
@@ -196,9 +194,8 @@ impl ShaderEnqueueCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .amdx_shader_enqueue
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .dispatch_graph_indirect_amdx;
+            .dispatch_graph_indirect_amdx
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, scratch, scratch_size, count_info) };
     }
@@ -220,9 +217,8 @@ impl ShaderEnqueueCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .amdx_shader_enqueue
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .dispatch_graph_indirect_count_amdx;
+            .dispatch_graph_indirect_count_amdx
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, scratch, scratch_size, count_info) };
     }

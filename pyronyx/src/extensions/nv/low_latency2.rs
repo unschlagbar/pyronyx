@@ -5,9 +5,10 @@
 
 use crate::vk::*;
 use core::ffi::CStr;
-use core::mem::MaybeUninit;
 
 /// Type: `Device`
+///
+/// Requires: (Vulkan 1.2 or [`VK_KHR_timeline_semaphore`](crate::khr::timeline_semaphore)) + ([`VK_KHR_present_id`](crate::khr::present_id) or [`VK_KHR_present_id2`](crate::khr::present_id2))
 pub const NAME: &CStr = c"VK_NV_low_latency2";
 pub const SPEC_VERSION: u32 = 2;
 
@@ -27,7 +28,11 @@ pub trait LowLatency2Device {
         latency_marker_info: &SetLatencyMarkerInfoNV,
     );
 
-    fn get_latency_timings(&self, swapchain: SwapchainKHR) -> GetLatencyMarkerInfoNV<'_>;
+    fn get_latency_timings(
+        &self,
+        swapchain: SwapchainKHR,
+        latency_marker_info: &mut GetLatencyMarkerInfoNV<'_>,
+    );
 }
 
 impl LowLatency2Device for Device {
@@ -41,9 +46,8 @@ impl LowLatency2Device for Device {
         let call = self
             .fns()
             .nv_low_latency2
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_latency_sleep_mode_nv;
+            .set_latency_sleep_mode_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, swapchain, sleep_mode_info) }.result()
     }
@@ -58,9 +62,8 @@ impl LowLatency2Device for Device {
         let call = self
             .fns()
             .nv_low_latency2
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .latency_sleep_nv;
+            .latency_sleep_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, swapchain, sleep_info) }.result()
     }
@@ -75,28 +78,26 @@ impl LowLatency2Device for Device {
         let call = self
             .fns()
             .nv_low_latency2
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_latency_marker_nv;
+            .set_latency_marker_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, swapchain, latency_marker_info) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetLatencyTimingsNV.html>
     #[inline]
-    fn get_latency_timings(&self, swapchain: SwapchainKHR) -> GetLatencyMarkerInfoNV<'_> {
-        let mut out = MaybeUninit::uninit();
+    fn get_latency_timings(
+        &self,
+        swapchain: SwapchainKHR,
+        latency_marker_info: &mut GetLatencyMarkerInfoNV<'_>,
+    ) {
         let call = self
             .fns()
             .nv_low_latency2
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_latency_timings_nv;
+            .get_latency_timings_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
-        unsafe {
-            (call)(self.handle, swapchain, out.as_mut_ptr());
-            out.assume_init()
-        }
+        unsafe { (call)(self.handle, swapchain, latency_marker_info) };
     }
 }
 
@@ -111,9 +112,8 @@ impl LowLatency2Queue for Queue {
         let call = self
             .fns()
             .nv_low_latency2
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .queue_notify_out_of_band_nv;
+            .queue_notify_out_of_band_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, queue_type_info) };
     }

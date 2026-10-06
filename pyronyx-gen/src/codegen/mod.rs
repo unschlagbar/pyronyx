@@ -192,13 +192,7 @@ pub const PACKED_FIELD_NAMES: &[(&str, &str)] = &[(
 )];
 
 /// "function Name", "additional params", "body lines", "remove return"
-pub const ASSERT_FNS: &[(&str, &str)] = &[
-    (
-        "vkAllocateDescriptorSets",
-        "allocate_info.descriptor_set_count",
-    ),
-    ("vkGetQueryPoolResults", ""),
-];
+pub const ASSERT_FNS: &[(&str, &str)] = &[("vkGetQueryPoolResults", "")];
 
 /// Commands whose untyped `void*` parameter is a caller-provided byte buffer rather
 /// than a pointer to a single opaque object.
@@ -287,12 +281,16 @@ pub const LEN_FNS: &[&str] = &[
     "vkGetQueueCheckpointData2NV",
     "vkGetValidationCacheDataEXT",
     "vkGetVideoSessionMemoryRequirementsKHR",
+    "vkGetPhysicalDeviceQueueFamilyDataGraphOpticalFlowImageFormatsARM",
+    "vkGetDeviceFaultReportsKHR",
 ];
 
 pub fn find_len_fn(cmd_name: &str) -> Option<&'static str> {
     LEN_FNS.iter().find(|&&name| name == cmd_name).copied()
 }
 
+/// Element types must not start with `sType`: `Vec` fills uninitialised memory, but the driver
+/// reads `sType`/`pNext` of each element. Those commands belong in [`LEN_FNS`].
 pub const VEC_FNS: &[&str] = &[
     "vkGetPhysicalDeviceQueueFamilyProperties",
     "vkEnumerateDeviceExtensionProperties",
@@ -308,8 +306,6 @@ pub const VEC_FNS: &[&str] = &[
     "vkGetShaderBinaryDataEXT",
     "vkGetPhysicalDeviceToolPropertiesEXT",
     "vkGetCudaModuleCacheNV",
-    "vkGetPhysicalDeviceQueueFamilyDataGraphOpticalFlowImageFormatsARM",
-    "vkGetDeviceFaultReportsKHR",
 ];
 
 pub const COPY: &[&str] = &[

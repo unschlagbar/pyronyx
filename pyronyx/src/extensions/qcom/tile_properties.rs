@@ -9,6 +9,8 @@ use core::mem::MaybeUninit;
 use core::ptr;
 
 /// Type: `Device`
+///
+/// Requires: [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1
 pub const NAME: &CStr = c"VK_QCOM_tile_properties";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -23,7 +25,8 @@ pub trait TilePropertiesDevice {
     fn get_dynamic_rendering_tile_properties(
         &self,
         rendering_info: &RenderingInfo,
-    ) -> Result<TilePropertiesQCOM<'_>>;
+        properties: &mut TilePropertiesQCOM<'_>,
+    ) -> Result<()>;
 }
 
 impl TilePropertiesDevice for Device {
@@ -40,9 +43,8 @@ impl TilePropertiesDevice for Device {
         let call = self
             .fns()
             .qcom_tile_properties
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_framebuffer_tile_properties_qcom;
+            .get_framebuffer_tile_properties_qcom
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -63,9 +65,8 @@ impl TilePropertiesDevice for Device {
             (self
                 .fns()
                 .qcom_tile_properties
-                .as_ref()
-                .expect(Self::EXT_LOAD_ERROR)
-                .get_framebuffer_tile_properties_qcom)(
+                .get_framebuffer_tile_properties_qcom
+                .unwrap_or_else(|| Self::ext_load_error()))(
                 self.handle,
                 framebuffer,
                 out.as_mut_ptr(),
@@ -81,15 +82,14 @@ impl TilePropertiesDevice for Device {
     fn get_dynamic_rendering_tile_properties(
         &self,
         rendering_info: &RenderingInfo,
-    ) -> Result<TilePropertiesQCOM<'_>> {
-        let mut out = MaybeUninit::uninit();
+        properties: &mut TilePropertiesQCOM<'_>,
+    ) -> Result<()> {
         let call = self
             .fns()
             .qcom_tile_properties
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_dynamic_rendering_tile_properties_qcom;
+            .get_dynamic_rendering_tile_properties_qcom
+            .unwrap_or_else(|| Self::ext_load_error());
 
-        unsafe { (call)(self.handle, rendering_info, out.as_mut_ptr()) }.init_on_success(out)
+        unsafe { (call)(self.handle, rendering_info, properties) }.result()
     }
 }

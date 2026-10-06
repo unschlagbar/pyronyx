@@ -9,6 +9,8 @@ use core::mem::MaybeUninit;
 use core::ptr;
 
 /// Type: `Instance`
+///
+/// Requires: [`VK_KHR_surface`](crate::khr::surface)
 pub const NAME: &CStr = c"VK_KHR_get_surface_capabilities2";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -16,7 +18,8 @@ pub trait GetSurfaceCapabilities2PhysicalDevice {
     fn get_surface_capabilities2(
         &self,
         surface_info: &PhysicalDeviceSurfaceInfo2KHR,
-    ) -> Result<SurfaceCapabilities2KHR<'_>>;
+        surface_capabilities: &mut SurfaceCapabilities2KHR<'_>,
+    ) -> Result<()>;
 
     fn get_surface_formats2(
         &self,
@@ -35,16 +38,15 @@ impl GetSurfaceCapabilities2PhysicalDevice for PhysicalDevice {
     fn get_surface_capabilities2(
         &self,
         surface_info: &PhysicalDeviceSurfaceInfo2KHR,
-    ) -> Result<SurfaceCapabilities2KHR<'_>> {
-        let mut out = MaybeUninit::uninit();
+        surface_capabilities: &mut SurfaceCapabilities2KHR<'_>,
+    ) -> Result<()> {
         let call = self
             .fns()
             .khr_get_surface_capabilities2
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_physical_device_surface_capabilities2_khr;
+            .get_physical_device_surface_capabilities2_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
-        unsafe { (call)(self.handle, surface_info, out.as_mut_ptr()) }.init_on_success(out)
+        unsafe { (call)(self.handle, surface_info, surface_capabilities) }.result()
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceSurfaceFormats2KHR.html>
@@ -60,9 +62,8 @@ impl GetSurfaceCapabilities2PhysicalDevice for PhysicalDevice {
         let call = self
             .fns()
             .khr_get_surface_capabilities2
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_physical_device_surface_formats2_khr;
+            .get_physical_device_surface_formats2_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -86,9 +87,8 @@ impl GetSurfaceCapabilities2PhysicalDevice for PhysicalDevice {
             (self
                 .fns()
                 .khr_get_surface_capabilities2
-                .as_ref()
-                .expect(Self::EXT_LOAD_ERROR)
-                .get_physical_device_surface_formats2_khr)(
+                .get_physical_device_surface_formats2_khr
+                .unwrap_or_else(|| Self::ext_load_error()))(
                 self.handle,
                 surface_info,
                 out.as_mut_ptr(),

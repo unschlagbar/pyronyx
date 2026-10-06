@@ -28,9 +28,8 @@ impl ObjectRefreshCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .khr_object_refresh
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .refresh_objects_khr;
+            .refresh_objects_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, refresh_objects) };
     }
@@ -57,9 +56,8 @@ impl ObjectRefreshPhysicalDevice for PhysicalDevice {
         let call = self
             .fns()
             .khr_object_refresh
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_physical_device_refreshable_object_types_khr;
+            .get_physical_device_refreshable_object_types_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -79,9 +77,8 @@ impl ObjectRefreshPhysicalDevice for PhysicalDevice {
             (self
                 .fns()
                 .khr_object_refresh
-                .as_ref()
-                .expect(Self::EXT_LOAD_ERROR)
-                .get_physical_device_refreshable_object_types_khr)(
+                .get_physical_device_refreshable_object_types_khr
+                .unwrap_or_else(|| Self::ext_load_error()))(
                 self.handle,
                 out.as_mut_ptr(),
                 ptr::null_mut(),

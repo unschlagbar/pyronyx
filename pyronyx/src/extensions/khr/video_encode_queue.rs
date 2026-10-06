@@ -9,6 +9,8 @@ use core::mem::MaybeUninit;
 use core::ptr;
 
 /// Type: `Device`
+///
+/// Requires: [`VK_KHR_video_queue`](crate::khr::video_queue) + ([`VK_KHR_synchronization2`](crate::khr::synchronization2) or Vulkan 1.3)
 pub const NAME: &CStr = c"VK_KHR_video_encode_queue";
 pub const SPEC_VERSION: u32 = 12;
 
@@ -16,7 +18,8 @@ pub trait VideoEncodeQueuePhysicalDevice {
     fn get_video_encode_quality_level_properties(
         &self,
         quality_level_info: &PhysicalDeviceVideoEncodeQualityLevelInfoKHR,
-    ) -> Result<VideoEncodeQualityLevelPropertiesKHR<'_>>;
+        quality_level_properties: &mut VideoEncodeQualityLevelPropertiesKHR<'_>,
+    ) -> Result<()>;
 }
 
 impl VideoEncodeQueuePhysicalDevice for PhysicalDevice {
@@ -25,16 +28,15 @@ impl VideoEncodeQueuePhysicalDevice for PhysicalDevice {
     fn get_video_encode_quality_level_properties(
         &self,
         quality_level_info: &PhysicalDeviceVideoEncodeQualityLevelInfoKHR,
-    ) -> Result<VideoEncodeQualityLevelPropertiesKHR<'_>> {
-        let mut out = MaybeUninit::uninit();
+        quality_level_properties: &mut VideoEncodeQualityLevelPropertiesKHR<'_>,
+    ) -> Result<()> {
         let call = self
             .fns()
             .khr_video_encode_queue
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_physical_device_video_encode_quality_level_properties_khr;
+            .get_physical_device_video_encode_quality_level_properties_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
-        unsafe { (call)(self.handle, quality_level_info, out.as_mut_ptr()) }.init_on_success(out)
+        unsafe { (call)(self.handle, quality_level_info, quality_level_properties) }.result()
     }
 }
 
@@ -67,9 +69,8 @@ impl VideoEncodeQueueDevice for Device {
         let call = self
             .fns()
             .khr_video_encode_queue
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_encoded_video_session_parameters_khr;
+            .get_encoded_video_session_parameters_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -95,9 +96,8 @@ impl VideoEncodeQueueDevice for Device {
             (self
                 .fns()
                 .khr_video_encode_queue
-                .as_ref()
-                .expect(Self::EXT_LOAD_ERROR)
-                .get_encoded_video_session_parameters_khr)(
+                .get_encoded_video_session_parameters_khr
+                .unwrap_or_else(|| Self::ext_load_error()))(
                 self.handle,
                 video_session_parameters_info,
                 feedback_info,
@@ -125,9 +125,8 @@ impl VideoEncodeQueueCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .khr_video_encode_queue
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .encode_video_khr;
+            .encode_video_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, encode_info) };
     }

@@ -7,6 +7,8 @@ use crate::vk::*;
 use core::ffi::CStr;
 
 /// Type: `Device`
+///
+/// Requires: [`VK_KHR_spirv_1_4`](crate::khr::spirv_1_4) or Vulkan 1.2
 pub const NAME: &CStr = c"VK_EXT_mesh_shader";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -45,9 +47,8 @@ impl MeshShaderCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_mesh_shader
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .draw_mesh_tasks_ext;
+            .draw_mesh_tasks_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, group_count_x, group_count_y, group_count_z) };
     }
@@ -70,9 +71,8 @@ impl MeshShaderCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_mesh_shader
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .draw_mesh_tasks_indirect_ext;
+            .draw_mesh_tasks_indirect_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, buffer, offset, draw_count, stride) };
     }
@@ -97,9 +97,8 @@ impl MeshShaderCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_mesh_shader
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .draw_mesh_tasks_indirect_count_ext;
+            .draw_mesh_tasks_indirect_count_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(

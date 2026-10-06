@@ -9,6 +9,8 @@ use core::mem::MaybeUninit;
 use core::ptr;
 
 /// Type: `Device`
+///
+/// Requires: [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1
 pub const NAME: &CStr = c"VK_NV_cooperative_vector";
 pub const SPEC_VERSION: u32 = 4;
 
@@ -33,9 +35,8 @@ impl CooperativeVectorPhysicalDevice for PhysicalDevice {
         let call = self
             .fns()
             .nv_cooperative_vector
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_physical_device_cooperative_vector_properties_nv;
+            .get_physical_device_cooperative_vector_properties_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, &mut property_count, properties.as_mut_ptr()) }.result()
     }
@@ -48,9 +49,8 @@ impl CooperativeVectorPhysicalDevice for PhysicalDevice {
             (self
                 .fns()
                 .nv_cooperative_vector
-                .as_ref()
-                .expect(Self::EXT_LOAD_ERROR)
-                .get_physical_device_cooperative_vector_properties_nv)(
+                .get_physical_device_cooperative_vector_properties_nv
+                .unwrap_or_else(|| Self::ext_load_error()))(
                 self.handle,
                 out.as_mut_ptr(),
                 ptr::null_mut(),
@@ -78,9 +78,8 @@ impl CooperativeVectorDevice for Device {
         let call = self
             .fns()
             .nv_cooperative_vector
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .convert_cooperative_vector_matrix_nv;
+            .convert_cooperative_vector_matrix_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, info) }.result()
     }
@@ -102,9 +101,8 @@ impl CooperativeVectorCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .nv_cooperative_vector
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .convert_cooperative_vector_matrix_nv;
+            .convert_cooperative_vector_matrix_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, infos.len() as u32, infos.as_ptr()) };
     }

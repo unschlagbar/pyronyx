@@ -8,6 +8,8 @@ use core::ffi::CStr;
 use core::ptr::{from_ref, null};
 
 /// Type: `Device`
+///
+/// Requires: ([`VK_KHR_get_memory_requirements2`](crate::khr::get_memory_requirements2) + [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2)) or Vulkan 1.1
 pub const NAME: &CStr = c"VK_QCOM_tile_memory_heap";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -27,9 +29,8 @@ impl TileMemoryHeapCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .qcom_tile_memory_heap
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .bind_tile_memory_qcom;
+            .bind_tile_memory_qcom
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, tile_memory_bind_info.map_or(null(), from_ref)) };
     }

@@ -2,7 +2,7 @@ use crate::codegen::impls::ImplTarget;
 use crate::parse::c_to_rust;
 use crate::parse::registry::{Registry, Task, VkCommand};
 use crate::{codegen::rust_name, parse::registry::RenderPass};
-use indexmap::IndexSet;
+use indexmap::{IndexMap, IndexSet};
 use roxmltree::Node;
 
 #[derive(Debug, Clone, Hash, PartialEq, Eq)]
@@ -13,6 +13,9 @@ pub struct Param {
     pub len: Option<String>,
     pub pointer_depth: u32,
     pub is_const: bool,
+    /// Points to a struct starting with `sType`/`pNext`, so it must be initialised
+    /// (and may be extended) by the caller.
+    pub extensible: bool,
 }
 
 pub fn parse_into(commands_node: &Node, reg: &mut Registry) {
@@ -62,7 +65,7 @@ pub fn parse_into(commands_node: &Node, reg: &mut Registry) {
         let params: Vec<Param> = node
             .children()
             .filter(|n| n.has_tag_name("param"))
-            .filter_map(|p| parse_param(p, &mut other_params))
+            .filter_map(|p| parse_param(p, &mut other_params, &reg.stypes))
             .collect();
 
         let target = ImplTarget::from_first_param(&params);
@@ -122,7 +125,11 @@ pub fn parse_into(commands_node: &Node, reg: &mut Registry) {
     }
 }
 
-pub fn parse_param(node: Node, other_params: &mut IndexSet<String>) -> Option<Param> {
+pub fn parse_param(
+    node: Node,
+    other_params: &mut IndexSet<String>,
+    stypes: &IndexMap<String, (String, bool)>,
+) -> Option<Param> {
     let (full_ty, base_ty, name) = parse_member(node);
     if other_params.contains(&name) {
         return None;
@@ -163,6 +170,7 @@ pub fn parse_param(node: Node, other_params: &mut IndexSet<String>) -> Option<Pa
         len: node.attribute("len").map(str::to_string),
         pointer_depth,
         is_const,
+        extensible: pointer_depth > 0 && stypes.contains_key(&base_ty.to_lowercase()),
     })
 }
 

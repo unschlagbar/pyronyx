@@ -7,6 +7,8 @@ use crate::vk::*;
 use core::ffi::CStr;
 
 /// Type: `Device`
+///
+/// Requires: [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1
 pub const NAME: &CStr = c"VK_EXT_depth_bias_control";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -26,9 +28,8 @@ impl DepthBiasControlCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_depth_bias_control
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_depth_bias2_ext;
+            .set_depth_bias2_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, depth_bias_info) };
     }

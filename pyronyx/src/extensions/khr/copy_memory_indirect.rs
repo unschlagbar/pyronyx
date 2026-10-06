@@ -7,6 +7,8 @@ use crate::vk::*;
 use core::ffi::CStr;
 
 /// Type: `Device`
+///
+/// Requires: ([`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) + [`VK_KHR_buffer_device_address`](crate::khr::buffer_device_address)) or Vulkan 1.2
 pub const NAME: &CStr = c"VK_KHR_copy_memory_indirect";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -31,9 +33,8 @@ impl CopyMemoryIndirectCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .khr_copy_memory_indirect
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .copy_memory_indirect_khr;
+            .copy_memory_indirect_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, copy_memory_indirect_info) };
     }
@@ -52,9 +53,8 @@ impl CopyMemoryIndirectCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .khr_copy_memory_indirect
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .copy_memory_to_image_indirect_khr;
+            .copy_memory_to_image_indirect_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, copy_memory_to_image_indirect_info) };
     }

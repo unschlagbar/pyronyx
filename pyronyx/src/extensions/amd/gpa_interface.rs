@@ -10,6 +10,8 @@ use core::ptr;
 use core::ptr::{from_ref, null};
 
 /// Type: `Device`
+///
+/// Requires: [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1
 pub const NAME: &CStr = c"VK_AMD_gpa_interface";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -26,9 +28,9 @@ pub trait GpaInterfaceDevice {
         allocator: Option<&AllocationCallbacks>,
     );
 
-    fn set_gpa_clock_mode(&self) -> Result<GpaDeviceClockModeInfoAMD<'_>>;
+    fn set_gpa_clock_mode(&self, info: &mut GpaDeviceClockModeInfoAMD<'_>) -> Result<()>;
 
-    fn get_gpa_clock_info(&self) -> Result<GpaDeviceGetClockInfoAMD<'_>>;
+    fn get_gpa_clock_info(&self, info: &mut GpaDeviceGetClockInfoAMD<'_>) -> Result<()>;
 
     fn get_gpa_session_status(&self, gpa_session: GpaSessionAMD) -> Result<()>;
 
@@ -59,9 +61,8 @@ impl GpaInterfaceDevice for Device {
         let call = self
             .fns()
             .amd_gpa_interface
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .create_gpa_session_amd;
+            .create_gpa_session_amd
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -84,39 +85,34 @@ impl GpaInterfaceDevice for Device {
         let call = self
             .fns()
             .amd_gpa_interface
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .destroy_gpa_session_amd;
+            .destroy_gpa_session_amd
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, gpa_session, allocator.map_or(null(), from_ref)) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkSetGpaDeviceClockModeAMD.html>
     #[inline]
-    fn set_gpa_clock_mode(&self) -> Result<GpaDeviceClockModeInfoAMD<'_>> {
-        let mut out = MaybeUninit::uninit();
+    fn set_gpa_clock_mode(&self, info: &mut GpaDeviceClockModeInfoAMD<'_>) -> Result<()> {
         let call = self
             .fns()
             .amd_gpa_interface
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_gpa_device_clock_mode_amd;
+            .set_gpa_device_clock_mode_amd
+            .unwrap_or_else(|| Self::ext_load_error());
 
-        unsafe { (call)(self.handle, out.as_mut_ptr()) }.init_on_success(out)
+        unsafe { (call)(self.handle, info) }.result()
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetGpaDeviceClockInfoAMD.html>
     #[inline]
-    fn get_gpa_clock_info(&self) -> Result<GpaDeviceGetClockInfoAMD<'_>> {
-        let mut out = MaybeUninit::uninit();
+    fn get_gpa_clock_info(&self, info: &mut GpaDeviceGetClockInfoAMD<'_>) -> Result<()> {
         let call = self
             .fns()
             .amd_gpa_interface
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_gpa_device_clock_info_amd;
+            .get_gpa_device_clock_info_amd
+            .unwrap_or_else(|| Self::ext_load_error());
 
-        unsafe { (call)(self.handle, out.as_mut_ptr()) }.init_on_success(out)
+        unsafe { (call)(self.handle, info) }.result()
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetGpaSessionStatusAMD.html>
@@ -125,9 +121,8 @@ impl GpaInterfaceDevice for Device {
         let call = self
             .fns()
             .amd_gpa_interface
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_gpa_session_status_amd;
+            .get_gpa_session_status_amd
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, gpa_session) }.result()
     }
@@ -146,9 +141,8 @@ impl GpaInterfaceDevice for Device {
         let call = self
             .fns()
             .amd_gpa_interface
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_gpa_session_results_amd;
+            .get_gpa_session_results_amd
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -174,9 +168,8 @@ impl GpaInterfaceDevice for Device {
             (self
                 .fns()
                 .amd_gpa_interface
-                .as_ref()
-                .expect(Self::EXT_LOAD_ERROR)
-                .get_gpa_session_results_amd)(
+                .get_gpa_session_results_amd
+                .unwrap_or_else(|| Self::ext_load_error()))(
                 self.handle,
                 gpa_session,
                 sample_id,
@@ -193,9 +186,8 @@ impl GpaInterfaceDevice for Device {
         let call = self
             .fns()
             .amd_gpa_interface
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .reset_gpa_session_amd;
+            .reset_gpa_session_amd
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, gpa_session) }.result()
     }
@@ -229,9 +221,8 @@ impl GpaInterfaceCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .amd_gpa_interface
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .begin_gpa_session_amd;
+            .begin_gpa_session_amd
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, gpa_session) }.result()
     }
@@ -247,9 +238,8 @@ impl GpaInterfaceCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .amd_gpa_interface
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .end_gpa_session_amd;
+            .end_gpa_session_amd
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, gpa_session) }.result()
     }
@@ -270,9 +260,8 @@ impl GpaInterfaceCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .amd_gpa_interface
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .begin_gpa_sample_amd;
+            .begin_gpa_sample_amd
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -296,9 +285,8 @@ impl GpaInterfaceCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .amd_gpa_interface
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .end_gpa_sample_amd;
+            .end_gpa_sample_amd
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, gpa_session, sample_id) };
     }
@@ -314,9 +302,8 @@ impl GpaInterfaceCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .amd_gpa_interface
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .copy_gpa_session_results_amd;
+            .copy_gpa_session_results_amd
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, gpa_session) };
     }

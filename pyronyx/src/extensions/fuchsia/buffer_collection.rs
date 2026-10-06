@@ -9,6 +9,8 @@ use core::mem::MaybeUninit;
 use core::ptr::{from_ref, null};
 
 /// Type: `Device`
+///
+/// Requires: [`VK_FUCHSIA_external_memory`](crate::fuchsia::external_memory) + ([`VK_KHR_sampler_ycbcr_conversion`](crate::khr::sampler_ycbcr_conversion) or Vulkan 1.1)
 pub const NAME: &CStr = c"VK_FUCHSIA_buffer_collection";
 pub const SPEC_VERSION: u32 = 2;
 
@@ -40,7 +42,8 @@ pub trait BufferCollectionDevice {
     fn get_buffer_collection_properties(
         &self,
         collection: BufferCollectionFUCHSIA,
-    ) -> Result<BufferCollectionPropertiesFUCHSIA<'_>>;
+        properties: &mut BufferCollectionPropertiesFUCHSIA<'_>,
+    ) -> Result<()>;
 }
 
 impl BufferCollectionDevice for Device {
@@ -55,9 +58,8 @@ impl BufferCollectionDevice for Device {
         let call = self
             .fns()
             .fuchsia_buffer_collection
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .create_buffer_collection_fuchsia;
+            .create_buffer_collection_fuchsia
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -80,9 +82,8 @@ impl BufferCollectionDevice for Device {
         let call = self
             .fns()
             .fuchsia_buffer_collection
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_buffer_collection_buffer_constraints_fuchsia;
+            .set_buffer_collection_buffer_constraints_fuchsia
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, collection, buffer_constraints_info) }.result()
     }
@@ -97,9 +98,8 @@ impl BufferCollectionDevice for Device {
         let call = self
             .fns()
             .fuchsia_buffer_collection
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_buffer_collection_image_constraints_fuchsia;
+            .set_buffer_collection_image_constraints_fuchsia
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, collection, image_constraints_info) }.result()
     }
@@ -114,9 +114,8 @@ impl BufferCollectionDevice for Device {
         let call = self
             .fns()
             .fuchsia_buffer_collection
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .destroy_buffer_collection_fuchsia;
+            .destroy_buffer_collection_fuchsia
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, collection, allocator.map_or(null(), from_ref)) };
     }
@@ -126,15 +125,14 @@ impl BufferCollectionDevice for Device {
     fn get_buffer_collection_properties(
         &self,
         collection: BufferCollectionFUCHSIA,
-    ) -> Result<BufferCollectionPropertiesFUCHSIA<'_>> {
-        let mut out = MaybeUninit::uninit();
+        properties: &mut BufferCollectionPropertiesFUCHSIA<'_>,
+    ) -> Result<()> {
         let call = self
             .fns()
             .fuchsia_buffer_collection
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_buffer_collection_properties_fuchsia;
+            .get_buffer_collection_properties_fuchsia
+            .unwrap_or_else(|| Self::ext_load_error());
 
-        unsafe { (call)(self.handle, collection, out.as_mut_ptr()) }.init_on_success(out)
+        unsafe { (call)(self.handle, collection, properties) }.result()
     }
 }

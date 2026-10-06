@@ -10,6 +10,8 @@ use core::ptr;
 use core::ptr::{from_ref, null};
 
 /// Type: `Device`
+///
+/// Requires: Vulkan 1.4 or [`VK_KHR_extended_flags`](crate::khr::extended_flags) or [`VK_KHR_maintenance5`](crate::khr::maintenance5)
 pub const NAME: &CStr = c"VK_KHR_pipeline_binary";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -18,7 +20,8 @@ pub trait PipelineBinaryDevice {
         &self,
         create_info: &PipelineBinaryCreateInfoKHR,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<PipelineBinaryHandlesInfoKHR<'_>>;
+        binaries: &mut PipelineBinaryHandlesInfoKHR<'_>,
+    ) -> Result<()>;
 
     fn destroy_pipeline_binary(
         &self,
@@ -29,7 +32,8 @@ pub trait PipelineBinaryDevice {
     fn get_pipeline_key(
         &self,
         pipeline_create_info: Option<&PipelineCreateInfoKHR>,
-    ) -> Result<PipelineBinaryKeyKHR<'_>>;
+        pipeline_key: &mut PipelineBinaryKeyKHR<'_>,
+    ) -> Result<()>;
 
     fn get_pipeline_binary_data(
         &self,
@@ -57,24 +61,23 @@ impl PipelineBinaryDevice for Device {
         &self,
         create_info: &PipelineBinaryCreateInfoKHR,
         allocator: Option<&AllocationCallbacks>,
-    ) -> Result<PipelineBinaryHandlesInfoKHR<'_>> {
-        let mut out = MaybeUninit::uninit();
+        binaries: &mut PipelineBinaryHandlesInfoKHR<'_>,
+    ) -> Result<()> {
         let call = self
             .fns()
             .khr_pipeline_binary
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .create_pipeline_binaries_khr;
+            .create_pipeline_binaries_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
                 self.handle,
                 create_info,
                 allocator.map_or(null(), from_ref),
-                out.as_mut_ptr(),
+                binaries,
             )
         }
-        .init_on_success(out)
+        .result()
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkDestroyPipelineBinaryKHR.html>
@@ -87,9 +90,8 @@ impl PipelineBinaryDevice for Device {
         let call = self
             .fns()
             .khr_pipeline_binary
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .destroy_pipeline_binary_khr;
+            .destroy_pipeline_binary_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -105,23 +107,22 @@ impl PipelineBinaryDevice for Device {
     fn get_pipeline_key(
         &self,
         pipeline_create_info: Option<&PipelineCreateInfoKHR>,
-    ) -> Result<PipelineBinaryKeyKHR<'_>> {
-        let mut out = MaybeUninit::uninit();
+        pipeline_key: &mut PipelineBinaryKeyKHR<'_>,
+    ) -> Result<()> {
         let call = self
             .fns()
             .khr_pipeline_binary
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_pipeline_key_khr;
+            .get_pipeline_key_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
                 self.handle,
                 pipeline_create_info.map_or(null(), from_ref),
-                out.as_mut_ptr(),
+                pipeline_key,
             )
         }
-        .init_on_success(out)
+        .result()
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPipelineBinaryDataKHR.html>
@@ -138,9 +139,8 @@ impl PipelineBinaryDevice for Device {
         let call = self
             .fns()
             .khr_pipeline_binary
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_pipeline_binary_data_khr;
+            .get_pipeline_binary_data_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -166,9 +166,8 @@ impl PipelineBinaryDevice for Device {
             (self
                 .fns()
                 .khr_pipeline_binary
-                .as_ref()
-                .expect(Self::EXT_LOAD_ERROR)
-                .get_pipeline_binary_data_khr)(
+                .get_pipeline_binary_data_khr
+                .unwrap_or_else(|| Self::ext_load_error()))(
                 self.handle,
                 info,
                 pipeline_binary_key,
@@ -189,9 +188,8 @@ impl PipelineBinaryDevice for Device {
         let call = self
             .fns()
             .khr_pipeline_binary
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .release_captured_pipeline_data_khr;
+            .release_captured_pipeline_data_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, info, allocator.map_or(null(), from_ref)) }.result()
     }

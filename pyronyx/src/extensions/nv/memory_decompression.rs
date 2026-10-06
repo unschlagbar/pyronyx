@@ -7,6 +7,10 @@ use crate::vk::*;
 use core::ffi::CStr;
 
 /// Type: `Device`
+///
+/// Promoted to [`VK_EXT_memory_decompression`](crate::ext::memory_decompression)
+///
+/// Requires: (([`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1) + [`VK_KHR_buffer_device_address`](crate::khr::buffer_device_address)) or Vulkan 1.2
 pub const NAME: &CStr = c"VK_NV_memory_decompression";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -33,9 +37,8 @@ impl MemoryDecompressionCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .nv_memory_decompression
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .decompress_memory_nv;
+            .decompress_memory_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -62,9 +65,8 @@ impl MemoryDecompressionCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .nv_memory_decompression
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .decompress_memory_indirect_count_nv;
+            .decompress_memory_indirect_count_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(

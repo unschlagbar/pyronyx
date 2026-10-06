@@ -8,6 +8,8 @@ use core::ffi::CStr;
 use core::mem::MaybeUninit;
 
 /// Type: `Device`
+///
+/// Requires: [`VK_KHR_external_semaphore_capabilities`](crate::khr::external_semaphore_capabilities) + [`VK_KHR_external_semaphore`](crate::khr::external_semaphore)
 pub const NAME: &CStr = c"VK_FUCHSIA_external_semaphore";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -34,9 +36,8 @@ impl ExternalSemaphoreDevice for Device {
         let call = self
             .fns()
             .fuchsia_external_semaphore
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_semaphore_zircon_handle_fuchsia;
+            .get_semaphore_zircon_handle_fuchsia
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, get_zircon_handle_info, out.as_mut_ptr()) }
             .init_on_success(out)
@@ -51,9 +52,8 @@ impl ExternalSemaphoreDevice for Device {
         let call = self
             .fns()
             .fuchsia_external_semaphore
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .import_semaphore_zircon_handle_fuchsia;
+            .import_semaphore_zircon_handle_fuchsia
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, import_semaphore_zircon_handle_info) }.result()
     }

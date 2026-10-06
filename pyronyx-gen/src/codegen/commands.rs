@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 
 use super::{Writer, file_header};
 use crate::{
@@ -25,7 +25,6 @@ pub fn generate(registry: &Registry, out_path: &str, table_out_path: &str) {
     w.ln("use crate::utils::to_option;");
     w.blank();
 
-    w.ln("// ── fn-pointer Typen ──────────────────────────────────────────────");
     for (_, cmd) in &registry.commands {
         write_pfn_type(&mut w, cmd);
         w.blank();
@@ -37,7 +36,6 @@ pub fn generate(registry: &Registry, out_path: &str, table_out_path: &str) {
     w.ln("use super::vk::*;");
     w.ln("use core::ffi::{CStr, c_void, c_char};");
     w.ln("use crate::utils::to_option;");
-    w.ln("use crate::utils::to_panic;");
 
     let mut instance_table = IndexSet::new();
     let mut device_table = IndexSet::new();
@@ -47,6 +45,7 @@ pub fn generate(registry: &Registry, out_path: &str, table_out_path: &str) {
         "InstanceFn",
         registry,
         &mut instance_table,
+        true,
         is_instance_command,
     );
 
@@ -55,18 +54,25 @@ pub fn generate(registry: &Registry, out_path: &str, table_out_path: &str) {
         "PhysicalDeviceFn",
         registry,
         &mut instance_table,
+        true,
         is_physical_device_command,
     );
 
-    write_dispatch_groups(&mut w, "DeviceFn", registry, &mut device_table, |cmd| {
-        is_device_command(cmd)
-    });
+    write_dispatch_groups(
+        &mut w,
+        "DeviceFn",
+        registry,
+        &mut device_table,
+        false,
+        is_device_command,
+    );
 
     write_dispatch_groups(
         &mut w,
         "QueueFn",
         registry,
         &mut device_table,
+        false,
         is_queue_command,
     );
 
@@ -75,6 +81,7 @@ pub fn generate(registry: &Registry, out_path: &str, table_out_path: &str) {
         "CommandBufferFn",
         registry,
         &mut device_table,
+        false,
         is_cmd_command,
     );
 
@@ -110,101 +117,131 @@ fn version_const_name(depends_str: &str) -> String {
     format!("API_VERSION_{}", version_part)
 }
 
+/// Writes one function table (`InstanceFn`, `DeviceFn`, …) and its per-version /
+/// per-extension sub-tables.
+///
+/// Every command gets exactly one `Option` slot; aliases share their target's slot (like
+/// `vulkan.hpp`'s dynamic loader). A slot is filled by the first enabled provider that
+/// exposes it: its core version first, then any enabled extension that requires the command
+/// or one of its aliases (e.g. `vkCmdDrawIndirectCount` ← `VK_KHR_draw_indirect_count`,
+/// `vkReleaseSwapchainImagesKHR` ← `VK_EXT_swapchain_maintenance1`).
 fn write_dispatch_groups(
     w: &mut Writer,
     struct_name: &str,
     registry: &Registry,
     groups: &mut IndexSet<String>,
+    instance_level: bool,
     filter: impl Fn(&VkCommand) -> bool,
 ) {
-    let cmds: Vec<&VkCommand> = registry.commands.values().filter(|c| filter(c)).collect();
-    if cmds.is_empty() {
+    let mut tables: IndexMap<Depends, Vec<&VkCommand>> = IndexMap::new();
+    for cmd in registry.commands.values() {
+        if cmd.alias.is_none() && !cmd.name.ends_with("ProcAddr") && filter(cmd) {
+            tables.entry(cmd.table_name()).or_default().push(cmd);
+        }
+    }
+    if tables.is_empty() {
         return;
     }
+    tables.sort_keys();
+    groups.insert(struct_name.to_string());
 
-    let mut versions: IndexMap<Depends, Vec<&VkCommand>> = IndexMap::new();
-    for cmd in cmds {
-        if cmd.name.ends_with("ProcAddr") {
+    // command name → (table field, slot field)
+    let mut slots: HashMap<&str, (String, String)> = HashMap::new();
+    for (depends, cmds) in &tables {
+        let table = depends.to_string().to_snake_case();
+        for cmd in cmds {
+            slots.insert(&cmd.name, (table.clone(), fn_field(&cmd.name)));
+        }
+    }
+
+    // Extensions whose type (instance / device) differs from this table's can't be checked
+    // against the `extensions` passed to `load`, e.g. device-level commands of
+    // `VK_EXT_debug_utils`. Their commands are looked up unconditionally instead.
+    let mut always = Vec::new();
+    let mut by_extension = Vec::new();
+    for ext in registry.extensions.iter().filter(|e| !e.disabled) {
+        let mut fills: IndexMap<&(String, String), &str> = IndexMap::new();
+        for name in ext.require_blocks.iter().flat_map(|b| &b.commands) {
+            if let Some(slot) = slots.get(canonical(registry, name)) {
+                fills.entry(slot).or_insert(name);
+            }
+        }
+        if fills.is_empty() {
             continue;
         }
-        versions.entry(cmd.table_name()).or_default().push(cmd);
+        if (ext.typ == "instance") == instance_level {
+            by_extension.push((&ext.name, fills));
+        } else {
+            always.push(fills);
+        }
     }
-    versions.sort_keys();
 
-    groups.insert(struct_name.to_string());
+    // Number of providers per slot, the core version counting as one.
+    let mut providers: HashMap<&(String, String), usize> = HashMap::new();
+    for (name, slot) in &slots {
+        if !matches!(registry.commands[*name].table_name(), Depends::Ext(_)) {
+            providers.insert(slot, 1);
+        }
+    }
+    for fills in always
+        .iter()
+        .chain(by_extension.iter().map(|(_, fills)| fills))
+    {
+        for slot in fills.keys() {
+            *providers.entry(slot).or_default() += 1;
+        }
+    }
 
     w.ln("#[derive(Clone)]");
     w.ln(&format!("pub struct {struct_name} {{"));
-    for (depends, _) in &versions {
-        let optional = matches!(depends, Depends::Ext(_));
-        let member_name = if optional {
-            format!("Option<{struct_name}{}>", depends.to_string())
-        } else {
-            format!("{struct_name}{}", depends.to_string())
-        };
+    for depends in tables.keys() {
         w.ln(&format!(
-            "    pub {}: {},",
-            depends.to_string().to_snake_case(),
-            member_name
+            "    pub {}: {struct_name}{depends},",
+            depends.to_string().to_snake_case()
         ));
     }
     w.ln("}");
     w.blank();
 
-    // ── load-Methode mit api_version ─────────────────────────────────────
     w.ln(&format!("impl {struct_name} {{"));
+    w.ln("    /// A table with no functions loaded; every call through it panics.");
+    w.ln("    pub const EMPTY: Self = Self {");
+    for depends in tables.keys() {
+        let field = depends.to_string().to_snake_case();
+        w.ln(&format!("        {field}: {struct_name}{depends}::EMPTY,"));
+    }
+    w.ln("    };");
+    w.blank();
     w.ln("    pub fn load<F: FnMut(&CStr) -> *const c_void>(");
     w.ln("        mut loader: F,");
     w.ln("        api_version: u32,");
     w.ln("        extensions: &[*const c_char],");
     w.ln("    ) -> Self {");
     w.ln("        let mut out = Self {");
-
-    for (depends, _) in &versions {
+    for depends in tables.keys() {
         let field = depends.to_string().to_snake_case();
-        let subgroup = format!("{struct_name}{}", depends.to_string());
-
+        let sub = format!("{struct_name}{depends}");
         match depends {
-            Depends::Ext(_) => w.ln(&format!(r#"{field}: None,"#)),
-            Depends::Core(v) => {
-                if v.as_str() == "v1_0" {
-                    w.ln(&format!(r#"{field}: {subgroup}::load(&mut loader),"#))
-                } else {
-                    let ver_const = version_const_name(depends.to_string().as_str());
-                    w.ln(&format!(
-                        r#"            {field}: if api_version >= {ver_const} {{
-                {subgroup}::load(&mut loader)
-            }} else {{
-                {subgroup}::default()
-            }},"#
-                    ));
-                }
-            }
-            _ => {
-                let ver_const = version_const_name(depends.to_string().as_str());
+            Depends::Core(v) if v != "v1_0" => {
+                let ver_const = version_const_name(v);
                 w.ln(&format!(
-                    r#"            {field}: if api_version >= {ver_const} {{
-                {subgroup}::load(&mut loader)
-            }} else {{
-                {subgroup}::default()
-            }},"#
+                    "            {field}: if api_version >= {ver_const} {{ {sub}::load(&mut loader) }} else {{ {sub}::EMPTY }},"
                 ));
             }
+            Depends::Ext(_) => w.ln(&format!("            {field}: {sub}::EMPTY,")),
+            _ => w.ln(&format!("            {field}: {sub}::load(&mut loader),")),
         }
     }
     w.ln("        };");
-
+    for fills in &always {
+        write_fills(w, fills, &providers);
+    }
     w.ln("        for &ext in extensions {");
-    w.ln("            let ext = unsafe { CStr::from_ptr(ext).to_bytes() };");
-    w.ln("            match ext {");
-    for (depends, cmd) in &versions {
-        if let Some(ext_name) = cmd.first().and_then(|c| c.extension.as_ref()) {
-            let field = depends.to_string().to_snake_case();
-            let subgroup = format!("{struct_name}{}", depends.to_string());
-            w.ln(&format!(
-                r#"                b"{ext_name}" => out.{field} = Some({subgroup}::load(&mut loader)),"#
-            ));
-        }
+    w.ln("            match unsafe { CStr::from_ptr(ext) }.to_bytes() {");
+    for (ext_name, fills) in &by_extension {
+        w.ln(&format!("                b\"{ext_name}\" => {{"));
+        write_fills(w, fills, &providers);
+        w.ln("                }");
     }
     w.ln("                _ => (),");
     w.ln("            }");
@@ -214,48 +251,70 @@ fn write_dispatch_groups(
     w.ln("}");
     w.blank();
 
-    for (depends, cmds) in &versions {
-        let struct_name_sub = format!("{struct_name}{}", depends.to_string());
-        let optional_struct = matches!(depends, Depends::Ext(_));
-
-        if optional_struct {
-            w.ln("#[derive(Clone)]");
-        } else {
-            w.ln("#[derive(Clone, Default)]");
-        }
-        w.ln(&format!("pub struct {struct_name_sub} {{"));
+    for (depends, cmds) in &tables {
+        let sub = format!("{struct_name}{depends}");
+        w.ln("#[derive(Clone, Default)]");
+        w.ln(&format!("pub struct {sub} {{"));
         for cmd in cmds {
-            let typ = if cmd.option_member() {
-                format!("Option<{}>", cmd.name)
-            } else {
-                cmd.name.clone()
-            };
-            w.ln(&format!("    pub {}: {},", fn_field(&cmd.name), typ));
+            w.ln(&format!(
+                "    pub {}: Option<{}>,",
+                fn_field(&cmd.name),
+                cmd.name
+            ));
         }
         w.ln("}");
         w.blank();
 
-        w.ln(&format!("impl {struct_name_sub} {{"));
-        w.ln("    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {");
-        w.ln("        Self {");
+        w.ln(&format!("impl {sub} {{"));
+        w.ln("    pub const EMPTY: Self = Self {");
         for cmd in cmds {
-            let field = fn_field(&cmd.name);
-            let name = &cmd.name;
-            if optional_struct {
+            w.ln(&format!("        {}: None,", fn_field(&cmd.name)));
+        }
+        w.ln("    };");
+        if !matches!(depends, Depends::Ext(_)) {
+            w.blank();
+            w.ln("    pub fn load<F: FnMut(&CStr) -> *const c_void>(mut loader: F) -> Self {");
+            w.ln("        Self {");
+            for cmd in cmds {
                 w.ln(&format!(
-                    r#"            {field}: to_panic(loader(c"{name}")),"#
-                ));
-            } else {
-                w.ln(&format!(
-                    r#"            {field}: to_option(loader(c"{name}")),"#
+                    r#"            {}: to_option(loader(c"{}")),"#,
+                    fn_field(&cmd.name),
+                    cmd.name
                 ));
             }
+            w.ln("        }");
+            w.ln("    }");
         }
-        w.ln("        }");
-        w.ln("    }");
         w.ln("}");
         w.blank();
     }
+}
+
+/// Loads each slot under the name this provider exposes it as. A slot shared with other
+/// providers is only filled while still empty, so a later provider can't replace (or null)
+/// an earlier one.
+fn write_fills(
+    w: &mut Writer,
+    fills: &IndexMap<&(String, String), &str>,
+    providers: &HashMap<&(String, String), usize>,
+) {
+    for (&slot, name) in fills {
+        let (table, field) = slot;
+        let load = format!(r#"out.{table}.{field} = to_option(loader(c"{name}"));"#);
+        if providers[slot] > 1 {
+            w.ln(&format!("if out.{table}.{field}.is_none() {{ {load} }}"));
+        } else {
+            w.ln(&load);
+        }
+    }
+}
+
+/// Follows `alias` links to the command that owns the function slot.
+fn canonical<'a>(registry: &'a Registry, mut name: &'a str) -> &'a str {
+    while let Some(target) = registry.commands.get(name).and_then(|c| c.alias.as_deref()) {
+        name = target;
+    }
+    name
 }
 
 fn write_dispatch_table(w: &mut Writer, struct_name: &str, groups: IndexSet<String>) {

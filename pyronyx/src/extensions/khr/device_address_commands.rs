@@ -9,6 +9,8 @@ use core::mem::MaybeUninit;
 use core::ptr::{from_ref, null};
 
 /// Type: `Device`
+///
+/// Requires: (((([`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1) + [`VK_KHR_buffer_device_address`](crate::khr::buffer_device_address)) or Vulkan 1.2) + [`VK_KHR_synchronization2`](crate::khr::synchronization2) + [`VK_EXT_extended_dynamic_state`](crate::ext::extended_dynamic_state)) or Vulkan 1.3
 pub const NAME: &CStr = c"VK_KHR_device_address_commands";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -108,9 +110,8 @@ impl DeviceAddressCommandsCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .khr_device_address_commands
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .copy_memory_khr;
+            .copy_memory_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, copy_memory_info.map_or(null(), from_ref)) };
     }
@@ -126,9 +127,8 @@ impl DeviceAddressCommandsCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .khr_device_address_commands
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .copy_memory_to_image_khr;
+            .copy_memory_to_image_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, copy_memory_info.map_or(null(), from_ref)) };
     }
@@ -144,9 +144,8 @@ impl DeviceAddressCommandsCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .khr_device_address_commands
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .copy_image_to_memory_khr;
+            .copy_image_to_memory_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, copy_memory_info.map_or(null(), from_ref)) };
     }
@@ -167,9 +166,8 @@ impl DeviceAddressCommandsCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .khr_device_address_commands
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .update_memory_khr;
+            .update_memory_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -198,9 +196,8 @@ impl DeviceAddressCommandsCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .khr_device_address_commands
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .fill_memory_khr;
+            .fill_memory_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, dst_range, dst_flags, data) };
     }
@@ -224,9 +221,8 @@ impl DeviceAddressCommandsCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .khr_device_address_commands
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .copy_query_pool_results_to_memory_khr;
+            .copy_query_pool_results_to_memory_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -255,9 +251,8 @@ impl DeviceAddressCommandsCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .khr_device_address_commands
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .begin_conditional_rendering2_ext;
+            .begin_conditional_rendering2_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, conditional_rendering_begin) };
     }
@@ -277,9 +272,8 @@ impl DeviceAddressCommandsCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .khr_device_address_commands
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .bind_transform_feedback_buffers2_ext;
+            .bind_transform_feedback_buffers2_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -306,9 +300,8 @@ impl DeviceAddressCommandsCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .khr_device_address_commands
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .begin_transform_feedback2_ext;
+            .begin_transform_feedback2_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -335,9 +328,8 @@ impl DeviceAddressCommandsCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .khr_device_address_commands
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .end_transform_feedback2_ext;
+            .end_transform_feedback2_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -368,9 +360,8 @@ impl DeviceAddressCommandsCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .khr_device_address_commands
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .draw_indirect_byte_count2_ext;
+            .draw_indirect_byte_count2_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -395,9 +386,8 @@ impl DeviceAddressCommandsCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .khr_device_address_commands
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .write_marker_to_memory_amd;
+            .write_marker_to_memory_amd
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, info) };
     }
@@ -413,9 +403,8 @@ impl DeviceAddressCommandsCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .khr_device_address_commands
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .bind_index_buffer3_khr;
+            .bind_index_buffer3_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, info) };
     }
@@ -431,9 +420,8 @@ impl DeviceAddressCommandsCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .khr_device_address_commands
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .bind_vertex_buffers3_khr;
+            .bind_vertex_buffers3_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -457,9 +445,8 @@ impl DeviceAddressCommandsCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .khr_device_address_commands
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .draw_indirect2_khr;
+            .draw_indirect2_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, info) };
     }
@@ -476,9 +463,8 @@ impl DeviceAddressCommandsCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .khr_device_address_commands
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .draw_indexed_indirect2_khr;
+            .draw_indexed_indirect2_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, info) };
     }
@@ -495,9 +481,8 @@ impl DeviceAddressCommandsCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .khr_device_address_commands
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .draw_indirect_count2_khr;
+            .draw_indirect_count2_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, info) };
     }
@@ -514,9 +499,8 @@ impl DeviceAddressCommandsCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .khr_device_address_commands
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .draw_indexed_indirect_count2_khr;
+            .draw_indexed_indirect_count2_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, info) };
     }
@@ -533,9 +517,8 @@ impl DeviceAddressCommandsCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .khr_device_address_commands
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .draw_mesh_tasks_indirect2_ext;
+            .draw_mesh_tasks_indirect2_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, info) };
     }
@@ -552,9 +535,8 @@ impl DeviceAddressCommandsCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .khr_device_address_commands
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .draw_mesh_tasks_indirect_count2_ext;
+            .draw_mesh_tasks_indirect_count2_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, info) };
     }
@@ -571,9 +553,8 @@ impl DeviceAddressCommandsCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .khr_device_address_commands
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .dispatch_indirect2_khr;
+            .dispatch_indirect2_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, info) };
     }
@@ -599,9 +580,8 @@ impl DeviceAddressCommandsDevice for Device {
         let call = self
             .fns()
             .khr_device_address_commands
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .create_acceleration_structure2_khr;
+            .create_acceleration_structure2_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(

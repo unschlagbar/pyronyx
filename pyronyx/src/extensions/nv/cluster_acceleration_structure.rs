@@ -5,9 +5,10 @@
 
 use crate::vk::*;
 use core::ffi::CStr;
-use core::mem::MaybeUninit;
 
 /// Type: `Device`
+///
+/// Requires: [`VK_KHR_acceleration_structure`](crate::khr::acceleration_structure)
 pub const NAME: &CStr = c"VK_NV_cluster_acceleration_structure";
 pub const SPEC_VERSION: u32 = 4;
 
@@ -15,7 +16,8 @@ pub trait ClusterAccelerationStructureDevice {
     fn get_cluster_acceleration_structure_build_sizes(
         &self,
         info: &ClusterAccelerationStructureInputInfoNV,
-    ) -> AccelerationStructureBuildSizesInfoKHR<'_>;
+        size_info: &mut AccelerationStructureBuildSizesInfoKHR<'_>,
+    );
 }
 
 impl ClusterAccelerationStructureDevice for Device {
@@ -24,19 +26,15 @@ impl ClusterAccelerationStructureDevice for Device {
     fn get_cluster_acceleration_structure_build_sizes(
         &self,
         info: &ClusterAccelerationStructureInputInfoNV,
-    ) -> AccelerationStructureBuildSizesInfoKHR<'_> {
-        let mut out = MaybeUninit::uninit();
+        size_info: &mut AccelerationStructureBuildSizesInfoKHR<'_>,
+    ) {
         let call = self
             .fns()
             .nv_cluster_acceleration_structure
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_cluster_acceleration_structure_build_sizes_nv;
+            .get_cluster_acceleration_structure_build_sizes_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
-        unsafe {
-            (call)(self.handle, info, out.as_mut_ptr());
-            out.assume_init()
-        }
+        unsafe { (call)(self.handle, info, size_info) };
     }
 }
 
@@ -62,9 +60,8 @@ impl ClusterAccelerationStructureCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .nv_cluster_acceleration_structure
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .build_cluster_acceleration_structure_indirect_nv;
+            .build_cluster_acceleration_structure_indirect_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, command_infos) };
     }

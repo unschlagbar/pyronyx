@@ -115,7 +115,7 @@ dependencies = [
 
 [[package]]
 name = "pyronyx"
-version = "0.4.0+1.4.357"
+version = "0.5.0+1.4.357"
 dependencies = [
  "raw-window-handle",
  "raw-window-metal",

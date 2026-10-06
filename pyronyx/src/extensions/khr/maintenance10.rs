@@ -8,6 +8,8 @@ use core::ffi::CStr;
 use core::ptr::{from_ref, null};
 
 /// Type: `Device`
+///
+/// Requires: [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1
 pub const NAME: &CStr = c"VK_KHR_maintenance10";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -27,9 +29,8 @@ impl Maintenance10CommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .khr_maintenance10
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .end_rendering2_khr;
+            .end_rendering2_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, rendering_end_info.map_or(null(), from_ref)) };
     }

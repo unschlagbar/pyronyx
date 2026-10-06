@@ -42,9 +42,8 @@ impl DeferredHostOperationsDevice for Device {
         let call = self
             .fns()
             .khr_deferred_host_operations
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .create_deferred_operation_khr;
+            .create_deferred_operation_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -66,9 +65,8 @@ impl DeferredHostOperationsDevice for Device {
         let call = self
             .fns()
             .khr_deferred_host_operations
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .destroy_deferred_operation_khr;
+            .destroy_deferred_operation_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, operation, allocator.map_or(null(), from_ref)) };
     }
@@ -79,9 +77,8 @@ impl DeferredHostOperationsDevice for Device {
         let call = self
             .fns()
             .khr_deferred_host_operations
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_deferred_operation_max_concurrency_khr;
+            .get_deferred_operation_max_concurrency_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, operation) }
     }
@@ -92,9 +89,8 @@ impl DeferredHostOperationsDevice for Device {
         let call = self
             .fns()
             .khr_deferred_host_operations
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_deferred_operation_result_khr;
+            .get_deferred_operation_result_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, operation) }.result()
     }
@@ -105,9 +101,8 @@ impl DeferredHostOperationsDevice for Device {
         let call = self
             .fns()
             .khr_deferred_host_operations
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .deferred_operation_join_khr;
+            .deferred_operation_join_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, operation) }.result()
     }

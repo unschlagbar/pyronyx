@@ -7,6 +7,8 @@ use crate::vk::*;
 use core::ffi::CStr;
 
 /// Type: `Instance`
+///
+/// Requires: [`VK_KHR_display`](crate::khr::display)
 pub const NAME: &CStr = c"VK_EXT_direct_mode_display";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -21,9 +23,8 @@ impl DirectModeDisplayPhysicalDevice for PhysicalDevice {
         let call = self
             .fns()
             .ext_direct_mode_display
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .release_display_ext;
+            .release_display_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, display) }.result()
     }

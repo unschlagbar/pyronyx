@@ -5,9 +5,10 @@
 
 use crate::vk::*;
 use core::ffi::CStr;
-use core::mem::MaybeUninit;
 
 /// Type: `Device`
+///
+/// Requires: [`VK_NV_device_generated_commands`](crate::nv::device_generated_commands)
 pub const NAME: &CStr = c"VK_NV_device_generated_commands_compute";
 pub const SPEC_VERSION: u32 = 2;
 
@@ -35,9 +36,8 @@ impl DeviceGeneratedCommandsComputeCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .nv_device_generated_commands_compute
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .update_pipeline_indirect_buffer_nv;
+            .update_pipeline_indirect_buffer_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, pipeline_bind_point, pipeline) };
     }
@@ -47,7 +47,8 @@ pub trait DeviceGeneratedCommandsComputeDevice {
     fn get_pipeline_indirect_memory_requirements(
         &self,
         create_info: &ComputePipelineCreateInfo,
-    ) -> MemoryRequirements2<'_>;
+        memory_requirements: &mut MemoryRequirements2<'_>,
+    );
 
     fn get_pipeline_indirect_address(
         &self,
@@ -61,19 +62,15 @@ impl DeviceGeneratedCommandsComputeDevice for Device {
     fn get_pipeline_indirect_memory_requirements(
         &self,
         create_info: &ComputePipelineCreateInfo,
-    ) -> MemoryRequirements2<'_> {
-        let mut out = MaybeUninit::uninit();
+        memory_requirements: &mut MemoryRequirements2<'_>,
+    ) {
         let call = self
             .fns()
             .nv_device_generated_commands_compute
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_pipeline_indirect_memory_requirements_nv;
+            .get_pipeline_indirect_memory_requirements_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
-        unsafe {
-            (call)(self.handle, create_info, out.as_mut_ptr());
-            out.assume_init()
-        }
+        unsafe { (call)(self.handle, create_info, memory_requirements) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPipelineIndirectDeviceAddressNV.html>
@@ -85,9 +82,8 @@ impl DeviceGeneratedCommandsComputeDevice for Device {
         let call = self
             .fns()
             .nv_device_generated_commands_compute
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_pipeline_indirect_device_address_nv;
+            .get_pipeline_indirect_device_address_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, info) }
     }

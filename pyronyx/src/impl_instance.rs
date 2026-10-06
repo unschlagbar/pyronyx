@@ -16,7 +16,7 @@ impl Instance {
             .fns()
             .v1_0
             .destroy_instance
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, allocator.map_or(null(), from_ref)) };
     }
@@ -34,7 +34,7 @@ impl Instance {
             .fns()
             .v1_1
             .enumerate_physical_device_groups
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -55,8 +55,10 @@ impl Instance {
                 .fns()
                 .v1_1
                 .enumerate_physical_device_groups
-                .expect(Self::CORE_LOAD_ERROR))(
-                self.handle, out.as_mut_ptr(), ptr::null_mut()
+                .unwrap_or_else(|| Self::core_load_error()))(
+                self.handle,
+                out.as_mut_ptr(),
+                ptr::null_mut(),
             )
         }
         .init_on_success(out)

@@ -10,6 +10,8 @@ use core::mem::MaybeUninit;
 use core::ptr::{from_ref, null};
 
 /// Type: `Device`
+///
+/// Requires: Vulkan 1.1
 pub const NAME: &CStr = c"VK_NV_external_sci_sync2";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -60,9 +62,8 @@ impl ExternalSciSync2Device for Device {
         let call = self
             .fns()
             .nv_external_sci_sync2
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_fence_sci_sync_fence_nv;
+            .get_fence_sci_sync_fence_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, get_sci_sync_handle_info, handle) }.result()
     }
@@ -77,9 +78,8 @@ impl ExternalSciSync2Device for Device {
         let call = self
             .fns()
             .nv_external_sci_sync2
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_fence_sci_sync_obj_nv;
+            .get_fence_sci_sync_obj_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, get_sci_sync_handle_info, handle) }.result()
     }
@@ -93,9 +93,8 @@ impl ExternalSciSync2Device for Device {
         let call = self
             .fns()
             .nv_external_sci_sync2
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .import_fence_sci_sync_fence_nv;
+            .import_fence_sci_sync_fence_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, import_fence_sci_sync_info) }.result()
     }
@@ -109,9 +108,8 @@ impl ExternalSciSync2Device for Device {
         let call = self
             .fns()
             .nv_external_sci_sync2
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .import_fence_sci_sync_obj_nv;
+            .import_fence_sci_sync_obj_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, import_fence_sci_sync_info) }.result()
     }
@@ -127,9 +125,8 @@ impl ExternalSciSync2Device for Device {
         let call = self
             .fns()
             .nv_external_sci_sync2
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .create_semaphore_sci_sync_pool_nv;
+            .create_semaphore_sci_sync_pool_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -152,9 +149,8 @@ impl ExternalSciSync2Device for Device {
         let call = self
             .fns()
             .nv_external_sci_sync2
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .destroy_semaphore_sci_sync_pool_nv;
+            .destroy_semaphore_sci_sync_pool_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -185,9 +181,8 @@ impl ExternalSciSync2PhysicalDevice for PhysicalDevice {
         let call = self
             .fns()
             .nv_external_sci_sync2
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_physical_device_sci_sync_attributes_nv;
+            .get_physical_device_sci_sync_attributes_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, sci_sync_attributes_info, attributes) }.result()
     }

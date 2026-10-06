@@ -7,6 +7,8 @@ use crate::vk::*;
 use core::ffi::CStr;
 
 /// Type: `Device`
+///
+/// Requires: [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1
 pub const NAME: &CStr = c"VK_EXT_transform_feedback";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -74,9 +76,8 @@ impl TransformFeedbackCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_transform_feedback
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .bind_transform_feedback_buffers_ext;
+            .bind_transform_feedback_buffers_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -107,9 +108,8 @@ impl TransformFeedbackCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_transform_feedback
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .begin_transform_feedback_ext;
+            .begin_transform_feedback_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -139,9 +139,8 @@ impl TransformFeedbackCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_transform_feedback
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .end_transform_feedback_ext;
+            .end_transform_feedback_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -171,9 +170,8 @@ impl TransformFeedbackCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_transform_feedback
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .begin_query_indexed_ext;
+            .begin_query_indexed_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, query_pool, query, flags, index) };
     }
@@ -189,9 +187,8 @@ impl TransformFeedbackCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_transform_feedback
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .end_query_indexed_ext;
+            .end_query_indexed_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, query_pool, query, index) };
     }
@@ -216,9 +213,8 @@ impl TransformFeedbackCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_transform_feedback
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .draw_indirect_byte_count_ext;
+            .draw_indirect_byte_count_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(

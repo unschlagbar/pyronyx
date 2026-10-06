@@ -9,6 +9,8 @@ use core::ffi::CStr;
 use core::ptr::{from_ref, null};
 
 /// Type: `Device`
+///
+/// Requires: (([`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1) + [`VK_KHR_dynamic_rendering`](crate::khr::dynamic_rendering)) or Vulkan 1.3
 pub const NAME: &CStr = c"VK_EXT_shader_object";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -115,9 +117,8 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_shader_object
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_patch_control_points_ext;
+            .set_patch_control_points_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, patch_control_points) };
     }
@@ -133,9 +134,8 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_shader_object
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_logic_op_ext;
+            .set_logic_op_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, logic_op) };
     }
@@ -151,9 +151,8 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_shader_object
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_tessellation_domain_origin_ext;
+            .set_tessellation_domain_origin_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, domain_origin) };
     }
@@ -169,9 +168,8 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_shader_object
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_depth_clamp_enable_ext;
+            .set_depth_clamp_enable_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, depth_clamp_enable as _) };
     }
@@ -187,9 +185,8 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_shader_object
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_polygon_mode_ext;
+            .set_polygon_mode_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, polygon_mode) };
     }
@@ -205,9 +202,8 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_shader_object
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_rasterization_samples_ext;
+            .set_rasterization_samples_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, rasterization_samples) };
     }
@@ -223,9 +219,8 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_shader_object
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_sample_mask_ext;
+            .set_sample_mask_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, samples, sample_mask.map_or(null(), from_ref)) };
     }
@@ -241,9 +236,8 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_shader_object
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_alpha_to_coverage_enable_ext;
+            .set_alpha_to_coverage_enable_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, alpha_to_coverage_enable as _) };
     }
@@ -259,9 +253,8 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_shader_object
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_alpha_to_one_enable_ext;
+            .set_alpha_to_one_enable_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, alpha_to_one_enable as _) };
     }
@@ -277,9 +270,8 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_shader_object
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_logic_op_enable_ext;
+            .set_logic_op_enable_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, logic_op_enable as _) };
     }
@@ -295,9 +287,8 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_shader_object
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_color_blend_enable_ext;
+            .set_color_blend_enable_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -324,9 +315,8 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_shader_object
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_color_blend_equation_ext;
+            .set_color_blend_equation_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -353,9 +343,8 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_shader_object
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_color_write_mask_ext;
+            .set_color_write_mask_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -378,9 +367,8 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_shader_object
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_rasterization_stream_ext;
+            .set_rasterization_stream_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, rasterization_stream) };
     }
@@ -399,9 +387,8 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_shader_object
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_conservative_rasterization_mode_ext;
+            .set_conservative_rasterization_mode_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, conservative_rasterization_mode) };
     }
@@ -417,9 +404,8 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_shader_object
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_extra_primitive_overestimation_size_ext;
+            .set_extra_primitive_overestimation_size_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, extra_primitive_overestimation_size) };
     }
@@ -435,9 +421,8 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_shader_object
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_depth_clip_enable_ext;
+            .set_depth_clip_enable_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, depth_clip_enable as _) };
     }
@@ -453,9 +438,8 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_shader_object
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_sample_locations_enable_ext;
+            .set_sample_locations_enable_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, sample_locations_enable as _) };
     }
@@ -475,9 +459,8 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_shader_object
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_color_blend_advanced_ext;
+            .set_color_blend_advanced_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -500,9 +483,8 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_shader_object
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_provoking_vertex_mode_ext;
+            .set_provoking_vertex_mode_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, provoking_vertex_mode) };
     }
@@ -518,9 +500,8 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_shader_object
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_line_rasterization_mode_ext;
+            .set_line_rasterization_mode_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, line_rasterization_mode) };
     }
@@ -536,9 +517,8 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_shader_object
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_line_stipple_enable_ext;
+            .set_line_stipple_enable_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, stippled_line_enable as _) };
     }
@@ -554,9 +534,8 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_shader_object
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_depth_clip_negative_one_to_one_ext;
+            .set_depth_clip_negative_one_to_one_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, negative_one_to_one as _) };
     }
@@ -572,9 +551,8 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_shader_object
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_viewport_w_scaling_enable_nv;
+            .set_viewport_w_scaling_enable_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, viewport_w_scaling_enable as _) };
     }
@@ -590,9 +568,8 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_shader_object
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_viewport_swizzle_nv;
+            .set_viewport_swizzle_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -615,9 +592,8 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_shader_object
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_coverage_to_color_enable_nv;
+            .set_coverage_to_color_enable_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, coverage_to_color_enable as _) };
     }
@@ -633,9 +609,8 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_shader_object
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_coverage_to_color_location_nv;
+            .set_coverage_to_color_location_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, coverage_to_color_location) };
     }
@@ -651,9 +626,8 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_shader_object
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_coverage_modulation_mode_nv;
+            .set_coverage_modulation_mode_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, coverage_modulation_mode) };
     }
@@ -669,9 +643,8 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_shader_object
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_coverage_modulation_table_enable_nv;
+            .set_coverage_modulation_table_enable_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, coverage_modulation_table_enable as _) };
     }
@@ -687,9 +660,8 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_shader_object
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_coverage_modulation_table_nv;
+            .set_coverage_modulation_table_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -711,9 +683,8 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_shader_object
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_shading_rate_image_enable_nv;
+            .set_shading_rate_image_enable_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, shading_rate_image_enable as _) };
     }
@@ -729,9 +700,8 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_shader_object
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_coverage_reduction_mode_nv;
+            .set_coverage_reduction_mode_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, coverage_reduction_mode) };
     }
@@ -747,9 +717,8 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_shader_object
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_representative_fragment_test_enable_nv;
+            .set_representative_fragment_test_enable_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, representative_fragment_test_enable as _) };
     }
@@ -769,9 +738,8 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_shader_object
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_vertex_input_ext;
+            .set_vertex_input_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -796,9 +764,8 @@ impl ShaderObjectCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_shader_object
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .bind_shaders_ext;
+            .bind_shaders_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -837,9 +804,8 @@ impl ShaderObjectDevice for Device {
         let call = self
             .fns()
             .ext_shader_object
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .create_shaders_ext;
+            .create_shaders_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -859,9 +825,8 @@ impl ShaderObjectDevice for Device {
         let call = self
             .fns()
             .ext_shader_object
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .destroy_shader_ext;
+            .destroy_shader_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, shader, allocator.map_or(null(), from_ref)) };
     }
@@ -872,9 +837,8 @@ impl ShaderObjectDevice for Device {
         let call = self
             .fns()
             .ext_shader_object
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_shader_binary_data_ext;
+            .get_shader_binary_data_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         read_into_vec_result(|count, data: *mut u8| unsafe {
             (call)(self.handle, shader, count, data.cast())

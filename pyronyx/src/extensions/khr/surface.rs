@@ -24,9 +24,8 @@ impl SurfaceInstance for Instance {
         let call = self
             .fns()
             .khr_surface
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .destroy_surface_khr;
+            .destroy_surface_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, surface, allocator.map_or(null(), from_ref)) };
     }
@@ -50,9 +49,8 @@ impl SurfacePhysicalDevice for PhysicalDevice {
         let call = self
             .fns()
             .khr_surface
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_physical_device_surface_support_khr;
+            .get_physical_device_surface_support_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, queue_family_index, surface, out.as_mut_ptr()) }
             .init_on_success(out)
@@ -66,9 +64,8 @@ impl SurfacePhysicalDevice for PhysicalDevice {
         let call = self
             .fns()
             .khr_surface
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_physical_device_surface_capabilities_khr;
+            .get_physical_device_surface_capabilities_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, surface, out.as_mut_ptr()) }.init_on_success(out)
     }
@@ -79,9 +76,8 @@ impl SurfacePhysicalDevice for PhysicalDevice {
         let call = self
             .fns()
             .khr_surface
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_physical_device_surface_formats_khr;
+            .get_physical_device_surface_formats_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         read_into_vec_result(|count, data| unsafe { (call)(self.handle, surface, count, data) })
     }
@@ -92,9 +88,8 @@ impl SurfacePhysicalDevice for PhysicalDevice {
         let call = self
             .fns()
             .khr_surface
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_physical_device_surface_present_modes_khr;
+            .get_physical_device_surface_present_modes_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         read_into_vec_result(|count, data| unsafe { (call)(self.handle, surface, count, data) })
     }

@@ -9,6 +9,8 @@ use core::mem::MaybeUninit;
 use core::ptr;
 
 /// Type: `Device`
+///
+/// Requires: [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1
 pub const NAME: &CStr = c"VK_KHR_pipeline_executable_properties";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -58,9 +60,8 @@ impl PipelineExecutablePropertiesDevice for Device {
         let call = self
             .fns()
             .khr_pipeline_executable_properties
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_pipeline_executable_properties_khr;
+            .get_pipeline_executable_properties_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -84,9 +85,8 @@ impl PipelineExecutablePropertiesDevice for Device {
             (self
                 .fns()
                 .khr_pipeline_executable_properties
-                .as_ref()
-                .expect(Self::EXT_LOAD_ERROR)
-                .get_pipeline_executable_properties_khr)(
+                .get_pipeline_executable_properties_khr
+                .unwrap_or_else(|| Self::ext_load_error()))(
                 self.handle,
                 pipeline_info,
                 out.as_mut_ptr(),
@@ -110,9 +110,8 @@ impl PipelineExecutablePropertiesDevice for Device {
         let call = self
             .fns()
             .khr_pipeline_executable_properties
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_pipeline_executable_statistics_khr;
+            .get_pipeline_executable_statistics_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -136,9 +135,8 @@ impl PipelineExecutablePropertiesDevice for Device {
             (self
                 .fns()
                 .khr_pipeline_executable_properties
-                .as_ref()
-                .expect(Self::EXT_LOAD_ERROR)
-                .get_pipeline_executable_statistics_khr)(
+                .get_pipeline_executable_statistics_khr
+                .unwrap_or_else(|| Self::ext_load_error()))(
                 self.handle,
                 executable_info,
                 out.as_mut_ptr(),
@@ -162,9 +160,8 @@ impl PipelineExecutablePropertiesDevice for Device {
         let call = self
             .fns()
             .khr_pipeline_executable_properties
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_pipeline_executable_internal_representations_khr;
+            .get_pipeline_executable_internal_representations_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -188,9 +185,8 @@ impl PipelineExecutablePropertiesDevice for Device {
             (self
                 .fns()
                 .khr_pipeline_executable_properties
-                .as_ref()
-                .expect(Self::EXT_LOAD_ERROR)
-                .get_pipeline_executable_internal_representations_khr)(
+                .get_pipeline_executable_internal_representations_khr
+                .unwrap_or_else(|| Self::ext_load_error()))(
                 self.handle,
                 executable_info,
                 out.as_mut_ptr(),

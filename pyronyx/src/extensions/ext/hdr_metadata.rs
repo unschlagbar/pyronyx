@@ -7,6 +7,8 @@ use crate::vk::*;
 use core::ffi::CStr;
 
 /// Type: `Device`
+///
+/// Requires: [`VK_KHR_swapchain`](crate::khr::swapchain)
 pub const NAME: &CStr = c"VK_EXT_hdr_metadata";
 pub const SPEC_VERSION: u32 = 3;
 
@@ -22,9 +24,8 @@ impl HdrMetadataDevice for Device {
         let call = self
             .fns()
             .ext_hdr_metadata
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_hdr_metadata_ext;
+            .set_hdr_metadata_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(

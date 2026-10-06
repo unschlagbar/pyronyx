@@ -9,6 +9,8 @@ use core::mem::MaybeUninit;
 use core::ptr;
 
 /// Type: `Device`
+///
+/// Requires: [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1
 pub const NAME: &CStr = c"VK_ARM_performance_counters_by_region";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -41,9 +43,8 @@ impl PerformanceCountersByRegionPhysicalDevice for PhysicalDevice {
         let call = self
             .fns()
             .arm_performance_counters_by_region
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .enumerate_physical_device_queue_family_performance_counters_by_region_arm;
+            .enumerate_physical_device_queue_family_performance_counters_by_region_arm
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -68,9 +69,8 @@ impl PerformanceCountersByRegionPhysicalDevice for PhysicalDevice {
             (self
                 .fns()
                 .arm_performance_counters_by_region
-                .as_ref()
-                .expect(Self::EXT_LOAD_ERROR)
-                .enumerate_physical_device_queue_family_performance_counters_by_region_arm)(
+                .enumerate_physical_device_queue_family_performance_counters_by_region_arm
+                .unwrap_or_else(|| Self::ext_load_error()))(
                 self.handle,
                 queue_family_index,
                 out.as_mut_ptr(),

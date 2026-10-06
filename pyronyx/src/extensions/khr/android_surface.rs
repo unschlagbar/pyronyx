@@ -9,6 +9,8 @@ use core::mem::MaybeUninit;
 use core::ptr::{from_ref, null};
 
 /// Type: `Instance`
+///
+/// Requires: [`VK_KHR_surface`](crate::khr::surface)
 pub const NAME: &CStr = c"VK_KHR_android_surface";
 pub const SPEC_VERSION: u32 = 6;
 
@@ -32,9 +34,8 @@ impl AndroidSurfaceInstance for Instance {
         let call = self
             .fns()
             .khr_android_surface
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .create_android_surface_khr;
+            .create_android_surface_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(

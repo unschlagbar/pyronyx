@@ -8,6 +8,8 @@ use core::ffi::CStr;
 use core::ptr::{from_ref, null};
 
 /// Type: `Device`
+///
+/// Requires: [`VK_KHR_swapchain`](crate::khr::swapchain) + [`VK_KHR_display`](crate::khr::display)
 pub const NAME: &CStr = c"VK_KHR_display_swapchain";
 pub const SPEC_VERSION: u32 = 10;
 
@@ -33,9 +35,8 @@ impl DisplaySwapchainDevice for Device {
         let call = self
             .fns()
             .khr_display_swapchain
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .create_shared_swapchains_khr;
+            .create_shared_swapchains_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(

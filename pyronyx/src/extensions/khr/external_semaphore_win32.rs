@@ -8,6 +8,8 @@ use core::ffi::CStr;
 use core::mem::MaybeUninit;
 
 /// Type: `Device`
+///
+/// Requires: [`VK_KHR_external_semaphore`](crate::khr::external_semaphore)
 pub const NAME: &CStr = c"VK_KHR_external_semaphore_win32";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -34,9 +36,8 @@ impl ExternalSemaphoreWin32Device for Device {
         let call = self
             .fns()
             .khr_external_semaphore_win32
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_semaphore_win32_handle_khr;
+            .get_semaphore_win32_handle_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, get_win32_handle_info, out.as_mut_ptr()) }.init_on_success(out)
     }
@@ -50,9 +51,8 @@ impl ExternalSemaphoreWin32Device for Device {
         let call = self
             .fns()
             .khr_external_semaphore_win32
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .import_semaphore_win32_handle_khr;
+            .import_semaphore_win32_handle_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, import_semaphore_win32_handle_info) }.result()
     }

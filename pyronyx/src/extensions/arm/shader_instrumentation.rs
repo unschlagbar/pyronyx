@@ -10,6 +10,8 @@ use core::ptr;
 use core::ptr::{from_ref, null};
 
 /// Type: `Device`
+///
+/// Requires: [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1
 pub const NAME: &CStr = c"VK_ARM_shader_instrumentation";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -34,9 +36,8 @@ impl ShaderInstrumentationPhysicalDevice for PhysicalDevice {
         let call = self
             .fns()
             .arm_shader_instrumentation
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .enumerate_physical_device_shader_instrumentation_metrics_arm;
+            .enumerate_physical_device_shader_instrumentation_metrics_arm
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -56,9 +57,8 @@ impl ShaderInstrumentationPhysicalDevice for PhysicalDevice {
             (self
                 .fns()
                 .arm_shader_instrumentation
-                .as_ref()
-                .expect(Self::EXT_LOAD_ERROR)
-                .enumerate_physical_device_shader_instrumentation_metrics_arm)(
+                .enumerate_physical_device_shader_instrumentation_metrics_arm
+                .unwrap_or_else(|| Self::ext_load_error()))(
                 self.handle,
                 out.as_mut_ptr(),
                 ptr::null_mut(),
@@ -105,9 +105,8 @@ impl ShaderInstrumentationDevice for Device {
         let call = self
             .fns()
             .arm_shader_instrumentation
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .create_shader_instrumentation_arm;
+            .create_shader_instrumentation_arm
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -130,9 +129,8 @@ impl ShaderInstrumentationDevice for Device {
         let call = self
             .fns()
             .arm_shader_instrumentation
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .destroy_shader_instrumentation_arm;
+            .destroy_shader_instrumentation_arm
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -155,9 +153,8 @@ impl ShaderInstrumentationDevice for Device {
         let call = self
             .fns()
             .arm_shader_instrumentation
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_shader_instrumentation_values_arm;
+            .get_shader_instrumentation_values_arm
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -177,9 +174,8 @@ impl ShaderInstrumentationDevice for Device {
         let call = self
             .fns()
             .arm_shader_instrumentation
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .clear_shader_instrumentation_metrics_arm;
+            .clear_shader_instrumentation_metrics_arm
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, instrumentation) };
     }
@@ -203,9 +199,8 @@ impl ShaderInstrumentationCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .arm_shader_instrumentation
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .begin_shader_instrumentation_arm;
+            .begin_shader_instrumentation_arm
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, instrumentation) };
     }
@@ -221,9 +216,8 @@ impl ShaderInstrumentationCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .arm_shader_instrumentation
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .end_shader_instrumentation_arm;
+            .end_shader_instrumentation_arm
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle) };
     }

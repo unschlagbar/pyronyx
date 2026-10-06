@@ -52,9 +52,8 @@ impl ValidationCacheDevice for Device {
         let call = self
             .fns()
             .ext_validation_cache
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .create_validation_cache_ext;
+            .create_validation_cache_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -77,9 +76,8 @@ impl ValidationCacheDevice for Device {
         let call = self
             .fns()
             .ext_validation_cache
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .destroy_validation_cache_ext;
+            .destroy_validation_cache_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -103,9 +101,8 @@ impl ValidationCacheDevice for Device {
         let call = self
             .fns()
             .ext_validation_cache
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_validation_cache_data_ext;
+            .get_validation_cache_data_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -126,9 +123,8 @@ impl ValidationCacheDevice for Device {
             (self
                 .fns()
                 .ext_validation_cache
-                .as_ref()
-                .expect(Self::EXT_LOAD_ERROR)
-                .get_validation_cache_data_ext)(
+                .get_validation_cache_data_ext
+                .unwrap_or_else(|| Self::ext_load_error()))(
                 self.handle,
                 validation_cache,
                 out.as_mut_ptr(),
@@ -148,9 +144,8 @@ impl ValidationCacheDevice for Device {
         let call = self
             .fns()
             .ext_validation_cache
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .merge_validation_caches_ext;
+            .merge_validation_caches_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(

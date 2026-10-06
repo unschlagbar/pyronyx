@@ -264,12 +264,11 @@ pub fn write_command_wrapper(
 
     let fn_name = fn_field(&cmd.name);
     let vtable = vtable_for_version(cmd);
-    let error = if matches!(cmd.table_name(), Depends::Core(_)) {
-        ".expect(Self::CORE_LOAD_ERROR)"
+    let unwrap = if matches!(cmd.table_name(), Depends::Core(_)) {
+        ".unwrap_or_else(|| Self::core_load_error())"
     } else {
-        ".expect(Self::EXT_LOAD_ERROR)"
+        ".unwrap_or_else(|| Self::ext_load_error())"
     };
-    let unwrap = if cmd.option_member() { error } else { "" };
     let vec = VEC_FNS.iter().any(|f| f == &cmd.name);
 
     let is_mut_slice_fn = find_len_fn(&cmd.name).is_some();
@@ -602,8 +601,12 @@ fn write_fn_body(
                 slice_name,
                 mutable,
                 elem_ty,
+                len_assert,
                 ..
             } => {
+                if let Some(len) = len_assert {
+                    w.ln(&format!("assert_eq!({slice_name}.len(), {len} as usize);"));
+                }
                 if vec {
                     if elem_ty == "u8" {
                         "data.cast()".to_string()
@@ -743,14 +746,10 @@ fn write_fn_body(
 }
 
 fn vtable_for_version(cmd: &VkCommand) -> String {
-    let version = cmd.table_name();
-    let unwrap = if matches!(version, Depends::Ext(_)) {
-        ".as_ref().expect(Self::EXT_LOAD_ERROR)"
-    } else {
-        ""
-    };
-    let version = version.to_string().to_snake_case();
-    format!("self.fns().{}{unwrap}", version)
+    format!(
+        "self.fns().{}",
+        cmd.table_name().to_string().to_snake_case()
+    )
 }
 
 fn write_cmd_docs(w: &mut Writer, cmd: &VkCommand) {

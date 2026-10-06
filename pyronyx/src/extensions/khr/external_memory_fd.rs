@@ -9,6 +9,8 @@ use core::ffi::c_int;
 use core::mem::MaybeUninit;
 
 /// Type: `Device`
+///
+/// Requires: [`VK_KHR_external_memory`](crate::khr::external_memory) or Vulkan 1.1
 pub const NAME: &CStr = c"VK_KHR_external_memory_fd";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -19,7 +21,8 @@ pub trait ExternalMemoryFdDevice {
         &self,
         handle_type: ExternalMemoryHandleTypeFlags,
         fd: c_int,
-    ) -> Result<MemoryFdPropertiesKHR<'_>>;
+        memory_fd_properties: &mut MemoryFdPropertiesKHR<'_>,
+    ) -> Result<()>;
 }
 
 impl ExternalMemoryFdDevice for Device {
@@ -30,9 +33,8 @@ impl ExternalMemoryFdDevice for Device {
         let call = self
             .fns()
             .khr_external_memory_fd
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_memory_fd_khr;
+            .get_memory_fd_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, get_fd_info, out.as_mut_ptr()) }.init_on_success(out)
     }
@@ -43,15 +45,14 @@ impl ExternalMemoryFdDevice for Device {
         &self,
         handle_type: ExternalMemoryHandleTypeFlags,
         fd: c_int,
-    ) -> Result<MemoryFdPropertiesKHR<'_>> {
-        let mut out = MaybeUninit::uninit();
+        memory_fd_properties: &mut MemoryFdPropertiesKHR<'_>,
+    ) -> Result<()> {
         let call = self
             .fns()
             .khr_external_memory_fd
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_memory_fd_properties_khr;
+            .get_memory_fd_properties_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
-        unsafe { (call)(self.handle, handle_type, fd, out.as_mut_ptr()) }.init_on_success(out)
+        unsafe { (call)(self.handle, handle_type, fd, memory_fd_properties) }.result()
     }
 }

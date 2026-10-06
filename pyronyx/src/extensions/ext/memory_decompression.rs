@@ -7,6 +7,8 @@ use crate::vk::*;
 use core::ffi::CStr;
 
 /// Type: `Device`
+///
+/// Requires: [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) + [`VK_KHR_buffer_device_address`](crate::khr::buffer_device_address)
 pub const NAME: &CStr = c"VK_EXT_memory_decompression";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -35,9 +37,8 @@ impl MemoryDecompressionCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_memory_decompression
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .decompress_memory_ext;
+            .decompress_memory_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, decompress_memory_info_ext) };
     }
@@ -60,9 +61,8 @@ impl MemoryDecompressionCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_memory_decompression
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .decompress_memory_indirect_count_ext;
+            .decompress_memory_indirect_count_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(

@@ -8,6 +8,8 @@ use core::ffi::CStr;
 use core::mem::MaybeUninit;
 
 /// Type: `Device`
+///
+/// Requires: [`VK_KHR_swapchain`](crate::khr::swapchain) + [`VK_KHR_present_id2`](crate::khr::present_id2) + [`VK_KHR_get_surface_capabilities2`](crate::khr::get_surface_capabilities2) + [`VK_KHR_calibrated_timestamps`](crate::khr::calibrated_timestamps)
 pub const NAME: &CStr = c"VK_EXT_present_timing";
 pub const SPEC_VERSION: u32 = 3;
 
@@ -33,7 +35,8 @@ pub trait PresentTimingDevice {
     fn get_past_presentation_timing(
         &self,
         past_presentation_timing_info: &PastPresentationTimingInfoEXT,
-    ) -> Result<PastPresentationTimingPropertiesEXT<'_>>;
+        past_presentation_timing_properties: &mut PastPresentationTimingPropertiesEXT<'_>,
+    ) -> Result<()>;
 }
 
 impl PresentTimingDevice for Device {
@@ -47,9 +50,8 @@ impl PresentTimingDevice for Device {
         let call = self
             .fns()
             .ext_present_timing
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_swapchain_present_timing_queue_size_ext;
+            .set_swapchain_present_timing_queue_size_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, swapchain, size) }.result()
     }
@@ -65,9 +67,8 @@ impl PresentTimingDevice for Device {
         let call = self
             .fns()
             .ext_present_timing
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_swapchain_timing_properties_ext;
+            .get_swapchain_timing_properties_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -91,9 +92,8 @@ impl PresentTimingDevice for Device {
         let call = self
             .fns()
             .ext_present_timing
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_swapchain_time_domain_properties_ext;
+            .get_swapchain_time_domain_properties_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -111,16 +111,21 @@ impl PresentTimingDevice for Device {
     fn get_past_presentation_timing(
         &self,
         past_presentation_timing_info: &PastPresentationTimingInfoEXT,
-    ) -> Result<PastPresentationTimingPropertiesEXT<'_>> {
-        let mut out = MaybeUninit::uninit();
+        past_presentation_timing_properties: &mut PastPresentationTimingPropertiesEXT<'_>,
+    ) -> Result<()> {
         let call = self
             .fns()
             .ext_present_timing
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_past_presentation_timing_ext;
+            .get_past_presentation_timing_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
-        unsafe { (call)(self.handle, past_presentation_timing_info, out.as_mut_ptr()) }
-            .init_on_success(out)
+        unsafe {
+            (call)(
+                self.handle,
+                past_presentation_timing_info,
+                past_presentation_timing_properties,
+            )
+        }
+        .result()
     }
 }

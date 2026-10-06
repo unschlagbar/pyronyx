@@ -9,6 +9,8 @@ use core::ffi::CStr;
 use core::mem::MaybeUninit;
 
 /// Type: `Device`
+///
+/// Requires: (((([`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1) + [`VK_KHR_buffer_device_address`](crate::khr::buffer_device_address) + [`VK_EXT_descriptor_indexing`](crate::ext::descriptor_indexing)) or Vulkan 1.2) + [`VK_KHR_synchronization2`](crate::khr::synchronization2)) or Vulkan 1.3
 pub const NAME: &CStr = c"VK_EXT_descriptor_buffer";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -62,9 +64,8 @@ impl DescriptorBufferDevice for Device {
         let call = self
             .fns()
             .ext_descriptor_buffer
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_descriptor_set_layout_size_ext;
+            .get_descriptor_set_layout_size_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(self.handle, layout, out.as_mut_ptr());
@@ -83,9 +84,8 @@ impl DescriptorBufferDevice for Device {
         let call = self
             .fns()
             .ext_descriptor_buffer
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_descriptor_set_layout_binding_offset_ext;
+            .get_descriptor_set_layout_binding_offset_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(self.handle, layout, binding, out.as_mut_ptr());
@@ -99,9 +99,8 @@ impl DescriptorBufferDevice for Device {
         let call = self
             .fns()
             .ext_descriptor_buffer
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_descriptor_ext;
+            .get_descriptor_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -123,9 +122,8 @@ impl DescriptorBufferDevice for Device {
         let call = self
             .fns()
             .ext_descriptor_buffer
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_buffer_opaque_capture_descriptor_data_ext;
+            .get_buffer_opaque_capture_descriptor_data_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, info, data.as_mut_ptr().cast()) }.result()
     }
@@ -140,9 +138,8 @@ impl DescriptorBufferDevice for Device {
         let call = self
             .fns()
             .ext_descriptor_buffer
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_image_opaque_capture_descriptor_data_ext;
+            .get_image_opaque_capture_descriptor_data_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, info, data.as_mut_ptr().cast()) }.result()
     }
@@ -157,9 +154,8 @@ impl DescriptorBufferDevice for Device {
         let call = self
             .fns()
             .ext_descriptor_buffer
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_image_view_opaque_capture_descriptor_data_ext;
+            .get_image_view_opaque_capture_descriptor_data_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, info, data.as_mut_ptr().cast()) }.result()
     }
@@ -174,9 +170,8 @@ impl DescriptorBufferDevice for Device {
         let call = self
             .fns()
             .ext_descriptor_buffer
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_sampler_opaque_capture_descriptor_data_ext;
+            .get_sampler_opaque_capture_descriptor_data_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, info, data.as_mut_ptr().cast()) }.result()
     }
@@ -191,9 +186,8 @@ impl DescriptorBufferDevice for Device {
         let call = self
             .fns()
             .ext_descriptor_buffer
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_acceleration_structure_opaque_capture_descriptor_data_ext;
+            .get_acceleration_structure_opaque_capture_descriptor_data_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, info, data.as_mut_ptr().cast()) }.result()
     }
@@ -231,9 +225,8 @@ impl DescriptorBufferCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_descriptor_buffer
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .bind_descriptor_buffers_ext;
+            .bind_descriptor_buffers_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -263,9 +256,8 @@ impl DescriptorBufferCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_descriptor_buffer
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_descriptor_buffer_offsets_ext;
+            .set_descriptor_buffer_offsets_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -296,9 +288,8 @@ impl DescriptorBufferCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_descriptor_buffer
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .bind_descriptor_buffer_embedded_samplers_ext;
+            .bind_descriptor_buffer_embedded_samplers_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, pipeline_bind_point, layout, set) };
     }

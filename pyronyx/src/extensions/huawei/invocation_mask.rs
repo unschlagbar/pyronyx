@@ -7,6 +7,8 @@ use crate::vk::*;
 use core::ffi::CStr;
 
 /// Type: `Device`
+///
+/// Requires: [`VK_KHR_ray_tracing_pipeline`](crate::khr::ray_tracing_pipeline) + ([`VK_KHR_synchronization2`](crate::khr::synchronization2) or Vulkan 1.3)
 pub const NAME: &CStr = c"VK_HUAWEI_invocation_mask";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -26,9 +28,8 @@ impl InvocationMaskCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .huawei_invocation_mask
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .bind_invocation_mask_huawei;
+            .bind_invocation_mask_huawei
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, image_view, image_layout) };
     }

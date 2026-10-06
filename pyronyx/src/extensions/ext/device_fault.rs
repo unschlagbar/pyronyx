@@ -5,9 +5,12 @@
 
 use crate::vk::*;
 use core::ffi::CStr;
-use core::mem::MaybeUninit;
 
 /// Type: `Device`
+///
+/// Promoted to [`VK_KHR_device_fault`](crate::khr::device_fault)
+///
+/// Requires: [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1
 pub const NAME: &CStr = c"VK_EXT_device_fault";
 pub const SPEC_VERSION: u32 = 2;
 
@@ -15,7 +18,8 @@ pub trait DeviceFaultDevice {
     fn get_fault_info(
         &self,
         fault_counts: *mut DeviceFaultCountsEXT,
-    ) -> Result<DeviceFaultInfoEXT<'_>>;
+        fault_info: &mut DeviceFaultInfoEXT<'_>,
+    ) -> Result<()>;
 }
 
 impl DeviceFaultDevice for Device {
@@ -24,15 +28,14 @@ impl DeviceFaultDevice for Device {
     fn get_fault_info(
         &self,
         fault_counts: *mut DeviceFaultCountsEXT,
-    ) -> Result<DeviceFaultInfoEXT<'_>> {
-        let mut out = MaybeUninit::uninit();
+        fault_info: &mut DeviceFaultInfoEXT<'_>,
+    ) -> Result<()> {
         let call = self
             .fns()
             .ext_device_fault
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_device_fault_info_ext;
+            .get_device_fault_info_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
-        unsafe { (call)(self.handle, fault_counts, out.as_mut_ptr()) }.init_on_success(out)
+        unsafe { (call)(self.handle, fault_counts, fault_info) }.result()
     }
 }

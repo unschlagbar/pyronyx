@@ -7,6 +7,8 @@ use crate::vk::*;
 use core::ffi::CStr;
 
 /// Type: `Device`
+///
+/// Requires: [`VK_EXT_memory_priority`](crate::ext::memory_priority)
 pub const NAME: &CStr = c"VK_EXT_pageable_device_local_memory";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -21,9 +23,8 @@ impl PageableDeviceLocalMemoryDevice for Device {
         let call = self
             .fns()
             .ext_pageable_device_local_memory
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_device_memory_priority_ext;
+            .set_device_memory_priority_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, memory, priority) };
     }

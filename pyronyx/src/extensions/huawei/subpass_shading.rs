@@ -8,6 +8,8 @@ use core::ffi::CStr;
 use core::mem::MaybeUninit;
 
 /// Type: `Device`
+///
+/// Requires: (([`VK_KHR_create_renderpass2`](crate::khr::create_renderpass2) or Vulkan 1.2) + [`VK_KHR_synchronization2`](crate::khr::synchronization2)) or Vulkan 1.3
 pub const NAME: &CStr = c"VK_HUAWEI_subpass_shading";
 pub const SPEC_VERSION: u32 = 3;
 
@@ -23,9 +25,8 @@ impl SubpassShadingDevice for Device {
         let call = self
             .fns()
             .huawei_subpass_shading
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_device_subpass_shading_max_workgroup_size_huawei;
+            .get_device_subpass_shading_max_workgroup_size_huawei
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, renderpass, out.as_mut_ptr()) }.init_on_success(out)
     }
@@ -47,9 +48,8 @@ impl SubpassShadingCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .huawei_subpass_shading
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .subpass_shading_huawei;
+            .subpass_shading_huawei
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle) };
     }

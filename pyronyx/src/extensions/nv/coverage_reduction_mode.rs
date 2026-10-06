@@ -9,6 +9,8 @@ use core::mem::MaybeUninit;
 use core::ptr;
 
 /// Type: `Device`
+///
+/// Requires: [`VK_NV_framebuffer_mixed_samples`](crate::nv::framebuffer_mixed_samples) + ([`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1)
 pub const NAME: &CStr = c"VK_NV_coverage_reduction_mode";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -33,9 +35,8 @@ impl CoverageReductionModePhysicalDevice for PhysicalDevice {
         let call = self
             .fns()
             .nv_coverage_reduction_mode
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_physical_device_supported_framebuffer_mixed_samples_combinations_nv;
+            .get_physical_device_supported_framebuffer_mixed_samples_combinations_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -55,9 +56,8 @@ impl CoverageReductionModePhysicalDevice for PhysicalDevice {
             (self
                 .fns()
                 .nv_coverage_reduction_mode
-                .as_ref()
-                .expect(Self::EXT_LOAD_ERROR)
-                .get_physical_device_supported_framebuffer_mixed_samples_combinations_nv)(
+                .get_physical_device_supported_framebuffer_mixed_samples_combinations_nv
+                .unwrap_or_else(|| Self::ext_load_error()))(
                 self.handle,
                 out.as_mut_ptr(),
                 ptr::null_mut(),

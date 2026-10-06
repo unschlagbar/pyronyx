@@ -15,7 +15,11 @@ impl Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkDestroyDevice.html>
     #[inline]
     pub fn destroy(&self, allocator: Option<&AllocationCallbacks>) {
-        let call = self.fns().v1_0.destroy_device.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_0
+            .destroy_device
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, allocator.map_or(null(), from_ref)) };
     }
@@ -27,7 +31,7 @@ impl Device {
             .fns()
             .v1_0
             .device_wait_idle
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle) }.result()
     }
@@ -44,7 +48,7 @@ impl Device {
             .fns()
             .v1_0
             .allocate_memory
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -60,7 +64,11 @@ impl Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkFreeMemory.html>
     #[inline]
     pub fn free_memory(&self, memory: DeviceMemory, allocator: Option<&AllocationCallbacks>) {
-        let call = self.fns().v1_0.free_memory.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_0
+            .free_memory
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, memory, allocator.map_or(null(), from_ref)) };
     }
@@ -75,7 +83,11 @@ impl Device {
         flags: MemoryMapFlags,
     ) -> Result<*mut c_void> {
         let mut out = MaybeUninit::uninit();
-        let call = self.fns().v1_0.map_memory.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_0
+            .map_memory
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, memory, offset, size, flags, out.as_mut_ptr()) }
             .init_on_success(out)
@@ -84,7 +96,11 @@ impl Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkUnmapMemory.html>
     #[inline]
     pub fn unmap_memory(&self, memory: DeviceMemory) {
-        let call = self.fns().v1_0.unmap_memory.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_0
+            .unmap_memory
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, memory) };
     }
@@ -96,7 +112,7 @@ impl Device {
             .fns()
             .v1_0
             .flush_mapped_memory_ranges
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -118,7 +134,7 @@ impl Device {
             .fns()
             .v1_0
             .invalidate_mapped_memory_ranges
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -138,7 +154,7 @@ impl Device {
             .fns()
             .v1_0
             .get_device_memory_commitment
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(self.handle, memory, out.as_mut_ptr());
@@ -154,7 +170,7 @@ impl Device {
             .fns()
             .v1_0
             .get_buffer_memory_requirements
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(self.handle, buffer, out.as_mut_ptr());
@@ -174,7 +190,7 @@ impl Device {
             .fns()
             .v1_0
             .bind_buffer_memory
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, buffer, memory, memory_offset) }.result()
     }
@@ -187,7 +203,7 @@ impl Device {
             .fns()
             .v1_0
             .get_image_memory_requirements
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(self.handle, image, out.as_mut_ptr());
@@ -207,7 +223,7 @@ impl Device {
             .fns()
             .v1_0
             .bind_image_memory
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, image, memory, memory_offset) }.result()
     }
@@ -222,7 +238,7 @@ impl Device {
             .fns()
             .v1_0
             .get_image_sparse_memory_requirements
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         read_into_vec(|count, data| unsafe { (call)(self.handle, image, count, data) })
     }
@@ -235,7 +251,11 @@ impl Device {
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<Fence> {
         let mut out = MaybeUninit::uninit();
-        let call = self.fns().v1_0.create_fence.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_0
+            .create_fence
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -251,7 +271,11 @@ impl Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkDestroyFence.html>
     #[inline]
     pub fn destroy_fence(&self, fence: Fence, allocator: Option<&AllocationCallbacks>) {
-        let call = self.fns().v1_0.destroy_fence.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_0
+            .destroy_fence
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, fence, allocator.map_or(null(), from_ref)) };
     }
@@ -259,7 +283,11 @@ impl Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkResetFences.html>
     #[inline]
     pub fn reset_fences(&self, fences: &[Fence]) -> Result<()> {
-        let call = self.fns().v1_0.reset_fences.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_0
+            .reset_fences
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, fences.len() as u32, fences.as_ptr()) }.result()
     }
@@ -271,7 +299,7 @@ impl Device {
             .fns()
             .v1_0
             .get_fence_status
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, fence) }.result()
     }
@@ -283,7 +311,7 @@ impl Device {
             .fns()
             .v1_0
             .wait_for_fences
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -309,7 +337,7 @@ impl Device {
             .fns()
             .v1_0
             .create_semaphore
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -329,7 +357,7 @@ impl Device {
             .fns()
             .v1_0
             .destroy_semaphore
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, semaphore, allocator.map_or(null(), from_ref)) };
     }
@@ -342,7 +370,11 @@ impl Device {
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<Event> {
         let mut out = MaybeUninit::uninit();
-        let call = self.fns().v1_0.create_event.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_0
+            .create_event
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -358,7 +390,11 @@ impl Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkDestroyEvent.html>
     #[inline]
     pub fn destroy_event(&self, event: Event, allocator: Option<&AllocationCallbacks>) {
-        let call = self.fns().v1_0.destroy_event.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_0
+            .destroy_event
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, event, allocator.map_or(null(), from_ref)) };
     }
@@ -370,7 +406,7 @@ impl Device {
             .fns()
             .v1_0
             .get_event_status
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, event) }.result()
     }
@@ -378,7 +414,11 @@ impl Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkSetEvent.html>
     #[inline]
     pub fn set_event(&self, event: Event) -> Result<()> {
-        let call = self.fns().v1_0.set_event.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_0
+            .set_event
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, event) }.result()
     }
@@ -386,7 +426,11 @@ impl Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkResetEvent.html>
     #[inline]
     pub fn reset_event(&self, event: Event) -> Result<()> {
-        let call = self.fns().v1_0.reset_event.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_0
+            .reset_event
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, event) }.result()
     }
@@ -403,7 +447,7 @@ impl Device {
             .fns()
             .v1_0
             .create_query_pool
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -427,7 +471,7 @@ impl Device {
             .fns()
             .v1_0
             .destroy_query_pool
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, query_pool, allocator.map_or(null(), from_ref)) };
     }
@@ -447,7 +491,7 @@ impl Device {
             .fns()
             .v1_0
             .get_query_pool_results
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -471,7 +515,7 @@ impl Device {
             .fns()
             .v1_2
             .reset_query_pool
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, query_pool, first_query, query_count) };
     }
@@ -484,7 +528,11 @@ impl Device {
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<Buffer> {
         let mut out = MaybeUninit::uninit();
-        let call = self.fns().v1_0.create_buffer.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_0
+            .create_buffer
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -500,7 +548,11 @@ impl Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkDestroyBuffer.html>
     #[inline]
     pub fn destroy_buffer(&self, buffer: Buffer, allocator: Option<&AllocationCallbacks>) {
-        let call = self.fns().v1_0.destroy_buffer.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_0
+            .destroy_buffer
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, buffer, allocator.map_or(null(), from_ref)) };
     }
@@ -517,7 +569,7 @@ impl Device {
             .fns()
             .v1_0
             .create_buffer_view
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -541,7 +593,7 @@ impl Device {
             .fns()
             .v1_0
             .destroy_buffer_view
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, buffer_view, allocator.map_or(null(), from_ref)) };
     }
@@ -554,7 +606,11 @@ impl Device {
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<Image> {
         let mut out = MaybeUninit::uninit();
-        let call = self.fns().v1_0.create_image.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_0
+            .create_image
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -570,7 +626,11 @@ impl Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkDestroyImage.html>
     #[inline]
     pub fn destroy_image(&self, image: Image, allocator: Option<&AllocationCallbacks>) {
-        let call = self.fns().v1_0.destroy_image.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_0
+            .destroy_image
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, image, allocator.map_or(null(), from_ref)) };
     }
@@ -587,7 +647,7 @@ impl Device {
             .fns()
             .v1_0
             .get_image_subresource_layout
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(self.handle, image, subresource, out.as_mut_ptr());
@@ -607,7 +667,7 @@ impl Device {
             .fns()
             .v1_0
             .create_image_view
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -631,7 +691,7 @@ impl Device {
             .fns()
             .v1_0
             .destroy_image_view
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, image_view, allocator.map_or(null(), from_ref)) };
     }
@@ -648,7 +708,7 @@ impl Device {
             .fns()
             .v1_0
             .create_shader_module
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -672,7 +732,7 @@ impl Device {
             .fns()
             .v1_0
             .destroy_shader_module
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -695,7 +755,7 @@ impl Device {
             .fns()
             .v1_0
             .create_pipeline_cache
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -719,7 +779,7 @@ impl Device {
             .fns()
             .v1_0
             .destroy_pipeline_cache
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -737,7 +797,7 @@ impl Device {
             .fns()
             .v1_0
             .get_pipeline_cache_data
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         read_into_vec_result(|count, data: *mut u8| unsafe {
             (call)(self.handle, pipeline_cache, count, data.cast())
@@ -755,7 +815,7 @@ impl Device {
             .fns()
             .v1_0
             .merge_pipeline_caches
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -782,7 +842,7 @@ impl Device {
             .fns()
             .v1_0
             .create_graphics_pipelines
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -811,7 +871,7 @@ impl Device {
             .fns()
             .v1_0
             .create_compute_pipelines
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -833,7 +893,7 @@ impl Device {
             .fns()
             .v1_0
             .destroy_pipeline
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, pipeline, allocator.map_or(null(), from_ref)) };
     }
@@ -850,7 +910,7 @@ impl Device {
             .fns()
             .v1_0
             .create_pipeline_layout
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -874,7 +934,7 @@ impl Device {
             .fns()
             .v1_0
             .destroy_pipeline_layout
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -893,7 +953,11 @@ impl Device {
         allocator: Option<&AllocationCallbacks>,
     ) -> Result<Sampler> {
         let mut out = MaybeUninit::uninit();
-        let call = self.fns().v1_0.create_sampler.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_0
+            .create_sampler
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -913,7 +977,7 @@ impl Device {
             .fns()
             .v1_0
             .destroy_sampler
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, sampler, allocator.map_or(null(), from_ref)) };
     }
@@ -930,7 +994,7 @@ impl Device {
             .fns()
             .v1_0
             .create_descriptor_set_layout
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -954,7 +1018,7 @@ impl Device {
             .fns()
             .v1_0
             .destroy_descriptor_set_layout
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -977,7 +1041,7 @@ impl Device {
             .fns()
             .v1_0
             .create_descriptor_pool
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -1001,7 +1065,7 @@ impl Device {
             .fns()
             .v1_0
             .destroy_descriptor_pool
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -1023,7 +1087,7 @@ impl Device {
             .fns()
             .v1_0
             .reset_descriptor_pool
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, descriptor_pool, flags) }.result()
     }
@@ -1043,7 +1107,7 @@ impl Device {
             .fns()
             .v1_0
             .allocate_descriptor_sets
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, allocate_info, descriptor_sets.as_mut_ptr()) }.result()
     }
@@ -1059,7 +1123,7 @@ impl Device {
             .fns()
             .v1_0
             .free_descriptor_sets
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -1083,7 +1147,7 @@ impl Device {
             .fns()
             .v1_0
             .update_descriptor_sets
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -1108,7 +1172,7 @@ impl Device {
             .fns()
             .v1_0
             .create_framebuffer
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -1132,7 +1196,7 @@ impl Device {
             .fns()
             .v1_0
             .destroy_framebuffer
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, framebuffer, allocator.map_or(null(), from_ref)) };
     }
@@ -1149,7 +1213,7 @@ impl Device {
             .fns()
             .v1_0
             .create_render_pass
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -1173,7 +1237,7 @@ impl Device {
             .fns()
             .v1_0
             .destroy_render_pass
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, render_pass, allocator.map_or(null(), from_ref)) };
     }
@@ -1186,7 +1250,7 @@ impl Device {
             .fns()
             .v1_0
             .get_render_area_granularity
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(self.handle, render_pass, out.as_mut_ptr());
@@ -1205,7 +1269,7 @@ impl Device {
             .fns()
             .v1_4
             .get_rendering_area_granularity
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(self.handle, rendering_area_info, out.as_mut_ptr());
@@ -1225,7 +1289,7 @@ impl Device {
             .fns()
             .v1_0
             .create_command_pool
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -1249,7 +1313,7 @@ impl Device {
             .fns()
             .v1_0
             .destroy_command_pool
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -1271,7 +1335,7 @@ impl Device {
             .fns()
             .v1_0
             .reset_command_pool
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, command_pool, flags) }.result()
     }
@@ -1287,7 +1351,7 @@ impl Device {
             .fns()
             .v1_0
             .free_command_buffers
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -1306,7 +1370,7 @@ impl Device {
             .fns()
             .v1_1
             .trim_command_pool
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, command_pool, flags) };
     }
@@ -1324,7 +1388,7 @@ impl Device {
             .fns()
             .v1_1
             .get_device_group_peer_memory_features
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -1345,7 +1409,7 @@ impl Device {
             .fns()
             .v1_1
             .bind_buffer_memory2
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, bind_infos.len() as u32, bind_infos.as_ptr()) }.result()
     }
@@ -1357,7 +1421,7 @@ impl Device {
             .fns()
             .v1_1
             .bind_image_memory2
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, bind_infos.len() as u32, bind_infos.as_ptr()) }.result()
     }
@@ -1374,7 +1438,7 @@ impl Device {
             .fns()
             .v1_1
             .create_descriptor_update_template
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -1398,7 +1462,7 @@ impl Device {
             .fns()
             .v1_1
             .destroy_descriptor_update_template
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -1421,7 +1485,7 @@ impl Device {
             .fns()
             .v1_1
             .update_descriptor_set_with_template
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -1438,18 +1502,15 @@ impl Device {
     pub fn get_buffer_memory_requirements2(
         &self,
         info: &BufferMemoryRequirementsInfo2,
-    ) -> MemoryRequirements2<'_> {
-        let mut out = MaybeUninit::uninit();
+        memory_requirements: &mut MemoryRequirements2<'_>,
+    ) {
         let call = self
             .fns()
             .v1_1
             .get_buffer_memory_requirements2
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
-        unsafe {
-            (call)(self.handle, info, out.as_mut_ptr());
-            out.assume_init()
-        }
+        unsafe { (call)(self.handle, info, memory_requirements) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetImageMemoryRequirements2.html>
@@ -1457,18 +1518,15 @@ impl Device {
     pub fn get_image_memory_requirements2(
         &self,
         info: &ImageMemoryRequirementsInfo2,
-    ) -> MemoryRequirements2<'_> {
-        let mut out = MaybeUninit::uninit();
+        memory_requirements: &mut MemoryRequirements2<'_>,
+    ) {
         let call = self
             .fns()
             .v1_1
             .get_image_memory_requirements2
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
-        unsafe {
-            (call)(self.handle, info, out.as_mut_ptr());
-            out.assume_init()
-        }
+        unsafe { (call)(self.handle, info, memory_requirements) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetImageSparseMemoryRequirements2.html>
@@ -1485,7 +1543,7 @@ impl Device {
             .fns()
             .v1_1
             .get_image_sparse_memory_requirements2
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -1509,7 +1567,7 @@ impl Device {
                 .fns()
                 .v1_1
                 .get_image_sparse_memory_requirements2
-                .expect(Self::CORE_LOAD_ERROR))(
+                .unwrap_or_else(|| Self::core_load_error()))(
                 self.handle,
                 info,
                 out.as_mut_ptr(),
@@ -1524,18 +1582,15 @@ impl Device {
     pub fn get_device_buffer_memory_requirements(
         &self,
         info: &DeviceBufferMemoryRequirements,
-    ) -> MemoryRequirements2<'_> {
-        let mut out = MaybeUninit::uninit();
+        memory_requirements: &mut MemoryRequirements2<'_>,
+    ) {
         let call = self
             .fns()
             .v1_3
             .get_device_buffer_memory_requirements
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
-        unsafe {
-            (call)(self.handle, info, out.as_mut_ptr());
-            out.assume_init()
-        }
+        unsafe { (call)(self.handle, info, memory_requirements) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetDeviceImageMemoryRequirements.html>
@@ -1543,18 +1598,15 @@ impl Device {
     pub fn get_device_image_memory_requirements(
         &self,
         info: &DeviceImageMemoryRequirements,
-    ) -> MemoryRequirements2<'_> {
-        let mut out = MaybeUninit::uninit();
+        memory_requirements: &mut MemoryRequirements2<'_>,
+    ) {
         let call = self
             .fns()
             .v1_3
             .get_device_image_memory_requirements
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
-        unsafe {
-            (call)(self.handle, info, out.as_mut_ptr());
-            out.assume_init()
-        }
+        unsafe { (call)(self.handle, info, memory_requirements) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetDeviceImageSparseMemoryRequirements.html>
@@ -1571,7 +1623,7 @@ impl Device {
             .fns()
             .v1_3
             .get_device_image_sparse_memory_requirements
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -1595,7 +1647,7 @@ impl Device {
                 .fns()
                 .v1_3
                 .get_device_image_sparse_memory_requirements
-                .expect(Self::CORE_LOAD_ERROR))(
+                .unwrap_or_else(|| Self::core_load_error()))(
                 self.handle,
                 info,
                 out.as_mut_ptr(),
@@ -1617,7 +1669,7 @@ impl Device {
             .fns()
             .v1_1
             .create_sampler_ycbcr_conversion
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -1641,7 +1693,7 @@ impl Device {
             .fns()
             .v1_1
             .destroy_sampler_ycbcr_conversion
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -1657,18 +1709,15 @@ impl Device {
     pub fn get_descriptor_set_layout_support(
         &self,
         create_info: &DescriptorSetLayoutCreateInfo,
-    ) -> DescriptorSetLayoutSupport<'_> {
-        let mut out = MaybeUninit::uninit();
+        support: &mut DescriptorSetLayoutSupport<'_>,
+    ) {
         let call = self
             .fns()
             .v1_1
             .get_descriptor_set_layout_support
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
-        unsafe {
-            (call)(self.handle, create_info, out.as_mut_ptr());
-            out.assume_init()
-        }
+        unsafe { (call)(self.handle, create_info, support) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkCreateRenderPass2.html>
@@ -1683,7 +1732,7 @@ impl Device {
             .fns()
             .v1_2
             .create_render_pass2
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -1704,7 +1753,7 @@ impl Device {
             .fns()
             .v1_2
             .get_semaphore_counter_value
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, semaphore, out.as_mut_ptr()) }.init_on_success(out)
     }
@@ -1716,7 +1765,7 @@ impl Device {
             .fns()
             .v1_2
             .wait_semaphores
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, wait_info, timeout) }.result()
     }
@@ -1728,7 +1777,7 @@ impl Device {
             .fns()
             .v1_2
             .signal_semaphore
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, signal_info) }.result()
     }
@@ -1740,7 +1789,7 @@ impl Device {
             .fns()
             .v1_2
             .get_buffer_opaque_capture_address
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, info) }
     }
@@ -1752,7 +1801,7 @@ impl Device {
             .fns()
             .v1_2
             .get_buffer_device_address
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, info) }
     }
@@ -1767,7 +1816,7 @@ impl Device {
             .fns()
             .v1_2
             .get_device_memory_opaque_capture_address
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, info) }
     }
@@ -1783,7 +1832,11 @@ impl Device {
         faults: &mut [FaultData],
     ) -> Result<()> {
         let mut fault_count = faults.len() as u32;
-        let call = self.fns().v1_0.get_fault_data.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_0
+            .get_fault_data
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -1806,7 +1859,11 @@ impl Device {
     ) -> Result<usize> {
         let mut out: MaybeUninit<u32> = MaybeUninit::uninit();
         unsafe {
-            (self.fns().v1_0.get_fault_data.expect(Self::CORE_LOAD_ERROR))(
+            (self
+                .fns()
+                .v1_0
+                .get_fault_data
+                .unwrap_or_else(|| Self::core_load_error()))(
                 self.handle,
                 fault_query_behavior,
                 unrecorded_faults,
@@ -1830,7 +1887,7 @@ impl Device {
             .fns()
             .v1_3
             .create_private_data_slot
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -1854,7 +1911,7 @@ impl Device {
             .fns()
             .v1_3
             .destroy_private_data_slot
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -1878,7 +1935,7 @@ impl Device {
             .fns()
             .v1_3
             .set_private_data
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -1905,7 +1962,7 @@ impl Device {
             .fns()
             .v1_3
             .get_private_data
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -1929,7 +1986,7 @@ impl Device {
             .fns()
             .v1_4
             .copy_memory_to_image
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, copy_memory_to_image_info) }.result()
     }
@@ -1944,7 +2001,7 @@ impl Device {
             .fns()
             .v1_4
             .copy_image_to_memory
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, copy_image_to_memory_info) }.result()
     }
@@ -1959,7 +2016,7 @@ impl Device {
             .fns()
             .v1_4
             .copy_image_to_image
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, copy_image_to_image_info) }.result()
     }
@@ -1974,7 +2031,7 @@ impl Device {
             .fns()
             .v1_4
             .transition_image_layout
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, transitions.len() as u32, transitions.as_ptr()) }.result()
     }
@@ -1985,18 +2042,15 @@ impl Device {
         &self,
         command_pool: CommandPool,
         command_buffer: vkCommandBuffer,
-    ) -> CommandPoolMemoryConsumption<'_> {
-        let mut out = MaybeUninit::uninit();
+        consumption: &mut CommandPoolMemoryConsumption<'_>,
+    ) {
         let call = self
             .fns()
             .v1_0
             .get_command_pool_memory_consumption
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
-        unsafe {
-            (call)(self.handle, command_pool, command_buffer, out.as_mut_ptr());
-            out.assume_init()
-        }
+        unsafe { (call)(self.handle, command_pool, command_buffer, consumption) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetImageSubresourceLayout2.html>
@@ -2005,18 +2059,15 @@ impl Device {
         &self,
         image: Image,
         subresource: &ImageSubresource2,
-    ) -> SubresourceLayout2<'_> {
-        let mut out = MaybeUninit::uninit();
+        layout: &mut SubresourceLayout2<'_>,
+    ) {
         let call = self
             .fns()
             .v1_4
             .get_image_subresource_layout2
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
-        unsafe {
-            (call)(self.handle, image, subresource, out.as_mut_ptr());
-            out.assume_init()
-        }
+        unsafe { (call)(self.handle, image, subresource, layout) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetDeviceImageSubresourceLayout.html>
@@ -2024,25 +2075,26 @@ impl Device {
     pub fn get_device_image_subresource_layout(
         &self,
         info: &DeviceImageSubresourceInfo,
-    ) -> SubresourceLayout2<'_> {
-        let mut out = MaybeUninit::uninit();
+        layout: &mut SubresourceLayout2<'_>,
+    ) {
         let call = self
             .fns()
             .v1_4
             .get_device_image_subresource_layout
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
-        unsafe {
-            (call)(self.handle, info, out.as_mut_ptr());
-            out.assume_init()
-        }
+        unsafe { (call)(self.handle, info, layout) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkMapMemory2.html>
     #[inline]
     pub fn map_memory2(&self, memory_map_info: &MemoryMapInfo) -> Result<*mut c_void> {
         let mut out = MaybeUninit::uninit();
-        let call = self.fns().v1_4.map_memory2.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_4
+            .map_memory2
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, memory_map_info, out.as_mut_ptr()) }.init_on_success(out)
     }
@@ -2050,7 +2102,11 @@ impl Device {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkUnmapMemory2.html>
     #[inline]
     pub fn unmap_memory2(&self, memory_unmap_info: &MemoryUnmapInfo) -> Result<()> {
-        let call = self.fns().v1_4.unmap_memory2.expect(Self::CORE_LOAD_ERROR);
+        let call = self
+            .fns()
+            .v1_4
+            .unmap_memory2
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, memory_unmap_info) }.result()
     }

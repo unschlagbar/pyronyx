@@ -7,6 +7,8 @@ use crate::vk::*;
 use core::ffi::CStr;
 
 /// Type: `Device`
+///
+/// Requires: [`VK_KHR_fragment_shading_rate`](crate::khr::fragment_shading_rate)
 pub const NAME: &CStr = c"VK_NV_fragment_shading_rate_enums";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -34,9 +36,8 @@ impl FragmentShadingRateEnumsCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .nv_fragment_shading_rate_enums
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_fragment_shading_rate_enum_nv;
+            .set_fragment_shading_rate_enum_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, shading_rate, combiner_ops) };
     }

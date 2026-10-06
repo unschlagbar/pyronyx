@@ -9,6 +9,10 @@ use core::mem::MaybeUninit;
 use core::ptr::{from_ref, null};
 
 /// Type: `Device`
+///
+/// Promoted to [`VK_KHR_opacity_micromap`](crate::khr::opacity_micromap)
+///
+/// Requires: [`VK_KHR_acceleration_structure`](crate::khr::acceleration_structure) + ([`VK_KHR_synchronization2`](crate::khr::synchronization2) or Vulkan 1.3)
 pub const NAME: &CStr = c"VK_EXT_opacity_micromap";
 pub const SPEC_VERSION: u32 = 2;
 
@@ -62,7 +66,8 @@ pub trait OpacityMicromapDevice {
         &self,
         build_type: AccelerationStructureBuildTypeKHR,
         build_info: &MicromapBuildInfoEXT,
-    ) -> MicromapBuildSizesInfoEXT<'_>;
+        size_info: &mut MicromapBuildSizesInfoEXT<'_>,
+    );
 }
 
 impl OpacityMicromapDevice for Device {
@@ -77,9 +82,8 @@ impl OpacityMicromapDevice for Device {
         let call = self
             .fns()
             .ext_opacity_micromap
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .create_micromap_ext;
+            .create_micromap_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -102,9 +106,8 @@ impl OpacityMicromapDevice for Device {
         let call = self
             .fns()
             .ext_opacity_micromap
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .build_micromaps_ext;
+            .build_micromaps_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -123,9 +126,8 @@ impl OpacityMicromapDevice for Device {
         let call = self
             .fns()
             .ext_opacity_micromap
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .destroy_micromap_ext;
+            .destroy_micromap_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, micromap, allocator.map_or(null(), from_ref)) };
     }
@@ -140,9 +142,8 @@ impl OpacityMicromapDevice for Device {
         let call = self
             .fns()
             .ext_opacity_micromap
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .copy_micromap_ext;
+            .copy_micromap_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, deferred_operation, info) }.result()
     }
@@ -157,9 +158,8 @@ impl OpacityMicromapDevice for Device {
         let call = self
             .fns()
             .ext_opacity_micromap
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .copy_micromap_to_memory_ext;
+            .copy_micromap_to_memory_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, deferred_operation, info) }.result()
     }
@@ -174,9 +174,8 @@ impl OpacityMicromapDevice for Device {
         let call = self
             .fns()
             .ext_opacity_micromap
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .copy_memory_to_micromap_ext;
+            .copy_memory_to_micromap_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, deferred_operation, info) }.result()
     }
@@ -193,9 +192,8 @@ impl OpacityMicromapDevice for Device {
         let call = self
             .fns()
             .ext_opacity_micromap
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .write_micromaps_properties_ext;
+            .write_micromaps_properties_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -221,9 +219,8 @@ impl OpacityMicromapDevice for Device {
         let call = self
             .fns()
             .ext_opacity_micromap
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_device_micromap_compatibility_ext;
+            .get_device_micromap_compatibility_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(self.handle, version_info, out.as_mut_ptr());
@@ -237,19 +234,15 @@ impl OpacityMicromapDevice for Device {
         &self,
         build_type: AccelerationStructureBuildTypeKHR,
         build_info: &MicromapBuildInfoEXT,
-    ) -> MicromapBuildSizesInfoEXT<'_> {
-        let mut out = MaybeUninit::uninit();
+        size_info: &mut MicromapBuildSizesInfoEXT<'_>,
+    ) {
         let call = self
             .fns()
             .ext_opacity_micromap
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_micromap_build_sizes_ext;
+            .get_micromap_build_sizes_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
-        unsafe {
-            (call)(self.handle, build_type, build_info, out.as_mut_ptr());
-            out.assume_init()
-        }
+        unsafe { (call)(self.handle, build_type, build_info, size_info) };
     }
 }
 
@@ -283,9 +276,8 @@ impl OpacityMicromapCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_opacity_micromap
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .build_micromaps_ext;
+            .build_micromaps_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, infos.len() as u32, infos.as_ptr()) };
     }
@@ -301,9 +293,8 @@ impl OpacityMicromapCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_opacity_micromap
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .copy_micromap_ext;
+            .copy_micromap_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, info) };
     }
@@ -319,9 +310,8 @@ impl OpacityMicromapCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_opacity_micromap
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .copy_micromap_to_memory_ext;
+            .copy_micromap_to_memory_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, info) };
     }
@@ -337,9 +327,8 @@ impl OpacityMicromapCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_opacity_micromap
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .copy_memory_to_micromap_ext;
+            .copy_memory_to_micromap_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, info) };
     }
@@ -361,9 +350,8 @@ impl OpacityMicromapCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_opacity_micromap
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .write_micromaps_properties_ext;
+            .write_micromaps_properties_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(

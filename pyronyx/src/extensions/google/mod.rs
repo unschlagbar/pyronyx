@@ -24,6 +24,8 @@ pub mod surfaceless_query {
     use core::ffi::CStr;
 
     /// Type: `Instance`
+    ///
+    /// Requires: [`VK_KHR_surface`](crate::khr::surface)
     pub const NAME: &CStr = c"VK_GOOGLE_surfaceless_query";
     pub const SPEC_VERSION: u32 = 2;
 }

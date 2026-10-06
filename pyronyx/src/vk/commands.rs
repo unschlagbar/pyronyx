@@ -12,7 +12,6 @@ use super::types::*;
 use crate::utils::to_option;
 use core::ffi::{c_char, c_int, c_void};
 
-// ── fn-pointer Typen ──────────────────────────────────────────────
 pub type vkCreateInstance = unsafe extern "system" fn(
     create_info: *const InstanceCreateInfo,
     allocator: *const AllocationCallbacks,

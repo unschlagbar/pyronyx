@@ -10,6 +10,8 @@ use core::ptr;
 use core::ptr::{from_ref, null};
 
 /// Type: `Instance`
+///
+/// Requires: [`VK_KHR_surface`](crate::khr::surface)
 pub const NAME: &CStr = c"VK_KHR_display";
 pub const SPEC_VERSION: u32 = 23;
 
@@ -61,9 +63,8 @@ impl DisplayPhysicalDevice for PhysicalDevice {
         let call = self
             .fns()
             .khr_display
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_physical_device_display_properties_khr;
+            .get_physical_device_display_properties_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, &mut property_count, properties.as_mut_ptr()) }.result()
     }
@@ -76,9 +77,8 @@ impl DisplayPhysicalDevice for PhysicalDevice {
             (self
                 .fns()
                 .khr_display
-                .as_ref()
-                .expect(Self::EXT_LOAD_ERROR)
-                .get_physical_device_display_properties_khr)(
+                .get_physical_device_display_properties_khr
+                .unwrap_or_else(|| Self::ext_load_error()))(
                 self.handle,
                 out.as_mut_ptr(),
                 ptr::null_mut(),
@@ -100,9 +100,8 @@ impl DisplayPhysicalDevice for PhysicalDevice {
         let call = self
             .fns()
             .khr_display
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_physical_device_display_plane_properties_khr;
+            .get_physical_device_display_plane_properties_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, &mut property_count, properties.as_mut_ptr()) }.result()
     }
@@ -115,9 +114,8 @@ impl DisplayPhysicalDevice for PhysicalDevice {
             (self
                 .fns()
                 .khr_display
-                .as_ref()
-                .expect(Self::EXT_LOAD_ERROR)
-                .get_physical_device_display_plane_properties_khr)(
+                .get_physical_device_display_plane_properties_khr
+                .unwrap_or_else(|| Self::ext_load_error()))(
                 self.handle,
                 out.as_mut_ptr(),
                 ptr::null_mut(),
@@ -140,9 +138,8 @@ impl DisplayPhysicalDevice for PhysicalDevice {
         let call = self
             .fns()
             .khr_display
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_display_plane_supported_displays_khr;
+            .get_display_plane_supported_displays_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -163,9 +160,8 @@ impl DisplayPhysicalDevice for PhysicalDevice {
             (self
                 .fns()
                 .khr_display
-                .as_ref()
-                .expect(Self::EXT_LOAD_ERROR)
-                .get_display_plane_supported_displays_khr)(
+                .get_display_plane_supported_displays_khr
+                .unwrap_or_else(|| Self::ext_load_error()))(
                 self.handle,
                 plane_index,
                 out.as_mut_ptr(),
@@ -189,9 +185,8 @@ impl DisplayPhysicalDevice for PhysicalDevice {
         let call = self
             .fns()
             .khr_display
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_display_mode_properties_khr;
+            .get_display_mode_properties_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -212,9 +207,8 @@ impl DisplayPhysicalDevice for PhysicalDevice {
             (self
                 .fns()
                 .khr_display
-                .as_ref()
-                .expect(Self::EXT_LOAD_ERROR)
-                .get_display_mode_properties_khr)(
+                .get_display_mode_properties_khr
+                .unwrap_or_else(|| Self::ext_load_error()))(
                 self.handle,
                 display,
                 out.as_mut_ptr(),
@@ -237,9 +231,8 @@ impl DisplayPhysicalDevice for PhysicalDevice {
         let call = self
             .fns()
             .khr_display
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .create_display_mode_khr;
+            .create_display_mode_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -264,9 +257,8 @@ impl DisplayPhysicalDevice for PhysicalDevice {
         let call = self
             .fns()
             .khr_display
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_display_plane_capabilities_khr;
+            .get_display_plane_capabilities_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, mode, plane_index, out.as_mut_ptr()) }.init_on_success(out)
     }
@@ -292,9 +284,8 @@ impl DisplayInstance for Instance {
         let call = self
             .fns()
             .khr_display
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .create_display_plane_surface_khr;
+            .create_display_plane_surface_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(

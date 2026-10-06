@@ -10,6 +10,8 @@ use core::mem::MaybeUninit;
 use core::ptr::{from_ref, null};
 
 /// Type: `Device`
+///
+/// Requires: [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1
 pub const NAME: &CStr = c"VK_NV_cuda_kernel_launch";
 pub const SPEC_VERSION: u32 = 2;
 
@@ -49,9 +51,8 @@ impl CudaKernelLaunchDevice for Device {
         let call = self
             .fns()
             .nv_cuda_kernel_launch
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .create_cuda_module_nv;
+            .create_cuda_module_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -70,9 +71,8 @@ impl CudaKernelLaunchDevice for Device {
         let call = self
             .fns()
             .nv_cuda_kernel_launch
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_cuda_module_cache_nv;
+            .get_cuda_module_cache_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         read_into_vec_result(|count, data: *mut u8| unsafe {
             (call)(self.handle, module, count, data.cast())
@@ -90,9 +90,8 @@ impl CudaKernelLaunchDevice for Device {
         let call = self
             .fns()
             .nv_cuda_kernel_launch
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .create_cuda_function_nv;
+            .create_cuda_function_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -111,9 +110,8 @@ impl CudaKernelLaunchDevice for Device {
         let call = self
             .fns()
             .nv_cuda_kernel_launch
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .destroy_cuda_module_nv;
+            .destroy_cuda_module_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, module, allocator.map_or(null(), from_ref)) };
     }
@@ -128,9 +126,8 @@ impl CudaKernelLaunchDevice for Device {
         let call = self
             .fns()
             .nv_cuda_kernel_launch
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .destroy_cuda_function_nv;
+            .destroy_cuda_function_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, function, allocator.map_or(null(), from_ref)) };
     }
@@ -152,9 +149,8 @@ impl CudaKernelLaunchCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .nv_cuda_kernel_launch
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .cuda_launch_kernel_nv;
+            .cuda_launch_kernel_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, launch_info) };
     }

@@ -9,6 +9,8 @@ use core::mem::MaybeUninit;
 use core::ptr::{from_ref, null};
 
 /// Type: `Instance`
+///
+/// Requires: [`VK_KHR_surface`](crate::khr::surface)
 pub const NAME: &CStr = c"VK_EXT_metal_surface";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -32,9 +34,8 @@ impl MetalSurfaceInstance for Instance {
         let call = self
             .fns()
             .ext_metal_surface
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .create_metal_surface_ext;
+            .create_metal_surface_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(

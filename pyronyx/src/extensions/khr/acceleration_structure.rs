@@ -9,6 +9,8 @@ use core::mem::MaybeUninit;
 use core::ptr::{from_ref, null};
 
 /// Type: `Device`
+///
+/// Requires: ((Vulkan 1.1 + [`VK_EXT_descriptor_indexing`](crate::ext::descriptor_indexing) + [`VK_KHR_buffer_device_address`](crate::khr::buffer_device_address)) or Vulkan 1.2) + [`VK_KHR_deferred_host_operations`](crate::khr::deferred_host_operations)
 pub const NAME: &CStr = c"VK_KHR_acceleration_structure";
 pub const SPEC_VERSION: u32 = 13;
 
@@ -72,8 +74,9 @@ pub trait AccelerationStructureDevice {
         &self,
         build_type: AccelerationStructureBuildTypeKHR,
         build_info: &AccelerationStructureBuildGeometryInfoKHR,
-        max_primitive_counts: Option<&u32>,
-    ) -> AccelerationStructureBuildSizesInfoKHR<'_>;
+        max_primitive_counts: &[u32],
+        size_info: &mut AccelerationStructureBuildSizesInfoKHR<'_>,
+    );
 }
 
 impl AccelerationStructureDevice for Device {
@@ -87,9 +90,8 @@ impl AccelerationStructureDevice for Device {
         let call = self
             .fns()
             .khr_acceleration_structure
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .destroy_acceleration_structure_khr;
+            .destroy_acceleration_structure_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -110,9 +112,8 @@ impl AccelerationStructureDevice for Device {
         let call = self
             .fns()
             .khr_acceleration_structure
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .copy_acceleration_structure_khr;
+            .copy_acceleration_structure_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, deferred_operation, info) }.result()
     }
@@ -127,9 +128,8 @@ impl AccelerationStructureDevice for Device {
         let call = self
             .fns()
             .khr_acceleration_structure
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .copy_acceleration_structure_to_memory_khr;
+            .copy_acceleration_structure_to_memory_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, deferred_operation, info) }.result()
     }
@@ -144,9 +144,8 @@ impl AccelerationStructureDevice for Device {
         let call = self
             .fns()
             .khr_acceleration_structure
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .copy_memory_to_acceleration_structure_khr;
+            .copy_memory_to_acceleration_structure_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, deferred_operation, info) }.result()
     }
@@ -163,9 +162,8 @@ impl AccelerationStructureDevice for Device {
         let call = self
             .fns()
             .khr_acceleration_structure
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .write_acceleration_structures_properties_khr;
+            .write_acceleration_structures_properties_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -191,9 +189,8 @@ impl AccelerationStructureDevice for Device {
         let call = self
             .fns()
             .khr_acceleration_structure
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_device_acceleration_structure_compatibility_khr;
+            .get_device_acceleration_structure_compatibility_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(self.handle, version_info, out.as_mut_ptr());
@@ -212,9 +209,8 @@ impl AccelerationStructureDevice for Device {
         let call = self
             .fns()
             .khr_acceleration_structure
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .create_acceleration_structure_khr;
+            .create_acceleration_structure_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -239,9 +235,8 @@ impl AccelerationStructureDevice for Device {
         let call = self
             .fns()
             .khr_acceleration_structure
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .build_acceleration_structures_khr;
+            .build_acceleration_structures_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -264,9 +259,8 @@ impl AccelerationStructureDevice for Device {
         let call = self
             .fns()
             .khr_acceleration_structure
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_acceleration_structure_device_address_khr;
+            .get_acceleration_structure_device_address_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, info) }
     }
@@ -277,26 +271,28 @@ impl AccelerationStructureDevice for Device {
         &self,
         build_type: AccelerationStructureBuildTypeKHR,
         build_info: &AccelerationStructureBuildGeometryInfoKHR,
-        max_primitive_counts: Option<&u32>,
-    ) -> AccelerationStructureBuildSizesInfoKHR<'_> {
-        let mut out = MaybeUninit::uninit();
+        max_primitive_counts: &[u32],
+        size_info: &mut AccelerationStructureBuildSizesInfoKHR<'_>,
+    ) {
+        assert_eq!(
+            max_primitive_counts.len(),
+            build_info.geometry_count as usize
+        );
         let call = self
             .fns()
             .khr_acceleration_structure
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_acceleration_structure_build_sizes_khr;
+            .get_acceleration_structure_build_sizes_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
                 self.handle,
                 build_type,
                 build_info,
-                max_primitive_counts.map_or(null(), from_ref),
-                out.as_mut_ptr(),
-            );
-            out.assume_init()
-        }
+                max_primitive_counts.as_ptr(),
+                size_info,
+            )
+        };
     }
 }
 
@@ -348,9 +344,8 @@ impl AccelerationStructureCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .khr_acceleration_structure
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .copy_acceleration_structure_khr;
+            .copy_acceleration_structure_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, info) };
     }
@@ -369,9 +364,8 @@ impl AccelerationStructureCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .khr_acceleration_structure
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .copy_acceleration_structure_to_memory_khr;
+            .copy_acceleration_structure_to_memory_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, info) };
     }
@@ -390,9 +384,8 @@ impl AccelerationStructureCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .khr_acceleration_structure
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .copy_memory_to_acceleration_structure_khr;
+            .copy_memory_to_acceleration_structure_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, info) };
     }
@@ -414,9 +407,8 @@ impl AccelerationStructureCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .khr_acceleration_structure
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .write_acceleration_structures_properties_khr;
+            .write_acceleration_structures_properties_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -446,9 +438,8 @@ impl AccelerationStructureCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .khr_acceleration_structure
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .build_acceleration_structures_khr;
+            .build_acceleration_structures_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -480,9 +471,8 @@ impl AccelerationStructureCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .khr_acceleration_structure
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .build_acceleration_structures_indirect_khr;
+            .build_acceleration_structures_indirect_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(

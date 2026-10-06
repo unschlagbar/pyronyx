@@ -8,6 +8,8 @@ use core::ffi::CStr;
 use core::ptr::{from_ref, null};
 
 /// Type: `Device`
+///
+/// Requires: [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1
 pub const NAME: &CStr = c"VK_EXT_depth_clamp_control";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -35,9 +37,8 @@ impl DepthClampControlCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_depth_clamp_control
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_depth_clamp_range_ext;
+            .set_depth_clamp_range_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(

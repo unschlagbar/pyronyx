@@ -9,6 +9,8 @@ use core::mem::MaybeUninit;
 use core::ptr;
 
 /// Type: `Device`
+///
+/// Requires: [`VK_KHR_swapchain`](crate::khr::swapchain)
 pub const NAME: &CStr = c"VK_GOOGLE_display_timing";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -37,9 +39,8 @@ impl DisplayTimingDevice for Device {
         let call = self
             .fns()
             .google_display_timing
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_refresh_cycle_duration_google;
+            .get_refresh_cycle_duration_google
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, swapchain, out.as_mut_ptr()) }.init_on_success(out)
     }
@@ -57,9 +58,8 @@ impl DisplayTimingDevice for Device {
         let call = self
             .fns()
             .google_display_timing
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_past_presentation_timing_google;
+            .get_past_presentation_timing_google
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -80,9 +80,8 @@ impl DisplayTimingDevice for Device {
             (self
                 .fns()
                 .google_display_timing
-                .as_ref()
-                .expect(Self::EXT_LOAD_ERROR)
-                .get_past_presentation_timing_google)(
+                .get_past_presentation_timing_google
+                .unwrap_or_else(|| Self::ext_load_error()))(
                 self.handle,
                 swapchain,
                 out.as_mut_ptr(),

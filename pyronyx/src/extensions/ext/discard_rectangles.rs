@@ -7,6 +7,8 @@ use crate::vk::*;
 use core::ffi::CStr;
 
 /// Type: `Device`
+///
+/// Requires: [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1
 pub const NAME: &CStr = c"VK_EXT_discard_rectangles";
 pub const SPEC_VERSION: u32 = 2;
 
@@ -30,9 +32,8 @@ impl DiscardRectanglesCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_discard_rectangles
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_discard_rectangle_ext;
+            .set_discard_rectangle_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -55,9 +56,8 @@ impl DiscardRectanglesCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_discard_rectangles
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_discard_rectangle_enable_ext;
+            .set_discard_rectangle_enable_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, discard_rectangle_enable as _) };
     }
@@ -73,9 +73,8 @@ impl DiscardRectanglesCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_discard_rectangles
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_discard_rectangle_mode_ext;
+            .set_discard_rectangle_mode_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, discard_rectangle_mode) };
     }

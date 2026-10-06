@@ -9,6 +9,8 @@ use core::mem::MaybeUninit;
 use core::ptr::{from_ref, null};
 
 /// Type: `Device`
+///
+/// Requires: [`VK_EXT_display_surface_counter`](crate::ext::display_surface_counter) + [`VK_KHR_swapchain`](crate::khr::swapchain)
 pub const NAME: &CStr = c"VK_EXT_display_control";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -50,9 +52,8 @@ impl DisplayControlDevice for Device {
         let call = self
             .fns()
             .ext_display_control
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .display_power_control_ext;
+            .display_power_control_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, display, display_power_info) }.result()
     }
@@ -68,9 +69,8 @@ impl DisplayControlDevice for Device {
         let call = self
             .fns()
             .ext_display_control
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .register_device_event_ext;
+            .register_device_event_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -95,9 +95,8 @@ impl DisplayControlDevice for Device {
         let call = self
             .fns()
             .ext_display_control
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .register_display_event_ext;
+            .register_display_event_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -122,9 +121,8 @@ impl DisplayControlDevice for Device {
         let call = self
             .fns()
             .ext_display_control
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_swapchain_counter_ext;
+            .get_swapchain_counter_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, swapchain, counter, out.as_mut_ptr()) }.init_on_success(out)
     }

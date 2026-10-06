@@ -7,6 +7,8 @@ use crate::vk::*;
 use core::ffi::CStr;
 
 /// Type: `Device`
+///
+/// Requires: [`VK_QCOM_tile_properties`](crate::qcom::tile_properties)
 pub const NAME: &CStr = c"VK_QCOM_tile_shading";
 pub const SPEC_VERSION: u32 = 2;
 
@@ -31,9 +33,8 @@ impl TileShadingCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .qcom_tile_shading
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .dispatch_tile_qcom;
+            .dispatch_tile_qcom
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, dispatch_tile_info) };
     }
@@ -49,9 +50,8 @@ impl TileShadingCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .qcom_tile_shading
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .begin_per_tile_execution_qcom;
+            .begin_per_tile_execution_qcom
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, per_tile_begin_info) };
     }
@@ -67,9 +67,8 @@ impl TileShadingCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .qcom_tile_shading
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .end_per_tile_execution_qcom;
+            .end_per_tile_execution_qcom
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, per_tile_end_info) };
     }

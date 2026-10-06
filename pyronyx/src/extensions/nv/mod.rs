@@ -18,6 +18,8 @@ pub mod corner_sampled_image {
     use core::ffi::CStr;
 
     /// Type: `Device`
+    ///
+    /// Requires: [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1
     pub const NAME: &CStr = c"VK_NV_corner_sampled_image";
     pub const SPEC_VERSION: u32 = 2;
 }
@@ -34,6 +36,8 @@ pub mod external_memory {
     use core::ffi::CStr;
 
     /// Type: `Device`
+    ///
+    /// Requires: [`VK_NV_external_memory_capabilities`](crate::nv::external_memory_capabilities)
     pub const NAME: &CStr = c"VK_NV_external_memory";
     pub const SPEC_VERSION: u32 = 1;
 }
@@ -42,6 +46,10 @@ pub mod win32_keyed_mutex {
     use core::ffi::CStr;
 
     /// Type: `Device`
+    ///
+    /// Promoted to [`VK_KHR_win32_keyed_mutex`](crate::khr::win32_keyed_mutex)
+    ///
+    /// Requires: [`VK_NV_external_memory_win32`](crate::nv::external_memory_win32)
     pub const NAME: &CStr = c"VK_NV_win32_keyed_mutex";
     pub const SPEC_VERSION: u32 = 2;
 }
@@ -99,6 +107,8 @@ pub mod shader_sm_builtins {
     use core::ffi::CStr;
 
     /// Type: `Device`
+    ///
+    /// Requires: Vulkan 1.1
     pub const NAME: &CStr = c"VK_NV_shader_sm_builtins";
     pub const SPEC_VERSION: u32 = 1;
 }
@@ -108,6 +118,8 @@ pub mod representative_fragment_test {
     use core::ffi::CStr;
 
     /// Type: `Device`
+    ///
+    /// Requires: [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1
     pub const NAME: &CStr = c"VK_NV_representative_fragment_test";
     pub const SPEC_VERSION: u32 = 2;
 }
@@ -115,6 +127,10 @@ pub mod shader_subgroup_partitioned {
     use core::ffi::CStr;
 
     /// Type: `Device`
+    ///
+    /// Promoted to [`VK_EXT_shader_subgroup_partitioned`](crate::ext::shader_subgroup_partitioned)
+    ///
+    /// Requires: Vulkan 1.1
     pub const NAME: &CStr = c"VK_NV_shader_subgroup_partitioned";
     pub const SPEC_VERSION: u32 = 1;
 }
@@ -122,6 +138,10 @@ pub mod compute_shader_derivatives {
     use core::ffi::CStr;
 
     /// Type: `Device`
+    ///
+    /// Promoted to [`VK_KHR_compute_shader_derivatives`](crate::khr::compute_shader_derivatives)
+    ///
+    /// Requires: [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1
     pub const NAME: &CStr = c"VK_NV_compute_shader_derivatives";
     pub const SPEC_VERSION: u32 = 1;
 }
@@ -130,6 +150,10 @@ pub mod fragment_shader_barycentric {
     use core::ffi::CStr;
 
     /// Type: `Device`
+    ///
+    /// Promoted to [`VK_KHR_fragment_shader_barycentric`](crate::khr::fragment_shader_barycentric)
+    ///
+    /// Requires: [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1
     pub const NAME: &CStr = c"VK_NV_fragment_shader_barycentric";
     pub const SPEC_VERSION: u32 = 1;
 }
@@ -137,6 +161,8 @@ pub mod shader_image_footprint {
     use core::ffi::CStr;
 
     /// Type: `Device`
+    ///
+    /// Requires: [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1
     pub const NAME: &CStr = c"VK_NV_shader_image_footprint";
     pub const SPEC_VERSION: u32 = 2;
 }
@@ -146,6 +172,8 @@ pub mod dedicated_allocation_image_aliasing {
     use core::ffi::CStr;
 
     /// Type: `Device`
+    ///
+    /// Requires: ([`VK_KHR_dedicated_allocation`](crate::khr::dedicated_allocation) + [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2)) or Vulkan 1.1
     pub const NAME: &CStr = c"VK_NV_dedicated_allocation_image_aliasing";
     pub const SPEC_VERSION: u32 = 1;
 }
@@ -156,6 +184,8 @@ pub mod inherited_viewport_scissor {
     use core::ffi::CStr;
 
     /// Type: `Device`
+    ///
+    /// Requires: [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1
     pub const NAME: &CStr = c"VK_NV_inherited_viewport_scissor";
     pub const SPEC_VERSION: u32 = 1;
 }
@@ -163,6 +193,8 @@ pub mod present_barrier {
     use core::ffi::CStr;
 
     /// Type: `Device`
+    ///
+    /// Requires: ([`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1) + [`VK_KHR_surface`](crate::khr::surface) + [`VK_KHR_get_surface_capabilities2`](crate::khr::get_surface_capabilities2) + [`VK_KHR_swapchain`](crate::khr::swapchain)
     pub const NAME: &CStr = c"VK_NV_present_barrier";
     pub const SPEC_VERSION: u32 = 1;
 }
@@ -170,6 +202,8 @@ pub mod device_diagnostics_config {
     use core::ffi::CStr;
 
     /// Type: `Device`
+    ///
+    /// Requires: [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1
     pub const NAME: &CStr = c"VK_NV_device_diagnostics_config";
     pub const SPEC_VERSION: u32 = 2;
 }
@@ -180,6 +214,8 @@ pub mod ray_tracing_motion_blur {
     use core::ffi::CStr;
 
     /// Type: `Device`
+    ///
+    /// Requires: [`VK_KHR_ray_tracing_pipeline`](crate::khr::ray_tracing_pipeline)
     pub const NAME: &CStr = c"VK_NV_ray_tracing_motion_blur";
     pub const SPEC_VERSION: u32 = 1;
 }
@@ -192,6 +228,8 @@ pub mod displacement_micromap {
     use core::ffi::CStr;
 
     /// Type: `Device`
+    ///
+    /// Requires: [`VK_EXT_opacity_micromap`](crate::ext::opacity_micromap)
     pub const NAME: &CStr = c"VK_NV_displacement_micromap";
     pub const SPEC_VERSION: u32 = 2;
 }
@@ -202,6 +240,8 @@ pub mod ray_tracing_linear_swept_spheres {
     use core::ffi::CStr;
 
     /// Type: `Device`
+    ///
+    /// Requires: [`VK_KHR_ray_tracing_pipeline`](crate::khr::ray_tracing_pipeline)
     pub const NAME: &CStr = c"VK_NV_ray_tracing_linear_swept_spheres";
     pub const SPEC_VERSION: u32 = 1;
 }
@@ -209,6 +249,8 @@ pub mod linear_color_attachment {
     use core::ffi::CStr;
 
     /// Type: `Device`
+    ///
+    /// Requires: [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1
     pub const NAME: &CStr = c"VK_NV_linear_color_attachment";
     pub const SPEC_VERSION: u32 = 1;
 }
@@ -218,6 +260,10 @@ pub mod ray_tracing_invocation_reorder {
     use core::ffi::CStr;
 
     /// Type: `Device`
+    ///
+    /// Promoted to [`VK_EXT_ray_tracing_invocation_reorder`](crate::ext::ray_tracing_invocation_reorder)
+    ///
+    /// Requires: [`VK_KHR_ray_tracing_pipeline`](crate::khr::ray_tracing_pipeline)
     pub const NAME: &CStr = c"VK_NV_ray_tracing_invocation_reorder";
     pub const SPEC_VERSION: u32 = 1;
 }
@@ -226,6 +272,8 @@ pub mod extended_sparse_address_space {
     use core::ffi::CStr;
 
     /// Type: `Device`
+    ///
+    /// Requires: [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1
     pub const NAME: &CStr = c"VK_NV_extended_sparse_address_space";
     pub const SPEC_VERSION: u32 = 1;
 }
@@ -235,6 +283,8 @@ pub mod per_stage_descriptor_set {
     use core::ffi::CStr;
 
     /// Type: `Device`
+    ///
+    /// Requires: [`VK_KHR_maintenance6`](crate::khr::maintenance6) or Vulkan 1.4
     pub const NAME: &CStr = c"VK_NV_per_stage_descriptor_set";
     pub const SPEC_VERSION: u32 = 1;
 }
@@ -242,6 +292,8 @@ pub mod descriptor_pool_overallocation {
     use core::ffi::CStr;
 
     /// Type: `Device`
+    ///
+    /// Requires: Vulkan 1.1
     pub const NAME: &CStr = c"VK_NV_descriptor_pool_overallocation";
     pub const SPEC_VERSION: u32 = 1;
 }
@@ -249,6 +301,8 @@ pub mod display_stereo {
     use core::ffi::CStr;
 
     /// Type: `Instance`
+    ///
+    /// Requires: [`VK_KHR_display`](crate::khr::display) + [`VK_KHR_get_display_properties2`](crate::khr::get_display_properties2)
     pub const NAME: &CStr = c"VK_NV_display_stereo";
     pub const SPEC_VERSION: u32 = 1;
 }
@@ -256,6 +310,8 @@ pub mod raw_access_chains {
     use core::ffi::CStr;
 
     /// Type: `Device`
+    ///
+    /// Requires: [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1
     pub const NAME: &CStr = c"VK_NV_raw_access_chains";
     pub const SPEC_VERSION: u32 = 1;
 }
@@ -264,6 +320,8 @@ pub mod command_buffer_inheritance {
     use core::ffi::CStr;
 
     /// Type: `Device`
+    ///
+    /// Requires: [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1
     pub const NAME: &CStr = c"VK_NV_command_buffer_inheritance";
     pub const SPEC_VERSION: u32 = 1;
 }
@@ -271,6 +329,8 @@ pub mod shader_atomic_float16_vector {
     use core::ffi::CStr;
 
     /// Type: `Device`
+    ///
+    /// Requires: [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1
     pub const NAME: &CStr = c"VK_NV_shader_atomic_float16_vector";
     pub const SPEC_VERSION: u32 = 1;
 }
@@ -278,6 +338,8 @@ pub mod ray_tracing_validation {
     use core::ffi::CStr;
 
     /// Type: `Device`
+    ///
+    /// Requires: [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1
     pub const NAME: &CStr = c"VK_NV_ray_tracing_validation";
     pub const SPEC_VERSION: u32 = 1;
 }
@@ -295,6 +357,8 @@ pub mod present_metering {
     use core::ffi::CStr;
 
     /// Type: `Device`
+    ///
+    /// Requires: [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1
     pub const NAME: &CStr = c"VK_NV_present_metering";
     pub const SPEC_VERSION: u32 = 1;
 }
@@ -303,6 +367,8 @@ pub mod cooperative_matrix_decode_vector {
     use core::ffi::CStr;
 
     /// Type: `Device`
+    ///
+    /// Requires: [`VK_NV_cooperative_matrix2`](crate::nv::cooperative_matrix2)
     pub const NAME: &CStr = c"VK_NV_cooperative_matrix_decode_vector";
     pub const SPEC_VERSION: u32 = 1;
 }

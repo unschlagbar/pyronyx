@@ -20,7 +20,7 @@ impl PhysicalDevice {
             .fns()
             .v1_0
             .get_physical_device_properties
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(self.handle, out.as_mut_ptr());
@@ -35,7 +35,7 @@ impl PhysicalDevice {
             .fns()
             .v1_0
             .get_physical_device_queue_family_properties
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         read_into_vec(|count, data| unsafe { (call)(self.handle, count, data) })
     }
@@ -48,7 +48,7 @@ impl PhysicalDevice {
             .fns()
             .v1_0
             .get_physical_device_memory_properties
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(self.handle, out.as_mut_ptr());
@@ -64,7 +64,7 @@ impl PhysicalDevice {
             .fns()
             .v1_0
             .get_physical_device_features
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(self.handle, out.as_mut_ptr());
@@ -80,7 +80,7 @@ impl PhysicalDevice {
             .fns()
             .v1_0
             .get_physical_device_format_properties
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(self.handle, format, out.as_mut_ptr());
@@ -103,7 +103,7 @@ impl PhysicalDevice {
             .fns()
             .v1_0
             .get_physical_device_image_format_properties
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -126,7 +126,7 @@ impl PhysicalDevice {
             .fns()
             .v1_0
             .enumerate_device_layer_properties
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         read_into_vec_result(|count, data| unsafe { (call)(self.handle, count, data) })
     }
@@ -141,7 +141,7 @@ impl PhysicalDevice {
             .fns()
             .v1_0
             .enumerate_device_extension_properties
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         read_into_vec_result(|count, data| unsafe {
             (call)(
@@ -167,7 +167,7 @@ impl PhysicalDevice {
             .fns()
             .v1_0
             .get_physical_device_sparse_image_format_properties
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         read_into_vec(|count, data| unsafe {
             (call)(self.handle, format, ty, samples, usage, tiling, count, data)
@@ -176,50 +176,42 @@ impl PhysicalDevice {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceFeatures2.html>
     #[inline]
-    pub fn get_features2(&self) -> PhysicalDeviceFeatures2<'_> {
-        let mut out = MaybeUninit::uninit();
+    pub fn get_features2(&self, features: &mut PhysicalDeviceFeatures2<'_>) {
         let call = self
             .fns()
             .v1_1
             .get_physical_device_features2
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
-        unsafe {
-            (call)(self.handle, out.as_mut_ptr());
-            out.assume_init()
-        }
+        unsafe { (call)(self.handle, features) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceProperties2.html>
     #[inline]
-    pub fn get_properties2(&self) -> PhysicalDeviceProperties2<'_> {
-        let mut out = MaybeUninit::uninit();
+    pub fn get_properties2(&self, properties: &mut PhysicalDeviceProperties2<'_>) {
         let call = self
             .fns()
             .v1_1
             .get_physical_device_properties2
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
-        unsafe {
-            (call)(self.handle, out.as_mut_ptr());
-            out.assume_init()
-        }
+        unsafe { (call)(self.handle, properties) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceFormatProperties2.html>
     #[inline]
-    pub fn get_format_properties2(&self, format: Format) -> FormatProperties2<'_> {
-        let mut out = MaybeUninit::uninit();
+    pub fn get_format_properties2(
+        &self,
+        format: Format,
+        format_properties: &mut FormatProperties2<'_>,
+    ) {
         let call = self
             .fns()
             .v1_1
             .get_physical_device_format_properties2
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
-        unsafe {
-            (call)(self.handle, format, out.as_mut_ptr());
-            out.assume_init()
-        }
+        unsafe { (call)(self.handle, format, format_properties) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceImageFormatProperties2.html>
@@ -227,15 +219,15 @@ impl PhysicalDevice {
     pub fn get_image_format_properties2(
         &self,
         image_format_info: &PhysicalDeviceImageFormatInfo2,
-    ) -> Result<ImageFormatProperties2<'_>> {
-        let mut out = MaybeUninit::uninit();
+        image_format_properties: &mut ImageFormatProperties2<'_>,
+    ) -> Result<()> {
         let call = self
             .fns()
             .v1_1
             .get_physical_device_image_format_properties2
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
-        unsafe { (call)(self.handle, image_format_info, out.as_mut_ptr()) }.init_on_success(out)
+        unsafe { (call)(self.handle, image_format_info, image_format_properties) }.result()
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceQueueFamilyProperties2.html>
@@ -251,7 +243,7 @@ impl PhysicalDevice {
             .fns()
             .v1_1
             .get_physical_device_queue_family_properties2
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -271,8 +263,10 @@ impl PhysicalDevice {
                 .fns()
                 .v1_1
                 .get_physical_device_queue_family_properties2
-                .expect(Self::CORE_LOAD_ERROR))(
-                self.handle, out.as_mut_ptr(), ptr::null_mut()
+                .unwrap_or_else(|| Self::core_load_error()))(
+                self.handle,
+                out.as_mut_ptr(),
+                ptr::null_mut(),
             );
             out.assume_init() as usize
         }
@@ -280,18 +274,17 @@ impl PhysicalDevice {
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceMemoryProperties2.html>
     #[inline]
-    pub fn get_memory_properties2(&self) -> PhysicalDeviceMemoryProperties2<'_> {
-        let mut out = MaybeUninit::uninit();
+    pub fn get_memory_properties2(
+        &self,
+        memory_properties: &mut PhysicalDeviceMemoryProperties2<'_>,
+    ) {
         let call = self
             .fns()
             .v1_1
             .get_physical_device_memory_properties2
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
-        unsafe {
-            (call)(self.handle, out.as_mut_ptr());
-            out.assume_init()
-        }
+        unsafe { (call)(self.handle, memory_properties) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceSparseImageFormatProperties2.html>
@@ -308,7 +301,7 @@ impl PhysicalDevice {
             .fns()
             .v1_1
             .get_physical_device_sparse_image_format_properties2
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
             (call)(
@@ -332,7 +325,7 @@ impl PhysicalDevice {
                 .fns()
                 .v1_1
                 .get_physical_device_sparse_image_format_properties2
-                .expect(Self::CORE_LOAD_ERROR))(
+                .unwrap_or_else(|| Self::core_load_error()))(
                 self.handle,
                 format_info,
                 out.as_mut_ptr(),
@@ -347,18 +340,21 @@ impl PhysicalDevice {
     pub fn get_external_buffer_properties(
         &self,
         external_buffer_info: &PhysicalDeviceExternalBufferInfo,
-    ) -> ExternalBufferProperties<'_> {
-        let mut out = MaybeUninit::uninit();
+        external_buffer_properties: &mut ExternalBufferProperties<'_>,
+    ) {
         let call = self
             .fns()
             .v1_1
             .get_physical_device_external_buffer_properties
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
-            (call)(self.handle, external_buffer_info, out.as_mut_ptr());
-            out.assume_init()
-        }
+            (call)(
+                self.handle,
+                external_buffer_info,
+                external_buffer_properties,
+            )
+        };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceExternalSemaphoreProperties.html>
@@ -366,18 +362,21 @@ impl PhysicalDevice {
     pub fn get_external_semaphore_properties(
         &self,
         external_semaphore_info: &PhysicalDeviceExternalSemaphoreInfo,
-    ) -> ExternalSemaphoreProperties<'_> {
-        let mut out = MaybeUninit::uninit();
+        external_semaphore_properties: &mut ExternalSemaphoreProperties<'_>,
+    ) {
         let call = self
             .fns()
             .v1_1
             .get_physical_device_external_semaphore_properties
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe {
-            (call)(self.handle, external_semaphore_info, out.as_mut_ptr());
-            out.assume_init()
-        }
+            (call)(
+                self.handle,
+                external_semaphore_info,
+                external_semaphore_properties,
+            )
+        };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceExternalFenceProperties.html>
@@ -385,18 +384,15 @@ impl PhysicalDevice {
     pub fn get_external_fence_properties(
         &self,
         external_fence_info: &PhysicalDeviceExternalFenceInfo,
-    ) -> ExternalFenceProperties<'_> {
-        let mut out = MaybeUninit::uninit();
+        external_fence_properties: &mut ExternalFenceProperties<'_>,
+    ) {
         let call = self
             .fns()
             .v1_1
             .get_physical_device_external_fence_properties
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
-        unsafe {
-            (call)(self.handle, external_fence_info, out.as_mut_ptr());
-            out.assume_init()
-        }
+        unsafe { (call)(self.handle, external_fence_info, external_fence_properties) };
     }
 
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetPhysicalDeviceToolProperties.html>
@@ -412,7 +408,7 @@ impl PhysicalDevice {
             .fns()
             .v1_3
             .get_physical_device_tool_properties
-            .expect(Self::CORE_LOAD_ERROR);
+            .unwrap_or_else(|| Self::core_load_error());
 
         unsafe { (call)(self.handle, &mut tool_count, tool_properties.as_mut_ptr()) }.result()
     }
@@ -426,8 +422,10 @@ impl PhysicalDevice {
                 .fns()
                 .v1_3
                 .get_physical_device_tool_properties
-                .expect(Self::CORE_LOAD_ERROR))(
-                self.handle, out.as_mut_ptr(), ptr::null_mut()
+                .unwrap_or_else(|| Self::core_load_error()))(
+                self.handle,
+                out.as_mut_ptr(),
+                ptr::null_mut(),
             )
         }
         .init_on_success(out)

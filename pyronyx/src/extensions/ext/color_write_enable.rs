@@ -7,6 +7,8 @@ use crate::vk::*;
 use core::ffi::CStr;
 
 /// Type: `Device`
+///
+/// Requires: [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1
 pub const NAME: &CStr = c"VK_EXT_color_write_enable";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -26,9 +28,8 @@ impl ColorWriteEnableCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .ext_color_write_enable
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_color_write_enable_ext;
+            .set_color_write_enable_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(

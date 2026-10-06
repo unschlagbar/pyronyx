@@ -6,9 +6,10 @@
 use crate::vk::*;
 use core::ffi::CStr;
 use core::ffi::c_void;
-use core::mem::MaybeUninit;
 
 /// Type: `Device`
+///
+/// Requires: [`VK_KHR_external_memory`](crate::khr::external_memory) or Vulkan 1.1
 pub const NAME: &CStr = c"VK_EXT_external_memory_host";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -17,7 +18,8 @@ pub trait ExternalMemoryHostDevice {
         &self,
         handle_type: ExternalMemoryHandleTypeFlags,
         host_pointer: &c_void,
-    ) -> Result<MemoryHostPointerPropertiesEXT<'_>>;
+        memory_host_pointer_properties: &mut MemoryHostPointerPropertiesEXT<'_>,
+    ) -> Result<()>;
 }
 
 impl ExternalMemoryHostDevice for Device {
@@ -27,16 +29,22 @@ impl ExternalMemoryHostDevice for Device {
         &self,
         handle_type: ExternalMemoryHandleTypeFlags,
         host_pointer: &c_void,
-    ) -> Result<MemoryHostPointerPropertiesEXT<'_>> {
-        let mut out = MaybeUninit::uninit();
+        memory_host_pointer_properties: &mut MemoryHostPointerPropertiesEXT<'_>,
+    ) -> Result<()> {
         let call = self
             .fns()
             .ext_external_memory_host
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_memory_host_pointer_properties_ext;
+            .get_memory_host_pointer_properties_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
-        unsafe { (call)(self.handle, handle_type, host_pointer, out.as_mut_ptr()) }
-            .init_on_success(out)
+        unsafe {
+            (call)(
+                self.handle,
+                handle_type,
+                host_pointer,
+                memory_host_pointer_properties,
+            )
+        }
+        .result()
     }
 }

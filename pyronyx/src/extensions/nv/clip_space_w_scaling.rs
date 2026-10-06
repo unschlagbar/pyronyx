@@ -34,9 +34,8 @@ impl ClipSpaceWScalingCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .nv_clip_space_w_scaling
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_viewport_w_scaling_nv;
+            .set_viewport_w_scaling_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(

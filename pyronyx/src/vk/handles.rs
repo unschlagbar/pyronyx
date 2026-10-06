@@ -45,6 +45,7 @@ use crate::{
     },
 };
 use core::{
+    cell::UnsafeCell,
     ffi::{CStr, c_char},
     fmt,
     mem::{MaybeUninit, transmute},
@@ -63,8 +64,20 @@ pub struct Instance {
 }
 
 impl Instance {
-    pub(crate) const CORE_LOAD_ERROR: &str = "Instance core function is not loaded or not available. You may want to increase you `vk::InstanceCreateInfo.application_info.api_version`";
-    pub(crate) const EXT_LOAD_ERROR: &str = "Instance ext function is not loaded or not available. You may use a extension that is not present in `vk::InstanceCreateInfo.enabled_extension_names`";
+    pub(crate) const CORE_LOAD_ERROR: &str = "Instance core function is not loaded or not available. You may want to increase your `vk::InstanceCreateInfo.application_info.api_version`";
+    pub(crate) const EXT_LOAD_ERROR: &str = "Instance ext function is not loaded or not available. You may use an extension that is not present in `vk::InstanceCreateInfo.enabled_extension_names`";
+
+    #[cold]
+    #[inline(never)]
+    pub(crate) fn core_load_error() -> ! {
+        panic!("{}", Self::CORE_LOAD_ERROR)
+    }
+
+    #[cold]
+    #[inline(never)]
+    pub(crate) fn ext_load_error() -> ! {
+        panic!("{}", Self::EXT_LOAD_ERROR)
+    }
 
     /// Returns the raw `VkInstance` handle.
     pub const fn handle(&self) -> vkInstance {
@@ -232,7 +245,9 @@ impl Instance {
             }
         };
 
-        let api_version = (unsafe { *create_info.application_info }).api_version;
+        // A null `application_info` means Vulkan 1.0.
+        let api_version = unsafe { create_info.application_info.as_ref() }
+            .map_or(vk::API_VERSION_1_0, |info| info.api_version);
 
         let out = Self {
             handle: instance,
@@ -242,16 +257,16 @@ impl Instance {
         Ok(out)
     }
 
-    /// Returns all [`PhysicalDevice`]s from this [`Instance`] as a wrapped with v_tables.
+    /// Returns all [`PhysicalDevice`]s from this [`Instance`], wrapped with their v-tables.
     ///
-    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetDeviceQueue.html>
+    /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkEnumeratePhysicalDevices.html>
     ///
     /// Unlike [`Instance::enumerate_physical_devices_raw`], which returns raw handles, this method returns
     /// [`PhysicalDevice`] objects that are ready to use with their associated function tables.
     ///
     /// # Safety
     /// The returned [`PhysicalDevice`] borrows its function table from this
-    /// [`Instance`]. Dropping the `Device` while any [`PhysicalDevice`] is still
+    /// [`Instance`]. Dropping the `Instance` while any [`PhysicalDevice`] is still
     /// in use is undefined behaviour.
     ///
     /// Calling **any** fn on [`PhysicalDevice`] with invalid non [null()](core::ptr::null()) pointer in the function parameter
@@ -268,7 +283,7 @@ impl Instance {
         })
     }
 
-    /// Returns al PhysicalDevices from this [`Instance`] without v_tables.
+    /// Returns all physical devices from this [`Instance`] without v-tables.
     /// to obtain the v_tables call [`vkPhysicalDevice::to_physical_device`] or directly [`Instance::enumerate_physical_devices`]
     ///
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkEnumeratePhysicalDevices.html>
@@ -279,7 +294,7 @@ impl Instance {
                 .fns()
                 .v1_0
                 .enumerate_physical_devices
-                .expect(Self::CORE_LOAD_ERROR))(self.handle(), count, data)
+                .unwrap_or_else(|| Self::core_load_error()))(self.handle(), count, data)
         })
     }
 }
@@ -290,15 +305,53 @@ impl Instance {
 ///
 /// Holds a **static** reference to the function table stored inside the parent
 /// `Instance`. Therefore it must not outlive the `Instance`.
-#[derive(Clone, Copy, Default)]
+#[derive(Clone, Copy)]
 pub struct PhysicalDevice {
     pub(crate) handle: vkPhysicalDevice,
-    pub(crate) v_table: Option<&'static PhysicalDeviceFn>,
+    pub(crate) v_table: &'static PhysicalDeviceFn,
+}
+
+/// Function table with nothing loaded, used by the `null()` handles so they need no
+/// `Option` (and no extra branch per call). Every call through it panics.
+///
+/// The `UnsafeCell` is never written to; it only makes the compiler treat the static as
+/// non-constant, which places the all-zero table in `.bss` instead of the binary.
+struct EmptyFn<T>(UnsafeCell<T>);
+
+// SAFETY: the table is never mutated.
+unsafe impl<T> Sync for EmptyFn<T> {}
+
+impl<T> EmptyFn<T> {
+    const fn get(&'static self) -> &'static T {
+        // SAFETY: the table is never mutated.
+        unsafe { &*self.0.get() }
+    }
+}
+
+static EMPTY_PHYSICAL_DEVICE_FN: EmptyFn<PhysicalDeviceFn> =
+    EmptyFn(UnsafeCell::new(PhysicalDeviceFn::EMPTY));
+
+impl Default for PhysicalDevice {
+    fn default() -> Self {
+        Self::null()
+    }
 }
 
 impl PhysicalDevice {
-    pub(crate) const CORE_LOAD_ERROR: &str = "PhysicalDevice Instance core function is not loaded or not available. You may want to increase you `vk::InstanceCreateInfo.application_info.api_version`";
-    pub(crate) const EXT_LOAD_ERROR: &str = "PhysicalDevice Instance ext function is not loaded or not available. You may use a extension that is not present in `vk::InstanceCreateInfo.enabled_extension_names`";
+    pub(crate) const CORE_LOAD_ERROR: &str = "PhysicalDevice Instance core function is not loaded or not available, or this PhysicalDevice has no v-table (obtain it via `Instance::enumerate_physical_devices` or `to_physical_device`). You may want to increase your `vk::InstanceCreateInfo.application_info.api_version`";
+    pub(crate) const EXT_LOAD_ERROR: &str = "PhysicalDevice ext function is not available: no driver supports the extension, or its instance extension isn't enabled";
+
+    #[cold]
+    #[inline(never)]
+    pub(crate) fn core_load_error() -> ! {
+        panic!("{}", Self::CORE_LOAD_ERROR)
+    }
+
+    #[cold]
+    #[inline(never)]
+    pub(crate) fn ext_load_error() -> ! {
+        panic!("{}", Self::EXT_LOAD_ERROR)
+    }
 
     /// Returns the raw `VkPhysicalDevice` handle.
     pub const fn handle(&self) -> vkPhysicalDevice {
@@ -308,14 +361,13 @@ impl PhysicalDevice {
     pub const fn null() -> Self {
         Self {
             handle: vk::vkPhysicalDevice::null(),
-            v_table: None,
+            v_table: EMPTY_PHYSICAL_DEVICE_FN.get(),
         }
     }
 
     /// Returns the function table for this [`PhysicalDevice`].
     pub const fn fns(&self) -> &PhysicalDeviceFn {
         self.v_table
-            .expect("No v-table use `self.handle().to_physical_Device(device)`")
     }
 
     /// Creates a logical device from this physical device.
@@ -337,7 +389,11 @@ impl PhysicalDevice {
     ) -> Result<Device> {
         let mut handle = MaybeUninit::uninit();
         let result = unsafe {
-            (self.fns().v1_0.create_device.expect(Self::CORE_LOAD_ERROR))(
+            (self
+                .fns()
+                .v1_0
+                .create_device
+                .unwrap_or_else(|| Self::core_load_error()))(
                 self.handle,
                 create_info,
                 raw_option(allocator),
@@ -394,8 +450,20 @@ pub struct Device {
 }
 
 impl Device {
-    pub(crate) const CORE_LOAD_ERROR: &str = "Device core function is not loaded or not available. You may want to increase you `vk::InstanceCreateInfo.application_info.api_version`";
-    pub(crate) const EXT_LOAD_ERROR: &str = "Device ext function is not loaded or not available. You may use a extension that is not present in `vk::InstanceCreateInfo.enabled_extension_names`";
+    pub(crate) const CORE_LOAD_ERROR: &str = "Device core function is not loaded or not available. You may want to increase your `vk::InstanceCreateInfo.application_info.api_version`";
+    pub(crate) const EXT_LOAD_ERROR: &str = "Device ext function is not loaded or not available. You may use an extension that is not present in `vk::InstanceCreateInfo.enabled_extension_names`";
+
+    #[cold]
+    #[inline(never)]
+    pub(crate) fn core_load_error() -> ! {
+        panic!("{}", Self::CORE_LOAD_ERROR)
+    }
+
+    #[cold]
+    #[inline(never)]
+    pub(crate) fn ext_load_error() -> ! {
+        panic!("{}", Self::EXT_LOAD_ERROR)
+    }
 
     /// Returns the raw `VkDevice` handle.
     pub const fn handle(&self) -> vkDevice {
@@ -447,7 +515,7 @@ impl Device {
                 .fns()
                 .v1_0
                 .get_device_queue
-                .expect(Self::CORE_LOAD_ERROR))(
+                .unwrap_or_else(|| Self::core_load_error()))(
                 self.handle(),
                 queue_family_index,
                 queue_index,
@@ -475,7 +543,7 @@ impl Device {
     /// To catch these bugs use `VK_LAYER_KHRONOS_validation` layer in [`InstanceCreateInfo`]
     /// together with the Vulkan SDK!
     ///
-    /// Requires Vulkan 1.1 or `VK_KHR_get_physical_device_properties2`.
+    /// Requires Vulkan 1.1.
     pub unsafe fn get_device_queue2(&self, queue_info: &vk::DeviceQueueInfo2) -> Queue {
         let handle = self.get_device_queue2_raw(queue_info);
         let v_table: &'static QueueFn = unsafe { transmute(&self.v_table().queue) };
@@ -488,7 +556,7 @@ impl Device {
     ///
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetDeviceQueue2.html>
     ///
-    /// Requires Vulkan 1.1 or `VK_KHR_get_physical_device_properties2`.
+    /// Requires Vulkan 1.1.
     pub fn get_device_queue2_raw(&self, queue_info: &vk::DeviceQueueInfo2) -> vkQueue {
         let mut out = MaybeUninit::uninit();
         unsafe {
@@ -496,8 +564,10 @@ impl Device {
                 .fns()
                 .v1_1 // Vulkan 1.1 dispatch table
                 .get_device_queue2
-                .expect(Self::CORE_LOAD_ERROR))(
-                self.handle(), queue_info, out.as_mut_ptr()
+                .unwrap_or_else(|| Self::core_load_error()))(
+                self.handle(),
+                queue_info,
+                out.as_mut_ptr(),
             )
         }
         unsafe { out.assume_init() }
@@ -511,7 +581,7 @@ impl Device {
     /// [`CommandBuffer`] objects that are ready to use with their associated function tables.
     ///
     /// # Safety
-    /// The returned [`CommandBuffer`] borrows their function table from this
+    /// The returned [`CommandBuffer`]s borrow their function table from this
     /// `Device`. Dropping the `Device` while any [`CommandBuffer`] is still
     /// in use is undefined behaviour.
     ///
@@ -551,8 +621,10 @@ impl Device {
                 .fns()
                 .v1_0
                 .allocate_command_buffers
-                .expect(Self::CORE_LOAD_ERROR))(
-                self.handle(), allocate_info, buffers.as_mut_ptr()
+                .unwrap_or_else(|| Self::core_load_error()))(
+                self.handle(),
+                allocate_info,
+                buffers.as_mut_ptr(),
             )
             .set_len_on_success(buffers, allocate_info.command_buffer_count as usize)
         }
@@ -570,8 +642,20 @@ pub struct Queue {
 }
 
 impl Queue {
-    pub(crate) const CORE_LOAD_ERROR: &str = "Queue Device core function is not loaded or not available. You may want to increase you `vk::InstanceCreateInfo.application_info.api_version`";
-    pub(crate) const EXT_LOAD_ERROR: &str = "Queue Device ext function is not loaded or not available. You may use a extension that is not present in `vk::InstanceCreateInfo.enabled_extension_names`";
+    pub(crate) const CORE_LOAD_ERROR: &str = "Queue Device core function is not loaded or not available. You may want to increase your `vk::InstanceCreateInfo.application_info.api_version`";
+    pub(crate) const EXT_LOAD_ERROR: &str = "Queue Device ext function is not loaded or not available. You may use an extension that is not present in `vk::InstanceCreateInfo.enabled_extension_names`";
+
+    #[cold]
+    #[inline(never)]
+    pub(crate) fn core_load_error() -> ! {
+        panic!("{}", Self::CORE_LOAD_ERROR)
+    }
+
+    #[cold]
+    #[inline(never)]
+    pub(crate) fn ext_load_error() -> ! {
+        panic!("{}", Self::EXT_LOAD_ERROR)
+    }
 
     /// Returns the raw `VkQueue` handle.
     pub const fn handle(&self) -> vkQueue {
@@ -588,15 +672,36 @@ impl Queue {
 ///
 /// Obtained via [`Device::allocate_command_buffers`]. Holds a static reference
 /// to the function table that lives inside the parent `Device`.
-#[derive(Clone, Copy, Default)]
+#[derive(Clone, Copy)]
 pub struct CommandBuffer {
     pub(crate) handle: vkCommandBuffer,
-    pub(crate) v_table: Option<&'static CommandBufferFn>,
+    pub(crate) v_table: &'static CommandBufferFn,
+}
+
+static EMPTY_COMMAND_BUFFER_FN: EmptyFn<CommandBufferFn> =
+    EmptyFn(UnsafeCell::new(CommandBufferFn::EMPTY));
+
+impl Default for CommandBuffer {
+    fn default() -> Self {
+        Self::null()
+    }
 }
 
 impl CommandBuffer {
-    pub(crate) const CORE_LOAD_ERROR: &str = "CommandBuffer Device core function is not loaded or not available. You may want to increase you `vk::InstanceCreateInfo.application_info.api_version`";
-    pub(crate) const EXT_LOAD_ERROR: &str = "CommandBuffer Device ext function is not loaded or not available. You may use a extension that is not present in `vk::InstanceCreateInfo.enabled_extension_names`";
+    pub(crate) const CORE_LOAD_ERROR: &str = "CommandBuffer Device core function is not loaded or not available, or this CommandBuffer has no v-table (obtain it via `Device::allocate_command_buffers` or `to_command_buffer`). You may want to increase your `vk::InstanceCreateInfo.application_info.api_version`";
+    pub(crate) const EXT_LOAD_ERROR: &str = "CommandBuffer Device ext function is not loaded or not available. You may use an extension that is not present in `vk::InstanceCreateInfo.enabled_extension_names`";
+
+    #[cold]
+    #[inline(never)]
+    pub(crate) fn core_load_error() -> ! {
+        panic!("{}", Self::CORE_LOAD_ERROR)
+    }
+
+    #[cold]
+    #[inline(never)]
+    pub(crate) fn ext_load_error() -> ! {
+        panic!("{}", Self::EXT_LOAD_ERROR)
+    }
 
     /// Returns the raw `VkCommandBuffer` handle.
     pub const fn handle(&self) -> vkCommandBuffer {
@@ -606,14 +711,13 @@ impl CommandBuffer {
     pub const fn null() -> Self {
         Self {
             handle: vk::vkCommandBuffer::null(),
-            v_table: None,
+            v_table: EMPTY_COMMAND_BUFFER_FN.get(),
         }
     }
 
     /// Returns the function table for this [`CommandBuffer`].
     pub const fn fns(&self) -> &CommandBufferFn {
         self.v_table
-            .expect("No v-table use `self.handle().to_command_buffer(device)`")
     }
 }
 

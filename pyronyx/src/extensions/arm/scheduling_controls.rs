@@ -7,6 +7,8 @@ use crate::vk::*;
 use core::ffi::CStr;
 
 /// Type: `Device`
+///
+/// Requires: [`VK_ARM_shader_core_builtins`](crate::arm::shader_core_builtins)
 pub const NAME: &CStr = c"VK_ARM_scheduling_controls";
 pub const SPEC_VERSION: u32 = 2;
 
@@ -26,9 +28,8 @@ impl SchedulingControlsCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .arm_scheduling_controls
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_dispatch_parameters_arm;
+            .set_dispatch_parameters_arm
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, dispatch_parameters) };
     }

@@ -9,6 +9,8 @@ use core::mem::MaybeUninit;
 use core::ptr;
 
 /// Type: `Device`
+///
+/// Requires: (([`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1) + [`VK_KHR_create_renderpass2`](crate::khr::create_renderpass2)) or Vulkan 1.2
 pub const NAME: &CStr = c"VK_KHR_fragment_shading_rate";
 pub const SPEC_VERSION: u32 = 2;
 
@@ -36,9 +38,8 @@ impl FragmentShadingRateCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .khr_fragment_shading_rate
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_fragment_shading_rate_khr;
+            .set_fragment_shading_rate_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, fragment_size, combiner_ops) };
     }
@@ -65,9 +66,8 @@ impl FragmentShadingRatePhysicalDevice for PhysicalDevice {
         let call = self
             .fns()
             .khr_fragment_shading_rate
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_physical_device_fragment_shading_rates_khr;
+            .get_physical_device_fragment_shading_rates_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -87,9 +87,8 @@ impl FragmentShadingRatePhysicalDevice for PhysicalDevice {
             (self
                 .fns()
                 .khr_fragment_shading_rate
-                .as_ref()
-                .expect(Self::EXT_LOAD_ERROR)
-                .get_physical_device_fragment_shading_rates_khr)(
+                .get_physical_device_fragment_shading_rates_khr
+                .unwrap_or_else(|| Self::ext_load_error()))(
                 self.handle,
                 out.as_mut_ptr(),
                 ptr::null_mut(),

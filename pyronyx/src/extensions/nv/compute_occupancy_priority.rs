@@ -7,6 +7,8 @@ use crate::vk::*;
 use core::ffi::CStr;
 
 /// Type: `Device`
+///
+/// Requires: [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1
 pub const NAME: &CStr = c"VK_NV_compute_occupancy_priority";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -26,9 +28,8 @@ impl ComputeOccupancyPriorityCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .nv_compute_occupancy_priority
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_compute_occupancy_priority_nv;
+            .set_compute_occupancy_priority_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, parameters) };
     }

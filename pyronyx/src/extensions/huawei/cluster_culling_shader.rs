@@ -7,6 +7,8 @@ use crate::vk::*;
 use core::ffi::CStr;
 
 /// Type: `Device`
+///
+/// Requires: [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1
 pub const NAME: &CStr = c"VK_HUAWEI_cluster_culling_shader";
 pub const SPEC_VERSION: u32 = 3;
 
@@ -29,9 +31,8 @@ impl ClusterCullingShaderCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .huawei_cluster_culling_shader
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .draw_cluster_huawei;
+            .draw_cluster_huawei
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, group_count_x, group_count_y, group_count_z) };
     }
@@ -48,9 +49,8 @@ impl ClusterCullingShaderCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .huawei_cluster_culling_shader
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .draw_cluster_indirect_huawei;
+            .draw_cluster_indirect_huawei
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, buffer, offset) };
     }

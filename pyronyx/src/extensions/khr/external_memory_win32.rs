@@ -8,6 +8,8 @@ use core::ffi::CStr;
 use core::mem::MaybeUninit;
 
 /// Type: `Device`
+///
+/// Requires: [`VK_KHR_external_memory`](crate::khr::external_memory) or Vulkan 1.1
 pub const NAME: &CStr = c"VK_KHR_external_memory_win32";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -21,7 +23,8 @@ pub trait ExternalMemoryWin32Device {
         &self,
         handle_type: ExternalMemoryHandleTypeFlags,
         handle: HANDLE,
-    ) -> Result<MemoryWin32HandlePropertiesKHR<'_>>;
+        memory_win32_handle_properties: &mut MemoryWin32HandlePropertiesKHR<'_>,
+    ) -> Result<()>;
 }
 
 impl ExternalMemoryWin32Device for Device {
@@ -35,9 +38,8 @@ impl ExternalMemoryWin32Device for Device {
         let call = self
             .fns()
             .khr_external_memory_win32
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_memory_win32_handle_khr;
+            .get_memory_win32_handle_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, get_win32_handle_info, out.as_mut_ptr()) }.init_on_success(out)
     }
@@ -48,15 +50,22 @@ impl ExternalMemoryWin32Device for Device {
         &self,
         handle_type: ExternalMemoryHandleTypeFlags,
         handle: HANDLE,
-    ) -> Result<MemoryWin32HandlePropertiesKHR<'_>> {
-        let mut out = MaybeUninit::uninit();
+        memory_win32_handle_properties: &mut MemoryWin32HandlePropertiesKHR<'_>,
+    ) -> Result<()> {
         let call = self
             .fns()
             .khr_external_memory_win32
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_memory_win32_handle_properties_khr;
+            .get_memory_win32_handle_properties_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
-        unsafe { (call)(self.handle, handle_type, handle, out.as_mut_ptr()) }.init_on_success(out)
+        unsafe {
+            (call)(
+                self.handle,
+                handle_type,
+                handle,
+                memory_win32_handle_properties,
+            )
+        }
+        .result()
     }
 }

@@ -9,6 +9,8 @@ use core::mem::MaybeUninit;
 use core::ptr::{from_ref, null};
 
 /// Type: `Instance`
+///
+/// Requires: [`VK_KHR_surface`](crate::khr::surface)
 pub const NAME: &CStr = c"VK_EXT_directfb_surface";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -32,9 +34,8 @@ impl DirectfbSurfaceInstance for Instance {
         let call = self
             .fns()
             .ext_directfb_surface
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .create_direct_fb_surface_ext;
+            .create_direct_fb_surface_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -67,9 +68,8 @@ impl DirectfbSurfacePhysicalDevice for PhysicalDevice {
         let call = self
             .fns()
             .ext_directfb_surface
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_physical_device_direct_fb_presentation_support_ext;
+            .get_physical_device_direct_fb_presentation_support_ext
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, queue_family_index, dfb) }
     }

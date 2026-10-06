@@ -10,6 +10,8 @@ use core::mem::MaybeUninit;
 use core::ptr::{from_ref, null};
 
 /// Type: `Instance`
+///
+/// Requires: [`VK_KHR_surface`](crate::khr::surface)
 pub const NAME: &CStr = c"VK_MVK_ios_surface";
 pub const SPEC_VERSION: u32 = 3;
 
@@ -33,9 +35,8 @@ impl IosSurfaceInstance for Instance {
         let call = self
             .fns()
             .mvk_ios_surface
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .create_ios_surface_mvk;
+            .create_ios_surface_mvk
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(

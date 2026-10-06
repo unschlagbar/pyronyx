@@ -9,6 +9,8 @@ use core::mem::MaybeUninit;
 use core::ptr;
 
 /// Type: `Device`
+///
+/// Requires: [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1
 pub const NAME: &CStr = c"VK_KHR_performance_query";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -46,9 +48,8 @@ impl PerformanceQueryPhysicalDevice for PhysicalDevice {
         let call = self
             .fns()
             .khr_performance_query
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .enumerate_physical_device_queue_family_performance_query_counters_khr;
+            .enumerate_physical_device_queue_family_performance_query_counters_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -73,9 +74,8 @@ impl PerformanceQueryPhysicalDevice for PhysicalDevice {
             (self
                 .fns()
                 .khr_performance_query
-                .as_ref()
-                .expect(Self::EXT_LOAD_ERROR)
-                .enumerate_physical_device_queue_family_performance_query_counters_khr)(
+                .enumerate_physical_device_queue_family_performance_query_counters_khr
+                .unwrap_or_else(|| Self::ext_load_error()))(
                 self.handle,
                 queue_family_index,
                 out.as_mut_ptr(),
@@ -97,9 +97,8 @@ impl PerformanceQueryPhysicalDevice for PhysicalDevice {
         let call = self
             .fns()
             .khr_performance_query
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_physical_device_queue_family_performance_query_passes_khr;
+            .get_physical_device_queue_family_performance_query_passes_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(self.handle, performance_query_create_info, out.as_mut_ptr());
@@ -121,9 +120,8 @@ impl PerformanceQueryDevice for Device {
         let call = self
             .fns()
             .khr_performance_query
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .acquire_profiling_lock_khr;
+            .acquire_profiling_lock_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, info) }.result()
     }
@@ -134,9 +132,8 @@ impl PerformanceQueryDevice for Device {
         let call = self
             .fns()
             .khr_performance_query
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .release_profiling_lock_khr;
+            .release_profiling_lock_khr
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle) };
     }

@@ -7,6 +7,8 @@ use crate::vk::*;
 use core::ffi::CStr;
 
 /// Type: `Device`
+///
+/// Requires: [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1
 pub const NAME: &CStr = c"VK_NV_shading_rate_image";
 pub const SPEC_VERSION: u32 = 3;
 
@@ -38,9 +40,8 @@ impl ShadingRateImageCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .nv_shading_rate_image
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .bind_shading_rate_image_nv;
+            .bind_shading_rate_image_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, image_view, image_layout) };
     }
@@ -60,9 +61,8 @@ impl ShadingRateImageCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .nv_shading_rate_image
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_viewport_shading_rate_palette_nv;
+            .set_viewport_shading_rate_palette_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(
@@ -89,9 +89,8 @@ impl ShadingRateImageCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .nv_shading_rate_image
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .set_coarse_sample_order_nv;
+            .set_coarse_sample_order_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(

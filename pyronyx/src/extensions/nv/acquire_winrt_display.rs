@@ -8,6 +8,8 @@ use core::ffi::CStr;
 use core::mem::MaybeUninit;
 
 /// Type: `Device`
+///
+/// Requires: [`VK_EXT_direct_mode_display`](crate::ext::direct_mode_display)
 pub const NAME: &CStr = c"VK_NV_acquire_winrt_display";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -24,9 +26,8 @@ impl AcquireWinrtDisplayPhysicalDevice for PhysicalDevice {
         let call = self
             .fns()
             .nv_acquire_winrt_display
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .acquire_winrt_display_nv;
+            .acquire_winrt_display_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, display) }.result()
     }
@@ -38,9 +39,8 @@ impl AcquireWinrtDisplayPhysicalDevice for PhysicalDevice {
         let call = self
             .fns()
             .nv_acquire_winrt_display
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_winrt_display_nv;
+            .get_winrt_display_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, device_relative_id, out.as_mut_ptr()) }.init_on_success(out)
     }

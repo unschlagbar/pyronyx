@@ -7,6 +7,8 @@ use crate::vk::*;
 use core::ffi::CStr;
 
 /// Type: `Device`
+///
+/// Requires: [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1
 pub const NAME: &CStr = c"VK_NV_mesh_shader";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -45,9 +47,8 @@ impl MeshShaderCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .nv_mesh_shader
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .draw_mesh_tasks_nv;
+            .draw_mesh_tasks_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, task_count, first_task) };
     }
@@ -70,9 +71,8 @@ impl MeshShaderCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .nv_mesh_shader
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .draw_mesh_tasks_indirect_nv;
+            .draw_mesh_tasks_indirect_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, buffer, offset, draw_count, stride) };
     }
@@ -97,9 +97,8 @@ impl MeshShaderCommandBuffer for CommandBuffer {
         let call = self
             .fns()
             .nv_mesh_shader
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .draw_mesh_tasks_indirect_count_nv;
+            .draw_mesh_tasks_indirect_count_nv
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe {
             (call)(

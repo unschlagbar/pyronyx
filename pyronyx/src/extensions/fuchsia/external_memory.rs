@@ -8,6 +8,8 @@ use core::ffi::CStr;
 use core::mem::MaybeUninit;
 
 /// Type: `Device`
+///
+/// Requires: ([`VK_KHR_external_memory_capabilities`](crate::khr::external_memory_capabilities) + [`VK_KHR_external_memory`](crate::khr::external_memory)) or Vulkan 1.1
 pub const NAME: &CStr = c"VK_FUCHSIA_external_memory";
 pub const SPEC_VERSION: u32 = 1;
 
@@ -21,7 +23,8 @@ pub trait ExternalMemoryDevice {
         &self,
         handle_type: ExternalMemoryHandleTypeFlags,
         zircon_handle: zx_handle_t,
-    ) -> Result<MemoryZirconHandlePropertiesFUCHSIA<'_>>;
+        memory_zircon_handle_properties: &mut MemoryZirconHandlePropertiesFUCHSIA<'_>,
+    ) -> Result<()>;
 }
 
 impl ExternalMemoryDevice for Device {
@@ -35,9 +38,8 @@ impl ExternalMemoryDevice for Device {
         let call = self
             .fns()
             .fuchsia_external_memory
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_memory_zircon_handle_fuchsia;
+            .get_memory_zircon_handle_fuchsia
+            .unwrap_or_else(|| Self::ext_load_error());
 
         unsafe { (call)(self.handle, get_zircon_handle_info, out.as_mut_ptr()) }
             .init_on_success(out)
@@ -49,16 +51,22 @@ impl ExternalMemoryDevice for Device {
         &self,
         handle_type: ExternalMemoryHandleTypeFlags,
         zircon_handle: zx_handle_t,
-    ) -> Result<MemoryZirconHandlePropertiesFUCHSIA<'_>> {
-        let mut out = MaybeUninit::uninit();
+        memory_zircon_handle_properties: &mut MemoryZirconHandlePropertiesFUCHSIA<'_>,
+    ) -> Result<()> {
         let call = self
             .fns()
             .fuchsia_external_memory
-            .as_ref()
-            .expect(Self::EXT_LOAD_ERROR)
-            .get_memory_zircon_handle_properties_fuchsia;
+            .get_memory_zircon_handle_properties_fuchsia
+            .unwrap_or_else(|| Self::ext_load_error());
 
-        unsafe { (call)(self.handle, handle_type, zircon_handle, out.as_mut_ptr()) }
-            .init_on_success(out)
+        unsafe {
+            (call)(
+                self.handle,
+                handle_type,
+                zircon_handle,
+                memory_zircon_handle_properties,
+            )
+        }
+        .result()
     }
 }
