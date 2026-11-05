@@ -22,6 +22,12 @@ pub mod vtables;
 
 pub use extensions::*;
 
+#[cfg(feature = "loaded")]
+mod loader;
+#[cfg(feature = "loaded")]
+pub use loader::{LoadError, load, load_from, vkGetInstanceProcAddr};
+
+#[cfg(not(feature = "loaded"))]
 unsafe extern "system" {
     /// <https://docs.vulkan.org/refpages/latest/refpages/source/vkGetInstanceProcAddr.html>
     pub unsafe fn vkGetInstanceProcAddr(

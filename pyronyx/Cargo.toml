@@ -18,6 +18,7 @@ categories = [
 
 [dependencies]
 raw-window-handle = { version = "0.6.2", optional = true }
+libloading = { version = "0.8", optional = true }
 
 # Bridges an AppKit NSView to the CAMetalLayer that Metal surface creation needs.
 [target.'cfg(target_os = "macos")'.dependencies]
@@ -26,3 +27,5 @@ raw-window-metal = "1"
 [features]
 default = []
 rwh_06 = ["raw-window-handle"]
+# Loads the Vulkan loader at runtime with `pyronyx::load` instead of linking it.
+loaded = ["libloading"]
