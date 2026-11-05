@@ -9,6 +9,11 @@ fn main() {
     println!("cargo:rerun-if-env-changed=VULKAN_SDK");
     println!("cargo:rerun-if-env-changed=ANDROID_NDK_HOME");
 
+    // `pyronyx::load` opens the loader at runtime instead.
+    if env::var_os("CARGO_FEATURE_LOADED").is_some() {
+        return;
+    }
+
     let target_os = env::var("CARGO_CFG_TARGET_OS").unwrap_or_default();
     let target_family = env::var("CARGO_CFG_TARGET_FAMILY").unwrap_or_default();
     let target_pointer_width = env::var("CARGO_CFG_TARGET_POINTER_WIDTH").unwrap_or_default();

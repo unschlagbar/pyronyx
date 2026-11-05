@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Changes
+
+- `loaded` feature: load the Vulkan loader at runtime with `pyronyx::load` instead of linking it, so a missing loader is an error the program can handle
+
 ## [0.5.0]
 
 ### Breaking
