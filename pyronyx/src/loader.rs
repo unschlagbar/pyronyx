@@ -67,7 +67,7 @@ pub unsafe fn load_from(path: impl AsRef<OsStr>) -> Result<(), LoadError> {
         return Ok(());
     }
     // SAFETY: the caller guarantees `path` is a Vulkan loader.
-    let library = unsafe { libloading::Library::new(path) }.map_err(LoadError)?;
+    let library = unsafe { libloading::Library::new(path.as_ref()) }.map_err(LoadError)?;
     // SAFETY: Vulkan defines `vkGetInstanceProcAddr` with this signature.
     let entry = *unsafe { library.get::<GetInstanceProcAddr>(b"vkGetInstanceProcAddr\0") }
         .map_err(LoadError)?;
@@ -92,7 +92,7 @@ pub unsafe fn vkGetInstanceProcAddr(
 ) -> vk::PFN_vkVoidFunction {
     let (_, entry) = ENTRY
         .get()
-        .expect("pyronyx::load must succeed before any Vulkan call");
+        .expect("Vulkan loader not loaded: call `pyronyx::load()` or `pyronyx::load_from()` and check that it returned Ok before making any Vulkan call");
     // SAFETY: forwarded unchanged to the loader's own entry point.
     unsafe { entry(instance, name) }
 }

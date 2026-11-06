@@ -4466,6 +4466,14 @@ pub type vkGetPhysicalDeviceCooperativeMatrixPropertiesKHR = unsafe extern "syst
     properties: *mut CooperativeMatrixPropertiesKHR,
 ) -> vkResult;
 
+pub type vkGetPhysicalDeviceCooperativeMatrixProperties2EXT = unsafe extern "system" fn(
+    physical_device: vkPhysicalDevice,
+    cooperative_matrix_info: *const PhysicalDeviceCooperativeMatrixInfo2EXT,
+    property_count: *mut u32,
+    properties: *mut CooperativeMatrixProperties2EXT,
+)
+    -> vkResult;
+
 pub type vkGetExecutionGraphPipelineScratchSizeAMDX = unsafe extern "system" fn(
     device: vkDevice,
     execution_graph: Pipeline,

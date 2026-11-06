@@ -1813,7 +1813,6 @@ pub enum StructureType {
     LayerSettingsCreateInfoEXT = 1000496000,
     PhysicalDeviceShaderCoreBuiltinsFeaturesARM = 1000497000,
     PhysicalDeviceShaderCoreBuiltinsPropertiesARM = 1000497001,
-    PhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT = 1000498000,
     PhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT = 1000499000,
     PhysicalDeviceInternallySynchronizedQueuesFeaturesKHR = 1000504000,
     LatencySleepModeInfoNV = 1000505000,
@@ -2066,8 +2065,12 @@ pub enum StructureType {
     PhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT = 1000642000,
     ComputeOccupancyPriorityParametersNV = 1000645000,
     PhysicalDeviceComputeOccupancyPriorityFeaturesNV = 1000645001,
+    PhysicalDevicePipelineLibraryGroupHandlesFeaturesKHR = 1000498000,
     PhysicalDeviceMaintenance11FeaturesKHR = 1000657000,
     QueueFamilyOptimalImageTransferGranularityPropertiesKHR = 1000657001,
+    PhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT = 1000659000,
+    PhysicalDeviceCooperativeMatrixInfo2EXT = 1000659001,
+    CooperativeMatrixProperties2EXT = 1000659002,
     PhysicalDeviceShaderSubgroupPartitionedFeaturesEXT = 1000662000,
     UbmSurfaceCreateInfoSEC = 1000664000,
     FormatProperties4KHR = 1000668000,
@@ -2085,7 +2088,14 @@ pub enum StructureType {
     DataGraphPipelineSessionNeuralStatisticsCreateInfoARM = 1000676001,
     PhysicalDeviceDataGraphNeuralAcceleratorStatisticsFeaturesARM = 1000676002,
     PhysicalDevicePrimitiveRestartIndexFeaturesEXT = 1000678000,
+    PhysicalDeviceImageTilingControlFeaturesEXT = 1000687000,
+    ImageTilingControlCreateInfoEXT = 1000687001,
     PhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV = 1000689000,
+    PhysicalDevicePrivateDataBaseHandleFeaturesNV = 1000707000,
+    PhysicalDeviceInfoPropertiesINTEL = 1000708000,
+    PhysicalDeviceBufferDeviceAddressAllocationAlignmentFeaturesVALVE = 1000709000,
+    PhysicalDeviceBufferDeviceAddressAllocationAlignmentPropertiesVALVE = 1000709001,
+    BufferDeviceAddressAlignmentAllocateInfoVALVE = 1000709002,
 }
 
 impl StructureType {
@@ -2925,6 +2935,8 @@ pub enum DriverId {
     MESAGfxstream = 29,
     /// Ape open source project
     ApeSoft = 30,
+    /// Reserved for undisclosed driver project
+    Reserved31 = 31,
 }
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkShadingRatePaletteEntryNV.html>
@@ -3985,4 +3997,14 @@ pub enum NeuralAcceleratorStatisticsModeARM {
     Disabled = 0,
     Statistics0 = 1,
     Statistics1 = 2,
+}
+
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkImageTilingControlEXT.html>
+#[repr(C)]
+#[derive(Clone, Copy, Debug, Default, Hash, PartialEq, Eq)]
+pub enum ImageTilingControlEXT {
+    #[default]
+    Default = 0,
+    MinSize = 1,
+    MaxPerformance = 2,
 }

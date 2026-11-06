@@ -1,6 +1,6 @@
 [package]
 name = "pyronyx"
-version = "0.5.0+1.4.357"
+version = "0.5.1+1.4.363"
 edition = "2024"
 rust-version = "1.85.0"
 license = "MIT"
@@ -18,7 +18,7 @@ categories = [
 
 [dependencies]
 raw-window-handle = { version = "0.6.2", optional = true }
-libloading = { version = "0.8", optional = true }
+libloading = { version = "0.9", optional = true }
 
 # Bridges an AppKit NSView to the CAMetalLayer that Metal surface creation needs.
 [target.'cfg(target_os = "macos")'.dependencies]

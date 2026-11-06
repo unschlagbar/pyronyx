@@ -843,7 +843,7 @@ pub mod image_compression_control_swapchain {
 
     /// Type: `Device`
     ///
-    /// Requires: [`VK_EXT_image_compression_control`](crate::ext::image_compression_control)
+    /// Requires: [`VK_EXT_image_compression_control`](crate::ext::image_compression_control) + [`VK_KHR_swapchain`](crate::khr::swapchain)
     pub const NAME: &CStr = c"VK_EXT_image_compression_control_swapchain";
     pub const SPEC_VERSION: u32 = 1;
 }
@@ -943,6 +943,8 @@ pub mod pipeline_library_group_handles {
     use core::ffi::CStr;
 
     /// Type: `Device`
+    ///
+    /// Promoted to [`VK_KHR_pipeline_library_group_handles`](crate::khr::pipeline_library_group_handles)
     ///
     /// Requires: [`VK_KHR_ray_tracing_pipeline`](crate::khr::ray_tracing_pipeline) + [`VK_KHR_pipeline_library`](crate::khr::pipeline_library)
     pub const NAME: &CStr = c"VK_EXT_pipeline_library_group_handles";
@@ -1055,6 +1057,7 @@ pub mod shader_uniform_buffer_unsized_array {
     pub const NAME: &CStr = c"VK_EXT_shader_uniform_buffer_unsized_array";
     pub const SPEC_VERSION: u32 = 1;
 }
+pub mod cooperative_matrix_maintenance1;
 pub mod shader_subgroup_partitioned {
     use core::ffi::CStr;
 
@@ -1074,3 +1077,12 @@ pub mod shader_ocp_microscaling_types {
     pub const SPEC_VERSION: u32 = 1;
 }
 pub mod primitive_restart_index;
+pub mod image_tiling_control {
+    use core::ffi::CStr;
+
+    /// Type: `Device`
+    ///
+    /// Requires: [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1
+    pub const NAME: &CStr = c"VK_EXT_image_tiling_control";
+    pub const SPEC_VERSION: u32 = 1;
+}

@@ -1099,8 +1099,15 @@ impl BuildAccelerationStructureFlagsKHR {
     pub const MicromapLossy: Self = Self(0b100_0000_0000);
 }
 
-/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPrivateDataSlotCreateFlags.html>
-pub type PrivateDataSlotCreateFlags = Flags;
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkPrivateDataSlotCreateFlagBits.html>
+#[repr(transparent)]
+#[derive(Clone, Copy, Hash, PartialEq, Eq)]
+pub struct PrivateDataSlotCreateFlags(pub(crate) Flags);
+vk_bitflags_wrapped!(PrivateDataSlotCreateFlags, Flags);
+
+impl PrivateDataSlotCreateFlags {
+    pub const BaseObjectHandleNV: Self = Self(0b1);
+}
 
 /// <https://docs.vulkan.org/refpages/latest/refpages/source/VkAccelerationStructureCreateFlagBitsKHR.html>
 #[repr(transparent)]
@@ -3172,4 +3179,14 @@ vk_bitflags_wrapped!(AccessFlags3KHR, Flags64);
 
 impl AccessFlags3KHR {
     pub const None: Self = Self(0);
+}
+
+/// <https://docs.vulkan.org/refpages/latest/refpages/source/VkCooperativeMatrixFlagBitsEXT.html>
+#[repr(transparent)]
+#[derive(Clone, Copy, Hash, PartialEq, Eq)]
+pub struct CooperativeMatrixFlagsEXT(pub(crate) Flags);
+vk_bitflags_wrapped!(CooperativeMatrixFlagsEXT, Flags);
+
+impl CooperativeMatrixFlagsEXT {
+    pub const SaturatingAccumulation: Self = Self(0b1);
 }

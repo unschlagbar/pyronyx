@@ -2412,6 +2412,36 @@ impl Debug for BuildAccelerationStructureFlagsKHR {
     }
 }
 
+impl Display for PrivateDataSlotCreateFlags {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+        const BITS: &[(PrivateDataSlotCreateFlags, &str)] = &[(
+            PrivateDataSlotCreateFlags::BaseObjectHandleNV,
+            "BaseObjectHandleNV",
+        )];
+
+        let mut first = true;
+        for &(flag, name) in BITS {
+            if self.contains(flag) {
+                if !first {
+                    f.write_str(" | ")?;
+                }
+                f.write_str(name)?;
+                first = false;
+            }
+        }
+        if first {
+            f.write_str("0")?;
+        }
+        Ok(())
+    }
+}
+
+impl Debug for PrivateDataSlotCreateFlags {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+        Display::fmt(self, f)
+    }
+}
+
 impl Display for AccelerationStructureCreateFlagsKHR {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         const BITS: &[(AccelerationStructureCreateFlagsKHR, &str)] = &[
@@ -7527,6 +7557,36 @@ impl Display for AccessFlags3KHR {
 }
 
 impl Debug for AccessFlags3KHR {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+        Display::fmt(self, f)
+    }
+}
+
+impl Display for CooperativeMatrixFlagsEXT {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+        const BITS: &[(CooperativeMatrixFlagsEXT, &str)] = &[(
+            CooperativeMatrixFlagsEXT::SaturatingAccumulation,
+            "SaturatingAccumulation",
+        )];
+
+        let mut first = true;
+        for &(flag, name) in BITS {
+            if self.contains(flag) {
+                if !first {
+                    f.write_str(" | ")?;
+                }
+                f.write_str(name)?;
+                first = false;
+            }
+        }
+        if first {
+            f.write_str("0")?;
+        }
+        Ok(())
+    }
+}
+
+impl Debug for CooperativeMatrixFlagsEXT {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         Display::fmt(self, f)
     }

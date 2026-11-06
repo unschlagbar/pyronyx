@@ -4714,6 +4714,7 @@ pub struct PipelineBinaryKeyKHR<'a> {
     /// Nullable
     pub next: *mut c_void,
     pub key_size: u32,
+    /// Len: `key_size`
     pub key: [u8; MAX_PIPELINE_BINARY_KEY_SIZE_KHR as usize],
     pub _marker: PhantomData<&'a ()>,
 }
@@ -7909,6 +7910,30 @@ impl ExtendsPhysicalDeviceFeatures2 for PhysicalDevicePrivateDataFeatures<'_> {}
 impl ExtendsDeviceCreateInfo for PhysicalDevicePrivateDataFeatures<'_> {}
 
 pub type PhysicalDevicePrivateDataFeaturesEXT<'a> = PhysicalDevicePrivateDataFeatures<'a>;
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
+#[repr(C)]
+#[derive(Copy, Clone, Debug)]
+pub struct PhysicalDevicePrivateDataBaseHandleFeaturesNV<'a> {
+    pub s_type: StructureType,
+    /// Nullable
+    pub next: *mut c_void,
+    pub private_data_base_handle: Bool32,
+    pub _marker: PhantomData<&'a ()>,
+}
+impl Default for PhysicalDevicePrivateDataBaseHandleFeaturesNV<'_> {
+    fn default() -> Self {
+        Self {
+            s_type: StructureType::PhysicalDevicePrivateDataBaseHandleFeaturesNV,
+            next: ptr::null_mut(),
+            private_data_base_handle: FALSE,
+            _marker: PhantomData,
+        }
+    }
+}
+
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDevicePrivateDataBaseHandleFeaturesNV<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDevicePrivateDataBaseHandleFeaturesNV<'_> {}
+
 /// Extends: `PhysicalDeviceProperties2`
 /// returned_only
 #[repr(C)]
@@ -29962,6 +29987,7 @@ impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceVideoEncodeFeedback2Featur
 impl ExtendsDeviceCreateInfo for PhysicalDeviceVideoEncodeFeedback2FeaturesKHR<'_> {}
 
 /// Extends: `VideoCapabilitiesKHR`
+/// returned_only
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
 pub struct VideoEncodeFeedback2CapabilitiesKHR<'a> {
@@ -36624,20 +36650,22 @@ impl Default for PhysicalDeviceFaultPropertiesKHR<'_> {
 
 impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceFaultPropertiesKHR<'_> {}
 
+pub type PhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT<'a> =
+    PhysicalDevicePipelineLibraryGroupHandlesFeaturesKHR<'a>;
 /// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
-pub struct PhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT<'a> {
+pub struct PhysicalDevicePipelineLibraryGroupHandlesFeaturesKHR<'a> {
     pub s_type: StructureType,
     /// Nullable
     pub next: *mut c_void,
     pub pipeline_library_group_handles: Bool32,
     pub _marker: PhantomData<&'a ()>,
 }
-impl Default for PhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT<'_> {
+impl Default for PhysicalDevicePipelineLibraryGroupHandlesFeaturesKHR<'_> {
     fn default() -> Self {
         Self {
-            s_type: StructureType::PhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT,
+            s_type: StructureType::PhysicalDevicePipelineLibraryGroupHandlesFeaturesKHR,
             next: ptr::null_mut(),
             pipeline_library_group_handles: FALSE,
             _marker: PhantomData,
@@ -36645,8 +36673,8 @@ impl Default for PhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT<'_> {
     }
 }
 
-impl ExtendsPhysicalDeviceFeatures2 for PhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT<'_> {}
-impl ExtendsDeviceCreateInfo for PhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT<'_> {}
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDevicePipelineLibraryGroupHandlesFeaturesKHR<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDevicePipelineLibraryGroupHandlesFeaturesKHR<'_> {}
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
@@ -38100,6 +38128,65 @@ impl Default for CooperativeMatrixPropertiesKHR<'_> {
             result_type: Default::default(),
             saturating_accumulation: FALSE,
             scope: Default::default(),
+            _marker: PhantomData,
+        }
+    }
+}
+
+#[repr(C)]
+#[derive(Copy, Clone, Debug)]
+pub struct PhysicalDeviceCooperativeMatrixInfo2EXT<'a> {
+    pub s_type: StructureType,
+    /// Nullable
+    pub next: *const c_void,
+    pub scope: ScopeKHR,
+    pub invocations: u32,
+    pub subgroup_size: u32,
+    pub flags: CooperativeMatrixFlagsEXT,
+    pub _marker: PhantomData<&'a ()>,
+}
+impl Default for PhysicalDeviceCooperativeMatrixInfo2EXT<'_> {
+    fn default() -> Self {
+        Self {
+            s_type: StructureType::PhysicalDeviceCooperativeMatrixInfo2EXT,
+            next: ptr::null_mut(),
+            scope: Default::default(),
+            invocations: 0,
+            subgroup_size: 0,
+            flags: Default::default(),
+            _marker: PhantomData,
+        }
+    }
+}
+
+/// returned_only
+#[repr(C)]
+#[derive(Copy, Clone, Debug)]
+pub struct CooperativeMatrixProperties2EXT<'a> {
+    pub s_type: StructureType,
+    /// Nullable
+    pub next: *mut c_void,
+    pub m_granularity: u32,
+    pub n_granularity: u32,
+    pub k_granularity: u32,
+    pub a_type: ComponentTypeKHR,
+    pub b_type: ComponentTypeKHR,
+    pub c_type: ComponentTypeKHR,
+    pub result_type: ComponentTypeKHR,
+    pub _marker: PhantomData<&'a ()>,
+}
+impl Default for CooperativeMatrixProperties2EXT<'_> {
+    fn default() -> Self {
+        Self {
+            s_type: StructureType::CooperativeMatrixProperties2EXT,
+            next: ptr::null_mut(),
+            m_granularity: 0,
+            n_granularity: 0,
+            k_granularity: 0,
+            a_type: Default::default(),
+            b_type: Default::default(),
+            c_type: Default::default(),
+            result_type: Default::default(),
             _marker: PhantomData,
         }
     }
@@ -45298,6 +45385,53 @@ impl ExtendsDataGraphPipelineDispatchInfoARM for DataGraphPipelineOpticalFlowDis
 /// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
+pub struct PhysicalDeviceImageTilingControlFeaturesEXT<'a> {
+    pub s_type: StructureType,
+    /// Nullable
+    pub next: *mut c_void,
+    pub image_tiling_control: Bool32,
+    pub _marker: PhantomData<&'a ()>,
+}
+impl Default for PhysicalDeviceImageTilingControlFeaturesEXT<'_> {
+    fn default() -> Self {
+        Self {
+            s_type: StructureType::PhysicalDeviceImageTilingControlFeaturesEXT,
+            next: ptr::null_mut(),
+            image_tiling_control: FALSE,
+            _marker: PhantomData,
+        }
+    }
+}
+
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceImageTilingControlFeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceImageTilingControlFeaturesEXT<'_> {}
+
+/// Extends: `ImageCreateInfo`
+#[repr(C)]
+#[derive(Copy, Clone, Debug)]
+pub struct ImageTilingControlCreateInfoEXT<'a> {
+    pub s_type: StructureType,
+    /// Nullable
+    pub next: *const c_void,
+    pub tiling_control: ImageTilingControlEXT,
+    pub _marker: PhantomData<&'a ()>,
+}
+impl Default for ImageTilingControlCreateInfoEXT<'_> {
+    fn default() -> Self {
+        Self {
+            s_type: StructureType::ImageTilingControlCreateInfoEXT,
+            next: ptr::null_mut(),
+            tiling_control: Default::default(),
+            _marker: PhantomData,
+        }
+    }
+}
+
+impl ExtendsImageCreateInfo for ImageTilingControlCreateInfoEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
+#[repr(C)]
+#[derive(Copy, Clone, Debug)]
 pub struct PhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT<'a> {
     pub s_type: StructureType,
     /// Nullable
@@ -45324,3 +45458,145 @@ impl Default for PhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT<'_> {
 
 impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT<'_> {}
 impl ExtendsDeviceCreateInfo for PhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
+#[repr(C)]
+#[derive(Copy, Clone, Debug)]
+pub struct PhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT<'a> {
+    pub s_type: StructureType,
+    /// Nullable
+    pub next: *mut c_void,
+    pub cooperative_matrix_properties2: Bool32,
+    pub cooperative_matrix_reductions: Bool32,
+    pub cooperative_matrix_conversions: Bool32,
+    pub cooperative_matrix_per_element_operations: Bool32,
+    pub cooperative_matrix_get_coordinate: Bool32,
+    pub _marker: PhantomData<&'a ()>,
+}
+impl Default for PhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT<'_> {
+    fn default() -> Self {
+        Self {
+            s_type: StructureType::PhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT,
+            next: ptr::null_mut(),
+            cooperative_matrix_properties2: FALSE,
+            cooperative_matrix_reductions: FALSE,
+            cooperative_matrix_conversions: FALSE,
+            cooperative_matrix_per_element_operations: FALSE,
+            cooperative_matrix_get_coordinate: FALSE,
+            _marker: PhantomData,
+        }
+    }
+}
+
+impl ExtendsPhysicalDeviceFeatures2 for PhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT<'_> {}
+impl ExtendsDeviceCreateInfo for PhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT<'_> {}
+
+/// Extends: `PhysicalDeviceFeatures2`, `DeviceCreateInfo`
+#[repr(C)]
+#[derive(Copy, Clone, Debug)]
+pub struct PhysicalDeviceBufferDeviceAddressAllocationAlignmentFeaturesVALVE<'a> {
+    pub s_type: StructureType,
+    /// Nullable
+    pub next: *mut c_void,
+    pub buffer_device_address_allocation_alignment: Bool32,
+    pub _marker: PhantomData<&'a ()>,
+}
+impl Default for PhysicalDeviceBufferDeviceAddressAllocationAlignmentFeaturesVALVE<'_> {
+    fn default() -> Self {
+        Self {
+            s_type:
+                StructureType::PhysicalDeviceBufferDeviceAddressAllocationAlignmentFeaturesVALVE,
+            next: ptr::null_mut(),
+            buffer_device_address_allocation_alignment: FALSE,
+            _marker: PhantomData,
+        }
+    }
+}
+
+impl ExtendsPhysicalDeviceFeatures2
+    for PhysicalDeviceBufferDeviceAddressAllocationAlignmentFeaturesVALVE<'_>
+{
+}
+impl ExtendsDeviceCreateInfo
+    for PhysicalDeviceBufferDeviceAddressAllocationAlignmentFeaturesVALVE<'_>
+{
+}
+
+/// Extends: `PhysicalDeviceProperties2`
+#[repr(C)]
+#[derive(Copy, Clone, Debug)]
+pub struct PhysicalDeviceBufferDeviceAddressAllocationAlignmentPropertiesVALVE<'a> {
+    pub s_type: StructureType,
+    /// Nullable
+    pub next: *mut c_void,
+    pub max_buffer_device_address_allocation_alignment: u32,
+    pub _marker: PhantomData<&'a ()>,
+}
+impl Default for PhysicalDeviceBufferDeviceAddressAllocationAlignmentPropertiesVALVE<'_> {
+    fn default() -> Self {
+        Self {
+            s_type:
+                StructureType::PhysicalDeviceBufferDeviceAddressAllocationAlignmentPropertiesVALVE,
+            next: ptr::null_mut(),
+            max_buffer_device_address_allocation_alignment: 0,
+            _marker: PhantomData,
+        }
+    }
+}
+
+impl ExtendsPhysicalDeviceProperties2
+    for PhysicalDeviceBufferDeviceAddressAllocationAlignmentPropertiesVALVE<'_>
+{
+}
+
+/// Extends: `BufferCreateInfo`, `MemoryAllocateInfo`
+#[repr(C)]
+#[derive(Copy, Clone, Debug)]
+pub struct BufferDeviceAddressAlignmentAllocateInfoVALVE<'a> {
+    pub s_type: StructureType,
+    /// Nullable
+    pub next: *mut c_void,
+    pub alignment: u32,
+    pub _marker: PhantomData<&'a ()>,
+}
+impl Default for BufferDeviceAddressAlignmentAllocateInfoVALVE<'_> {
+    fn default() -> Self {
+        Self {
+            s_type: StructureType::BufferDeviceAddressAlignmentAllocateInfoVALVE,
+            next: ptr::null_mut(),
+            alignment: 0,
+            _marker: PhantomData,
+        }
+    }
+}
+
+impl ExtendsBufferCreateInfo for BufferDeviceAddressAlignmentAllocateInfoVALVE<'_> {}
+impl ExtendsMemoryAllocateInfo for BufferDeviceAddressAlignmentAllocateInfoVALVE<'_> {}
+
+/// Extends: `PhysicalDeviceProperties2`
+/// returned_only
+#[repr(C)]
+#[derive(Copy, Clone, Debug)]
+pub struct PhysicalDeviceInfoPropertiesINTEL<'a> {
+    pub s_type: StructureType,
+    /// Nullable
+    pub next: *mut c_void,
+    pub device_ip_version_arch: u32,
+    pub device_ip_version_release: u32,
+    pub device_ip_version_revision: u32,
+    pub _marker: PhantomData<&'a ()>,
+}
+impl Default for PhysicalDeviceInfoPropertiesINTEL<'_> {
+    fn default() -> Self {
+        Self {
+            s_type: StructureType::PhysicalDeviceInfoPropertiesINTEL,
+            next: ptr::null_mut(),
+            device_ip_version_arch: 0,
+            device_ip_version_release: 0,
+            device_ip_version_revision: 0,
+            _marker: PhantomData,
+        }
+    }
+}
+
+impl ExtendsPhysicalDeviceProperties2 for PhysicalDeviceInfoPropertiesINTEL<'_> {}

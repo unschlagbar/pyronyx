@@ -1088,6 +1088,15 @@ pub mod opacity_micromap {
     pub const SPEC_VERSION: u32 = 1;
 }
 pub mod maintenance10;
+pub mod pipeline_library_group_handles {
+    use core::ffi::CStr;
+
+    /// Type: `Device`
+    ///
+    /// Requires: [`VK_KHR_ray_tracing_pipeline`](crate::khr::ray_tracing_pipeline) + [`VK_KHR_pipeline_library`](crate::khr::pipeline_library)
+    pub const NAME: &CStr = c"VK_KHR_pipeline_library_group_handles";
+    pub const SPEC_VERSION: u32 = 1;
+}
 pub mod maintenance11 {
     use core::ffi::CStr;
 

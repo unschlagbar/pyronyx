@@ -473,6 +473,7 @@ pub struct PhysicalDeviceFn {
     pub arm_tensors: PhysicalDeviceFnArmTensors,
     pub ext_acquire_drm_display: PhysicalDeviceFnExtAcquireDrmDisplay,
     pub ext_acquire_xlib_display: PhysicalDeviceFnExtAcquireXlibDisplay,
+    pub ext_cooperative_matrix_maintenance1: PhysicalDeviceFnExtCooperativeMatrixMaintenance1,
     pub ext_descriptor_heap: PhysicalDeviceFnExtDescriptorHeap,
     pub ext_direct_mode_display: PhysicalDeviceFnExtDirectModeDisplay,
     pub ext_directfb_surface: PhysicalDeviceFnExtDirectfbSurface,
@@ -521,6 +522,8 @@ impl PhysicalDeviceFn {
         arm_tensors: PhysicalDeviceFnArmTensors::EMPTY,
         ext_acquire_drm_display: PhysicalDeviceFnExtAcquireDrmDisplay::EMPTY,
         ext_acquire_xlib_display: PhysicalDeviceFnExtAcquireXlibDisplay::EMPTY,
+        ext_cooperative_matrix_maintenance1:
+            PhysicalDeviceFnExtCooperativeMatrixMaintenance1::EMPTY,
         ext_descriptor_heap: PhysicalDeviceFnExtDescriptorHeap::EMPTY,
         ext_direct_mode_display: PhysicalDeviceFnExtDirectModeDisplay::EMPTY,
         ext_directfb_surface: PhysicalDeviceFnExtDirectfbSurface::EMPTY,
@@ -581,6 +584,8 @@ impl PhysicalDeviceFn {
             arm_tensors: PhysicalDeviceFnArmTensors::EMPTY,
             ext_acquire_drm_display: PhysicalDeviceFnExtAcquireDrmDisplay::EMPTY,
             ext_acquire_xlib_display: PhysicalDeviceFnExtAcquireXlibDisplay::EMPTY,
+            ext_cooperative_matrix_maintenance1:
+                PhysicalDeviceFnExtCooperativeMatrixMaintenance1::EMPTY,
             ext_descriptor_heap: PhysicalDeviceFnExtDescriptorHeap::EMPTY,
             ext_direct_mode_display: PhysicalDeviceFnExtDirectModeDisplay::EMPTY,
             ext_directfb_surface: PhysicalDeviceFnExtDirectfbSurface::EMPTY,
@@ -783,6 +788,10 @@ impl PhysicalDeviceFn {
                     c"vkGetPhysicalDeviceQueueFamilyDataGraphEngineOperationPropertiesARM",
                 ));
         }
+        out.ext_cooperative_matrix_maintenance1
+            .get_physical_device_cooperative_matrix_properties2_ext = to_option(loader(
+            c"vkGetPhysicalDeviceCooperativeMatrixProperties2EXT",
+        ));
         for &ext in extensions {
             match unsafe { CStr::from_ptr(ext) }.to_bytes() {
                 b"VK_KHR_surface" => {
@@ -1210,6 +1219,18 @@ impl PhysicalDeviceFnExtAcquireXlibDisplay {
     pub const EMPTY: Self = Self {
         acquire_xlib_display_ext: None,
         get_rand_r_output_display_ext: None,
+    };
+}
+
+#[derive(Clone, Default)]
+pub struct PhysicalDeviceFnExtCooperativeMatrixMaintenance1 {
+    pub get_physical_device_cooperative_matrix_properties2_ext:
+        Option<vkGetPhysicalDeviceCooperativeMatrixProperties2EXT>,
+}
+
+impl PhysicalDeviceFnExtCooperativeMatrixMaintenance1 {
+    pub const EMPTY: Self = Self {
+        get_physical_device_cooperative_matrix_properties2_ext: None,
     };
 }
 

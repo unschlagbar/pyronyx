@@ -1,6 +1,8 @@
 # Changelog
 
-## [Unreleased]
+## [0.5.1]
+
+### Updated to Vulkan 1.4.363.1
 
 ### Changes
 

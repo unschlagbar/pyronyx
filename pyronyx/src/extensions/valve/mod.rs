@@ -37,3 +37,12 @@ pub mod shader_mixed_float_dot_product {
     pub const NAME: &CStr = c"VK_VALVE_shader_mixed_float_dot_product";
     pub const SPEC_VERSION: u32 = 1;
 }
+pub mod buffer_device_address_allocation_alignment {
+    use core::ffi::CStr;
+
+    /// Type: `Device`
+    ///
+    /// Requires: [`VK_KHR_buffer_device_address`](crate::khr::buffer_device_address) or Vulkan 1.2
+    pub const NAME: &CStr = c"VK_VALVE_buffer_device_address_allocation_alignment";
+    pub const SPEC_VERSION: u32 = 1;
+}

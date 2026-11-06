@@ -82,6 +82,8 @@ pub mod data_graph_neural_accelerator_statistics {
     use core::ffi::CStr;
 
     /// Type: `Device`
+    ///
+    /// Requires: [`VK_KHR_get_physical_device_properties2`](crate::khr::get_physical_device_properties2) or Vulkan 1.1
     pub const NAME: &CStr = c"VK_ARM_data_graph_neural_accelerator_statistics";
     pub const SPEC_VERSION: u32 = 1;
 }

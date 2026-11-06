@@ -10,7 +10,7 @@ use core::ffi::CStr;
 ///
 /// Requires: (Vulkan 1.2 or [`VK_KHR_timeline_semaphore`](crate::khr::timeline_semaphore)) + ([`VK_KHR_present_id`](crate::khr::present_id) or [`VK_KHR_present_id2`](crate::khr::present_id2))
 pub const NAME: &CStr = c"VK_NV_low_latency2";
-pub const SPEC_VERSION: u32 = 2;
+pub const SPEC_VERSION: u32 = 3;
 
 pub trait LowLatency2Device {
     fn set_latency_sleep_mode(

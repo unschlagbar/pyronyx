@@ -372,3 +372,12 @@ pub mod cooperative_matrix_decode_vector {
     pub const NAME: &CStr = c"VK_NV_cooperative_matrix_decode_vector";
     pub const SPEC_VERSION: u32 = 1;
 }
+pub mod private_data_base_handle {
+    use core::ffi::CStr;
+
+    /// Type: `Device`
+    ///
+    /// Requires: Vulkan 1.3 or [`VK_EXT_private_data`](crate::ext::private_data)
+    pub const NAME: &CStr = c"VK_NV_private_data_base_handle";
+    pub const SPEC_VERSION: u32 = 1;
+}
